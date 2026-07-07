@@ -38,6 +38,9 @@ yarn-error.log*
 # asset migration scratch (large; not for git)
 .tmp/
 
+# wrangler local dev state
+.wrangler/
+
 # vercel
 .vercel
 
