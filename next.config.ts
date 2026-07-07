@@ -53,6 +53,12 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    loader: "custom",
+    loaderFile: "./src/lib/cdn-image-loader.ts",
+    localPatterns: [
+      { pathname: "/cdn/**" },
+      { pathname: "/brand/**" },
+    ],
     remotePatterns: [
       {
         protocol: "https",
