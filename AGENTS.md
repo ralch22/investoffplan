@@ -26,7 +26,7 @@ Two agents work this repo in parallel. Read this before editing to avoid conflic
 ## Grok (Cursor) — current focus
 
 **Completed:**
-- **Track B Phase 3:** R2 asset buckets (`investoffplan-preview-assets`, `investoffplan-assets`), `/cdn/*` route, migration scripts (`migrate-assets-to-r2.ts`, `apply-asset-urls-to-d1.ts`)
+- **Track B Phase 3:** R2 asset buckets (`investoffplan-preview-assets`, `investoffplan-assets`), `/cdn/*` route, migration scripts (`migrate-assets-to-r2.ts`, `apply-asset-urls-to-d1.ts`); prod R2 wiring (config support + `assets:migrate:production` / `assets:apply-d1:production`), D1 apply for prod cutover of /cdn/* asset URLs.
 - **Track B Phase 2:** Upsert logic (`catalog-upsert.ts`), ingest pipeline, GitHub Actions weekly scrape (`.github/workflows/catalog-ingest.yml`)
 - **Track B Phase 1 (live on preview):** D1 + Drizzle, Read API, remote seed, `NEXT_PUBLIC_CATALOG_API=1`, client/server dynamic catalog wiring, preview deploy
 - **Track B Phase 1:** Cloudflare D1 + Drizzle schema, migration, seed script, Read API (`/api/catalog/*`), `docs/catalog-api.md`
