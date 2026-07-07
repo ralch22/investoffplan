@@ -5,6 +5,7 @@ import { PageShell } from "@/components/page-shell";
 import { HeroSearch } from "@/components/hero-search";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { HomeFeaturedGrid } from "@/components/home-featured-grid";
+import { DeveloperLogo } from "@/components/developer-logo";
 import {
   getFeaturedProjects,
   getSiteStats,
@@ -120,9 +121,18 @@ export default async function HomePage() {
               <Link
                 key={`${dev.slug}-${i}`}
                 href={`/developers/${dev.slug}`}
-                className="shrink-0 text-xl font-bold tracking-tighter text-surface-dark opacity-60 transition hover:opacity-100"
+                className="flex shrink-0 items-center gap-3 opacity-70 transition hover:opacity-100"
               >
-                {dev.name.toUpperCase()}
+                <DeveloperLogo
+                  name={dev.name}
+                  logoUrl={dev.logoUrl}
+                  slug={dev.slug}
+                  size="sm"
+                  className="border border-border"
+                />
+                <span className="text-lg font-bold tracking-tight text-surface-dark">
+                  {dev.name}
+                </span>
               </Link>
             ))}
           </div>

@@ -5,17 +5,13 @@ import { join } from "node:path";
 import { createCatalogApi, type CatalogApi, type CatalogFile } from "./catalog-core";
 import { getDb } from "./db/client";
 import { fetchCatalogFile, fetchProjectBySlug as dbFetchProject } from "./db/catalog-queries";
+import { parseFoundedYear } from "./developer-utils";
 import { cityLabel } from "./format";
+import { slugify } from "./slugify";
+import type { DeveloperSummary } from "./types";
 
-export interface DeveloperSummary {
-  slug: string;
-  name: string;
-  initials: string;
-  projectCount: number;
-  unitCount: number;
-  cities: string[];
-  minPriceAed: number;
-}
+export type { DeveloperSummary };
+export { DEVELOPER_PAGE_SIZE } from "./types";
 
 export interface AreaSummary {
   slug: string;
@@ -31,13 +27,6 @@ export interface InsightStat {
   label: string;
   value: string;
   detail?: string;
-}
-
-function slugify(value: string): string {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
 }
 
 let cachedApi: CatalogApi | null = null;
@@ -71,10 +60,12 @@ export async function getCatalogApi(): Promise<CatalogApi> {
 
 export async function getDevelopers(): Promise<DeveloperSummary[]> {
   const api = await getCatalogApi();
+  const devListBySlug = new Map(api.getDevList().map((dev) => [dev.slug, dev]));
   const map = new Map<string, DeveloperSummary>();
 
   for (const project of api.projects) {
     const slug = slugify(project.developer);
+    const devMeta = devListBySlug.get(slug);
     const existing = map.get(slug);
     const minUnit = Math.min(...project.units.map((u) => u.launchPriceAed));
 
@@ -87,6 +78,10 @@ export async function getDevelopers(): Promise<DeveloperSummary[]> {
         unitCount: project.units.length,
         cities: [project.city],
         minPriceAed: minUnit,
+        logoUrl: devMeta?.logoUrl ?? project.developerLogo,
+        description: devMeta?.description,
+        foundedYear: parseFoundedYear(devMeta?.establishedSince),
+        numProjectsOnline: devMeta?.numProjectsOnline,
       });
       continue;
     }
@@ -97,9 +92,69 @@ export async function getDevelopers(): Promise<DeveloperSummary[]> {
     if (!existing.cities.includes(project.city)) {
       existing.cities.push(project.city);
     }
+    if (!existing.logoUrl && project.developerLogo) {
+      existing.logoUrl = project.developerLogo;
+    }
+    if (!existing.description && devMeta?.description) {
+      existing.description = devMeta.description;
+    }
+    if (!existing.foundedYear && devMeta?.establishedSince) {
+      existing.foundedYear = parseFoundedYear(devMeta.establishedSince);
+    }
+    if (existing.numProjectsOnline == null && devMeta?.numProjectsOnline != null) {
+      existing.numProjectsOnline = devMeta.numProjectsOnline;
+    }
   }
 
-  return [...map.values()].sort((a, b) => b.projectCount - a.projectCount);
+  for (const dev of api.getDevList()) {
+    if (map.has(dev.slug)) continue;
+    map.set(dev.slug, {
+      slug: dev.slug,
+      name: dev.name,
+      initials: dev.name.slice(0, 2).toUpperCase(),
+      projectCount: dev.numProjectsOnline ?? 0,
+      unitCount: 0,
+      cities: [],
+      minPriceAed: Number.POSITIVE_INFINITY,
+      logoUrl: dev.logoUrl,
+      description: dev.description,
+      foundedYear: parseFoundedYear(dev.establishedSince),
+      numProjectsOnline: dev.numProjectsOnline,
+    });
+  }
+
+  return [...map.values()]
+    .filter((dev) => dev.projectCount > 0)
+    .sort(
+      (a, b) =>
+        b.unitCount - a.unitCount ||
+        b.projectCount - a.projectCount ||
+        a.name.localeCompare(b.name),
+    );
+}
+
+export async function getDeveloperCityCounts(): Promise<
+  Array<{ slug: import("./types").CitySlug; label: string; count: number }>
+> {
+  const developers = await getDevelopers();
+  const api = await getCatalogApi();
+  const counts = new Map<string, number>();
+
+  for (const dev of developers) {
+    for (const city of dev.cities) {
+      counts.set(city, (counts.get(city) ?? 0) + 1);
+    }
+  }
+
+  return api
+    .getCityCounts()
+    .filter((city) => city.slug !== "all")
+    .map((city) => ({
+      slug: city.slug,
+      label: city.label,
+      count: counts.get(city.slug) ?? 0,
+    }))
+    .filter((city) => city.count > 0);
 }
 
 export async function getDeveloper(slug: string): Promise<DeveloperSummary | null> {
@@ -225,4 +280,4 @@ export async function getProjectBySlug(slug: string) {
   return api.getProjectBySlug(slug);
 }
 
-export { slugify };
+export { slugify } from "./slugify";

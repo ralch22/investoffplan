@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -20,6 +19,10 @@ import {
 } from "@/lib/format";
 import { unitPricePerSqft } from "@/lib/investment-metrics";
 import { resolveBrochureUrl } from "@/lib/brochure";
+import { CompactMediaGallery } from "@/components/compact-media-gallery";
+import { DeveloperAttribution } from "@/components/developer-attribution";
+import { getProjectGalleryImages } from "@/lib/project-gallery-images";
+import { cn } from "@/lib/cn";
 import type { CurrencyCode } from "@/lib/types";
 
 interface ComparePageProps {
@@ -163,8 +166,10 @@ export function ComparePage({ initialIds, initialItems }: ComparePageProps) {
                     </th>
                     <AnimatePresence mode="popLayout">
                       {items.map((item) => {
-                        const imageUrl =
-                          item.catalog?.imageUrl ?? item.project.imageUrl;
+                        const galleryImages = getProjectGalleryImages(
+                          item.project,
+                          item.catalog,
+                        );
                         const unitId =
                           `${item.project.id}:${item.unit.id}` as CompareUnitId;
 
@@ -175,31 +180,29 @@ export function ComparePage({ initialIds, initialItems }: ComparePageProps) {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             key={unitId}
-                            className="min-w-[200px] border-l border-border p-4 text-left align-top"
+                            className="min-w-[220px] border-l border-border p-4 text-left align-top"
                           >
+                            <div className="relative mb-3 h-36 overflow-hidden rounded-xl">
+                              <CompactMediaGallery
+                                images={galleryImages}
+                                alt={item.project.name}
+                                projectHref={`/projects/${item.project.slug}`}
+                                fallbackClassName={cn(
+                                  "bg-gradient-to-br",
+                                  item.project.imageGradient,
+                                )}
+                                sizes="220px"
+                                className="rounded-xl"
+                              />
+                            </div>
                             <Link
                               href={`/projects/${item.project.slug}`}
                               className="group block"
                             >
-                              <div className="relative mb-3 h-28 overflow-hidden rounded-xl bg-surface-alt">
-                                {imageUrl ? (
-                                  <Image
-                                    priority
-                                    src={imageUrl}
-                                    alt={item.project.name}
-                                    fill
-                                    className="object-cover transition duration-300 group-hover:scale-[1.03]"
-                                    sizes="200px"
-                                  />
-                                ) : (
-                                  <div
-                                    className={`h-full bg-gradient-to-br ${item.project.imageGradient}`}
-                                  />
-                                )}
-                              </div>
-                              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-                                {item.project.developer}
-                              </p>
+                              <DeveloperAttribution
+                                name={item.project.developer}
+                                logoUrl={item.project.developerLogo ?? item.catalog?.developerLogo}
+                              />
                               <p className="mt-1 font-semibold text-text-dark group-hover:text-brand">
                                 {item.project.name}
                               </p>

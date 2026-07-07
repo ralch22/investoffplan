@@ -118,6 +118,22 @@ export interface CatalogUnit {
   status: string;
 }
 
+export interface DeveloperSummary {
+  slug: string;
+  name: string;
+  initials: string;
+  projectCount: number;
+  unitCount: number;
+  cities: string[];
+  minPriceAed: number;
+  logoUrl?: string;
+  description?: string;
+  foundedYear?: number;
+  numProjectsOnline?: number;
+}
+
+export const DEVELOPER_PAGE_SIZE = 12;
+
 export interface DevListEntry {
   id: string;
   name: string;

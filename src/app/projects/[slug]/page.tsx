@@ -11,6 +11,7 @@ import { ProjectUnitRanges } from "@/components/project-unit-ranges";
 import { ProjectDetailCtas } from "@/components/project-detail-ctas";
 import { ProjectDetailFavorite } from "@/components/project-detail-favorite";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { DeveloperAttribution } from "@/components/developer-attribution";
 import { ShowcaseProjectCard } from "@/components/showcase-project-card";
 import { PaymentCalculator } from "@/components/payment-calculator";
 import { ProjectDetailNav } from "@/components/project-detail-nav";
@@ -145,6 +146,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const amenities = project.amenities ?? enrichmentAmenities;
 
   const heroImage = gallery[0];
+  const additionalPhotoCount = heroImage
+    ? [...new Set(gallery.filter(Boolean))].filter((src) => src !== heroImage).length
+    : gallery.length;
 
   return (
     <PageShell headerVariant="transparent">
@@ -191,7 +195,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <p className="mt-2 text-white/85">
             {cityLabel(project.city)}, United Arab Emirates
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap items-center gap-3">
             {[
               { label: "From", value: formatPrice(minPrice, "AED") },
               { label: "Payment", value: project.paymentPlan },
@@ -206,6 +210,14 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 <p className="mt-1 font-semibold">{stat.value}</p>
               </div>
             ))}
+            {additionalPhotoCount > 0 ? (
+              <a
+                href="#project-gallery"
+                className="rounded-full border border-white/35 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+              >
+                {additionalPhotoCount + 1} photos
+              </a>
+            ) : null}
           </div>
         </div>
       </section>
@@ -233,6 +245,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <ProjectGallery
           images={gallery}
           alt={project.name}
+          excludeUrls={heroImage ? [heroImage] : []}
           fallbackClassName={`bg-gradient-to-br ${project.imageGradient}`}
         />
 
@@ -253,9 +266,13 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 </span>
               ) : null}
             </div>
-            <p className="mt-2 text-muted">
-              {project.developer} · {cityLabel(project.city)}, {project.area}
-            </p>
+            <DeveloperAttribution
+              name={project.developer}
+              logoUrl={project.developerLogo}
+              suffix={` · ${cityLabel(project.city)}, ${project.area}`}
+              uppercase={false}
+              className="mt-2"
+            />
             <div className="mt-1 flex flex-wrap gap-4">
               {project.coordinates ? (
                 <Link

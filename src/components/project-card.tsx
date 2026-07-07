@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { BrochureButton } from "@/components/brochure-button";
 import { BrochureModal } from "@/components/brochure-modal";
+import { CompactMediaGallery } from "@/components/compact-media-gallery";
+import { DeveloperAttribution } from "@/components/developer-attribution";
 import { CompareCheckbox } from "@/components/compare-bar";
 import { ContactButton } from "@/components/contact-button";
 import { FavoriteButton } from "@/components/favorite-button";
@@ -20,6 +21,7 @@ import {
 } from "@/lib/format";
 import { resolveBrochureUrl } from "@/lib/brochure";
 import { unitPricePerSqft } from "@/lib/investment-metrics";
+import { getProjectGalleryImages } from "@/lib/project-gallery-images";
 import { cn } from "@/lib/cn";
 
 interface ProjectCardProps {
@@ -45,7 +47,7 @@ export function ProjectCard({
   const { project, unit, catalog } = item;
   const compareId = `${project.id}:${unit.id}` as CompareUnitId;
   const handover = catalog?.handover ?? project.handover;
-  const imageUrl = catalog?.imageUrl ?? project.imageUrl;
+  const galleryImages = getProjectGalleryImages(project, catalog);
   const isSoldOut = (catalog?.status ?? project.status) === "sold-out";
   const brochureUrl = resolveBrochureUrl(project);
   const ppsf = unitPricePerSqft({ project, unit, catalog });
@@ -73,25 +75,22 @@ export function ProjectCard({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
         className={cn(
-          "group relative flex w-full flex-col overflow-hidden rounded-2xl bg-surface-dark shadow-elevation-md transition-all duration-500 hover:-translate-y-1 hover:shadow-elevation-lg",
-          featured ? "min-h-[420px] lg:col-span-2" : "min-h-[380px] lg:w-[calc(50%-10px)]",
+          "group flex w-full flex-col overflow-hidden rounded-2xl border border-border bg-surface-dark shadow-elevation-md transition-all duration-500 hover:-translate-y-1 hover:shadow-elevation-lg",
+          featured ? "lg:col-span-2" : "lg:w-[calc(50%-10px)]",
         )}
       >
-        <Link href={`/projects/${project.slug}`} className="absolute inset-0">
-          {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt={project.name}
-              fill
-              priority={featured}
-              className={cn("object-cover transition-transform duration-700 group-hover:scale-105", isSoldOut && "grayscale-[35%]")}
-              sizes={featured ? "100vw" : "(max-width: 768px) 100vw, 50vw"}
-            />
-          ) : (
-            <div className={cn("h-full w-full bg-gradient-to-br", project.imageGradient)} />
-          )}
-          <div className="card-photo-overlay absolute inset-0" />
-        </Link>
+        <div className={cn("relative w-full shrink-0", featured ? "h-64 md:h-72" : "h-52 md:h-56")}>
+          <CompactMediaGallery
+            images={galleryImages}
+            alt={project.name}
+            projectHref={`/projects/${project.slug}`}
+            fallbackClassName={cn("bg-gradient-to-br", project.imageGradient)}
+            priority={featured}
+            soldOutGrayscale={isSoldOut}
+            sizes={featured ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 768px) 100vw, 400px"}
+            className="rounded-none"
+          />
+        </div>
 
         <div className="relative flex flex-1 flex-col p-5">
           <div className="flex items-start justify-between gap-3">
@@ -111,11 +110,13 @@ export function ProjectCard({
             </div>
           </div>
 
-          <div className="mt-auto space-y-3 pt-16">
-            <p className="text-xs font-medium uppercase tracking-wide text-white/70">
-              {project.developer}
-              {handover ? ` · Handover ${handover}` : ""}
-            </p>
+          <div className="mt-auto space-y-3">
+            <DeveloperAttribution
+              name={project.developer}
+              logoUrl={project.developerLogo}
+              suffix={handover ? ` · Handover ${handover}` : undefined}
+              variant="light"
+            />
             <h3 className="text-2xl font-semibold leading-tight text-white md:text-3xl">
               <Link href={`/projects/${project.slug}`} className="hover:text-white/90">
                 {project.name}
@@ -182,7 +183,7 @@ function ListCard({
 }: Omit<ProjectCardProps, "layout" | "featured">) {
   const { project, unit, catalog } = item;
   const compareId = `${project.id}:${unit.id}` as CompareUnitId;
-  const imageUrl = catalog?.imageUrl ?? project.imageUrl;
+  const galleryImages = getProjectGalleryImages(project, catalog);
   const handover = catalog?.handover ?? project.handover;
   const paymentLabel = catalog?.paymentPlan || project.paymentPlan || "Payment Plan";
   const isSoldOut = (catalog?.status ?? project.status) === "sold-out";
@@ -197,36 +198,30 @@ function ListCard({
       className="group overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-elevation-md"
     >
       <div className="flex flex-col md:flex-row">
-        <Link
-          href={`/projects/${project.slug}`}
-          className={cn(
-            "relative h-52 w-full shrink-0 md:h-auto md:w-80",
-            !imageUrl && `bg-gradient-to-br ${project.imageGradient}`,
-          )}
-        >
-          {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt={project.name}
-              fill
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-              sizes="320px"
-            />
-          ) : null}
-          <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark">
+        <div className="relative h-52 w-full shrink-0 md:h-auto md:w-80">
+          <CompactMediaGallery
+            images={galleryImages}
+            alt={project.name}
+            projectHref={`/projects/${project.slug}`}
+            fallbackClassName={cn("bg-gradient-to-br", project.imageGradient)}
+            sizes="320px"
+            className="h-full rounded-none md:rounded-l-2xl"
+          />
+          <span className="pointer-events-none absolute left-4 top-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark">
             {unitCount} {unitTypeLabel} unit{unitCount === 1 ? "" : "s"}
           </span>
-          <span className="absolute bottom-4 left-4 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
+          <span className="pointer-events-none absolute bottom-4 left-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
             {paymentLabel}
           </span>
-        </Link>
+        </div>
         <div className="flex flex-1 flex-col gap-3 p-5 md:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-muted">
-                {project.developer}
-                {handover ? ` · ${handover}` : ""}
-              </p>
+              <DeveloperAttribution
+                name={project.developer}
+                logoUrl={project.developerLogo ?? catalog?.developerLogo}
+                suffix={handover ? ` · ${handover}` : undefined}
+              />
               <h3 className="mt-1 text-xl font-semibold text-text-dark">
                 <Link href={`/projects/${project.slug}`} className="hover:text-brand">
                   {project.name}

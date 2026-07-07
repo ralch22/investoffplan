@@ -76,6 +76,7 @@ function slimProject(p) {
     featuredRank: p.featuredRank,
     imageGradient: p.imageGradient,
     imageUrl: p.imageUrl,
+    imageGallery: p.imageGallery,
     videoAvailable: p.videoAvailable,
     coordinates: p.coordinates,
     brochureUrl: p.brochureUrl,

@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { DeveloperLogo } from "@/components/developer-logo";
 import { useCatalog } from "@/lib/catalog-browser";
 
 export function DeveloperSpotlight() {
@@ -24,19 +24,13 @@ export function DeveloperSpotlight() {
             href={`/developers/${dev.slug}`}
             className="flex items-start gap-3 rounded-xl border border-slate-100 p-4 transition hover:border-slate-200 hover:bg-slate-50"
           >
-            {dev.logoUrl ? (
-              <Image
-                src={dev.logoUrl}
-                alt={dev.name}
-                width={40}
-                height={40}
-                className="h-10 w-10 rounded-full object-contain"
-              />
-            ) : (
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-bold text-slate-700">
-                {dev.name.slice(0, 2).toUpperCase()}
-              </span>
-            )}
+            <DeveloperLogo
+              name={dev.name}
+              logoUrl={dev.logoUrl}
+              slug={dev.slug}
+              size="md"
+              rounded="full"
+            />
             <div className="min-w-0">
               <p className="font-semibold text-slate-900">{dev.name}</p>
               {dev.numProjectsOnline != null ? (

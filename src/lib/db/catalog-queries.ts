@@ -69,7 +69,6 @@ function slimProjectForLite(project: Project): Project {
   return {
     ...project,
     units: [],
-    imageGallery: undefined,
     description: undefined,
     amenities: undefined,
   };

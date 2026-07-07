@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { DeveloperAttribution } from "@/components/developer-attribution";
 import { FavoriteButton } from "@/components/favorite-button";
 import type { Project } from "@/lib/types";
 import { formatPrice } from "@/lib/format";
@@ -72,10 +73,12 @@ export function ShowcaseProjectCard({
 
       <div className={cn("space-y-3 p-5", dark ? "text-white" : "text-text-dark")}>
         <div>
-          <p className={cn("text-xs font-medium uppercase tracking-wide", dark ? "text-white/70" : "text-muted")}>
-            {project.developer}
-            {project.area ? ` · ${project.area}` : ""}
-          </p>
+          <DeveloperAttribution
+            name={project.developer}
+            logoUrl={project.developerLogo}
+            suffix={project.area ? ` · ${project.area}` : undefined}
+            variant={dark ? "dark" : "muted"}
+          />
           <h3 className="text-lg font-semibold">
             <Link
               href={`/projects/${project.slug}`}
