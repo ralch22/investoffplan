@@ -1,5 +1,22 @@
 name: Catalog ingest
 
+# Required GitHub repository secrets for weekly catalog scrape + production D1 upsert:
+#   - CLOUDFLARE_API_TOKEN
+#       Create a scoped API token in Cloudflare dashboard (My Profile > API Tokens).
+#       Permissions needed:
+#         - Account > D1:Edit
+#         - Account > Workers Scripts:Edit  (required for wrangler getPlatformProxy --remote)
+#       Include the target account resource.
+#   - CLOUDFLARE_ACCOUNT_ID
+#       Value: 4a75e91d6fca8bc58467fb80ce1b9c2e
+#
+# Optional GitHub repository variables:
+#   - IOP_WHATSAPP  (default contact number injected into catalog rows when PF has none)
+#
+# The ingest always runs `upsert-catalog-to-d1.ts --remote` (production D1) and
+# commits updated data/catalog.json + public/data/ slices on schedule runs.
+# Use "Run workflow" with smoke=true for quick validation (no full commit side-effects).
+
 on:
   schedule:
     # Monday 04:00 UTC — weekly PF catalog refresh

@@ -22,12 +22,21 @@ Workflow: `.github/workflows/catalog-ingest.yml`
 - **Schedule:** Mondays 04:00 UTC
 - **Manual:** Actions → Catalog ingest → Run workflow (optional smoke mode)
 
-**Required secrets:**
-- `CLOUDFLARE_API_TOKEN` — D1 edit + Workers (for remote upsert via platform proxy)
+**Required GitHub repository secrets (for catalog-ingest workflow + production D1 upsert):**
+- `CLOUDFLARE_API_TOKEN`
+  - Create via Cloudflare dashboard → My Profile → API Tokens.
+  - Required permissions:
+    - Account > D1:Edit
+    - Account > Workers Scripts:Edit (for `wrangler` platform proxy / remote bindings in CI)
+  - Scope the token to the account `4a75e91d6fca8bc58467fb80ce1b9c2e`.
 - `CLOUDFLARE_ACCOUNT_ID` — `4a75e91d6fca8bc58467fb80ce1b9c2e`
 
-**Optional vars:**
-- `IOP_WHATSAPP` — default WhatsApp number written into catalog rows
+**Optional GitHub repository variables:**
+- `IOP_WHATSAPP` — default WhatsApp number written into catalog rows (when a scraped project lacks contact info)
+
+Configure at: repository **Settings > Secrets and variables > Actions**.
+
+The GitHub Actions workflow (`.github/workflows/catalog-ingest.yml`) always passes `--remote` and therefore targets the production D1 (`investoffplan-catalog`) for upserts. Scheduled runs also commit refreshed catalog snapshots back to the repo.
 
 The pipeline runs:
 1. `scrape-pf-catalog.ts` — Property Finder unit-view ingest
