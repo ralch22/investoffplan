@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { Inter, PT_Serif } from "next/font/google";
 import { SiteJsonLd } from "@/components/site-json-ld";
+import { CatalogPrefetch } from "@/components/catalog-prefetch";
 import "./globals.css";
 
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -68,6 +69,7 @@ export default function RootLayout({
       <body className="min-h-full bg-background text-foreground">
         {gaMeasurementId ? <GoogleAnalytics gaId={gaMeasurementId} /> : null}
         <SiteJsonLd />
+        <CatalogPrefetch />
         {children}
       </body>
     </html>
