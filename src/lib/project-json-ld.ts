@@ -24,6 +24,33 @@ export function buildProjectJsonLd(opts: {
 
   const brochure = resolveBrochureUrl(project);
 
+  const offers: Record<string, unknown> = {
+    "@type": "AggregateOffer",
+    lowPrice: minPrice,
+    priceCurrency: "AED",
+    offerCount: project.units.length,
+    availability:
+      project.status === "sold-out"
+        ? "https://schema.org/SoldOut"
+        : "https://schema.org/InStock",
+    seller: {
+      "@type": "Organization",
+      name: project.developer,
+    },
+  };
+
+  const additionalProperty = [
+    project.handover
+      ? { "@type": "PropertyValue", name: "Handover", value: project.handover }
+      : null,
+    project.paymentPlan
+      ? { "@type": "PropertyValue", name: "Payment plan", value: project.paymentPlan }
+      : null,
+    brochure
+      ? { "@type": "PropertyValue", name: "Brochure", value: brochure }
+      : null,
+  ].filter(Boolean);
+
   return {
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
@@ -44,31 +71,8 @@ export function buildProjectJsonLd(opts: {
           longitude: project.coordinates.lng,
         }
       : undefined,
-    offers: {
-      "@type": "AggregateOffer",
-      lowPrice: minPrice,
-      priceCurrency: "AED",
-      offerCount: project.units.length,
-      availability:
-        project.status === "sold-out"
-          ? "https://schema.org/SoldOut"
-          : "https://schema.org/InStock",
-    },
-    seller: {
-      "@type": "Organization",
-      name: project.developer,
-    },
-    additionalProperty: [
-      project.handover
-        ? { "@type": "PropertyValue", name: "Handover", value: project.handover }
-        : null,
-      project.paymentPlan
-        ? { "@type": "PropertyValue", name: "Payment plan", value: project.paymentPlan }
-        : null,
-      brochure
-        ? { "@type": "PropertyValue", name: "Brochure", value: brochure }
-        : null,
-    ].filter(Boolean),
+    offers,
+    additionalProperty: additionalProperty.length ? additionalProperty : undefined,
   };
 }
 
