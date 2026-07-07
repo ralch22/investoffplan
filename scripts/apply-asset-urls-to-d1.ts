@@ -9,27 +9,35 @@ import type { CatalogFile } from "../src/lib/catalog-core";
 import { updateAssetUrlsFromCatalog } from "../src/lib/db/update-asset-urls";
 import * as schema from "../src/lib/db/schema";
 
-const WRANGLER_CONFIG = join(process.cwd(), "wrangler.jsonc");
 const CATALOG_PATH = join(process.cwd(), "data", "catalog.json");
+
+function getWranglerConfig(): string {
+  const args = process.argv.slice(2);
+  const flag = args.find((arg) => arg.startsWith("--config="));
+  return flag
+    ? join(process.cwd(), flag.split("=")[1])
+    : join(process.cwd(), "wrangler.jsonc");
+}
 
 async function main() {
   const remote = process.argv.includes("--remote");
   const syncPublic = !process.argv.includes("--skip-sync");
   const catalog = JSON.parse(readFileSync(CATALOG_PATH, "utf8")) as CatalogFile;
+  const wranglerConfig = getWranglerConfig();
 
   if (syncPublic) {
     execSync("node scripts/sync-catalog-public.mjs", { stdio: "inherit" });
   }
 
   const { env, dispose } = await getPlatformProxy({
-    configPath: WRANGLER_CONFIG,
+    configPath: wranglerConfig,
     remoteBindings: remote,
     persist: remote ? false : undefined,
   });
 
   const d1 = env.DB as D1Database | undefined;
   if (!d1) {
-    throw new Error("D1 binding DB is missing from wrangler.jsonc");
+    throw new Error(`D1 binding DB is missing from ${wranglerConfig}`);
   }
 
   const db = drizzle(d1, { schema });

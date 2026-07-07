@@ -29,9 +29,11 @@
     "ingest:catalog:smoke": "tsx scripts/catalog-ingest-pipeline.ts --smoke --remote",
     "assets:migrate:local": "tsx scripts/migrate-assets-to-r2.ts --resume",
     "assets:migrate:remote": "tsx scripts/migrate-assets-to-r2.ts --remote --resume --concurrency=8",
+    "assets:migrate:production": "tsx scripts/migrate-assets-to-r2.ts --remote --resume --concurrency=8 --force --config=wrangler.production.jsonc",
     "assets:migrate:smoke": "tsx scripts/migrate-assets-to-r2.ts --remote --resume --limit=10 --skip-catalog",
     "assets:apply-d1:local": "tsx scripts/apply-asset-urls-to-d1.ts",
     "assets:apply-d1:remote": "tsx scripts/apply-asset-urls-to-d1.ts --remote",
+    "assets:apply-d1:production": "tsx scripts/apply-asset-urls-to-d1.ts --remote --config=wrangler.production.jsonc",
     "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {

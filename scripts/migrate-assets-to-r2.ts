@@ -16,20 +16,25 @@ import {
 import {
   getAssetsBucketName,
   putRemoteObject,
+  remoteObjectExists,
   writeTempAssetFile,
 } from "../src/lib/assets/r2-cli";
 
 const ROOT = process.cwd();
-const WRANGLER_CONFIG = join(ROOT, "wrangler.jsonc");
 const CATALOG_PATH = join(ROOT, "data", "catalog.json");
 const MANIFEST_PATH = join(ROOT, "data", "asset-migration.json");
 
 function parseArgs() {
   const args = process.argv.slice(2);
+  const configFlag = args.find((arg) => arg.startsWith("--config="));
+  const wranglerConfig = configFlag
+    ? join(ROOT, configFlag.split("=")[1])
+    : join(ROOT, "wrangler.jsonc");
   return {
     remote: args.includes("--remote"),
     dryRun: args.includes("--dry-run"),
     resume: args.includes("--resume"),
+    force: args.includes("--force"),
     updateCatalog: !args.includes("--skip-catalog"),
     limit: (() => {
       const flag = args.find((arg) => arg.startsWith("--limit="));
@@ -40,6 +45,7 @@ function parseArgs() {
       if (flag) return Math.max(1, Number(flag.split("=")[1]));
       return args.includes("--remote") ? 3 : 6;
     })(),
+    wranglerConfig,
   };
 }
 
@@ -77,8 +83,9 @@ async function processTaskLocal(
   task: AssetTask,
   manifest: AssetMigrationManifest,
   dryRun: boolean,
+  force: boolean,
 ) {
-  if (manifest.uploaded[task.key]) return;
+  if (!force && manifest.uploaded[task.key]) return;
 
   if (dryRun) {
     console.log(`[assets] dry-run upload ${task.key} <= ${task.sourceUrl}`);
@@ -117,15 +124,35 @@ async function processTaskRemote(
   task: AssetTask,
   manifest: AssetMigrationManifest,
   dryRun: boolean,
+  wranglerConfigPath: string,
+  force: boolean,
 ) {
-  if (manifest.uploaded[task.key]) return;
+  if (!force && manifest.uploaded[task.key]) return;
 
   if (dryRun) {
     console.log(`[assets] dry-run upload ${task.key} <= ${task.sourceUrl}`);
     return;
   }
 
+  const inManifest = !!manifest.uploaded[task.key];
+  if (inManifest && !force) {
+    return;
+  }
+
   try {
+    if (remoteObjectExists({ bucketName, key: task.key, cwd: ROOT, wranglerConfigPath })) {
+      if (!inManifest) {
+        manifest.uploaded[task.key] = {
+          sourceUrl: task.sourceUrl,
+          uploadedAt: new Date().toISOString(),
+          bytes: 0,
+        };
+        delete manifest.failed[task.key];
+      }
+      console.log(`[assets] skip existing in target ${task.key}`);
+      return;
+    }
+
     const { body, contentType } = await downloadAsset(task.sourceUrl);
     const tempFile = writeTempAssetFile(ROOT, task.key, body);
     putRemoteObject({
@@ -134,7 +161,7 @@ async function processTaskRemote(
       filePath: tempFile,
       contentType: contentType || task.contentType,
       cwd: ROOT,
-      wranglerConfigPath: WRANGLER_CONFIG,
+      wranglerConfigPath,
     });
 
     manifest.uploaded[task.key] = {
@@ -165,14 +192,14 @@ function recordFailure(
 }
 
 async function main() {
-  const { remote, dryRun, resume, updateCatalog, limit, concurrency } = parseArgs();
+  const { remote, dryRun, resume, force, updateCatalog, limit, concurrency, wranglerConfig } = parseArgs();
   const catalog = JSON.parse(readFileSync(CATALOG_PATH, "utf8")) as CatalogFile;
   const manifest = loadManifest();
 
   const allTasks = collectAssetTasks(catalog);
   let pending = allTasks;
 
-  if (resume) {
+  if (resume && !force) {
     pending = pending.filter((task) => !manifest.uploaded[task.key]);
   }
 
@@ -193,25 +220,25 @@ async function main() {
   let processed = 0;
 
   if (remote) {
-    const bucketName = getAssetsBucketName(WRANGLER_CONFIG);
+    const bucketName = getAssetsBucketName(wranglerConfig);
     await runPool(pending, concurrency, async (task) => {
-      await processTaskRemote(bucketName, task, manifest, dryRun);
+      await processTaskRemote(bucketName, task, manifest, dryRun, wranglerConfig, force);
       processed += 1;
       if (!dryRun && processed % 10 === 0) saveManifest(manifest);
     });
   } else {
     const { env, dispose } = await getPlatformProxy({
-      configPath: WRANGLER_CONFIG,
+      configPath: wranglerConfig,
       remoteBindings: false,
     });
 
     const bucket = env.ASSETS_R2_BUCKET as R2Bucket | undefined;
     if (!bucket) {
-      throw new Error("ASSETS_R2_BUCKET binding is missing from wrangler.jsonc");
+      throw new Error(`ASSETS_R2_BUCKET binding is missing from ${wranglerConfig}`);
     }
 
     await runPool(pending, concurrency, async (task) => {
-      await processTaskLocal(bucket, task, manifest, dryRun);
+      await processTaskLocal(bucket, task, manifest, dryRun, force);
       processed += 1;
       if (!dryRun && processed % 25 === 0) saveManifest(manifest);
     });

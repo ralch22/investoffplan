@@ -50,6 +50,13 @@ if (target === "production" && raw.includes("// \"routes\"")) {
   );
 }
 
+if (target === "production") {
+  if (!raw.includes('"ASSETS_R2_BUCKET"') || !raw.includes('"investoffplan-assets"')) {
+    console.error(`[verify-deploy] Production R2 ASSETS_R2_BUCKET binding for investoffplan-assets missing or incorrect.`);
+    ok = false;
+  }
+}
+
 if (!ok) process.exit(1);
 
 console.log(`[verify-deploy] ${target} config OK (${workerName} → ${siteUrl})`);
