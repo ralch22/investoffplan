@@ -53,7 +53,7 @@ export function hasBrochure(item: FlatUnit): boolean {
 
 export function isWaterfront(item: FlatUnit): boolean {
   const haystack = [
-    item.catalog?.locationFull,
+    item.catalog?.locationFull ?? item.project.locationFull,
     item.project.area,
     item.project.name,
   ]
