@@ -10,7 +10,9 @@ export default function cdnImageLoader({
   width,
   quality,
 }: ImageLoaderProps): string {
-  if (src.startsWith("/cdn/")) {
+  // R2 catalog assets + static brand SVGs: serve directly. Workers image optimizer
+  // cannot fetch /cdn from ASSETS, and rejects SVGs unless allowSvg is enabled.
+  if (src.startsWith("/cdn/") || src.startsWith("/brand/")) {
     return src;
   }
 
