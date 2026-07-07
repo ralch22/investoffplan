@@ -4,6 +4,7 @@ import { useState } from "react";
 import { HoneypotField } from "@/components/honeypot-field";
 import { TurnstileField } from "@/components/turnstile-field";
 import { PrimaryButton } from "@/components/ui/primary-button";
+import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import { guardFormSubmit } from "@/lib/form-guard";
 
@@ -89,6 +90,8 @@ export function ContactForm() {
       "",
       values.message.trim(),
     ].join("\n");
+
+    trackEvent(ANALYTICS_EVENTS.CONTACT_SUBMIT, { form: "contact_page" });
 
     window.location.href = `mailto:admin@investoffplan.com?subject=${encodeURIComponent(values.subject.trim())}&body=${encodeURIComponent(body)}`;
     setSubmitted(true);

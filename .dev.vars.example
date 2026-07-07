@@ -8,6 +8,10 @@ NEXT_PUBLIC_CATALOG_API=1
 # Production (wrangler.production.jsonc):
 # NEXT_PUBLIC_SITE_URL=https://investoffplan.com
 
+# GA4 — InvestOffPlan property only (do NOT reuse VaultOS G-VVQXDS8BK8)
+# Create a separate property in GA4 Admin, then set Measurement ID per environment.
+NEXT_PUBLIC_GA_MEASUREMENT_ID=
+
 # Optional — Cloudflare Turnstile (forms skip widget when site key is unset)
 NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 # Server-only — set via: npx wrangler secret put TURNSTILE_SECRET_KEY
