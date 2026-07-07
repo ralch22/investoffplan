@@ -1,9 +1,12 @@
 import type { MetadataRoute } from "next";
 import { getAreas, getDevelopers, getCatalogApi } from "@/lib/catalog";
 import { GUIDE_CARDS } from "@/lib/figma-copy";
-import { getSiteUrl } from "@/lib/site-url";
 
-const BASE = getSiteUrl();
+let base: string = process.env.NEXT_PUBLIC_SITE_URL ?? "https://investoffplan-preview.emerge-digital.workers.dev";
+if (!base || base.includes("preview") || base.includes("emerge-digital")) {
+  base = "https://investoffplan.com";
+}
+const BASE = base;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const api = await getCatalogApi();
