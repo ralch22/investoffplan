@@ -86,7 +86,18 @@ export function BrochureModal({
     } else {
       const whatsappNumber = whatsapp ? whatsapp.replace(/\D/g, "") : "971508226002";
       const text = `Hi, I just requested the brochure for ${projectName} on invest off-plan. My name is ${name.trim()}. Phone: ${phone.trim()}. Please send it to me!`;
-      const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+      // Analytics hook + UTM for WhatsApp brochure fallback CTA (GA4 ready)
+      const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}&utm_source=investoffplan&utm_medium=brochure_modal&utm_campaign=whatsapp_fallback`;
+      try {
+        const w = window as any;
+        if (w.gtag) {
+          w.gtag("event", "brochure_request", { method: "whatsapp", project: projectName });
+        }
+        (w.dataLayer = w.dataLayer || []).push({
+          event: "brochure_whatsapp_fallback",
+          project_name: projectName,
+        });
+      } catch {}
       window.open(waUrl, "_blank", "noopener,noreferrer");
     }
 
@@ -121,7 +132,7 @@ export function BrochureModal({
         <p className="mt-2 text-sm text-muted">
           {hasPdf
             ? `Get the official PDF for ${projectName}`
-            : `Request the brochure for ${projectName} — we'll send it on WhatsApp`}
+            : `A broker will send the brochure for ${projectName} via WhatsApp`}
         </p>
 
         <form onSubmit={handleSubmit} className="relative mt-6 space-y-4" noValidate>
@@ -182,7 +193,7 @@ export function BrochureModal({
               ? "Submitting…"
               : hasPdf
                 ? "Download PDF brochure"
-                : "Request via WhatsApp"}
+                : "Request brochure via WhatsApp"}
           </button>
         </form>
       </div>
