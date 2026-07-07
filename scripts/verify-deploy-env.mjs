@@ -44,6 +44,13 @@ if (siteUrl !== cfg.siteUrl) {
   ok = false;
 }
 
+const catalogMatch = raw.match(/"NEXT_PUBLIC_CATALOG_API"\s*:\s*"([^"]+)"/);
+const catalogApi = catalogMatch?.[1];
+if (catalogApi !== "1") {
+  console.error(`[verify-deploy] Expected NEXT_PUBLIC_CATALOG_API "1", found "${catalogApi ?? "missing"}".`);
+  ok = false;
+}
+
 if (target === "production" && raw.includes("// \"routes\"")) {
   console.warn(
     "[verify-deploy] Production routes are still commented out — uncomment in wrangler.production.jsonc when the zone is live.",
