@@ -59,6 +59,7 @@ export function BrandLogo({
       sizes={logo.sizes}
       className={cn("h-auto w-auto max-w-full", className)}
       priority={priority}
+      unoptimized
     />
   );
 }
