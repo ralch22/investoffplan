@@ -87,7 +87,7 @@
 | Project card grid (beds, type, price, plan, WA) | Yes | `DeveloperProjectCard` | **Done** |
 | Pagination | Yes | `DEVELOPER_PAGE_SIZE` (12) | **Done** |
 | SEO about + FAQ block | Yes | Sanitized HTML + FAQ details | **Done** |
-| Full developer portfolio count | 222 (Emaar) | 22 in catalog; portfolio note when `numProjectsOnline` set | P2 (ingest) |
+| Full developer portfolio count | 222 (Emaar) | 222 via `scrape:dev-portfolio` | **Done** (Emaar) |
 
 ### DataGuru parity (`/tools`)
 
