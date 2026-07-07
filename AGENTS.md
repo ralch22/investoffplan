@@ -33,7 +33,7 @@ Two agents work this repo in parallel. Read this before editing to avoid conflic
 - Turnstile + honeypot on all forms; `/api/turnstile/verify`, `/api/health`
 - SSR compare units (`compare/page.tsx`), map deep-link + server map pins
 - Favorites slim API (`/api/projects/by-slugs`) — no 8MB catalog download
-- `catalog-map.json` + `catalog-lite.json` slices; lite-first client load (~3.5MB vs 8MB)
+- `catalog-map.json` + `catalog-lite.json` slices; lite-first client load (~0.87MB vs 8MB; issue #14 trim)
 - projects inline map SSR pins
 - Compare `localStorage` init fix; insights brochure CTA; production `wrangler.production.jsonc`
 - LCP: hero `priority`, removed `unoptimized` on key PF images; gallery `sizes`; sitemap `scrapedAt`

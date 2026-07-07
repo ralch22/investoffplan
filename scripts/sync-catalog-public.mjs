@@ -39,6 +39,20 @@ const mapProjects = catalog.projects
 const mapFile = { scrapedAt: catalog.scrapedAt, projects: mapProjects };
 writeFileSync(join(outDir, "catalog-map.json"), `${JSON.stringify(mapFile)}\n`, "utf8");
 
+// Build locationFull (project-level) and minPrice for lite slice
+const locationByProjectId = {};
+const minPriceByProjectId = {};
+for (const u of catalog.units || []) {
+  if (u.locationFull && !locationByProjectId[u.projectId]) {
+    locationByProjectId[u.projectId] = u.locationFull;
+  }
+}
+for (const p of catalog.projects || []) {
+  if (p.units && p.units.length) {
+    minPriceByProjectId[p.id] = Math.min(...p.units.map((u) => u.launchPriceAed));
+  }
+}
+
 function slimProject(p) {
   return {
     id: p.id,
@@ -51,6 +65,8 @@ function slimProject(p) {
     city: p.city,
     citySlug: p.citySlug,
     area: p.area,
+    locationFull: p.locationFull || locationByProjectId[p.id],
+    minPriceAed: p.minPriceAed || minPriceByProjectId[p.id],
     status: p.status,
     handover: p.handover,
     paymentPlan: p.paymentPlan,
@@ -69,6 +85,21 @@ function slimProject(p) {
   };
 }
 
+function slimUnit(u) {
+  // Keep only unit-variant fields + project ref. Drop imageGallery (heavy, PDP only) and all
+  // duplicated project metadata (locationFull, prices etc now on project or fallbacks).
+  return {
+    id: u.id,
+    projectId: u.projectId,
+    beds: u.beds,
+    sqftMin: u.sqftMin,
+    sqftMax: u.sqftMax,
+    launchPriceAed: u.launchPriceAed,
+    launchPriceMaxAed: u.launchPriceMaxAed,
+    propertyType: u.propertyType,
+  };
+}
+
 const liteCatalog = {
   version: catalog.version,
   unitCount: catalog.unitCount,
@@ -78,7 +109,7 @@ const liteCatalog = {
   developerSerpLinks: catalog.developerSerpLinks,
   devList: catalog.devList,
   projects: catalog.projects.map(slimProject),
-  units: catalog.units,
+  units: catalog.units.map(slimUnit),
 };
 
 writeFileSync(
