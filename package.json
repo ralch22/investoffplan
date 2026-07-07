@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "CLOUDFLARE_ACCOUNT_ID=4a75e91d6fca8bc58467fb80ce1b9c2e next dev",
     "prebuild": "node scripts/sync-catalog-public.mjs",
     "build": "NEXT_IS_BUILD=1 next build",
     "start": "next start",

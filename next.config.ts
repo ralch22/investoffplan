@@ -65,4 +65,8 @@ const nextConfig: NextConfig = {
 
 export default nextConfig;
 
-initOpenNextCloudflareForDev();
+// Local `next dev` uses Miniflare by default — ASSETS_R2_BUCKET is empty, so /cdn/* 404s.
+// Remote bindings point dev at investoffplan-preview-assets (same bucket as preview Worker).
+void initOpenNextCloudflareForDev({
+  remoteBindings: process.env.NODE_ENV === "development",
+});

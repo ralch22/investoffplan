@@ -37,6 +37,7 @@ yarn-error.log*
 
 # asset migration scratch (large; not for git)
 .tmp/
+data/.asset-migration.lock
 
 # wrangler local dev state
 .wrangler/

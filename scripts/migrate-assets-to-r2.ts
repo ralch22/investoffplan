@@ -1,6 +1,6 @@
 /// <reference path="../cloudflare-env.d.ts" />
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { getPlatformProxy } from "wrangler";
 import type { CatalogFile } from "../src/lib/catalog-core";
@@ -23,6 +23,32 @@ import {
 const ROOT = process.cwd();
 const CATALOG_PATH = join(ROOT, "data", "catalog.json");
 const MANIFEST_PATH = join(ROOT, "data", "asset-migration.json");
+const LOCK_PATH = join(ROOT, "data", ".asset-migration.lock");
+
+function acquireMigrationLock() {
+  if (existsSync(LOCK_PATH)) {
+    let holder = "unknown";
+    try {
+      holder = readFileSync(LOCK_PATH, "utf8").trim();
+    } catch {
+      // ignore stale read errors
+    }
+    console.error(
+      `[assets] Migration lock held (${LOCK_PATH}, pid ${holder}). ` +
+        "Another terminal may be running assets:migrate — wait for it to finish.",
+    );
+    process.exit(1);
+  }
+  writeFileSync(LOCK_PATH, `${process.pid}\n`, { flag: "wx" });
+}
+
+function releaseMigrationLock() {
+  try {
+    unlinkSync(LOCK_PATH);
+  } catch {
+    // lock already removed
+  }
+}
 
 function parseArgs() {
   const args = process.argv.slice(2);
@@ -192,6 +218,10 @@ function recordFailure(
 }
 
 async function main() {
+  if (!process.argv.includes("--dry-run")) {
+    acquireMigrationLock();
+  }
+
   const { remote, dryRun, resume, force, updateCatalog, limit, concurrency, wranglerConfig } = parseArgs();
   const catalog = JSON.parse(readFileSync(CATALOG_PATH, "utf8")) as CatalogFile;
   const manifest = loadManifest();
@@ -261,7 +291,13 @@ async function main() {
   console.log(`[assets] Done — uploaded=${uploaded} failed=${failed}`);
 }
 
-main().catch((error) => {
-  console.error("[assets] Migration failed:", error);
-  process.exit(1);
-});
+main()
+  .catch((error) => {
+    console.error("[assets] Migration failed:", error);
+    process.exit(1);
+  })
+  .finally(() => {
+    if (!process.argv.includes("--dry-run")) {
+      releaseMigrationLock();
+    }
+  });

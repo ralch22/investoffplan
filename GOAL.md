@@ -120,6 +120,8 @@
 - **Antigravity lane:** `tests/**`, `compare-bar`, `mobile-filter-sheet`, `project-about` styling — coordinate on PDP.
 - **Verify before merge:** `npm run build && npm run test:e2e`
 - **Deploy preview after material UI changes.**
+- **One terminal for long jobs:** never run concurrent `npm run deploy`, `npm run build`, or `assets:migrate:*` (`.next` races + manifest lock).
+- **Images / CDN:** catalog URLs are `/cdn/*` → `investoffplan-preview-assets` R2. Preview Worker serves them; local `next dev` uses **remote R2 bindings** (see `next.config.ts`). Do not run two `assets:migrate:remote` sessions — manifest uses `data/.asset-migration.lock`.
 
 ---
 
