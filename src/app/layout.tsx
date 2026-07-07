@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, PT_Serif } from "next/font/google";
 import { SiteJsonLd } from "@/components/site-json-ld";
+import { CatalogPrefetch } from "@/components/catalog-prefetch";
 import "./globals.css";
 
 const inter = Inter({
@@ -64,6 +65,7 @@ export default function RootLayout({
     >
       <body className="min-h-full bg-background text-foreground">
         <SiteJsonLd />
+        <CatalogPrefetch />
         {children}
       </body>
     </html>
