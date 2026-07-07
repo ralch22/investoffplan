@@ -1,6 +1,6 @@
 import { asc, eq, inArray } from "drizzle-orm";
 import { createCatalogApi, type CatalogFile, PAGE_SIZE } from "@/lib/catalog-core";
-import type { CollectionFilter, Project, ProjectFilters, SortOption, ViewMode } from "@/lib/types";
+import type { CatalogUnit, CollectionFilter, Project, ProjectFilters, SortOption, ViewMode } from "@/lib/types";
 import { getMapProjectsFromList } from "@/lib/map-data";
 import type { CatalogDatabase } from "./client";
 import { rowToCatalogUnit, rowToDevListEntry, rowToProject } from "./mappers";
@@ -75,13 +75,47 @@ function slimProjectForLite(project: Project): Project {
   };
 }
 
+function slimUnitForLite(u: any) {
+  // Minimal unit for lite slice (grid perf). Heavy fields + project dups stripped;
+  // locationFull and minPriceAed live on project in lite.
+  return {
+    id: u.id,
+    projectId: u.projectId,
+    beds: u.beds,
+    sqftMin: u.sqftMin,
+    sqftMax: u.sqftMax,
+    launchPriceAed: u.launchPriceAed,
+    launchPriceMaxAed: u.launchPriceMaxAed,
+    propertyType: u.propertyType,
+  };
+}
+
 export async function fetchCatalogLite(db: CatalogDatabase): Promise<CatalogFile | null> {
   const full = await fetchCatalogFile(db);
   if (!full) return null;
 
+  const locMap = new Map<string, string>();
+  (full.units || []).forEach((u: any) => {
+    if (u.locationFull && !locMap.has(u.projectId)) {
+      locMap.set(u.projectId, u.locationFull);
+    }
+  });
+
+  const slimProjects = full.projects.map((p) => {
+    const sp = slimProjectForLite(p);
+    if (!sp.locationFull) {
+      sp.locationFull = locMap.get(p.id);
+    }
+    if (sp.minPriceAed == null && p.units && p.units.length > 0) {
+      sp.minPriceAed = Math.min(...p.units.map((u: any) => u.launchPriceAed));
+    }
+    return sp;
+  });
+
   return {
     ...full,
-    projects: full.projects.map(slimProjectForLite),
+    projects: slimProjects,
+    units: full.units.map(slimUnitForLite) as CatalogUnit[],
   };
 }
 

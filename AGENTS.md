@@ -26,14 +26,14 @@ Two agents work this repo in parallel. Read this before editing to avoid conflic
 ## Grok (Cursor) — current focus
 
 **Completed:**
-- **Track B Phase 3:** R2 asset buckets (`investoffplan-preview-assets`, `investoffplan-assets`), `/cdn/*` route, migration scripts (`migrate-assets-to-r2.ts`, `apply-asset-urls-to-d1.ts`)
+- **Track B Phase 3:** R2 asset buckets (`investoffplan-preview-assets`, `investoffplan-assets`), `/cdn/*` route, migration scripts (`migrate-assets-to-r2.ts`, `apply-asset-urls-to-d1.ts`); prod R2 wiring (config support + `assets:migrate:production` / `assets:apply-d1:production`), D1 apply for prod cutover of /cdn/* asset URLs.
 - **Track B Phase 2:** Upsert logic (`catalog-upsert.ts`), ingest pipeline, GitHub Actions weekly scrape (`.github/workflows/catalog-ingest.yml`)
 - **Track B Phase 1 (live on preview):** D1 + Drizzle, Read API, remote seed, `NEXT_PUBLIC_CATALOG_API=1`, client/server dynamic catalog wiring, preview deploy
 - **Track B Phase 1:** Cloudflare D1 + Drizzle schema, migration, seed script, Read API (`/api/catalog/*`), `docs/catalog-api.md`
 - Turnstile + honeypot on all forms; `/api/turnstile/verify`, `/api/health`
 - SSR compare units (`compare/page.tsx`), map deep-link + server map pins
 - Favorites slim API (`/api/projects/by-slugs`) — no 8MB catalog download
-- `catalog-map.json` + `catalog-lite.json` slices; lite-first client load (~3.5MB vs 8MB)
+- `catalog-map.json` + `catalog-lite.json` slices; lite-first client load (~0.87MB vs 8MB; issue #14 trim)
 - projects inline map SSR pins
 - Compare `localStorage` init fix; insights brochure CTA; production `wrangler.production.jsonc`
 - LCP: hero `priority`, removed `unoptimized` on key PF images; gallery `sizes`; sitemap `scrapedAt`
@@ -69,3 +69,7 @@ Preview: https://investoffplan-preview.emerge-digital.workers.dev
 ```bash
 npm run build && npm run test:e2e
 ```
+
+## PR checks (branch protection)
+
+PRs to `main` must pass the GitHub Actions job **`build and e2e`** (workflow: `.github/workflows/ci.yml`). Configure that check name in branch protection so AO workers cannot merge without a green build + Playwright e2e run.

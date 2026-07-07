@@ -185,7 +185,7 @@ export function createCatalogApi(raw: CatalogFile): CatalogApi {
           project.name,
           project.developer,
           project.area,
-          cu?.locationFull,
+          cu?.locationFull ?? project.locationFull,
           project.city,
         ]
           .filter(Boolean)

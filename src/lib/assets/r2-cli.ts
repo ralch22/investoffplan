@@ -49,6 +49,46 @@ export function putRemoteObject(opts: {
   );
 }
 
+export function remoteObjectExists(opts: {
+  bucketName: string;
+  key: string;
+  cwd: string;
+  wranglerConfigPath: string;
+}): boolean {
+  const { bucketName, key, cwd, wranglerConfigPath } = opts;
+  const accountId = getAccountId(wranglerConfigPath);
+  try {
+    const out = execFileSync(
+      "npx",
+      [
+        "wrangler",
+        "r2",
+        "object",
+        "list",
+        bucketName,
+        `--prefix=${key}`,
+        "--remote",
+        "--limit=1",
+        "--json",
+      ],
+      {
+        cwd,
+        stdio: ["ignore", "pipe", "ignore"],
+        env: {
+          ...process.env,
+          CLOUDFLARE_ACCOUNT_ID: accountId,
+        },
+        encoding: "utf8",
+      },
+    );
+    const parsed = out ? JSON.parse(out) : [];
+    const items = Array.isArray(parsed) ? parsed : [];
+    return items.some((item: any) => (item.key || item.name) === key);
+  } catch {
+    return false;
+  }
+}
+
 function getAccountId(wranglerConfigPath: string): string {
   const raw = readFileSync(wranglerConfigPath, "utf8");
   const match = raw.match(/"account_id"\s*:\s*"([^"]+)"/);

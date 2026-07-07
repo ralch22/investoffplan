@@ -64,6 +64,8 @@ export interface Project {
   city: Exclude<CitySlug, "all">;
   citySlug?: string;
   area: string;
+  locationFull?: string;
+  minPriceAed?: number; // populated on lite slice for map support without units
   status: "off-plan" | "under-construction" | "ready" | "sold-out";
   handover?: string;
   paymentPlan: string;
