@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CurrencySelector } from "@/components/currency-selector";
 import { MobileNav } from "@/components/mobile-nav";
 import { PrimaryButton } from "@/components/ui/primary-button";
@@ -13,6 +13,7 @@ import { cn } from "@/lib/cn";
 
 const NAV = [
   { href: "/projects", label: "Projects" },
+  { href: "/tools", label: "Data toolkit" },
   { href: "/developers", label: "Developers" },
   { href: "/areas", label: "Areas" },
   { href: "/insights", label: "Guides" },
@@ -39,22 +40,37 @@ export function SiteHeader({
 }: SiteHeaderProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const favoritesCount = useFavoritesCount();
   const isTransparent = variant === "transparent";
+  const showSolidHeader = !isTransparent || scrolled;
+
+  useEffect(() => {
+    if (!isTransparent) return;
+
+    const onScroll = () => setScrolled(window.scrollY > 48);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isTransparent]);
 
   return (
     <>
       <header
         className={cn(
-          isTransparent
-            ? "absolute inset-x-0 top-0 z-[var(--z-header)]"
-            : "sticky top-0 z-[var(--z-header)] border-b border-border/80 bg-surface/90 shadow-elevation-sm backdrop-blur-xl",
+          "inset-x-0 top-0 z-[var(--z-header)] transition-[background-color,box-shadow,border-color] duration-300",
+          isTransparent ? "absolute" : "sticky",
+          showSolidHeader
+            ? "border-b border-border/80 bg-surface/95 shadow-elevation-sm backdrop-blur-xl"
+            : isTransparent
+              ? "border-b border-transparent bg-transparent"
+              : "",
         )}
       >
         <div className="mx-auto flex max-w-[1200px] items-center gap-3 px-5 py-3 md:px-8">
           <Link href="/" className="focus-ring flex shrink-0 items-center rounded-sm">
             <BrandLogo
-              variant={isTransparent ? "horizontal-white" : "horizontal-dark"}
+              variant={showSolidHeader ? "horizontal-dark" : "horizontal-white"}
               className="h-8 w-auto sm:h-9"
             />
           </Link>
@@ -71,7 +87,7 @@ export function SiteHeader({
                   href={item.href}
                   className={cn(
                     "focus-ring rounded-lg px-3 py-2 text-sm font-medium transition",
-                    isTransparent
+                    !showSolidHeader
                       ? active
                         ? "bg-white/15 text-white"
                         : "text-white/85 hover:bg-white/10 hover:text-white"
@@ -98,7 +114,7 @@ export function SiteHeader({
               className={cn(
                 "relative rounded-full border transition focus-ring iop-btn-press",
                 "inline-flex h-10 w-10 items-center justify-center sm:h-auto sm:w-auto sm:px-3 sm:py-2 sm:text-xs sm:font-semibold",
-                isTransparent
+                !showSolidHeader
                   ? "border-white/30 text-white/90 hover:border-white hover:bg-white/10"
                   : "border-border text-muted hover:border-brand hover:text-brand",
               )}
@@ -111,7 +127,7 @@ export function SiteHeader({
                 <span
                   className={cn(
                     "absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white",
-                    isTransparent ? "bg-white text-brand" : "bg-brand",
+                    !showSolidHeader ? "bg-white text-brand" : "bg-brand",
                   )}
                 >
                   {favoritesCount}
@@ -135,7 +151,7 @@ export function SiteHeader({
               type="button"
               className={cn(
                 "iop-btn-press focus-ring flex h-10 w-10 items-center justify-center rounded-xl border lg:hidden",
-                isTransparent
+                !showSolidHeader
                   ? "border-white/30 text-white"
                   : "border-border text-text-dark",
               )}

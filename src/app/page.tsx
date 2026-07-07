@@ -113,9 +113,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="overflow-hidden border-b border-border bg-white py-5">
+      <section className="overflow-hidden border-b border-border bg-white py-5 marquee-mask">
         <div className="relative flex items-center gap-14">
-          <div className="flex animate-[marquee_40s_linear_infinite] items-center gap-14 whitespace-nowrap">
+          <div className="flex animate-[marquee_40s_linear_infinite] items-center gap-14 whitespace-nowrap hover:[animation-play-state:paused]">
             {[...topDevelopers, ...topDevelopers].map((dev, i) => (
               <Link
                 key={`${dev.slug}-${i}`}
@@ -129,22 +129,24 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
+        <p className="section-eyebrow text-center">Live catalog intelligence</p>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: "Unit options", value: stats.unitCount.toLocaleString() },
-            { label: "Brochure PDFs", value: analytics.brochureCount.toLocaleString() },
-            { label: "Map-ready projects", value: analytics.withCoords.toLocaleString() },
-            { label: "Avg AED/sqft", value: analytics.avgPpsf.toLocaleString() },
+            { label: "Unit options", value: stats.unitCount.toLocaleString(), hint: "Across all emirates" },
+            { label: "Brochure PDFs", value: analytics.brochureCount.toLocaleString(), hint: "Download or WhatsApp" },
+            { label: "Map-ready projects", value: analytics.withCoords.toLocaleString(), hint: "With coordinates" },
+            { label: "Avg AED/sqft", value: analytics.avgPpsf.toLocaleString(), hint: "Catalog benchmark" },
           ].map((item) => (
             <div
               key={item.label}
-              className="rounded-2xl border border-border bg-surface p-5 shadow-elevation-sm transition hover:shadow-elevation-md"
+              className="group rounded-2xl border border-border bg-surface p-5 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-elevation-md"
             >
-              <p className="text-3xl font-semibold tabular-nums text-brand">
+              <p className="font-display text-3xl font-semibold tabular-nums text-brand md:text-4xl">
                 {item.value}
               </p>
-              <p className="mt-1 text-sm text-muted">{item.label}</p>
+              <p className="mt-1 text-sm font-semibold text-text-dark">{item.label}</p>
+              <p className="mt-0.5 text-xs text-muted-light">{item.hint}</p>
             </div>
           ))}
         </div>
@@ -166,22 +168,26 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {topAreas.map((area) => (
+            {topAreas.map((area, index) => (
               <Link
                 key={area.slug}
                 href={`/areas/${area.slug}`}
-                className="group overflow-hidden rounded-2xl border border-border bg-white transition hover:shadow-lg"
+                className="group overflow-hidden rounded-2xl border border-border bg-white transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
               >
-                <div className="p-6">
-                  <p className="text-xl font-semibold text-text-dark group-hover:text-brand">
+                <div className="area-card-accent relative px-6 py-5">
+                  <span className="font-display text-5xl font-semibold leading-none text-brand/15">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <p className="mt-3 text-xl font-semibold text-text-dark transition group-hover:text-brand">
                     {area.name}
                   </p>
                   <p className="mt-2 text-sm text-muted">
                     {area.cityLabel} · {area.projectCount} projects
                   </p>
-                  <span className="mt-4 inline-block text-sm font-semibold text-brand">
-                    Explore →
-                  </span>
+                </div>
+                <div className="flex items-center justify-between border-t border-border px-6 py-4">
+                  <span className="text-sm font-semibold text-brand">Explore area</span>
+                  <span className="text-brand transition group-hover:translate-x-0.5" aria-hidden>→</span>
                 </div>
               </Link>
             ))}
@@ -207,9 +213,14 @@ export default async function HomePage() {
               <Link
                 key={type.label}
                 href={type.href}
-                className="rounded-2xl border border-border bg-white p-6 transition hover:border-brand hover:shadow-md"
+                className="group rounded-2xl border border-border bg-white p-6 transition hover:-translate-y-0.5 hover:border-brand hover:shadow-elevation-md"
               >
-                <p className="text-lg font-semibold text-text-dark">{type.label}</p>
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-muted text-brand">
+                  <PropertyTypeIcon label={type.label} />
+                </span>
+                <p className="mt-4 text-lg font-semibold text-text-dark group-hover:text-brand">
+                  {type.label}
+                </p>
                 <p className="mt-2 text-sm text-muted">
                   Browse off-plan {type.label.toLowerCase()}
                 </p>
@@ -257,11 +268,11 @@ export default async function HomePage() {
           <h2 className="font-display text-3xl font-semibold text-text-dark md:text-4xl">
             Frequently <em className="italic">Asked Questions.</em>
           </h2>
-          <div className="mt-8 space-y-4">
+          <div className="mt-8 space-y-3">
             {FAQS.map((faq) => (
               <details
                 key={faq.q}
-                className="rounded-2xl border border-border bg-white p-5"
+                className="faq-details rounded-2xl border border-border bg-white p-5 transition"
               >
                 <summary className="cursor-pointer font-semibold text-text-dark">
                   {faq.q}
@@ -289,5 +300,20 @@ export default async function HomePage() {
         </div>
       </section>
     </PageShell>
+  );
+}
+
+function PropertyTypeIcon({ label }: { label: string }) {
+  const paths: Record<string, string> = {
+    Apartments: "M4 18V8l8-5 8 5v10M8 18v-4h8v4",
+    Townhouses: "M3 12l9-7 9 7v8H3zM9 20v-6h6v6",
+    Villas: "M4 10l8-6 8 6v10H4zM10 20v-5h4v5",
+    Penthouses: "M4 14h16M6 14V8h12v6M8 20h8",
+  };
+  const d = paths[label] ?? "M4 12h16M4 6h16M4 18h16";
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden>
+      <path d={d} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }

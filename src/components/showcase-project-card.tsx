@@ -63,15 +63,18 @@ export function ShowcaseProjectCard({
         <span className="absolute left-4 top-4 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
           {badge}
         </span>
-        <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-text-dark">
-          {project.developer}
-        </span>
+        {project.handover ? (
+          <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-text-dark">
+            {project.handover}
+          </span>
+        ) : null}
       </Link>
 
       <div className={cn("space-y-3 p-5", dark ? "text-white" : "text-text-dark")}>
         <div>
-          <p className={cn("text-xs font-medium uppercase", dark ? "text-white/70" : "text-muted")}>
+          <p className={cn("text-xs font-medium uppercase tracking-wide", dark ? "text-white/70" : "text-muted")}>
             {project.developer}
+            {project.area ? ` · ${project.area}` : ""}
           </p>
           <h3 className="text-lg font-semibold">
             <Link

@@ -26,7 +26,7 @@ export function PrimaryButton({
     "iop-btn-press focus-ring inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold",
     variant === "solid"
       ? "bg-brand text-white shadow-elevation-sm hover:bg-brand-dark"
-      : "border border-white/50 bg-white/10 text-white backdrop-blur-sm hover:bg-white/20",
+      : "border border-white/50 bg-white/10 text-white backdrop-blur-sm hover:border-white hover:bg-white/20",
     disabled && "pointer-events-none opacity-60",
     className,
   );

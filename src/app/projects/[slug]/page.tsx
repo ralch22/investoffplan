@@ -4,15 +4,23 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { ProjectAbout } from "@/components/project-about";
+import { ProjectKeyFacts } from "@/components/project-key-facts";
+import { ProjectLocationSection } from "@/components/project-location-section";
+import { ProjectTimeline } from "@/components/project-timeline";
+import { ProjectUnitRanges } from "@/components/project-unit-ranges";
 import { ProjectDetailCtas } from "@/components/project-detail-ctas";
 import { ProjectDetailFavorite } from "@/components/project-detail-favorite";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ShowcaseProjectCard } from "@/components/showcase-project-card";
 import { PaymentCalculator } from "@/components/payment-calculator";
 import { ProjectDetailNav } from "@/components/project-detail-nav";
+import { PROJECT_DETAIL_SECTIONS } from "@/lib/project-detail-sections";
 import { ProjectUnitsTable } from "@/components/project-units-table";
 import { ShareButton } from "@/components/share-button";
-import { getProjectBySlug } from "@/lib/catalog";
+import { getProjectBySlug, slugify } from "@/lib/catalog";
+import { getAreaInsightsForProject } from "@/lib/area-insights";
+import { ProjectLivingInArea } from "@/components/project-living-in-area";
+import { ProjectMasterplan } from "@/components/project-masterplan";
 import { ProjectGallery } from "@/components/project-gallery";
 import { getEnrichment } from "@/lib/enrichments";
 import {
@@ -107,6 +115,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const related = api.projects.filter(
     (p) => p.slug !== slug && p.city === project.city,
   ).slice(0, 3);
+  const areaInsights = await getAreaInsightsForProject(slugify(project.area));
 
   const siteUrl = getSiteUrl();
   const projectUrl = `${siteUrl}/projects/${slug}`;
@@ -210,7 +219,14 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           ]}
         />
         <div className="mt-4">
-          <ProjectDetailNav />
+          <ProjectDetailNav
+            sections={PROJECT_DETAIL_SECTIONS.filter((section) => {
+              if (section.id === "masterplan") return Boolean(project.masterPlanUrl);
+              if (section.id === "living-in-area") return Boolean(areaInsights);
+              if (section.id === "related") return related.length > 0;
+              return true;
+            })}
+          />
         </div>
 
         <div id="overview">
@@ -291,6 +307,11 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
 
 
+        <div id="key-facts" className="scroll-mt-24">
+          <ProjectKeyFacts project={project} />
+          <ProjectTimeline project={project} />
+        </div>
+
         <ProjectAbout
           enrichment={enrichment}
           brochureUrl={project.brochureUrl ?? enrichment?.brochureUrl}
@@ -298,7 +319,15 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           description={project.description}
           amenities={amenities}
         />
+
+        <ProjectUnitRanges units={project.units} />
+
+        <ProjectMasterplan project={project} />
         </div>
+
+        {areaInsights ? <ProjectLivingInArea insights={areaInsights} /> : null}
+
+        <ProjectLocationSection project={project} />
 
         <div id="calculator" className="mt-10 scroll-mt-24">
           <PaymentCalculator

@@ -209,8 +209,8 @@ export function ProjectsPage({
   const meta = api?.meta ?? initialMeta;
   const heading =
     viewMode === "unit"
-      ? `${meta.unitCount.toLocaleString()} Off-Plan Unit Options in UAE`
-      : `${meta.projectCount.toLocaleString()} New Off-Plan Projects in UAE`;
+      ? `${meta.unitCount.toLocaleString()} Total unit options in UAE`
+      : `${meta.projectCount.toLocaleString()} New off-plan projects in UAE`;
 
   const locationLabel =
     filters.city !== "all"
@@ -370,7 +370,7 @@ export function ProjectsPage({
                 }}
                 className="rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
               >
-                {viewMode === "unit" ? "Project view" : "Unit view"}
+                {viewMode === "unit" ? "Show project view" : "Show unit view"}
               </button>
               <SortSelect value={sort} onChange={setSort} />
             </div>

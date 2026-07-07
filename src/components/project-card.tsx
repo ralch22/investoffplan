@@ -51,6 +51,8 @@ export function ProjectCard({
   const ppsf = unitPricePerSqft({ project, unit, catalog });
   const paymentLabel = catalog?.paymentPlan || project.paymentPlan || "Payment Plan";
   const statusLabel = isSoldOut ? "Sold out" : project.isPremium ? "Premium" : "Available";
+  const unitCount = catalog?.projectUnitCount ?? project.unitCount;
+  const unitTypeLabel = unit.propertyType.toLowerCase();
 
   if (layout === "list") {
     return (
@@ -93,9 +95,14 @@ export function ProjectCard({
 
         <div className="relative flex flex-1 flex-col p-5">
           <div className="flex items-start justify-between gap-3">
-            <span className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white shadow-sm">
-              {paymentLabel}
-            </span>
+            <div className="flex flex-wrap gap-2">
+              <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark shadow-sm">
+                {unitCount} {unitTypeLabel} unit{unitCount === 1 ? "" : "s"}
+              </span>
+              <span className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white shadow-sm">
+                {paymentLabel}
+              </span>
+            </div>
             <div className="flex items-center gap-2">
               <span className="glass-pill rounded-full px-3 py-1 text-xs font-medium text-white">
                 {statusLabel}
@@ -179,6 +186,8 @@ function ListCard({
   const handover = catalog?.handover ?? project.handover;
   const paymentLabel = catalog?.paymentPlan || project.paymentPlan || "Payment Plan";
   const isSoldOut = (catalog?.status ?? project.status) === "sold-out";
+  const unitCount = catalog?.projectUnitCount ?? project.unitCount;
+  const unitTypeLabel = unit.propertyType.toLowerCase();
 
   return (
     <motion.article
@@ -204,8 +213,8 @@ function ListCard({
               sizes="320px"
             />
           ) : null}
-          <span className="absolute left-4 top-4 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
-            {isSoldOut ? "Sold out" : "Available"}
+          <span className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark">
+            {unitCount} {unitTypeLabel} unit{unitCount === 1 ? "" : "s"}
           </span>
           <span className="absolute bottom-4 left-4 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
             {paymentLabel}

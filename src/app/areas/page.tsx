@@ -78,18 +78,36 @@ export default async function AreasPage() {
         </div>
       </section>
 
+      <section className="border-t border-border bg-surface-alt py-14">
+        <div className="mx-auto max-w-[1200px] px-5 md:px-8">
+          <h2 className="font-display text-2xl font-semibold text-text-dark md:text-3xl">
+            Community insights<span className="text-brand">.</span>
+          </h2>
+          <p className="mt-3 max-w-xl text-sm text-muted">
+            Browse areas by lifestyle — family-friendly, waterfront, urban, golf, and more —
+            like Property Finder DataGuru, powered by our off-plan catalog.
+          </p>
+          <PrimaryButton href="/tools/communities" className="mt-6">
+            Explore by lifestyle
+          </PrimaryButton>
+        </div>
+      </section>
+
       <section className="bg-surface-darker py-16 text-white">
         <div className="mx-auto max-w-[1200px] px-5 md:px-8">
           <h2 className="font-display text-3xl font-semibold md:text-4xl">
             Search The Map<span className="text-brand">.</span>
           </h2>
           <p className="mt-3 max-w-xl text-white/80">
-            Explore {areas.length}+ communities with live project pins and searchable
-            inventory.
+            Explore communities with launch-price tiers or project pins — two map views for
+            budget and inventory.
           </p>
-          <PrimaryButton href="/map" className="mt-6">
-            Open map
-          </PrimaryButton>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <PrimaryButton href="/tools/price-map">Price map</PrimaryButton>
+            <PrimaryButton href="/map" variant="ghost" showArrow={false}>
+              Project map
+            </PrimaryButton>
+          </div>
         </div>
       </section>
     </PageShell>

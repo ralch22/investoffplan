@@ -1,4 +1,5 @@
 import type { ProjectEnrichment } from "@/lib/enrichment";
+import { htmlToPlainText, sanitizeProjectHtml } from "@/lib/sanitize-html";
 
 interface ProjectAboutProps {
   enrichment: ProjectEnrichment | null;
@@ -9,7 +10,7 @@ interface ProjectAboutProps {
 }
 
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return htmlToPlainText(html);
 }
 
 export function ProjectAbout({
@@ -27,20 +28,42 @@ export function ProjectAbout({
     ? (enrichment.facts.amenities as string[])
     : [];
   const amenities = catalogAmenities.length ? catalogAmenities : enrichmentAmenities;
+  const sanitizedHtml = description ? sanitizeProjectHtml(description) : "";
+  const hasRichHtml = sanitizedHtml.length > 80;
   const aboutText =
     enrichment?.summary ??
-    (description ? stripHtml(description) : undefined);
+    (description && !hasRichHtml ? stripHtml(description) : undefined);
 
-  if (!aboutText && !brochure && !video && amenities.length === 0) {
+  if (!aboutText && !hasRichHtml && !brochure && !video && amenities.length === 0) {
     return null;
   }
 
   return (
-    <section className="mt-10 space-y-6">
-      {aboutText ? (
+    <section aria-labelledby="about-heading" className="mt-10 space-y-6">
+      {hasRichHtml ? (
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-text-dark">About</h2>
-          <p className="mt-4 text-lg leading-relaxed text-text-dark/80">{aboutText}</p>
+          <h2
+            id="about-heading"
+            className="font-display text-2xl font-semibold text-text-dark md:text-3xl"
+          >
+            About the <em className="italic">project</em>
+          </h2>
+          <div
+            className="prose-balance mt-4 max-w-none space-y-4 text-base leading-relaxed text-text-dark/85 [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-semibold [&_li]:ml-4 [&_li]:list-disc [&_p]:mt-3 [&_ul]:mt-3 [&_ul]:space-y-1"
+            dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+          />
+        </div>
+      ) : aboutText ? (
+        <div>
+          <h2
+            id="about-heading"
+            className="font-display text-2xl font-semibold text-text-dark md:text-3xl"
+          >
+            About the <em className="italic">project</em>
+          </h2>
+          <p className="prose-balance mt-4 text-lg leading-relaxed text-text-dark/80">
+            {aboutText}
+          </p>
         </div>
       ) : null}
 

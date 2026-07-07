@@ -17,7 +17,7 @@ interface DetailResult {
   brochureUrl?: string;
   description?: string;
   amenities?: Array<{ id: string; name: string }>;
-  masterPlan?: { url?: string };
+  masterPlan?: { url?: string; image?: string };
   videoUrl?: string;
   images?: Array<{ medium?: string; large?: string }>;
 }
@@ -114,7 +114,9 @@ async function main() {
           if (detail?.amenities?.length) {
             project.amenities = detail.amenities.map((a) => a.name);
           }
-          if (detail?.masterPlan?.url) project.masterPlanUrl = detail.masterPlan.url;
+          const masterPlanImage =
+            detail?.masterPlan?.url ?? detail?.masterPlan?.image;
+          if (masterPlanImage) project.masterPlanUrl = masterPlanImage;
           if (detail?.videoUrl) project.videoUrl = detail.videoUrl;
         } catch (err) {
           console.warn(

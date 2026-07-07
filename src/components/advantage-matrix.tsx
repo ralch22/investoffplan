@@ -6,8 +6,9 @@ export function AdvantageMatrix() {
   return (
     <section className="bg-surface-alt py-14">
       <div className="mx-auto max-w-[1200px] px-5 md:px-8">
-        <h2 className="text-center text-2xl font-normal text-text-dark md:text-[36px]">
-          <strong>Better than Property Finder + opr.ae combined</strong>
+        <h2 className="font-display text-center text-3xl font-semibold text-text-dark md:text-4xl">
+          Better than Property Finder + opr.ae{" "}
+          <em className="italic">combined.</em>
         </h2>
         <p className="mx-auto mt-3 max-w-2xl text-center text-muted">
           One platform with PF&apos;s full unit catalog, opr.ae&apos;s brochure UX, and

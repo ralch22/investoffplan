@@ -19,6 +19,7 @@
     "ingest:dry": "tsx scripts/ingest-projects.ts --dry-run",
     "scrape:pf": "tsx scripts/scrape-pf-catalog.ts",
     "scrape:brochures": "tsx scripts/scrape-pf-brochures.ts",
+    "scrape:masterplans": "tsx scripts/scrape-pf-masterplans.ts",
     "db:migrate:local": "wrangler d1 migrations apply investoffplan-catalog --local",
     "db:migrate:remote": "wrangler d1 migrations apply investoffplan-catalog --remote",
     "db:seed:local": "tsx scripts/migrate-catalog-to-d1.ts",
