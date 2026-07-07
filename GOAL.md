@@ -76,6 +76,19 @@
 - Turnstile on all lead forms
 - Guides / insights content hub
 
+### Developer LP (`/developers/[slug]`)
+
+| Feature | PF | IOP | Priority |
+|---------|----|-----|----------|
+| Developer hero + logo + bio | Yes | Logo + catalog bio excerpt | **Done** |
+| Contact developer (Email, WhatsApp) | Yes | `DeveloperContactPanel` | **Done** |
+| H1: New & Off-Plan Projects by [Dev] | Yes | Match copy | **Done** |
+| Project count + sort (Featured) | Yes | Catalog count + `SortSelect` | **Done** |
+| Project card grid (beds, type, price, plan, WA) | Yes | `DeveloperProjectCard` | **Done** |
+| Pagination | Yes | `DEVELOPER_PAGE_SIZE` (12) | **Done** |
+| SEO about + FAQ block | Yes | Sanitized HTML + FAQ details | **Done** |
+| Full developer portfolio count | 222 (Emaar) | 22 in catalog; portfolio note when `numProjectsOnline` set | P2 (ingest) |
+
 ### DataGuru parity (`/tools`)
 
 | PF DataGuru tool | PF URL | IOP route | Status |
@@ -121,7 +134,7 @@
 - **Verify before merge:** `npm run build && npm run test:e2e`
 - **Deploy preview after material UI changes.**
 - **One terminal for long jobs:** never run concurrent `npm run deploy`, `npm run build`, or `assets:migrate:*` (`.next` races + manifest lock).
-- **Images / CDN:** catalog URLs are `/cdn/*` → `investoffplan-preview-assets` R2. Preview Worker serves them; local `next dev` uses **remote R2 bindings** (see `next.config.ts`). Do not run two `assets:migrate:remote` sessions — manifest uses `data/.asset-migration.lock`.
+- **Images / CDN:** catalog URLs are `/cdn/*` → `investoffplan-preview-assets` R2. Preview Worker serves them (20/20 spot-check OK). Local `next dev` proxies missing assets to preview (`src/app/cdn/[...path]/route.ts`). Do not run two `assets:migrate:remote` sessions — manifest uses `data/.asset-migration.lock`.
 
 ---
 
