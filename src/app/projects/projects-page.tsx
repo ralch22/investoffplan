@@ -16,6 +16,7 @@ import { KnownDevelopers } from "@/components/known-developers";
 import { ProjectMap } from "@/components/project-map";
 import { CollectionChips } from "@/components/collection-chips";
 import { ProjectsSearchSync } from "@/components/projects-search-sync";
+import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import type { CompareUnitId } from "@/lib/compare";
 import {
@@ -188,11 +189,18 @@ export function ProjectsPage({
 
   function toggleCompare(id: CompareUnitId) {
     setCompareIds((prev) => {
-      const next = prev.includes(id)
+      const removing = prev.includes(id);
+      const atCapacity = !removing && prev.length >= 3;
+      const next = removing
         ? prev.filter((x) => x !== id)
-        : prev.length >= 3
+        : atCapacity
           ? prev
           : [...prev, id];
+
+      if (!removing && !atCapacity) {
+        trackEvent(ANALYTICS_EVENTS.COMPARE_ADD, { unit_id: id });
+      }
+
       setStoredCompareIds(next);
       return next;
     });

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { BrochureButton } from "@/components/brochure-button";
 import { BrochureModal } from "@/components/brochure-modal";
 import { ContactButton } from "@/components/contact-button";
+import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { resolveBrochureUrl } from "@/lib/brochure";
 
 interface ProjectDetailCtasProps {
@@ -22,6 +23,13 @@ export function ProjectDetailCtas({
   const [brochureOpen, setBrochureOpen] = useState(false);
 
   const whatsappHref = `https://wa.me/${whatsapp.replace(/\D/g, "")}`;
+
+  function trackWhatsappClick(source: string) {
+    trackEvent(ANALYTICS_EVENTS.WHATSAPP_CLICK, {
+      project_name: projectName,
+      source,
+    });
+  }
 
   return (
     <>
@@ -69,6 +77,7 @@ export function ProjectDetailCtas({
           href={`https://wa.me/${whatsapp.replace(/\D/g, "")}`}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackWhatsappClick("pdp_pill")}
           className="rounded-full border border-brand py-3 text-center text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
         >
           Check availability
@@ -92,6 +101,7 @@ export function ProjectDetailCtas({
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackWhatsappClick("pdp_mobile_bar")}
             className="iop-btn-press flex-1 rounded-full border border-brand py-3.5 text-center text-sm font-semibold text-brand transition hover:bg-brand-muted"
           >
             WhatsApp

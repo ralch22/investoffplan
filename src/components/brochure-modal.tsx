@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { HoneypotField } from "@/components/honeypot-field";
 import { TurnstileField } from "@/components/turnstile-field";
+import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { isDownloadablePdfUrl } from "@/lib/brochure";
 import { cn } from "@/lib/cn";
 import { guardFormSubmit } from "@/lib/form-guard";
@@ -80,6 +81,11 @@ export function BrochureModal({
       setGuardError(guard.error ?? "Unable to submit. Please try again.");
       return;
     }
+
+    trackEvent(ANALYTICS_EVENTS.BROCHURE_OPEN, {
+      project_name: projectName,
+      delivery: hasPdf ? "pdf" : "whatsapp",
+    });
 
     if (hasPdf) {
       window.open(brochureUrl, "_blank", "noopener,noreferrer");
