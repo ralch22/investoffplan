@@ -6,14 +6,18 @@ import { PageShell } from "@/components/page-shell";
 import { DeveloperAboutSection } from "@/components/developer-about-section";
 import { DeveloperContactPanel } from "@/components/developer-contact-panel";
 import { DeveloperLogo } from "@/components/developer-logo";
-import { DeveloperProjectsSection } from "@/components/developer-projects-section";
+import { DeveloperPaginationLinks } from "@/components/developer-pagination-links";
+import { DeveloperProjectCard } from "@/components/developer-project-card";
+import { DeveloperSortControl } from "@/components/developer-sort-control";
 import { getDeveloper, getDevelopers, getProjectsByDeveloper } from "@/lib/catalog";
-import { developerDescription } from "@/lib/developer-utils";
+import { developerDescription, sortDeveloperProjects } from "@/lib/developer-utils";
 import { buildDeveloperJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
+import { DEVELOPER_PAGE_SIZE, type SortOption } from "@/lib/types";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string; sort?: string }>;
 }
 
 export async function generateStaticParams() {
@@ -31,12 +35,29 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function DeveloperDetailPage({ params }: PageProps) {
+export default async function DeveloperDetailPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { slug } = await params;
+  const query = await searchParams;
   const developer = await getDeveloper(slug);
   if (!developer) notFound();
 
+  const sort = (query.sort as SortOption | undefined) ?? "featured";
+  const page = Math.max(1, Number(query.page ?? "1") || 1);
   const projects = await getProjectsByDeveloper(slug);
+  const sorted = sortDeveloperProjects(projects, sort);
+  const totalPages = Math.max(1, Math.ceil(sorted.length / DEVELOPER_PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageItems = sorted.slice(
+    (currentPage - 1) * DEVELOPER_PAGE_SIZE,
+    currentPage * DEVELOPER_PAGE_SIZE,
+  );
+  const countLabel =
+    developer.numProjectsOnline && developer.numProjectsOnline > developer.projectCount
+      ? `${developer.projectCount.toLocaleString()} projects on invest off-plan · ${developer.numProjectsOnline.toLocaleString()} in developer portfolio`
+      : `${developer.projectCount.toLocaleString()} project${developer.projectCount === 1 ? "" : "s"}`;
   const allDevelopers = await getDevelopers();
   const others = allDevelopers.filter((dev) => dev.slug !== slug).slice(0, 5);
   const siteUrl = getSiteUrl();
@@ -87,14 +108,44 @@ export default async function DeveloperDetailPage({ params }: PageProps) {
       </section>
 
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
-        <Suspense fallback={<p className="text-muted">Loading projects…</p>}>
-          <DeveloperProjectsSection
-            developerName={developer.name}
-            projects={projects}
-            catalogProjectCount={developer.projectCount}
-            portfolioProjectCount={developer.numProjectsOnline}
+        <section aria-labelledby="developer-projects-heading">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h1
+                id="developer-projects-heading"
+                className="font-display text-3xl font-semibold text-text-dark md:text-4xl"
+              >
+                New &amp; Off-Plan Projects by {developer.name}
+              </h1>
+              <p className="mt-2 text-sm font-medium text-muted">{countLabel}</p>
+            </div>
+            <Suspense fallback={<span className="text-sm text-muted">Sort by: Featured</span>}>
+              <DeveloperSortControl value={sort} />
+            </Suspense>
+          </div>
+
+          {pageItems.length === 0 ? (
+            <p className="mt-10 text-muted">
+              No listings for this developer right now. Check back soon or contact our team.
+            </p>
+          ) : (
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {pageItems.map((project, index) => (
+                <DeveloperProjectCard
+                  key={project.id}
+                  project={project}
+                  priorityImage={currentPage === 1 && index < 4}
+                />
+              ))}
+            </div>
+          )}
+
+          <DeveloperPaginationLinks
+            page={currentPage}
+            totalPages={totalPages}
+            sort={sort}
           />
-        </Suspense>
+        </section>
       </main>
 
       <DeveloperAboutSection
