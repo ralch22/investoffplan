@@ -1,0 +1,57 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "investoffplan",
+  "account_id": "4a75e91d6fca8bc58467fb80ce1b9c2e",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "investoffplan"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "investoffplan-catalog",
+      "database_id": "e5aa2877-4359-4c28-8499-0c149200c6a4",
+      "migrations_dir": "drizzle/migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "investoffplan-opennext-cache"
+    },
+    {
+      "binding": "ASSETS_R2_BUCKET",
+      "bucket_name": "investoffplan-assets"
+    }
+  ],
+  "images": {
+    "binding": "IMAGES"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  // Go-live checklist:
+  // 1. Confirm investoffplan.com zone is on account 4a75e91d6fca8bc58467fb80ce1b9c2e
+  // 2. Uncomment routes below
+  // 3. npm run deploy:verify:production && npm run deploy:production
+  // 4. Add www → apex redirect in Cloudflare dashboard if needed
+  // "routes": [
+  //   { "pattern": "investoffplan.com/*", "zone_name": "investoffplan.com" },
+  //   { "pattern": "www.investoffplan.com/*", "zone_name": "investoffplan.com" }
+  // ],
+  "vars": {
+    "NEXT_PUBLIC_SITE_URL": "https://investoffplan.com",
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADxBjx3Slso2Jeoo",
+    "NEXT_PUBLIC_CATALOG_API": "1"
+  }
+}

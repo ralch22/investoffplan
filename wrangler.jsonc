@@ -1,0 +1,55 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "investoffplan-preview",
+  "account_id": "4a75e91d6fca8bc58467fb80ce1b9c2e",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "investoffplan-preview"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "investoffplan-catalog",
+      "database_id": "e5aa2877-4359-4c28-8499-0c149200c6a4",
+      "migrations_dir": "drizzle/migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "investoffplan-preview-opennext-cache"
+    },
+    {
+      "binding": "ASSETS_R2_BUCKET",
+      "bucket_name": "investoffplan-preview-assets"
+    }
+  ],
+  "images": {
+    "binding": "IMAGES"
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  // Attach when investoffplan.com zone is on this account:
+  // "routes": [
+  //   { "pattern": "investoffplan.com/*", "zone_name": "investoffplan.com" },
+  //   { "pattern": "www.investoffplan.com/*", "zone_name": "investoffplan.com" }
+  // ],
+  // Secrets (wrangler secret put): TURNSTILE_SECRET_KEY, FIRECRAWL_API_KEY
+  // Public Turnstile site key: NEXT_PUBLIC_TURNSTILE_SITE_KEY in vars or .dev.vars
+  "vars": {
+    "NEXT_PUBLIC_SITE_URL": "https://investoffplan-preview.emerge-digital.workers.dev",
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADxBjx3Slso2Jeoo",
+    "NEXT_PUBLIC_CATALOG_API": "1"
+  }
+}

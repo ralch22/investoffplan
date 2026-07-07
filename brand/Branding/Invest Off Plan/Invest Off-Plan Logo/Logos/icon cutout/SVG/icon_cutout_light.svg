@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="a" data-name="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 268.66 256.68">
+  <defs>
+    <style>
+      .k {
+        fill: #fff;
+      }
+
+      .l {
+        fill: #ee3d3a;
+      }
+    </style>
+  </defs>
+  <path class="k" d="M31.37,25.38v205.91h205.91V25.38H31.37ZM134.77,187.27h-19.3l19.3-84.56h19.3l-19.3,84.56Z"/>
+  <rect class="l" x="114.59" y="69.4" width="20.07" height="20.07"/>
+</svg>

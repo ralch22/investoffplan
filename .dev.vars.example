@@ -1,0 +1,17 @@
+# Copy to .dev.vars for local preview/deploy (never commit .dev.vars).
+# Public vars can also live in wrangler.jsonc "vars".
+
+# Preview (default):
+NEXT_PUBLIC_SITE_URL=https://investoffplan-preview.emerge-digital.workers.dev
+# Serve catalog from D1 API routes (requires npm run db:seed:local)
+NEXT_PUBLIC_CATALOG_API=1
+# Production (wrangler.production.jsonc):
+# NEXT_PUBLIC_SITE_URL=https://investoffplan.com
+
+# Optional — Cloudflare Turnstile (forms skip widget when site key is unset)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+# Server-only — set via: npx wrangler secret put TURNSTILE_SECRET_KEY
+TURNSTILE_SECRET_KEY=
+
+# Optional enrichment pipeline
+FIRECRAWL_API_KEY=

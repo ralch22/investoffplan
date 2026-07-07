@@ -1,0 +1,64 @@
+name: Catalog ingest
+
+on:
+  schedule:
+    # Monday 04:00 UTC — weekly PF catalog refresh
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      smoke:
+        description: "Smoke test (2 PF pages, 5 brochures)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: catalog-ingest
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+
+      - name: Run catalog ingest pipeline
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          IOP_WHATSAPP: ${{ vars.IOP_WHATSAPP }}
+        run: |
+          ARGS="--remote"
+          if [ "${{ github.event.inputs.smoke }}" = "true" ]; then
+            ARGS="$ARGS --smoke"
+          fi
+          npx tsx scripts/catalog-ingest-pipeline.ts $ARGS
+
+      - name: Commit catalog snapshot
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/catalog.json public/data/
+          if git diff --staged --quiet; then
+            echo "No catalog changes to commit"
+            exit 0
+          fi
+          git commit -m "chore(catalog): weekly PF ingest $(date -u +%Y-%m-%d)"
+          git push
