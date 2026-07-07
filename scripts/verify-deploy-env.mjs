@@ -26,9 +26,11 @@ if (!cfg) {
 const raw = readFileSync(join(root, cfg.file), "utf8");
 const siteUrlMatch = raw.match(/"NEXT_PUBLIC_SITE_URL"\s*:\s*"([^"]+)"/);
 const nameMatch = raw.match(/"name"\s*:\s*"([^"]+)"/);
+const catalogMatch = raw.match(/"NEXT_PUBLIC_CATALOG_API"\s*:\s*"([^"]*)"/);
 
 const siteUrl = siteUrlMatch?.[1];
 const workerName = nameMatch?.[1];
+const catalogApi = catalogMatch?.[1];
 
 let ok = true;
 
@@ -41,6 +43,23 @@ if (siteUrl !== cfg.siteUrl) {
   console.error(
     `[verify-deploy] Expected NEXT_PUBLIC_SITE_URL "${cfg.siteUrl}", found "${siteUrl ?? "missing"}".`,
   );
+  ok = false;
+}
+
+if (catalogApi !== "1") {
+  console.error(`[verify-deploy] Expected NEXT_PUBLIC_CATALOG_API "1", found "${catalogApi ?? "missing"}".`);
+  ok = false;
+}
+
+const hasD1 = /"d1_databases"\s*:/.test(raw) && /"binding"\s*:\s*"DB"/.test(raw);
+if (!hasD1) {
+  console.error(`[verify-deploy] D1 "DB" binding missing in ${cfg.file}.`);
+  ok = false;
+}
+
+const hasR2Assets = /"r2_buckets"\s*:/.test(raw) && /ASSETS_R2_BUCKET/.test(raw);
+if (!hasR2Assets) {
+  console.error(`[verify-deploy] R2 "ASSETS_R2_BUCKET" binding missing in ${cfg.file}.`);
   ok = false;
 }
 

@@ -14,7 +14,7 @@
     "deploy:verify": "node scripts/verify-deploy-env.mjs preview",
     "deploy:verify:production": "node scripts/verify-deploy-env.mjs production",
     "deploy": "node scripts/verify-deploy-env.mjs preview && opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "deploy:production": "node scripts/verify-deploy-env.mjs production && opennextjs-cloudflare build && opennextjs-cloudflare deploy -- --config wrangler.production.jsonc",
+    "deploy:production": "node scripts/verify-deploy-env.mjs production && opennextjs-cloudflare build -c wrangler.production.jsonc && opennextjs-cloudflare deploy -c wrangler.production.jsonc",
     "ingest": "tsx scripts/ingest-projects.ts",
     "ingest:dry": "tsx scripts/ingest-projects.ts --dry-run",
     "scrape:pf": "tsx scripts/scrape-pf-catalog.ts",
