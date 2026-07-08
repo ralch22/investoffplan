@@ -8,7 +8,13 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: isPreview
       ? { userAgent: "*", disallow: "/" }
-      : { userAgent: "*", allow: "/" },
+      : {
+          userAgent: "*",
+          allow: "/",
+          // Keep API routes and the client-side compare tool out of the index.
+          // /compare is a draft utility page (share-link driven, no canonical content).
+          disallow: ["/api/", "/compare"],
+        },
     sitemap: "https://investoffplan.com/sitemap.xml",
   };
 }
