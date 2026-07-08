@@ -15,36 +15,45 @@ import {
 } from "./schema";
 
 export async function isCatalogDbSeeded(db: CatalogDatabase): Promise<boolean> {
-  const meta = await db.select().from(catalogMeta).where(eq(catalogMeta.id, 1)).get();
-  return Boolean(meta);
+  try {
+    const meta = await db.select().from(catalogMeta).where(eq(catalogMeta.id, 1)).get();
+    return Boolean(meta);
+  } catch {
+    // Table may not exist in this environment (e.g. plain `next start` in e2e/CI without D1 bindings + migrations)
+    return false;
+  }
 }
 
 export async function fetchCatalogMeta(db: CatalogDatabase) {
-  const [meta, cities, serpLinks, devRows] = await Promise.all([
-    db.select().from(catalogMeta).where(eq(catalogMeta.id, 1)).get(),
-    db.select().from(cityCounts).orderBy(asc(cityCounts.sortOrder)).all(),
-    db.select().from(developerSerpLinks).orderBy(asc(developerSerpLinks.sortOrder)).all(),
-    db.select().from(developers).all(),
-  ]);
+  try {
+    const [meta, cities, serpLinks, devRows] = await Promise.all([
+      db.select().from(catalogMeta).where(eq(catalogMeta.id, 1)).get(),
+      db.select().from(cityCounts).orderBy(asc(cityCounts.sortOrder)).all(),
+      db.select().from(developerSerpLinks).orderBy(asc(developerSerpLinks.sortOrder)).all(),
+      db.select().from(developers).all(),
+    ]);
 
-  if (!meta) return null;
+    if (!meta) return null;
 
-  return {
-    version: meta.version as 2,
-    unitCount: meta.unitCount,
-    projectCount: meta.projectCount,
-    scrapedAt: meta.scrapedAt,
-    cityCounts: cities.map((c) => ({
-      slug: c.slug,
-      label: c.label,
-      count: c.count,
-    })),
-    developerSerpLinks: serpLinks.map((l) => ({
-      title: l.title,
-      path: l.path,
-    })),
-    devList: devRows.map(rowToDevListEntry),
-  };
+    return {
+      version: meta.version as 2,
+      unitCount: meta.unitCount,
+      projectCount: meta.projectCount,
+      scrapedAt: meta.scrapedAt,
+      cityCounts: cities.map((c) => ({
+        slug: c.slug,
+        label: c.label,
+        count: c.count,
+      })),
+      developerSerpLinks: serpLinks.map((l) => ({
+        title: l.title,
+        path: l.path,
+      })),
+      devList: devRows.map(rowToDevListEntry),
+    };
+  } catch {
+    return null;
+  }
 }
 
 async function fetchAllProjects(db: CatalogDatabase): Promise<Project[]> {
