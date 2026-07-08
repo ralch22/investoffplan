@@ -1,6 +1,8 @@
 import { developerDescription, developerFaqs } from "@/lib/developer-utils";
 import { sanitizeProjectHtml } from "@/lib/sanitize-html";
 import { cityLabel } from "@/lib/format";
+import { FaqAccordion } from "@/components/faq-accordion";
+import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 
 interface DeveloperAboutSectionProps {
   slug: string;
@@ -51,18 +53,14 @@ export function DeveloperAboutSection({
           </p>
         ) : null}
 
-        <div className="mt-10 space-y-3">
-          {faqs.map((faq) => (
-            <details
-              key={faq.q}
-              className="faq-details rounded-2xl border border-border bg-white p-5 transition"
-            >
-              <summary className="cursor-pointer font-semibold text-text-dark">
-                {faq.q}
-              </summary>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{faq.a}</p>
-            </details>
-          ))}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(buildFaqPageJsonLd(faqs)),
+          }}
+        />
+        <div className="mt-10">
+          <FaqAccordion faqs={faqs} />
         </div>
       </div>
     </section>

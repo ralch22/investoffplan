@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getAreas, getDevelopers, getCatalogApi } from "@/lib/catalog";
 import { GUIDE_CARDS } from "@/lib/figma-copy";
+import { getNewsArticles } from "@/content/articles";
+import { FAQ_TOPICS } from "@/content/faq";
 
 let base: string = process.env.NEXT_PUBLIC_SITE_URL ?? "https://investoffplan-preview.emerge-digital.workers.dev";
 if (!base || base.includes("preview") || base.includes("emerge-digital")) {
@@ -17,7 +19,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/projects",
     "/developers",
     "/areas",
-    "/insights",
+    "/guides",
+    "/faq",
     "/compare",
     "/map",
     "/contact",
@@ -71,5 +74,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...staticRoutes, ...projectRoutes, ...developerRoutes, ...areaRoutes, ...guideRoutes];
+  const newsRoutes = getNewsArticles().map((article) => ({
+    url: `${BASE}/news/${article.slug}`,
+    lastModified: new Date(`${article.publishedAt}T00:00:00Z`),
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
+  const faqRoutes = FAQ_TOPICS.map((topic) => ({
+    url: `${BASE}/faq/${topic.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
+  return [
+    ...staticRoutes,
+    ...projectRoutes,
+    ...developerRoutes,
+    ...areaRoutes,
+    ...guideRoutes,
+    ...newsRoutes,
+    ...faqRoutes,
+  ];
 }

@@ -12,7 +12,7 @@ const NAV = [
   { href: "/developers", label: "Developers" },
   { href: "/areas", label: "Areas" },
   { href: "/map", label: "Map" },
-  { href: "/insights", label: "Guides" },
+  { href: "/guides", label: "Guides" },
   { href: "/news", label: "News" },
   { href: "/favorites", label: "Favorites" },
   { href: "/about", label: "About" },

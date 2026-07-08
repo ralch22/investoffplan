@@ -16,7 +16,7 @@ const NAV = [
   { href: "/tools", label: "Data toolkit" },
   { href: "/developers", label: "Developers" },
   { href: "/areas", label: "Areas" },
-  { href: "/insights", label: "Guides" },
+  { href: "/guides", label: "Guides" },
   { href: "/news", label: "News" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

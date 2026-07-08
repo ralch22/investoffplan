@@ -13,6 +13,8 @@ import {
   getDevelopers,
 } from "@/lib/catalog";
 import { AdvantageMatrix } from "@/components/advantage-matrix";
+import { FaqAccordion } from "@/components/faq-accordion";
+import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -278,19 +280,21 @@ export default async function HomePage() {
           <h2 className="font-display text-3xl font-semibold text-text-dark md:text-4xl">
             Frequently <em className="italic">Asked Questions.</em>
           </h2>
-          <div className="mt-8 space-y-3">
-            {FAQS.map((faq) => (
-              <details
-                key={faq.q}
-                className="faq-details rounded-2xl border border-border bg-white p-5 transition"
-              >
-                <summary className="cursor-pointer font-semibold text-text-dark">
-                  {faq.q}
-                </summary>
-                <p className="mt-3 text-sm leading-relaxed text-muted">{faq.a}</p>
-              </details>
-            ))}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(buildFaqPageJsonLd(FAQS)),
+            }}
+          />
+          <div className="mt-8">
+            <FaqAccordion faqs={FAQS} />
           </div>
+          <p className="mt-6 text-sm text-muted">
+            More questions?{" "}
+            <Link href="/faq" className="font-semibold text-brand hover:text-brand-dark">
+              Browse the full FAQ →
+            </Link>
+          </p>
         </div>
       </section>
 

@@ -6,18 +6,19 @@ const MAIN_LINKS = [
   { href: "/projects", label: "Projects" },
   { href: "/developers", label: "Developers" },
   { href: "/areas", label: "Areas" },
-  { href: "/insights", label: "Guides" },
+  { href: "/guides", label: "Guides" },
   { href: "/news", label: "News" },
+  { href: "/faq", label: "FAQ" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
 
 const GUIDE_LINKS = [
-  { href: "/insights", label: "Buying Off-Plan" },
-  { href: "/insights", label: "Finding the Right Developer" },
-  { href: "/insights", label: "Understanding Payment Plans" },
-  { href: "/insights", label: "Off-Plan for Foreign Investors" },
-  { href: "/insights", label: "Acquiring the Golden Visa" },
+  { href: "/guides/why-invest-off-plan-dubai", label: "Buying Off-Plan" },
+  { href: "/developers", label: "Finding the Right Developer" },
+  { href: "/guides/understanding-payment-plans", label: "Understanding Payment Plans" },
+  { href: "/guides/foreign-investor-guide", label: "Off-Plan for Foreign Investors" },
+  { href: "/faq/golden-visa", label: "Acquiring the Golden Visa" },
 ];
 
 export function SiteFooter() {

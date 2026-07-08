@@ -5,6 +5,8 @@ import { PageShell } from "@/components/page-shell";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { GUIDE_CARDS, GUIDE_REASONS, getGuide } from "@/lib/figma-copy";
+import { getGuideBody } from "@/content/articles";
+import { ArticleBody } from "@/components/article-body";
 import { getSiteUrl } from "@/lib/site-url";
 
 interface PageProps {
@@ -40,6 +42,7 @@ export default async function GuideDetailPage({ params }: PageProps) {
   const guide = getGuide(slug);
   if (!guide) notFound();
 
+  const body = getGuideBody(slug);
   const reasons = GUIDE_REASONS[slug] ?? [
     {
       title: guide.title,
@@ -65,10 +68,15 @@ export default async function GuideDetailPage({ params }: PageProps) {
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
-            { label: "Guides", href: "/insights" },
+            { label: "Guides", href: "/guides" },
             { label: guide.title },
           ]}
         />
+        {body ? (
+          <article className="mt-8">
+            <ArticleBody sections={body} />
+          </article>
+        ) : null}
         <div className="mt-8 space-y-4">
           {reasons.map((reason, index) => {
             const highlighted = index === reasons.length - 1;
@@ -117,7 +125,7 @@ export default async function GuideDetailPage({ params }: PageProps) {
         </div>
 
         <p className="mt-8 text-center text-sm text-muted">
-          <Link href="/insights" className="font-semibold text-brand hover:text-brand-dark">
+          <Link href="/guides" className="font-semibold text-brand hover:text-brand-dark">
             ← All investment guides
           </Link>
         </p>
