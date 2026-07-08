@@ -130,7 +130,10 @@
 - [x] Floor plans (6,084 images, 598 projects) + PF FAQs/sales dates/ownership on PDP
 - [x] Arabic /ar (RTL, dictionaries, localized chrome, home/about/contact + hreflang)
 - [ ] Arabic SERP/PDP chrome + batch description_ar translation
-- [ ] GHL secrets (GHL_API_KEY, GHL_LOCATION_ID, LEADS_RETRY_TOKEN) — Rami
+- [x] GHL secrets + end-to-end verified (2026-07-08); notify workflow = manual step (docs/ghl-notify-workflow.md)
+- [x] WhatsApp lead routing to Jad's numbers (site + catalog + ingest)
+- [x] A11y quick wins from docs/a11y-audit-2026-07-08.md (labels, contrast, landmarks, Escape/roles)
+- [ ] A11y structural: port brochure modal / mobile nav / filter sheet to <dialog>.showModal() (focus trap); hero-overlay contrast guarantee; sanitizer empty-heading strip
 
 ### Phase 3 — Exceed + production
 - [ ] Production cutover + GA4 measurement ID
