@@ -5,6 +5,7 @@
 **Counterparty benchmarks:**
 - Property Finder `view=unit_types` SERP + single project PDP (e.g. Address Residences Zabeel)
 - [Property Finder DataGuru](https://www.propertyfinder.ae/blog/data-guru/) five-tool toolkit (Price Map, Community Insights, Rent vs Buy, Residential Insights, New Projects)
+- [opr.ae](https://opr.ae/) (added 2026-07-08): editorial area pages, FAQ hub, real blog/news, mortgage calc + pre-approval lead engine, collection SEO URLs, Arabic locale
 
 **Preview:** https://investoffplan-preview.emerge-digital.workers.dev  
 **Production:** https://investoffplan.com (cutover pending)
@@ -118,11 +119,23 @@
 - [x] Area/community modules on PDP (`ProjectLivingInArea`)
 - [ ] Enrichment pass for top 100 premium projects
 
+### Phase 2.5 — opr.ae parity (2026-07-08 build)
+- [x] Unit-size normalization (PF ships mixed sqm/sqft — normalized at ingest)
+- [x] Real lead capture: /api/leads → D1 store-first → GoHighLevel (+retry cron)
+- [x] SERP advanced filters (developer / payment plan / handover / amenities)
+- [x] Real /news articles + canonical /guides (/insights 308s) + /faq hub (15 topics)
+- [x] Mortgage calculator + pre-approval lead form (/tools/mortgage)
+- [x] Area editorial depth (top 30 areas) + stats bands
+- [x] Collection landing pages (/collections/* — 9 SEO URLs)
+- [x] Floor plans (6,084 images, 598 projects) + PF FAQs/sales dates/ownership on PDP
+- [x] Arabic /ar (RTL, dictionaries, localized chrome, home/about/contact + hreflang)
+- [ ] Arabic SERP/PDP chrome + batch description_ar translation
+- [ ] GHL secrets (GHL_API_KEY, GHL_LOCATION_ID, LEADS_RETRY_TOKEN) — Rami
+
 ### Phase 3 — Exceed + production
 - [ ] Production cutover + GA4 measurement ID
 - [ ] Sold-history / resale (if licensable)
 - [ ] Lighthouse 90+ mobile on SERP + PDP
-- [ ] Arabic / RTL (regional best-in-breed)
 
 ---
 
@@ -146,4 +159,4 @@
 4. Recommend **one** highest-leverage next play; execute on approval.
 5. When all P0 rows are ✅ and production is live: propose archiving this goal doc.
 
-**Last audited:** 2026-07-07
+**Last audited:** 2026-07-08
