@@ -40,9 +40,9 @@ const PROPERTY_TYPE_DEFS = [
 ] as const;
 
 const HIGHLIGHTS = [
-  { value: "10%", label: "Average ROI potential on prime launches" },
-  { value: "10 Years", label: "Golden Visa eligibility on qualifying investments" },
-  { value: "80/20", label: "Flexible payment plans across the catalog" },
+  { value: "10%", label: "Average ROI potential on prime launches", image: "/images/creek-orchard.jpg" },
+  { value: "10 Years", label: "Golden Visa eligibility on qualifying investments", image: "/images/joud-residence.jpg" },
+  { value: "80/20", label: "Flexible payment plans across the catalog", image: "/images/skyline-terraces.jpg" },
 ];
 
 const FAQS = [
@@ -338,10 +338,23 @@ export default async function HomePage() {
               {HIGHLIGHTS.map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-2xl border border-border bg-white p-6 text-center shadow-sm"
+                  className="relative flex min-h-[150px] flex-col justify-end overflow-hidden rounded-2xl border border-border shadow-sm"
                 >
-                  <p className="text-3xl font-semibold text-brand">{item.value}</p>
-                  <p className="mt-2 text-xs text-muted">{item.label}</p>
+                  <Image
+                    src={item.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 100vw, 260px"
+                    className="object-cover"
+                    {...unoptimizedProp(item.image)}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface-darker/90 via-surface-dark/50 to-transparent" />
+                  <div className="relative p-5 text-white">
+                    <p className="font-display text-4xl font-semibold text-brand-light">
+                      {item.value}
+                    </p>
+                    <p className="mt-1 text-xs text-white/85">{item.label}</p>
+                  </div>
                 </div>
               ))}
             </div>
