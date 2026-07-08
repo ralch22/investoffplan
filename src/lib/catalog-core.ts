@@ -3,6 +3,7 @@ import {
   isWaterfront,
   valueScore,
 } from "./investment-metrics";
+import { sanitizePfFaqs } from "./sanitize-html";
 import { slugify } from "./slugify";
 import type {
   CatalogUnit,
@@ -65,11 +66,13 @@ export const PAGE_SIZE = 24;
 
 function normalizeProject(p: Project & { citySlug?: string }): Project {
   const slug = (p.citySlug || p.city) as Project["city"];
+  const pfFaqs = p.pfFaqs ? sanitizePfFaqs(p.pfFaqs) : undefined;
   return {
     ...p,
     city: slug,
     imageGradient: p.imageGradient ?? "from-slate-800 via-slate-600 to-sky-700",
     featuredRank: p.featuredRank ?? 999,
+    pfFaqs: pfFaqs && pfFaqs.length > 0 ? pfFaqs : undefined,
   };
 }
 
