@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import type { ProjectFilters as Filters } from "@/lib/types";
 import {
   MoreFiltersPanel,
@@ -25,32 +25,35 @@ export function MobileFilterSheet({
   developerOptions = [],
   amenityOptions = [],
 }: MobileFilterSheetProps) {
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
-  if (!open) return null;
+  // Native <dialog>.showModal() gives focus trap, Escape, and focus restore
+  // for free (a11y audit O2).
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open && !dialog.open) dialog.showModal();
+    else if (!open && dialog.open) dialog.close();
+  }, [open]);
 
   const { dict } = useI18n();
   const f = dict.serp.filters;
 
   return (
-    <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true" aria-label="Filters">
-      <button
-        type="button"
-        aria-label={f.closeFilters}
-        className="absolute inset-0 bg-surface-darker/60 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div
-        data-testid="mobile-filter-sheet"
-        className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5 shadow-elevation-lg"
-      >
+    <dialog
+      ref={dialogRef}
+      aria-label={f.title}
+      onClose={onClose}
+      onClick={(e) => {
+        if (e.target === dialogRef.current) onClose();
+      }}
+      className="fixed inset-0 z-50 m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-surface-darker/60 backdrop:backdrop-blur-sm md:hidden"
+    >
+      {open ? (
+        <div
+          data-testid="mobile-filter-sheet"
+          className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5 shadow-elevation-lg"
+        >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-text-dark">{f.title}</h2>
           <button
@@ -150,14 +153,15 @@ export function MobileFilterSheet({
           />
         </div>
 
-        <button
-          type="button"
-          onClick={onClose}
-          className="iop-btn-press mt-6 w-full rounded-full bg-brand py-3 text-sm font-semibold text-white hover:bg-brand-dark"
-        >
-          {f.showResults}
-        </button>
-      </div>
-    </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="iop-btn-press mt-6 w-full rounded-full bg-brand py-3 text-sm font-semibold text-white hover:bg-brand-dark"
+          >
+            {f.showResults}
+          </button>
+        </div>
+      ) : null}
+    </dialog>
   );
 }

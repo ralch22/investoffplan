@@ -36,6 +36,7 @@ import type {
 } from "@/lib/types";
 import { interpolate } from "@/i18n";
 import { useI18n } from "@/i18n/locale-provider";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 const isApiMode = process.env.NEXT_PUBLIC_CATALOG_API === "1";
 
@@ -299,8 +300,10 @@ export function ProjectsPage({
             alt=""
             fill
             priority
+            fetchPriority="high"
             sizes="100vw"
             className="object-cover"
+            {...unoptimizedProp(heroImage)}
           />
         ) : null}
         <div className="absolute inset-0 bg-hero-overlay" />

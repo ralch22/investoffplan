@@ -26,8 +26,15 @@
 | Compare units | None | Up to 3 side-by-side | **Exceed** |
 | Price/sqft | None | On SERP + PDP | **Exceed** |
 | Accessibility | Unknown | WCAG 2.2 AA on SERP + PDP | **In progress** |
-| Core Web Vitals | Industry leader | LCP <2.5s, CLS <0.1 | **Monitor** |
+| Core Web Vitals | Industry leader | LCP <2.5s, CLS <0.1 | **In progress** (#58) |
 | Production domain | Live | `investoffplan.com` live | **LIVE** (2026-07-08) |
+
+**PSI / Lighthouse mobile (prod, before #58 perf changes, 2026-07-08):**
+- `/` : 64 (LCP 7.6s)
+- `/projects` : 78 (LCP 4.9s)
+- PDP e.g. `/projects/105-residences` : 55 (LCP 15.4s)
+- CLS: 0 (good) across.
+- Target after: ≥90, LCP <2.5s. (feat/58: explicit font display:swap; unoptimized only on SVGs+/cdn R2; priority/sizes + fetchPriority on LCP images.)
 
 ---
 
@@ -144,7 +151,7 @@
 
 ## Guardrails
 
-- **Max 4 concurrent AO workers** (Grok rate limits).
+- **Max 3 concurrent AO workers** — claude-code (Opus 4.8) since 2026-07-08; Grok retired for non-trivial work (reliability).
 - **jpools deprioritized** while IOP is priority.
 - **Antigravity lane:** `tests/**`, `compare-bar`, `mobile-filter-sheet`, `project-about` styling — coordinate on PDP.
 - **Verify before merge:** `npm run build && npm run test:e2e`

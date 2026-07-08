@@ -13,6 +13,7 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import { getAreas } from "@/lib/catalog";
 import { areaTagline } from "@/lib/figma-copy";
 import { getAreaImage, getHeroImage } from "@/lib/area-images";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 export default async function AreasPage() {
   const areas = (await getAreas()).slice(0, 6);
@@ -55,6 +56,7 @@ export default async function AreasPage() {
                         fill
                         className="object-cover transition duration-500 group-hover:scale-[1.03]"
                         sizes="(max-width: 640px) 100vw, 33vw"
+                        {...unoptimizedProp(imageUrl)}
                       />
                     ) : (
                       <div className="h-full bg-surface-alt" />

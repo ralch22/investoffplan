@@ -26,6 +26,9 @@ export function sanitizeProjectHtml(html: string): string {
       if (match.startsWith("</")) return `</${name}>`;
       return `<${name}>`;
     })
+    // Drop empty headings (e.g. `<h3><br></h3>`) so screen-reader heading
+    // navigation doesn't land on blank stops (a11y audit P7).
+    .replace(/<(h2|h3)>(?:\s|<br>|&nbsp;|&#160;)*<\/\1>/gi, "")
     .replace(/\s+/g, " ")
     .trim();
 }

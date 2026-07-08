@@ -22591,6 +22591,38 @@
       "sourceUrl": "https://new-projects-media.propertyfinder.com/project/cf1502fd-65ce-4637-b0d5-d91a31e706ee/gallery/image/EuWGTyvkpSPo5V301cfpagYKhwdHlwDv9Sqlv5qKL7E=/medium.webp",
       "uploadedAt": "2026-07-07T11:25:24.699Z",
       "bytes": 43922
+    },
+    "projects/105-residences/gallery/000.webp": {
+      "sourceUrl": "",
+      "restoredFrom": "preview-bucket-copy 2026-07-08"
+    },
+    "projects/105-residences/gallery/001.webp": {
+      "sourceUrl": "",
+      "restoredFrom": "preview-bucket-copy 2026-07-08"
+    },
+    "projects/105-residences/gallery/002.webp": {
+      "sourceUrl": "",
+      "restoredFrom": "preview-bucket-copy 2026-07-08"
+    },
+    "projects/105-residences/gallery/003.webp": {
+      "sourceUrl": "",
+      "restoredFrom": "preview-bucket-copy 2026-07-08"
+    },
+    "projects/105-residences/gallery/004.webp": {
+      "sourceUrl": "",
+      "restoredFrom": "preview-bucket-copy 2026-07-08"
+    },
+    "projects/105-residences/gallery/005.webp": {
+      "sourceUrl": "",
+      "restoredFrom": "preview-bucket-copy 2026-07-08"
+    },
+    "projects/105-residences/gallery/006.webp": {
+      "sourceUrl": "",
+      "restoredFrom": "preview-bucket-copy 2026-07-08"
+    },
+    "projects/105-residences/brochure.pdf": {
+      "sourceUrl": "",
+      "restoredFrom": "preview-bucket-copy 2026-07-08"
     }
   },
   "failed": {}

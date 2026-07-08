@@ -17,5 +17,9 @@ NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 # Server-only — set via: npx wrangler secret put TURNSTILE_SECRET_KEY
 TURNSTILE_SECRET_KEY=
 
+# Server-only GA4 Measurement Protocol secret (used by /api/leads to emit generate_lead server-side).
+# Set via: npx wrangler secret put GA4_MP_SECRET  (on preview + production workers)
+# GA4_MP_SECRET=  (do not put real value here)
+
 # Optional enrichment pipeline
 FIRECRAWL_API_KEY=

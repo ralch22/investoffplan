@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HoneypotField } from "@/components/honeypot-field";
 import { TurnstileField } from "@/components/turnstile-field";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
@@ -58,17 +58,16 @@ export function BrochureModal({
   const [turnstileToken, setTurnstileToken] = useState("");
   const [guardError, setGuardError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
+  // Native <dialog>.showModal() gives focus trap, Escape, and focus restore
+  // for free (a11y audit O1).
   useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
-  if (!open) return null;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open && !dialog.open) dialog.showModal();
+    else if (!open && dialog.open) dialog.close();
+  }, [open]);
 
   const hasPdf = isDownloadablePdfUrl(brochureUrl);
 
@@ -140,19 +139,20 @@ export function BrochureModal({
   }
 
   return (
-    <div className="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center p-4">
-      <button
-        type="button"
-        aria-label="Close"
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={handleClose}
-      />
+    <dialog
+      ref={dialogRef}
+      aria-labelledby="brochure-modal-title"
+      onClose={handleClose}
+      className="fixed inset-0 z-[var(--z-modal)] m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+    >
+      {open ? (
       <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="brochure-modal-title"
-        className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-elevation-lg"
+        className="flex min-h-full items-center justify-center p-4"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) handleClose();
+        }}
       >
+      <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-elevation-lg">
         <h2 id="brochure-modal-title" className="text-xl font-semibold text-text-dark">
           Download brochure
         </h2>
@@ -224,6 +224,8 @@ export function BrochureModal({
           </button>
         </form>
       </div>
-    </div>
+      </div>
+      ) : null}
+    </dialog>
   );
 }

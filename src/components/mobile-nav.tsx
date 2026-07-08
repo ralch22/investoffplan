@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { BrandLogo } from "@/components/brand-logo";
 import { useFavoritesCount } from "@/hooks/use-favorites-count";
 import { cn } from "@/lib/cn";
@@ -31,26 +31,27 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
   const pathname = usePathname();
   const favoritesCount = useFavoritesCount();
   const { locale, dict } = useI18n();
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
+  // Native <dialog>.showModal() gives focus trap, Escape, and focus restore
+  // for free (a11y audit O1).
   useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, onClose]);
-
-  if (!open) return null;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open && !dialog.open) dialog.showModal();
+    else if (!open && dialog.open) dialog.close();
+  }, [open]);
 
   return (
-    <div className="fixed inset-0 z-[var(--z-overlay)] lg:hidden" role="dialog" aria-modal="true">
-      <button
-        type="button"
-        className="absolute inset-0 bg-surface-darker/60 backdrop-blur-sm"
-        aria-label={dict.nav.closeMenu}
-        onClick={onClose}
-      />
+    <dialog
+      ref={dialogRef}
+      onClose={onClose}
+      onClick={(e) => {
+        if (e.target === dialogRef.current) onClose();
+      }}
+      className="fixed inset-0 z-[var(--z-overlay)] m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-surface-darker/60 backdrop:backdrop-blur-sm lg:hidden"
+    >
+      {open ? (
       <nav className="absolute end-0 top-0 flex h-full w-[min(100%,20rem)] flex-col bg-surface shadow-elevation-lg">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <BrandLogo variant="horizontal-dark" className="h-7 w-auto" />
@@ -105,6 +106,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
           </Link>
         </div>
       </nav>
-    </div>
+      ) : null}
+    </dialog>
   );
 }
