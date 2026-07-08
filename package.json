@@ -38,7 +38,8 @@
     "assets:apply-d1:local": "tsx scripts/apply-asset-urls-to-d1.ts",
     "assets:apply-d1:remote": "tsx scripts/apply-asset-urls-to-d1.ts --remote",
     "assets:apply-d1:production": "tsx scripts/apply-asset-urls-to-d1.ts --remote --config=wrangler.production.jsonc",
-    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "build:dld-area-stats": "tsx scripts/build-dld-area-stats.ts"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.10",
