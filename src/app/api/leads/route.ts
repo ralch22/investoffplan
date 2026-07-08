@@ -6,6 +6,7 @@ import { leads } from "@/lib/db/schema";
 import { isHoneypotTripped } from "@/lib/form-guard";
 import { isTurnstileEnabled, verifyTurnstileToken } from "@/lib/turnstile";
 import { forwardLeadToGhl } from "@/lib/ghl";
+import { sendGa4GenerateLead } from "@/lib/ga4-mp";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,7 @@ interface LeadBody {
   honeypot?: string;
   turnstileToken?: string;
   extra?: Record<string, unknown>;
+  gaClientId?: string;
 }
 
 const clean = (v: unknown, max = 500): string | undefined => {
@@ -109,7 +111,7 @@ export async function POST(request: Request) {
 
   await db.insert(leads).values(lead);
 
-  const forward = async () => {
+  const forwardGhl = async () => {
     const result = await forwardLeadToGhl({
       formType,
       name,
@@ -130,12 +132,28 @@ export async function POST(request: Request) {
       .where(eq(leads.id, lead.id));
   };
 
+  const sendGa4 = async () => {
+    // Extract client id if provided by client (from _ga cookie); server falls back inside.
+    const clientIdFromBody =
+      typeof (body as LeadBody).gaClientId === "string"
+        ? (body as LeadBody).gaClientId
+        : undefined;
+    await sendGa4GenerateLead({
+      formType,
+      projectSlug: lead.projectSlug ?? undefined,
+      clientId: clientIdFromBody,
+    });
+    // Never throws outward; GA4 errors are swallowed inside sendGa4GenerateLead.
+  };
+
   try {
     const { ctx } = await getCloudflareContext({ async: true });
-    ctx.waitUntil(forward());
+    ctx.waitUntil(forwardGhl());
+    ctx.waitUntil(sendGa4());
   } catch {
     // Not on Workers (e.g. next start in e2e) — forward inline, best effort.
-    await forward().catch(() => {});
+    await forwardGhl().catch(() => {});
+    await sendGa4().catch(() => {});
   }
 
   return NextResponse.json({ ok: true, id: lead.id });

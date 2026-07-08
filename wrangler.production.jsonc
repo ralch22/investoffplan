@@ -49,6 +49,9 @@
     { "pattern": "investoffplan.com/*", "zone_name": "investoffplan.com" },
     { "pattern": "www.investoffplan.com/*", "zone_name": "investoffplan.com" }
   ],
+  // Secrets (set via wrangler secret put on production worker):
+  //   GA4_MP_SECRET for server-side GA4 Measurement Protocol generate_lead events
+  //   (plus TURNSTILE_SECRET_KEY, GHL_*, LEADS_RETRY_TOKEN, etc.)
   "vars": {
     "NEXT_PUBLIC_SITE_URL": "https://investoffplan.com",
     "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADxyqgdGGZ6sArrC",
