@@ -1,0 +1,353 @@
+// English UI strings — source of truth for the dictionary shape.
+const dict = {
+  "nav": {
+    "projects": "Projects",
+    "dataToolkit": "Data toolkit",
+    "developers": "Developers",
+    "areas": "Areas",
+    "map": "Map",
+    "guides": "Guides",
+    "news": "News",
+    "favorites": "Favorites",
+    "favoritesWithCount": "Favorites ({count})",
+    "about": "About",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "areaProperties": "Area Properties",
+    "browseProperties": "Browse properties",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "closeNavigation": "Close navigation",
+    "mainNavAria": "Main"
+  },
+  "footer": {
+    "columns": {
+      "guides": "Guides",
+      "collections": "Collections"
+    },
+    "links": {
+      "waterfrontProjects": "Waterfront Projects",
+      "brandedResidences": "Branded Residences",
+      "underAed2m": "Under AED 2M",
+      "dubaiOffPlan": "Dubai Off-Plan",
+      "rasAlKhaimah": "Ras Al Khaimah",
+      "buyingOffPlan": "Buying Off-Plan",
+      "findingRightDeveloper": "Finding the Right Developer",
+      "understandingPaymentPlans": "Understanding Payment Plans",
+      "foreignInvestors": "Off-Plan for Foreign Investors",
+      "goldenVisa": "Acquiring the Golden Visa"
+    },
+    "contact": {
+      "telephone": "Telephone: {phone}",
+      "email": "Email: {email}",
+      "address": "Address: Business Bay, Dubai"
+    },
+    "privacy": "Privacy",
+    "cookies": "Cookies",
+    "legal": "© {year} invest off-plan · Powered by Aria Properties LLC · DRN 20678, a licensed real estate brokerage in Dubai"
+  },
+  "common": {
+    "viewDetails": "View Details",
+    "whatsapp": "WhatsApp",
+    "compare": "Compare",
+    "compareUnit": "Compare unit",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites",
+    "downloadFreePdfBrochure": "Download Free PDF Brochure →",
+    "downloadBrochure": "Download Brochure →",
+    "downloadBrochureFor": "Download brochure for {name}",
+    "premium": "Premium",
+    "available": "Available",
+    "soldOut": "Sold out",
+    "paymentPlan": "Payment Plan",
+    "handover": "Handover {date}",
+    "unitCountSingular": "{count} {type} unit",
+    "unitCountPlural": "{count} {type} units",
+    "submit": "Submit",
+    "submitting": "Submitting…",
+    "close": "Close",
+    "retry": "Retry",
+    "prev": "Prev",
+    "next": "Next",
+    "browseProjects": "Browse all properties",
+    "readMore": "Read more",
+    "breadcrumbAria": "Breadcrumb",
+    "paginationAria": "Pagination",
+    "viewAll": "View All →"
+  },
+  "home": {
+    "heroEyebrow": "UAE off-plan intelligence for serious buyers",
+    "heroTitle": "UAE's Premier Off-Plan Platform",
+    "heroSubtitle": "{unitCount} unit options across {projectCount} projects — brochures, price per sqft, compare, and a live map in one place.",
+    "browseAllProperties": "Browse all properties",
+    "openMap": "Open map",
+    "statsEyebrow": "Live catalog intelligence",
+    "stats": {
+      "unitOptions": "Unit options",
+      "unitOptionsHint": "Across all emirates",
+      "brochurePdfs": "Brochure PDFs",
+      "brochurePdfsHint": "Download or WhatsApp",
+      "mapReadyProjects": "Map-ready projects",
+      "mapReadyProjectsHint": "With coordinates",
+      "avgPpsf": "Avg AED/sqft",
+      "avgPpsfHint": "Catalog benchmark"
+    },
+    "keyLocationsHeading": "Key Locations.",
+    "viewAllLocations": "View All Locations →",
+    "areaMeta": "{city} · {count} projects",
+    "exploreArea": "Explore area",
+    "propertyTypesHeading": "Property Types.",
+    "propertyTypes": {
+      "apartments": "Apartments",
+      "townhouses": "Townhouses",
+      "villas": "Villas",
+      "penthouses": "Penthouses"
+    },
+    "browsePropertyType": "Browse off-plan {type}",
+    "findPerfectHeading": "Find the Perfect Property Investment.",
+    "findPerfectBody": "Browse UAE's most comprehensive off-plan catalog with unit-level pricing, brochures, and live map intelligence.",
+    "browsePropertiesCta": "Browse Properties",
+    "highlights": {
+      "avgRoi": "Average ROI potential on prime launches",
+      "goldenVisa": "Golden Visa eligibility on qualifying investments",
+      "flexiblePlans": "Flexible payment plans across the catalog"
+    },
+    "faqHeading": "Frequently Asked Questions.",
+    "moreQuestions": "More questions?",
+    "browseFullFaq": "Browse the full FAQ →",
+    "consultationHeading": "Book a Consultation with an Off-Plan Expert.",
+    "consultationBody": "Leave your contact details to register your interest in launches, brochures, and payment plans.",
+    "bookConsultation": "Book a consultation"
+  },
+  "serp": {
+    "heading": "{count} Total unit options in UAE",
+    "headingProjects": "{count} New off-plan projects in UAE",
+    "searchResultsTitle": "Search Results",
+    "propertiesIn": "Properties in {location}",
+    "resultsCount": "{count} results",
+    "resultsIn": "in {location}",
+    "updated": "Updated {date}",
+    "filtersAndSearch": "Filters & search",
+    "view": {
+      "grid": "Grid",
+      "list": "List",
+      "map": "Map",
+      "showProjectView": "Show project view",
+      "showUnitView": "Show unit view"
+    },
+    "sort": {
+      "sortBy": "Sort by:",
+      "featured": "Featured",
+      "priceAsc": "Price: Low to High",
+      "priceDesc": "Price: High to Low",
+      "bestValue": "Best value (AED/sqft)",
+      "handoverSoonest": "Handover: Soonest",
+      "handoverLatest": "Handover: Latest"
+    },
+    "chips": {
+      "all": "All",
+      "premium": "Premium",
+      "brochurePdf": "Brochure PDF",
+      "videoTour": "Video tour",
+      "under2m": "Under AED 2M",
+      "studio": "Studio",
+      "waterfront": "Waterfront"
+    },
+    "filters": {
+      "title": "Filters",
+      "closeFilters": "Close filters",
+      "close": "Close",
+      "search": "Search",
+      "searchPlaceholder": "Project, developer, area...",
+      "searchPlaceholderMobile": "Search by project, area, developer...",
+      "propertyType": "Property type",
+      "allTypes": "All types",
+      "apartment": "Apartment",
+      "villa": "Villa",
+      "townhouse": "Townhouse",
+      "penthouse": "Penthouse",
+      "beds": "Beds",
+      "any": "Any",
+      "studio": "Studio",
+      "bed1": "1 Bed",
+      "beds2": "2 Beds",
+      "beds3": "3 Beds",
+      "beds4": "4 Beds",
+      "beds5Plus": "5+ Beds",
+      "maxPrice": "Max price (AED)",
+      "upTo15m": "Up to 1.5M",
+      "upTo25m": "Up to 2.5M",
+      "upTo4m": "Up to 4M",
+      "moreFilters": "More filters",
+      "developer": "Developer",
+      "allDevelopers": "All developers",
+      "minPrice": "Min price (AED)",
+      "noMinimum": "No minimum",
+      "from500k": "From 500K",
+      "from1m": "From 1M",
+      "from2m": "From 2M",
+      "from5m": "From 5M",
+      "paymentPlan": "Payment plan",
+      "anyPlan": "Any plan",
+      "postHandoverPlan": "Post-handover plan",
+      "multiplePlans": "Multiple plans",
+      "handoverBy": "Handover by",
+      "anyDate": "Any date",
+      "endOfYear": "End of {year}",
+      "amenities": "Amenities",
+      "showResults": "Show results"
+    },
+    "empty": {
+      "title": "No units match your filters",
+      "body": "Try clearing beds, price, or city filters.",
+      "clearAllFilters": "Clear all filters"
+    },
+    "error": {
+      "couldNotLoad": "Could not load project catalog",
+      "retry": "Retry"
+    }
+  },
+  "pdp": {
+    "sectionsAria": "Project sections",
+    "sections": {
+      "overview": "Overview",
+      "keyFacts": "Key info",
+      "masterplan": "Masterplan",
+      "floorPlans": "Floor plans",
+      "units": "Units",
+      "livingInArea": "Area",
+      "location": "Location",
+      "calculator": "Calculator",
+      "related": "Related"
+    },
+    "keyFacts": {
+      "heading": "Key information",
+      "deliveryDate": "Delivery date",
+      "location": "Location",
+      "paymentPlan": "Payment plan",
+      "propertyTypes": "Property types",
+      "governmentFee": "Government fee",
+      "ownershipType": "Ownership type",
+      "developer": "Developer",
+      "status": "Status",
+      "toBeAnnounced": "To be announced",
+      "governmentFeeValue": "4% DLD",
+      "freehold": "Freehold",
+      "seePaymentPlans": "See {count} payment plans",
+      "statusSoldOut": "Sold out",
+      "statusUnderConstruction": "Under construction",
+      "statusReady": "Ready",
+      "statusOffPlan": "Off-plan"
+    },
+    "timeline": {
+      "heading": "Project timeline",
+      "projectListed": "Project listed",
+      "availableNow": "Available now",
+      "booking": "Booking",
+      "open": "Open",
+      "closed": "Closed",
+      "construction": "Construction",
+      "inProgress": "In progress",
+      "complete": "Complete",
+      "offPlan": "Off-plan",
+      "expectedCompletion": "Expected completion",
+      "tba": "TBA",
+      "step": "Step {index} of {total}"
+    }
+  },
+  "forms": {
+    "contact": {
+      "emailPlaceholder": "Email address",
+      "subjectPlaceholder": "Subject",
+      "messagePlaceholder": "Message",
+      "successTitle": "Thanks — your message has been sent.",
+      "successBody": "Our team will get back to you shortly. You can also email admin@investoffplan.com",
+      "sendAnother": "Send another message",
+      "submit": "Submit",
+      "submitting": "Submitting…"
+    },
+    "contactCta": {
+      "namePlaceholder": "Name",
+      "phonePlaceholder": "Phone",
+      "emailPlaceholder": "Email",
+      "countryPlaceholder": "Country of residence",
+      "messagePlaceholder": "What are you looking for?",
+      "successTitle": "Thanks — your enquiry is with our team.",
+      "successBody": "We'll reach out shortly. Prefer instant chat?",
+      "whatsappCta": "Message us on WhatsApp",
+      "sendAnotherEnquiry": "Send another enquiry",
+      "submitViaWhatsapp": "Submit via WhatsApp"
+    },
+    "newsletter": {
+      "title": "Off-Plan Newsletter.",
+      "subtitle": "Exclusive insights on the latest off-plan opportunities.",
+      "namePlaceholder": "Name...",
+      "phonePlaceholder": "Phone...",
+      "emailPlaceholder": "Email...",
+      "whatsappOptIn": "Opt-in to receive WhatsApp exclusives",
+      "success": "You're subscribed — we'll send launch alerts to {email}.",
+      "formAria": "Newsletter signup",
+      "submit": "Submit",
+      "submitting": "Submitting…"
+    },
+    "brochure": {
+      "title": "Download brochure",
+      "pdfSubtitle": "Get the official PDF for {name}",
+      "whatsappSubtitle": "A broker will send the brochure for {name} via WhatsApp",
+      "fullNameLabel": "Full name",
+      "phoneNumberLabel": "Phone number",
+      "downloadPdf": "Download PDF brochure",
+      "requestViaWhatsapp": "Request brochure via WhatsApp",
+      "closeAria": "Close"
+    },
+    "preapproval": {
+      "namePlaceholder": "Full name",
+      "phonePlaceholder": "Phone (with country code)",
+      "emailPlaceholder": "Email address",
+      "budgetLabel": "Purchase budget",
+      "budgetUnder1m": "Under AED 1M",
+      "budget1to2m": "AED 1M – 2M",
+      "budget2to5m": "AED 2M – 5M",
+      "budget5mPlus": "AED 5M+",
+      "cta": "Get pre-approval",
+      "successTitle": "Pre-approval request received.",
+      "successBody": "A mortgage specialist will contact you to confirm eligibility and current rates — no fees, no obligation.",
+      "disclaimer": "Zero fees. We connect you with licensed UAE mortgage advisers."
+    },
+    "errors": {
+      "nameRequired": "Name is required",
+      "fullNameShort": "Enter your full name",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email",
+      "emailInvalidAddress": "Enter a valid email address",
+      "phoneRequired": "Phone is required",
+      "phoneNumberRequired": "Phone number is required",
+      "phoneInvalid": "Enter a valid phone number",
+      "subjectRequired": "Subject is required",
+      "subjectShort": "Subject must be at least 3 characters",
+      "messageRequired": "Message is required",
+      "messageShort": "Message must be at least 10 characters",
+      "messageWhatLooking": "Tell us what you're looking for",
+      "submitFailed": "Unable to submit. Please try again.",
+      "subscribeFailed": "Unable to subscribe. Please try again."
+    }
+  },
+  "format": {
+    "beds": {
+      "studio": "Studio",
+      "one": "1 Bed",
+      "many": "{count} Beds"
+    },
+    "from": "from",
+    "fromUpper": "FROM",
+    "million": "M",
+    "sqft": "{value} sqft",
+    "sqftRange": "{min} - {max} sqft",
+    "pricePerSqft": "AED {value}/sqft"
+  }
+} as const;
+
+type DeepWiden<T> = { [K in keyof T]: T[K] extends string ? string : DeepWiden<T[K]> };
+
+export type Dict = DeepWiden<typeof dict>;
+export const en: Dict = dict;

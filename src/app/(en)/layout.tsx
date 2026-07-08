@@ -3,7 +3,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { Inter, PT_Serif } from "next/font/google";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { CatalogPrefetch } from "@/components/catalog-prefetch";
-import "./globals.css";
+import "../globals.css";
 
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
