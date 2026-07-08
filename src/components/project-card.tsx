@@ -22,6 +22,7 @@ import {
 import { resolveBrochureUrl } from "@/lib/brochure";
 import { unitPricePerSqft } from "@/lib/investment-metrics";
 import { getProjectGalleryImages } from "@/lib/project-gallery-images";
+import { cardEntrance, cardHoverLift } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 
 interface ProjectCardProps {
@@ -71,11 +72,10 @@ export function ProjectCard({
   return (
     <>
       <motion.article
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
+        {...cardEntrance(index)}
+        {...cardHoverLift}
         className={cn(
-          "group flex w-full flex-col overflow-hidden rounded-2xl border border-border bg-surface-dark shadow-elevation-md transition-all duration-500 hover:-translate-y-1 hover:shadow-elevation-lg",
+          "group flex w-full flex-col overflow-hidden rounded-2xl border border-border bg-surface-dark shadow-elevation-md transition-shadow duration-500 hover:shadow-elevation-lg",
           featured ? "lg:col-span-2" : "lg:w-[calc(50%-10px)]",
         )}
       >
@@ -193,10 +193,9 @@ function ListCard({
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.05, ease: "easeOut" }}
-      className="group overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-all duration-500 hover:-translate-y-1 hover:shadow-elevation-md"
+      {...cardEntrance(index)}
+      {...cardHoverLift}
+      className="group overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition-shadow duration-500 hover:shadow-elevation-md"
     >
       <div className="flex flex-col md:flex-row">
         <div className="relative h-52 w-full shrink-0 md:h-auto md:w-80">

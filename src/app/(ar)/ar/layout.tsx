@@ -3,6 +3,7 @@ import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { CatalogPrefetch } from "@/components/catalog-prefetch";
+import { MotionProvider } from "@/components/motion-provider";
 import { LocaleProvider } from "@/i18n/locale-provider";
 import { getDictionary } from "@/i18n";
 import "../../globals.css";
@@ -76,7 +77,7 @@ export default function ArabicRootLayout({
         <SiteJsonLd />
         <CatalogPrefetch />
         <LocaleProvider locale="ar" dict={dict}>
-          {children}
+          <MotionProvider>{children}</MotionProvider>
         </LocaleProvider>
       </body>
     </html>
