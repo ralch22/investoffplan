@@ -12,7 +12,7 @@ const uploadedKeys = new Set(
   Object.keys((rawManifest as { uploaded?: Record<string, unknown> }).uploaded ?? {}),
 );
 
-function isServableImage(url: string | undefined): url is string {
+export function isServableImage(url: string | undefined): url is string {
   if (!url) return false;
   if (!url.startsWith("/cdn/")) return true;
   return uploadedKeys.has(url.slice(5));

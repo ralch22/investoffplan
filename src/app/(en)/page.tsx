@@ -14,7 +14,8 @@ import {
   getDevelopers,
 } from "@/lib/catalog";
 import { unoptimizedProp } from "@/lib/asset-image";
-import { getAreaImage } from "@/lib/area-images";
+import { getAreaImage, isServableImage } from "@/lib/area-images";
+import { getCatalogApi } from "@/lib/catalog";
 import { AdvantageMatrix } from "@/components/advantage-matrix";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
@@ -31,12 +32,12 @@ export const metadata: Metadata = {
   },
 };
 
-const PROPERTY_TYPES = [
-  { href: "/projects?type=apartment", label: "Apartments" },
-  { href: "/projects?type=townhouse", label: "Townhouses" },
-  { href: "/projects?type=villa", label: "Villas" },
-  { href: "/projects?type=penthouse", label: "Penthouses" },
-];
+const PROPERTY_TYPE_DEFS = [
+  { key: "apartment", label: "Apartments" },
+  { key: "townhouse", label: "Townhouses" },
+  { key: "villa", label: "Villas" },
+  { key: "penthouse", label: "Penthouses" },
+] as const;
 
 const HIGHLIGHTS = [
   { value: "10%", label: "Average ROI potential on prime launches" },
@@ -78,6 +79,36 @@ export default async function HomePage() {
   const areaImages = await Promise.all(topAreas.map((a) => getAreaImage(a.name)));
   const topDevelopers = (await getDevelopers()).slice(0, 8);
   const heroImage = featured[0]?.imageUrl;
+
+  // Priced property-type tiles — a real project photo + cheapest launch price
+  // per type, so the section is a set of navigable entry points, not decoration.
+  const catalogApi = await getCatalogApi();
+  const propertyTypeTiles = PROPERTY_TYPE_DEFS.map((t) => {
+    let minPriceAed = Infinity;
+    let count = 0;
+    let image: string | undefined;
+    for (const project of catalogApi.projects) {
+      const typeUnits = project.units.filter((u) =>
+        u.propertyType.toLowerCase().includes(t.key),
+      );
+      if (typeUnits.length === 0) continue;
+      count += 1;
+      for (const u of typeUnits) {
+        // skip price-on-request units (launchPriceAed 0) so "From" is a real floor
+        if (u.launchPriceAed > 0 && u.launchPriceAed < minPriceAed) {
+          minPriceAed = u.launchPriceAed;
+        }
+      }
+      if (!image && isServableImage(project.imageUrl)) image = project.imageUrl;
+    }
+    return {
+      label: t.label,
+      href: `/projects?type=${t.key}`,
+      minPriceAed: Number.isFinite(minPriceAed) ? minPriceAed : null,
+      count,
+      image,
+    };
+  }).filter((t) => t.count > 0);
 
   return (
     <PageShell headerVariant="transparent">
@@ -246,21 +277,41 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {PROPERTY_TYPES.map((type) => (
+            {propertyTypeTiles.map((type) => (
               <Link
                 key={type.label}
                 href={type.href}
-                className="group rounded-2xl border border-border bg-white p-6 transition hover:-translate-y-0.5 hover:border-brand hover:shadow-elevation-md"
+                className="iop-btn-press focus-ring group relative flex min-h-[200px] flex-col justify-end overflow-hidden rounded-2xl border border-border shadow-elevation-sm transition hover:-translate-y-0.5 hover:shadow-elevation-md"
               >
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-muted text-brand">
-                  <PropertyTypeIcon label={type.label} />
-                </span>
-                <p className="mt-4 text-lg font-semibold text-text-dark group-hover:text-brand">
-                  {type.label}
-                </p>
-                <p className="mt-2 text-sm text-muted">
-                  Browse off-plan {type.label.toLowerCase()}
-                </p>
+                {type.image ? (
+                  <Image
+                    src={type.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
+                    className="object-cover transition duration-500 group-hover:scale-[1.05]"
+                    {...unoptimizedProp(type.image)}
+                  />
+                ) : (
+                  <div className="area-card-accent absolute inset-0" />
+                )}
+                <div className="card-photo-overlay absolute inset-0" />
+                <div className="relative p-5 text-white">
+                  <p className="text-lg font-semibold">{type.label}</p>
+                  {type.minPriceAed ? (
+                    <p className="mt-1 text-sm text-white/85">
+                      From AED {type.minPriceAed.toLocaleString()}
+                    </p>
+                  ) : (
+                    <p className="mt-1 text-sm text-white/75">{type.count} projects</p>
+                  )}
+                  <span
+                    className="mt-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand text-white transition group-hover:translate-x-0.5"
+                    aria-hidden
+                  >
+                    →
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
@@ -342,17 +393,3 @@ export default async function HomePage() {
   );
 }
 
-function PropertyTypeIcon({ label }: { label: string }) {
-  const paths: Record<string, string> = {
-    Apartments: "M4 18V8l8-5 8 5v10M8 18v-4h8v4",
-    Townhouses: "M3 12l9-7 9 7v8H3zM9 20v-6h6v6",
-    Villas: "M4 10l8-6 8 6v10H4zM10 20v-5h4v5",
-    Penthouses: "M4 14h16M6 14V8h12v6M8 20h8",
-  };
-  const d = paths[label] ?? "M4 12h16M4 6h16M4 18h16";
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden>
-      <path d={d} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
