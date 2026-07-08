@@ -128,7 +128,6 @@ export function ProjectCard({
               {ppsf ? ` · AED ${ppsf.toLocaleString()}/sqft` : ""}
             </p>
             <p className="text-xl font-bold text-white">
-              from{" "}
               {formatFromPrice(unit.launchPriceAed, unit.launchPriceMaxAed, currency)}
             </p>
 
