@@ -207,3 +207,101 @@ Will be extended to read from D1 when `DB` binding is available (same `{ project
 - **Binding:** `DB` in `wrangler.jsonc`
 - **Database ID:** `e5aa2877-4359-4c28-8499-0c149200c6a4`
 - **Tables:** `catalog_meta`, `city_counts`, `developer_serp_links`, `developers`, `projects`, `project_units`, `catalog_units`
+
+---
+
+## Production D1 runbook
+
+Operational reference for the production catalog database. Covers **migrate**, **seed**, **ingest**, and **rollback**.
+
+> ⚠️ **`--remote` == production.** Both `wrangler.jsonc` (preview) and `wrangler.production.jsonc` point at the **same** D1 database (`investoffplan-catalog`, id `e5aa2877-4359-4c28-8499-0c149200c6a4`). There is **no separate preview catalog DB** — any `--remote` command mutates live production data behind `investoffplan.com`. Local commands (`--local`) touch only the on-disk SQLite replica under `.wrangler/`.
+
+### Preconditions
+
+- `wrangler` authenticated for account `4a75e91d6fca8bc58467fb80ce1b9c2e` (`npx wrangler whoami`).
+- `CLOUDFLARE_API_TOKEN` with **Account → D1:Edit** + **Workers Scripts:Edit** (for CI / remote bindings).
+- **Take a backup before any destructive remote write** (see [Rollback](#rollback)). Reseeds and full-wipe seeds are destructive; upserts are not.
+
+### 1. Migrate (schema)
+
+Migrations live in `drizzle/migrations/` (`0000_initial.sql` … `0003_catalog_filter_indexes.sql`) and are applied by `wrangler d1 migrations apply` (tracked in D1's `d1_migrations` table — safe to re-run, already-applied files are skipped).
+
+```bash
+npm run db:migrate:local     # apply pending migrations to local replica
+npx wrangler d1 migrations list investoffplan-catalog --remote   # preview what will apply
+npm run db:migrate:remote    # apply pending migrations to PRODUCTION D1
+```
+
+Run migrations **before** seeding/ingesting when the schema has changed. Adding a new migration: drop the `.sql` file into `drizzle/migrations/` (keep the numeric prefix ordering) and apply local → remote.
+
+### 2. Seed (full replace)
+
+Destructive: wipes all catalog tables, then imports `data/catalog.json`. Use for the **first** load or a deliberate full rebuild — not routine refreshes.
+
+```bash
+npm run db:seed:local        # wipe + import data/catalog.json → local D1
+npm run db:seed:remote       # export local D1 → PRODUCTION D1 (run db:seed:local first)
+```
+
+`db:seed:remote` (`scripts/seed-remote-d1.mjs`) `DELETE`s every catalog table on production, exports the local tables to `.tmp/investoffplan-catalog-data.sql`, then replays that file remotely — so the local replica must already hold the intended data.
+
+### 3. Ingest (incremental upsert)
+
+Non-destructive merge — preserves existing rows (e.g. enriched brochures) and updates/inserts changed ones. This is the **routine** path for keeping the catalog fresh.
+
+```bash
+npm run db:upsert:local      # merge data/catalog.json → local D1
+npm run db:upsert:remote     # merge data/catalog.json → PRODUCTION D1
+
+npm run ingest:catalog       # scrape PF + brochures + sync JSON + upsert (add --remote for prod)
+npm run ingest:catalog:smoke # 2-page scrape smoke test + remote upsert (safe canary)
+```
+
+Pipeline stages (`scripts/catalog-ingest-pipeline.ts`; `--remote` propagates to the final upsert only):
+1. `scrape-pf-catalog.ts` — Property Finder unit-view ingest (`--pages 2` under `--smoke`).
+2. `scrape-pf-brochures.ts --resume` — enrich brochures/metadata (skips existing PDFs).
+3. `sync-catalog-public.mjs` — refresh static JSON fallback slices.
+4. `upsert-catalog-to-d1.ts [--remote]` — merge into D1 without a wipe.
+
+**Automation:** `.github/workflows/catalog-ingest.yml` runs Mondays 04:00 UTC (and manual dispatch), always `--remote`, and commits refreshed `data/catalog.json` + `public/data/*` back to the repo. See [Automated ingest](#automated-ingest-github-actions).
+
+**Verify after ingest/seed:**
+
+```bash
+curl -s https://investoffplan.com/api/catalog/meta | jq '{version, unitCount, projectCount, scrapedAt}'
+npx wrangler d1 execute investoffplan-catalog --remote \
+  --command "SELECT COUNT(*) AS units FROM catalog_units; SELECT COUNT(*) AS projects FROM projects;"
+```
+
+`unitCount`/`projectCount` should match the source snapshot, and `scrapedAt` should advance. A `catalog_database_empty` (503) response means the schema exists but no rows landed — reseed.
+
+### Rollback
+
+**Always back up before a destructive remote write:**
+
+```bash
+npx wrangler d1 export investoffplan-catalog --remote \
+  --output .tmp/catalog-backup-$(date +%Y%m%d-%H%M%S).sql
+```
+
+Restore that backup (recreate schema + data from the dump):
+
+```bash
+npx wrangler d1 execute investoffplan-catalog --remote --file=.tmp/catalog-backup-<stamp>.sql
+```
+
+**Time Travel (point-in-time restore, no backup file needed).** D1 retains ~30 days of history:
+
+```bash
+npx wrangler d1 time-travel info investoffplan-catalog --remote        # current bookmark
+npx wrangler d1 time-travel restore investoffplan-catalog --remote \
+  --timestamp=2026-07-06T14:00:00Z                                     # or --bookmark=<id>
+```
+
+Time Travel restores the **whole database** to that instant — coordinate before using it (it also reverts the `leads` and migration-tracking tables). After any restore, re-run the [verification](#3-ingest-incremental-upsert) checks and confirm `/api/catalog/meta` reflects the expected snapshot.
+
+**Bad ingest recovery playbook:**
+1. `wrangler d1 time-travel info` to capture the current bookmark (so you can roll *forward* again if needed).
+2. Restore to the last-known-good timestamp/bookmark, **or** replay the pre-write `.sql` backup.
+3. Re-verify counts + `scrapedAt` via `/api/catalog/meta`.
+4. Fix the source (`data/catalog.json` / scraper), then re-run `db:upsert:remote` to reapply the good data.
