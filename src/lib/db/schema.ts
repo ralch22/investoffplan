@@ -74,6 +74,7 @@ export const projects = sqliteTable(
   },
   (table) => [
     index("projects_city_idx").on(table.city),
+    index("projects_city_slug_idx").on(table.citySlug),
     index("projects_developer_idx").on(table.developer),
     index("projects_premium_idx").on(table.isPremium),
   ],
@@ -139,6 +140,8 @@ export const catalogUnits = sqliteTable(
   (table) => [
     index("catalog_units_project_slug_idx").on(table.projectSlug),
     index("catalog_units_city_slug_idx").on(table.citySlug),
+    index("catalog_units_city_idx").on(table.city),
+    index("catalog_units_developer_idx").on(table.developer),
     index("catalog_units_price_idx").on(table.launchPriceAed),
     index("catalog_units_beds_idx").on(table.beds),
     index("catalog_units_property_type_idx").on(table.propertyType),
