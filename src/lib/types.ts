@@ -83,8 +83,21 @@ export interface Project {
   amenities?: string[];
   masterPlanUrl?: string;
   videoUrl?: string;
+  floorPlans?: FloorPlan[];
+  salesStartDate?: string;
+  ownershipType?: string;
+  constructionProgress?: number;
+  pfFaqs?: Array<{ q: string; a: string }>;
   whatsapp: string;
   units: UnitType[];
+}
+
+export interface FloorPlan {
+  beds: number;
+  propertyType?: string;
+  area?: number;
+  layoutType?: string;
+  imageUrl: string;
 }
 
 export interface CatalogUnit {
@@ -145,6 +158,8 @@ export interface DevListEntry {
   devPageEnabled?: boolean;
 }
 
+export type PaymentPlanFilter = "all" | "post-handover" | "multiple";
+
 export interface ProjectFilters {
   query: string;
   city: CitySlug;
@@ -152,4 +167,11 @@ export interface ProjectFilters {
   beds: number | "studio" | "all";
   minPrice: number | null;
   maxPrice: number | null;
+  /** Developer slug (slugified developer name) or "all". */
+  developer: string;
+  paymentPlan: PaymentPlanFilter;
+  /** Latest acceptable handover year, or "all". */
+  handoverBy: number | "all";
+  /** Every selected amenity must be present on the project. */
+  amenities: string[];
 }

@@ -81,7 +81,7 @@ export function MediaGalleryLightbox({
         <div className="flex items-center justify-between gap-4 px-4 py-3 text-white md:px-6">
           <p className="text-sm font-medium">
             <span className="font-semibold">{alt}</span>
-            <span className="ml-2 tabular-nums text-white/70">
+            <span className="ms-2 tabular-nums text-white/70">
               {active + 1} / {count}
             </span>
           </p>
@@ -117,7 +117,7 @@ export function MediaGalleryLightbox({
               <button
                 type="button"
                 onClick={onPrev}
-                className="absolute left-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 md:left-6"
+                className="absolute start-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 md:start-6"
                 aria-label="Previous photo"
               >
                 <ChevronIcon direction="left" />
@@ -125,7 +125,7 @@ export function MediaGalleryLightbox({
               <button
                 type="button"
                 onClick={onNext}
-                className="absolute right-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 md:right-6"
+                className="absolute end-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 md:end-6"
                 aria-label="Next photo"
               >
                 <ChevronIcon direction="right" />
@@ -174,7 +174,11 @@ export function useGalleryIndex(length: number, initial = 0) {
 
 export function ChevronIcon({ direction }: { direction: "left" | "right" }) {
   return (
-    <svg viewBox="0 0 20 20" className="h-5 w-5 fill-none stroke-current stroke-2" aria-hidden>
+    <svg
+      viewBox="0 0 20 20"
+      className="h-5 w-5 fill-none stroke-current stroke-2 rtl:-scale-x-100"
+      aria-hidden
+    >
       {direction === "left" ? (
         <path d="M12 4 6 10l6 6" strokeLinecap="round" strokeLinejoin="round" />
       ) : (

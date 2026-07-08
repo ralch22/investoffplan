@@ -63,6 +63,14 @@ export function isWaterfront(item: FlatUnit): boolean {
   return /beach|waterfront|island|marina|palm|creek|coast|shore|sea/.test(haystack);
 }
 
+const BRANDED_KEYWORDS =
+  /armani|bugatti|mercedes|bentley|cavalli|missoni|elie saab|versace|fendi|baccarat|trump|address|vida|rove|st\.? regis|ritz|four seasons|w residences|jumeirah living|paramount|de grisogono|dorchester|mandarin oriental|six senses|banyan tree|nobu|kempinski|sls|mama shelter|hyde|delano|rixos|waldorf/i;
+
+/** Branded residences — hotel/fashion/auto-brand names in the project title. */
+export function isBrandedResidence(item: FlatUnit): boolean {
+  return BRANDED_KEYWORDS.test(item.project.name);
+}
+
 export function valueScore(item: FlatUnit): number {
   const ppsf = unitPricePerSqft(item);
   if (!ppsf) return item.unit.launchPriceAed;

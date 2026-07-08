@@ -3,6 +3,7 @@ import {
   isWaterfront,
   valueScore,
 } from "./investment-metrics";
+import { slugify } from "./slugify";
 import type {
   CatalogUnit,
   CitySlug,
@@ -77,6 +78,27 @@ function handoverValue(handover?: string): number {
   const match = handover.match(/Q(\d)\s+(\d{4})/);
   if (!match) return 9999;
   return Number(match[2]) * 10 + Number(match[1]);
+}
+
+export function handoverYear(handover?: string): number | null {
+  const match = handover?.match(/(\d{4})/);
+  return match ? Number(match[1]) : null;
+}
+
+/**
+ * Payment-plan classification from the scraped label:
+ * "10/35/5/50" (4 segments, last > 0) = post-handover plan;
+ * "N Payment Plans" (paymentPlanCount > 1) = multiple plans.
+ */
+export function matchesPaymentPlan(
+  plan: string | undefined,
+  planCount: number | undefined,
+  filter: "post-handover" | "multiple",
+): boolean {
+  if (filter === "multiple") return (planCount ?? 0) > 1;
+  if (!plan) return false;
+  const segments = plan.split("/").map((s) => Number(s.trim()));
+  return segments.length >= 4 && segments.every(Number.isFinite) && segments[3] > 0;
 }
 
 export function createCatalogApi(raw: CatalogFile): CatalogApi {
@@ -179,6 +201,29 @@ export function createCatalogApi(raw: CatalogFile): CatalogApi {
           return false;
         if (filters.maxPrice != null && unit.launchPriceAed > filters.maxPrice)
           return false;
+        if (filters.developer && filters.developer !== "all") {
+          const devSlug = slugify(cu?.developer ?? project.developer);
+          if (devSlug !== filters.developer) return false;
+        }
+        if (filters.paymentPlan && filters.paymentPlan !== "all") {
+          const plan = cu?.paymentPlan ?? project.paymentPlan;
+          const planCount = cu?.paymentPlanCount ?? project.paymentPlanCount;
+          if (!matchesPaymentPlan(plan, planCount, filters.paymentPlan)) return false;
+        }
+        if (filters.handoverBy && filters.handoverBy !== "all") {
+          const year = handoverYear(cu?.handover ?? project.handover);
+          if (year == null || year > filters.handoverBy) return false;
+        }
+        if (filters.amenities && filters.amenities.length > 0) {
+          const projectAmenities = (project.amenities ?? []).map((a) =>
+            a.toLowerCase(),
+          );
+          if (projectAmenities.length === 0) return false;
+          const allPresent = filters.amenities.every((wanted) =>
+            projectAmenities.some((a) => a.includes(wanted.toLowerCase())),
+          );
+          if (!allPresent) return false;
+        }
         if (!q) return true;
 
         const haystack = [

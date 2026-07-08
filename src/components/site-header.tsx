@@ -10,17 +10,20 @@ import type { CurrencyCode } from "@/lib/types";
 import { BrandLogo } from "@/components/brand-logo";
 import { useFavoritesCount } from "@/hooks/use-favorites-count";
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate, localePath } from "@/i18n/config";
+import { LanguageSwitcher } from "@/components/language-switcher";
 
-const NAV = [
-  { href: "/projects", label: "Projects" },
-  { href: "/tools", label: "Data toolkit" },
-  { href: "/developers", label: "Developers" },
-  { href: "/areas", label: "Areas" },
-  { href: "/insights", label: "Guides" },
-  { href: "/news", label: "News" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
+const NAV_KEYS = [
+  { href: "/projects", key: "projects" },
+  { href: "/tools", key: "dataToolkit" },
+  { href: "/developers", key: "developers" },
+  { href: "/areas", key: "areas" },
+  { href: "/guides", key: "guides" },
+  { href: "/news", key: "news" },
+  { href: "/about", key: "about" },
+  { href: "/contact", key: "contact" },
+] as const;
 
 interface SiteHeaderProps {
   currency: CurrencyCode;
@@ -39,6 +42,7 @@ export function SiteHeader({
   variant = "light",
 }: SiteHeaderProps) {
   const pathname = usePathname();
+  const { locale, dict } = useI18n();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const favoritesCount = useFavoritesCount();
@@ -68,7 +72,10 @@ export function SiteHeader({
         )}
       >
         <div className="mx-auto flex max-w-[1200px] items-center gap-3 px-5 py-3 md:px-8">
-          <Link href="/" className="focus-ring flex shrink-0 items-center rounded-sm">
+          <Link
+            href={localePath(locale, "/")}
+            className="focus-ring flex shrink-0 items-center rounded-sm"
+          >
             <BrandLogo
               variant={showSolidHeader ? "horizontal-dark" : "horizontal-white"}
               className="h-8 w-auto sm:h-9"
@@ -77,14 +84,15 @@ export function SiteHeader({
 
           <nav
             className="hidden flex-1 items-center justify-center gap-0.5 lg:flex"
-            aria-label="Main"
+            aria-label={dict.nav.mainNavAria}
           >
-            {NAV.map((item) => {
-              const active = isActive(pathname, item.href);
+            {NAV_KEYS.map((item) => {
+              const href = localePath(locale, item.href);
+              const active = isActive(pathname, href);
               return (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={href}
                   className={cn(
                     "focus-ring rounded-lg px-3 py-2 text-sm font-medium transition",
                     !showSolidHeader
@@ -97,7 +105,7 @@ export function SiteHeader({
                   )}
                   aria-current={active ? "page" : undefined}
                 >
-                  {item.label}
+                  {dict.nav[item.key]}
                 </Link>
               );
             })}
@@ -105,11 +113,11 @@ export function SiteHeader({
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <Link
-              href="/favorites"
+              href={localePath(locale, "/favorites")}
               aria-label={
                 favoritesCount > 0
-                  ? `Favorites (${favoritesCount})`
-                  : "Favorites"
+                  ? interpolate(dict.nav.favoritesWithCount, { count: favoritesCount })
+                  : dict.nav.favorites
               }
               className={cn(
                 "relative rounded-full border transition focus-ring iop-btn-press",
@@ -122,11 +130,11 @@ export function SiteHeader({
               <span className="sm:hidden" aria-hidden>
                 ★
               </span>
-              <span className="hidden sm:inline">Favorites</span>
+              <span className="hidden sm:inline">{dict.nav.favorites}</span>
               {favoritesCount > 0 ? (
                 <span
                   className={cn(
-                    "absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white",
+                    "absolute -end-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white",
                     !showSolidHeader ? "bg-white text-brand" : "bg-brand",
                   )}
                 >
@@ -135,11 +143,12 @@ export function SiteHeader({
               ) : null}
             </Link>
             <PrimaryButton
-              href="/areas"
+              href={localePath(locale, "/areas")}
               className="hidden px-4 py-2 text-xs sm:inline-flex"
             >
-              Area Properties
+              {dict.nav.areaProperties}
             </PrimaryButton>
+            <LanguageSwitcher solid={showSolidHeader} />
             {onCurrencyChange ? (
               <CurrencySelector value={currency} onChange={onCurrencyChange} />
             ) : (
@@ -155,7 +164,7 @@ export function SiteHeader({
                   ? "border-white/30 text-white"
                   : "border-border text-text-dark",
               )}
-              aria-label="Open menu"
+              aria-label={dict.nav.openMenu}
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen(true)}
             >

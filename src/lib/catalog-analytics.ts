@@ -67,10 +67,10 @@ export async function getCatalogAnalytics() {
   };
 }
 
-export function getAdvantageMatrix() {
+export function getAdvantageMatrix(unitCount?: number) {
   return [
     {
-      feature: "Unit-level SERP (1,501 options)",
+      feature: `Unit-level SERP (${unitCount ? unitCount.toLocaleString("en-US") : "2,000+"} options)`,
       pf: true,
       opr: false,
       iop: true,

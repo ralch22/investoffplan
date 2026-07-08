@@ -25,7 +25,7 @@ export function ProjectsSearchSync({ filters, collection, onSync }: ProjectsSear
     const newFilters = { ...filters };
     let newCollection = collection;
 
-    const q = searchParams.get("q");
+    const q = searchParams.get("q") ?? searchParams.get("query");
     if (q) { newFilters.query = q; hasUpdates = true; }
 
     const c = searchParams.get("collection");
@@ -42,9 +42,30 @@ export function ProjectsSearchSync({ filters, collection, onSync }: ProjectsSear
     
     const minP = searchParams.get("minP");
     if (minP) { newFilters.minPrice = Number(minP); hasUpdates = true; }
-    
+
     const maxP = searchParams.get("maxP");
     if (maxP) { newFilters.maxPrice = Number(maxP); hasUpdates = true; }
+
+    const dev = searchParams.get("dev");
+    if (dev) { newFilters.developer = dev; hasUpdates = true; }
+
+    const pay = searchParams.get("pay");
+    if (pay === "post-handover" || pay === "multiple") {
+      newFilters.paymentPlan = pay;
+      hasUpdates = true;
+    }
+
+    const handover = searchParams.get("handover");
+    if (handover && Number.isFinite(Number(handover))) {
+      newFilters.handoverBy = Number(handover);
+      hasUpdates = true;
+    }
+
+    const amen = searchParams.get("amen");
+    if (amen) {
+      newFilters.amenities = amen.split(",").map((a) => a.trim()).filter(Boolean);
+      hasUpdates = true;
+    }
 
     if (hasUpdates) {
       onSync(newFilters, newCollection);
@@ -62,6 +83,10 @@ export function ProjectsSearchSync({ filters, collection, onSync }: ProjectsSear
     if (filters.propertyType !== "all") params.set("type", filters.propertyType);
     if (filters.minPrice) params.set("minP", String(filters.minPrice));
     if (filters.maxPrice) params.set("maxP", String(filters.maxPrice));
+    if (filters.developer !== "all") params.set("dev", filters.developer);
+    if (filters.paymentPlan !== "all") params.set("pay", filters.paymentPlan);
+    if (filters.handoverBy !== "all") params.set("handover", String(filters.handoverBy));
+    if (filters.amenities.length > 0) params.set("amen", filters.amenities.join(","));
     
     const newSearch = params.toString();
     const currentSearch = searchParams.toString();

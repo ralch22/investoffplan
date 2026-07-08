@@ -45,7 +45,10 @@
   //   { "pattern": "investoffplan.com/*", "zone_name": "investoffplan.com" },
   //   { "pattern": "www.investoffplan.com/*", "zone_name": "investoffplan.com" }
   // ],
-  // Secrets (wrangler secret put): TURNSTILE_SECRET_KEY, FIRECRAWL_API_KEY
+  // Secrets (wrangler secret put): TURNSTILE_SECRET_KEY, FIRECRAWL_API_KEY,
+  //   GHL_API_KEY + GHL_LOCATION_ID (lead forwarding — leads store in D1 with
+  //   ghl_status=skipped until these exist), optional GHL_WORKFLOW_ID,
+  //   LEADS_RETRY_TOKEN (guards /api/leads/retry, used by leads-retry cron)
   // Public Turnstile site key: NEXT_PUBLIC_TURNSTILE_SITE_KEY in vars or .dev.vars
   "vars": {
     "NEXT_PUBLIC_SITE_URL": "https://investoffplan-preview.emerge-digital.workers.dev",

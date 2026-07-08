@@ -239,6 +239,10 @@ export async function queryCatalogProjects(
     beds: query.filters?.beds ?? "all",
     minPrice: query.filters?.minPrice ?? null,
     maxPrice: query.filters?.maxPrice ?? null,
+    developer: query.filters?.developer ?? "all",
+    paymentPlan: query.filters?.paymentPlan ?? "all",
+    handoverBy: query.filters?.handoverBy ?? "all",
+    amenities: query.filters?.amenities ?? [],
   };
 
   let items = api.flattenCatalogUnits();

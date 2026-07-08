@@ -160,7 +160,7 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
                   type="button"
                   onClick={() => setSelected(point)}
                   className={cn(
-                    "w-full rounded-xl border px-4 py-3 text-left transition",
+                    "w-full rounded-xl border px-4 py-3 text-start transition",
                     active
                       ? "border-brand bg-brand-muted"
                       : "border-border bg-white hover:border-brand/40",
@@ -188,7 +188,7 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
         </ul>
       </aside>
 
-      <div className="min-h-[420px] overflow-hidden rounded-2xl border border-border">
+      <div dir="ltr" className="min-h-[420px] overflow-hidden rounded-2xl border border-border">
         <MapContainer
           center={DUBAI_CENTER}
           zoom={10}
@@ -256,7 +256,7 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
                 Explore community
               </Link>
               <Link
-                href={`/projects?query=${encodeURIComponent(selected.name)}`}
+                href={`/projects?q=${encodeURIComponent(selected.name)}`}
                 className="rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-text-dark"
               >
                 View projects

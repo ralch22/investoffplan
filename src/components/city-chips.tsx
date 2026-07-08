@@ -36,7 +36,7 @@ export function CityChips({ cities, value, onChange }: CityChipsProps) {
           )}
         >
           {city.label}
-          <span className="ml-1.5 text-xs opacity-75">({city.count})</span>
+          <span className="ms-1.5 text-xs opacity-75">({city.count})</span>
         </button>
       ))}
     </div>

@@ -120,7 +120,7 @@ export function PaymentCalculator({
           </div>
 
           <div className="mt-6 overflow-hidden rounded-xl border border-border">
-            <table className="w-full text-left text-sm">
+            <table className="w-full text-start text-sm">
               <thead className="bg-surface-alt text-muted">
                 <tr>
                   <th className="px-4 py-3 font-medium">Phase</th>

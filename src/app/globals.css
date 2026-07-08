@@ -361,3 +361,8 @@ h3 {
     var(--surface-alt) 100%
   );
 }
+/* Arabic locale: IBM Plex Sans Arabic replaces both faces (PT Serif has no Arabic). */
+html[lang="ar"] {
+  --font-sans: var(--font-arabic), "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-arabic), Georgia, serif;
+}

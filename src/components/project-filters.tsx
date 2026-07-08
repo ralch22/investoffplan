@@ -1,23 +1,43 @@
 "use client";
 
+import { useState } from "react";
 import type { ProjectFilters as Filters } from "@/lib/types";
 import { cn } from "@/lib/cn";
+import {
+  MoreFiltersPanel,
+  type DeveloperOption,
+} from "@/components/more-filters-panel";
 
 interface ProjectFiltersProps {
   filters: Filters;
   onChange: (filters: Filters) => void;
-  onOpenMore?: () => void;
+  developerOptions?: DeveloperOption[];
+  amenityOptions?: string[];
   className?: string;
 }
 
 const labelClass = "text-xs font-medium text-muted";
 
+export function countMoreFilters(filters: Filters): number {
+  return (
+    (filters.developer !== "all" ? 1 : 0) +
+    (filters.paymentPlan !== "all" ? 1 : 0) +
+    (filters.handoverBy !== "all" ? 1 : 0) +
+    (filters.minPrice != null ? 1 : 0) +
+    filters.amenities.length
+  );
+}
+
 export function ProjectFilters({
   filters,
   onChange,
-  onOpenMore,
+  developerOptions = [],
+  amenityOptions = [],
   className,
 }: ProjectFiltersProps) {
+  const [moreOpen, setMoreOpen] = useState(false);
+  const moreCount = countMoreFilters(filters);
+
   return (
     <div
       className={cn(
@@ -105,11 +125,34 @@ export function ProjectFilters({
 
       <button
         type="button"
-        onClick={onOpenMore}
-        className="iop-btn-press focus-ring hidden h-12 rounded-xl border border-brand px-4 text-sm font-semibold text-brand hover:bg-brand-muted md:inline-flex md:items-center md:justify-center"
+        onClick={() => setMoreOpen((v) => !v)}
+        aria-expanded={moreOpen}
+        className={cn(
+          "iop-btn-press focus-ring hidden h-12 rounded-xl border px-4 text-sm font-semibold md:inline-flex md:items-center md:justify-center md:gap-2",
+          moreOpen || moreCount > 0
+            ? "border-brand bg-brand text-white hover:bg-brand-dark"
+            : "border-brand text-brand hover:bg-brand-muted",
+        )}
       >
         More filters
+        {moreCount > 0 ? (
+          <span className="rounded-full bg-white/25 px-2 py-0.5 text-xs">
+            {moreCount}
+          </span>
+        ) : null}
       </button>
+
+      {moreOpen ? (
+        <div className="hidden border-t border-border pt-4 md:col-span-full md:block">
+          <MoreFiltersPanel
+            filters={filters}
+            onChange={onChange}
+            developerOptions={developerOptions}
+            amenityOptions={amenityOptions}
+            variant="popover"
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

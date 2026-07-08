@@ -65,9 +65,23 @@ export function rowToProject(row: ProjectRow, units: ProjectUnitRow[]): Project 
     amenities: parseJsonArray(row.amenities),
     masterPlanUrl: row.masterPlanUrl ?? undefined,
     videoUrl: row.videoUrl ?? undefined,
+    floorPlans: parseJson(row.floorPlans),
+    salesStartDate: row.salesStartDate ?? undefined,
+    ownershipType: row.ownershipType ?? undefined,
+    constructionProgress: row.constructionProgress ?? undefined,
+    pfFaqs: parseJson(row.pfFaqs),
     whatsapp: row.whatsapp,
     units: units.map(rowToUnitType),
   };
+}
+
+function parseJson<T>(value: string | null): T | undefined {
+  if (!value) return undefined;
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    return undefined;
+  }
 }
 
 export function rowToCatalogUnit(row: CatalogUnitRow): CatalogUnit {

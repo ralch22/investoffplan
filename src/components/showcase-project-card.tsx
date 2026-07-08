@@ -61,11 +61,11 @@ export function ShowcaseProjectCard({
           <div className={cn("h-full bg-gradient-to-br", project.imageGradient)} />
         )}
         <div className="card-photo-overlay absolute inset-0" />
-        <span className="absolute left-4 top-4 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
+        <span className="absolute start-4 top-4 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
           {badge}
         </span>
         {project.handover ? (
-          <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-text-dark">
+          <span className="absolute end-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-text-dark">
             {project.handover}
           </span>
         ) : null}

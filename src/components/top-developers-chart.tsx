@@ -88,14 +88,14 @@ export function TopDevelopersChart({ developers }: TopDevelopersChartProps) {
               </Link>
               <div className="relative h-8 overflow-hidden rounded-lg bg-surface-alt">
                 <div
-                  className="absolute inset-y-0 left-0 rounded-lg bg-brand/85 transition-all duration-500"
+                  className="absolute inset-y-0 start-0 rounded-lg bg-brand/85 transition-all duration-500"
                   style={{ width }}
                 />
                 <span className="relative z-10 flex h-full items-center px-3 text-xs font-semibold text-white mix-blend-difference">
                   #{index + 1}
                 </span>
               </div>
-              <p className="text-right text-sm font-semibold tabular-nums text-text-dark md:min-w-16">
+              <p className="text-end text-sm font-semibold tabular-nums text-text-dark md:min-w-16">
                 {value.toLocaleString()}
               </p>
             </div>

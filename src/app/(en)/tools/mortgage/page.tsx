@@ -1,0 +1,66 @@
+import type { Metadata } from "next";
+import { PageShell } from "@/components/page-shell";
+import { PageHero } from "@/components/page-hero";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { MortgageCalculator } from "@/components/mortgage-calculator";
+import { MortgagePreapprovalForm } from "@/components/mortgage-preapproval-form";
+import { getHeroImage } from "@/lib/area-images";
+import { getSiteUrl } from "@/lib/site-url";
+
+export const metadata: Metadata = {
+  title: "UAE Mortgage Calculator & Pre-Approval",
+  description:
+    "Model UAE mortgage repayments, DLD fees, and cash-to-close — then request free pre-approval from licensed advisers.",
+  alternates: { canonical: `${getSiteUrl()}/tools/mortgage` },
+};
+
+export default async function MortgagePage() {
+  const heroImage = await getHeroImage();
+
+  return (
+    <PageShell headerVariant="transparent">
+      <PageHero
+        title="Mortgage calculator"
+        subtitle="Repayments, fees, and stress-tested affordability — then get pre-approved."
+        imageUrl={heroImage}
+      />
+
+      <main className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Data toolkit", href: "/tools" },
+            { label: "Mortgage" },
+          ]}
+        />
+        <div className="mt-8">
+          <MortgageCalculator />
+        </div>
+
+        <section
+          id="pre-approval"
+          className="mt-14 grid gap-8 rounded-2xl border border-border bg-surface-alt p-8 md:grid-cols-2 md:items-center md:p-10"
+        >
+          <div>
+            <h2 className="font-display text-3xl font-semibold text-text-dark">
+              Get pre-approved <em className="italic">before</em> you shortlist.
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted">
+              Pre-approval tells you exactly what you can borrow — so you can negotiate
+              off-plan payment plans with confidence. Our licensed UAE mortgage partners
+              confirm eligibility, current rates, and off-plan LTV caps at no cost.
+            </p>
+            <ul className="mt-5 space-y-2 text-sm text-muted">
+              <li>• Free eligibility check, no obligation</li>
+              <li>• Off-plan and handover-mortgage guidance</li>
+              <li>• Resident and non-resident options</li>
+            </ul>
+          </div>
+          <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
+            <MortgagePreapprovalForm />
+          </div>
+        </section>
+      </main>
+    </PageShell>
+  );
+}

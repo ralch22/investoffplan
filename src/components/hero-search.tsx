@@ -36,7 +36,7 @@ export function HeroSearch({ className }: HeroSearchProps) {
         <div className="relative flex flex-1 items-center">
           <svg
             viewBox="0 0 20 20"
-            className="pointer-events-none absolute left-3 h-5 w-5 text-muted-light"
+            className="pointer-events-none absolute start-3 h-5 w-5 text-muted-light"
             aria-hidden
           >
             <circle cx="9" cy="9" r="5.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
@@ -47,7 +47,7 @@ export function HeroSearch({ className }: HeroSearchProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by project, developer, or area"
-            className="iop-input h-12 flex-1 border-0 bg-transparent pl-10 shadow-none focus:shadow-none"
+            className="iop-input h-12 flex-1 border-0 bg-transparent ps-10 shadow-none focus:shadow-none"
             aria-label="Search properties"
           />
         </div>

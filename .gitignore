@@ -48,3 +48,4 @@ data/.asset-migration.lock
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+.ao/

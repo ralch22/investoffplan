@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getAreas, getDevelopers, getCatalogApi } from "@/lib/catalog";
 import { GUIDE_CARDS } from "@/lib/figma-copy";
+import { getNewsArticles } from "@/content/articles";
+import { FAQ_TOPICS } from "@/content/faq";
+import { COLLECTION_PAGES } from "@/lib/collections";
 
 let base: string = process.env.NEXT_PUBLIC_SITE_URL ?? "https://investoffplan-preview.emerge-digital.workers.dev";
 if (!base || base.includes("preview") || base.includes("emerge-digital")) {
@@ -17,7 +20,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/projects",
     "/developers",
     "/areas",
-    "/insights",
+    "/guides",
+    "/faq",
     "/compare",
     "/map",
     "/contact",
@@ -28,6 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/tools/price-map",
     "/tools/communities",
     "/tools/rent-vs-buy",
+    "/tools/mortgage",
     "/tools/residential",
     "/tools/payment",
     "/privacy-policy",
@@ -71,5 +76,50 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...staticRoutes, ...projectRoutes, ...developerRoutes, ...areaRoutes, ...guideRoutes];
+  const newsRoutes = getNewsArticles().map((article) => ({
+    url: `${BASE}/news/${article.slug}`,
+    lastModified: new Date(`${article.publishedAt}T00:00:00Z`),
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
+  const collectionRoutes = COLLECTION_PAGES.map((page) => ({
+    url: `${BASE}/collections/${page.slug}`,
+    lastModified: catalogUpdated,
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
+  }));
+
+  const faqRoutes = FAQ_TOPICS.map((topic) => ({
+    url: `${BASE}/faq/${topic.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
+  // Arabic mirror pages (partial tree — homepage, about, contact).
+  const arabicRoutes = ["/ar", "/ar/about", "/ar/contact"].map((path) => ({
+    url: `${BASE}${path}`,
+    lastModified: catalogUpdated,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+    alternates: {
+      languages: {
+        en: path === "/ar" ? `${BASE}/` : `${BASE}${path.slice(3)}`,
+        ar: `${BASE}${path}`,
+      },
+    },
+  }));
+
+  return [
+    ...staticRoutes,
+    ...arabicRoutes,
+    ...projectRoutes,
+    ...developerRoutes,
+    ...areaRoutes,
+    ...guideRoutes,
+    ...newsRoutes,
+    ...collectionRoutes,
+    ...faqRoutes,
+  ];
 }

@@ -280,4 +280,23 @@ export async function getProjectBySlug(slug: string) {
   return api.getProjectBySlug(slug);
 }
 
+/** Most common project amenities across the catalog, for filter options. */
+export async function getTopAmenities(limit = 20): Promise<string[]> {
+  const api = await getCatalogApi();
+  const counts = new Map<string, { label: string; count: number }>();
+  for (const project of api.projects) {
+    for (const amenity of project.amenities ?? []) {
+      const key = amenity.trim().toLowerCase();
+      if (!key) continue;
+      const entry = counts.get(key);
+      if (entry) entry.count += 1;
+      else counts.set(key, { label: amenity.trim(), count: 1 });
+    }
+  }
+  return [...counts.values()]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, limit)
+    .map((entry) => entry.label);
+}
+
 export { slugify } from "./slugify";

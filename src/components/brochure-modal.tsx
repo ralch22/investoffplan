@@ -6,12 +6,13 @@ import { TurnstileField } from "@/components/turnstile-field";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { isDownloadablePdfUrl } from "@/lib/brochure";
 import { cn } from "@/lib/cn";
-import { guardFormSubmit } from "@/lib/form-guard";
+import { submitLead } from "@/lib/leads-client";
 
 interface BrochureModalProps {
   open: boolean;
   onClose: () => void;
   projectName: string;
+  projectSlug?: string;
   brochureUrl?: string;
   whatsapp?: string;
 }
@@ -45,6 +46,7 @@ export function BrochureModal({
   open,
   onClose,
   projectName,
+  projectSlug,
   brochureUrl,
   whatsapp,
 }: BrochureModalProps) {
@@ -68,17 +70,26 @@ export function BrochureModal({
     if (Object.keys(nextErrors).length > 0) return;
 
     setSubmitting(true);
-    const guard = await guardFormSubmit({ honeypot, turnstileToken });
+    const result = await submitLead({
+      formType: "brochure",
+      name: name.trim(),
+      phone: phone.trim(),
+      message: `Brochure request: ${projectName}`,
+      projectSlug,
+      honeypot,
+      turnstileToken,
+      extra: { delivery: hasPdf ? "pdf" : "whatsapp" },
+    });
     setSubmitting(false);
-    if (guard.bot) {
+    if (result.bot) {
       setName("");
       setPhone("");
       setErrors({});
       onClose();
       return;
     }
-    if (!guard.ok) {
-      setGuardError(guard.error ?? "Unable to submit. Please try again.");
+    if (!result.ok) {
+      setGuardError(result.error ?? "Unable to submit. Please try again.");
       return;
     }
 

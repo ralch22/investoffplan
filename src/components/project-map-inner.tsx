@@ -102,14 +102,14 @@ export function ProjectMapInner({
         <p className="text-sm text-muted">
           {filtered.length.toLocaleString()} projects with coordinates
         </p>
-        <div className="max-h-[min(420px,50vh)] space-y-2 overflow-y-auto pr-1 lg:max-h-[520px]">
+        <div className="max-h-[min(420px,50vh)] space-y-2 overflow-y-auto pe-1 lg:max-h-[520px]">
           {filtered.slice(0, 80).map((p) => (
             <button
               key={p.id}
               type="button"
               onClick={() => setSelected(p)}
               className={cn(
-                "iop-btn-press w-full rounded-xl border p-3 text-left transition",
+                "iop-btn-press w-full rounded-xl border p-3 text-start transition",
                 selected?.id === p.id
                   ? "border-brand bg-brand-muted"
                   : "border-border hover:border-brand/40",
@@ -125,7 +125,7 @@ export function ProjectMapInner({
       </div>
 
       <div className="relative order-1 overflow-hidden rounded-2xl border border-border bg-map-surface lg:order-2 lg:min-h-[520px]">
-        <div className="h-[360px] w-full lg:h-full lg:absolute lg:inset-0">
+        <div dir="ltr" className="h-[360px] w-full lg:h-full lg:absolute lg:inset-0">
           <MapContainer
             center={DUBAI_CENTER}
             zoom={11}
@@ -151,7 +151,7 @@ export function ProjectMapInner({
         </div>
 
         {selected ? (
-          <div className="absolute bottom-4 left-4 right-4 z-[400] rounded-xl border border-border bg-white/95 p-4 shadow-elevation-md backdrop-blur">
+          <div className="absolute bottom-4 start-4 end-4 z-[400] rounded-xl border border-border bg-white/95 p-4 shadow-elevation-md backdrop-blur">
             <div className="flex gap-3">
               {selected.imageUrl ? (
                 <div className="relative hidden h-16 w-20 shrink-0 overflow-hidden rounded-lg sm:block">
@@ -192,7 +192,7 @@ export function ProjectMapInner({
             </div>
           </div>
         ) : (
-          <p className="absolute bottom-4 left-4 right-4 z-[400] pointer-events-none rounded-xl border border-dashed border-border bg-white/80 px-4 py-3 text-center text-sm text-muted backdrop-blur">
+          <p className="absolute bottom-4 start-4 end-4 z-[400] pointer-events-none rounded-xl border border-dashed border-border bg-white/80 px-4 py-3 text-center text-sm text-muted backdrop-blur">
             Tap a pin or search the list to explore projects
           </p>
         )}

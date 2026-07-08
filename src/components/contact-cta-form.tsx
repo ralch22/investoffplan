@@ -6,7 +6,7 @@ import { TurnstileField } from "@/components/turnstile-field";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
-import { guardFormSubmit } from "@/lib/form-guard";
+import { submitLead } from "@/lib/leads-client";
 
 interface FormState {
   name: string;
@@ -72,36 +72,27 @@ export function ContactCtaForm() {
     if (Object.keys(nextErrors).length > 0) return;
 
     setSubmitting(true);
-    const guard = await guardFormSubmit({ honeypot, turnstileToken });
+    const result = await submitLead({
+      formType: "contact-cta",
+      name: values.name.trim(),
+      phone: values.phone.trim(),
+      email: values.email.trim(),
+      country: values.country.trim() || undefined,
+      message: values.message.trim(),
+      honeypot,
+      turnstileToken,
+    });
     setSubmitting(false);
-    if (guard.bot) {
+    if (result.bot) {
       setSubmitted(true);
       return;
     }
-    if (!guard.ok) {
-      setGuardError(guard.error ?? "Unable to submit. Please try again.");
+    if (!result.ok) {
+      setGuardError(result.error ?? "Unable to submit. Please try again.");
       return;
     }
 
-    const text = [
-      "New enquiry from invest off-plan",
-      `Name: ${values.name.trim()}`,
-      `Phone: ${values.phone.trim()}`,
-      `Email: ${values.email.trim()}`,
-      values.country.trim() ? `Country: ${values.country.trim()}` : null,
-      "",
-      values.message.trim(),
-    ]
-      .filter(Boolean)
-      .join("\n");
-
     trackEvent(ANALYTICS_EVENTS.CONTACT_SUBMIT, { form: "contact_cta" });
-
-    window.open(
-      `https://wa.me/97144397620?text=${encodeURIComponent(text)}`,
-      "_blank",
-      "noopener,noreferrer",
-    );
     setSubmitted(true);
   }
 
@@ -111,9 +102,18 @@ export function ContactCtaForm() {
   if (submitted) {
     return (
       <div className="mt-6 rounded-2xl border border-white/20 bg-white/10 p-6 text-center">
-        <p className="font-semibold text-white">Thanks — we&apos;ve opened WhatsApp for you.</p>
+        <p className="font-semibold text-white">Thanks — your enquiry is with our team.</p>
         <p className="mt-2 text-sm text-white/75">
-          Send the pre-filled message to reach our team directly.
+          We&apos;ll reach out shortly. Prefer instant chat?{" "}
+          <a
+            href="https://wa.me/97144397620"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-brand-light hover:text-white"
+          >
+            Message us on WhatsApp
+          </a>
+          .
         </p>
         <button
           type="button"

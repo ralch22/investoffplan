@@ -9,6 +9,7 @@
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { chromium } from "playwright";
+import { normalizeUnitSize } from "./lib/pf-ingest-helpers";
 
 const BASE =
   "https://www.propertyfinder.ae/en/new-projects?view=unit_types";
@@ -295,11 +296,17 @@ async function main() {
       projectsMap.set(u.projectId, project);
     }
 
-    project.units.push({
-      id: u.id,
+    const size = normalizeUnitSize({
       beds: u.bedrooms,
       sqftMin: u.area.min,
       sqftMax: u.area.max !== u.area.min ? u.area.max : undefined,
+      priceAed: u.startingPrice.min,
+    });
+    project.units.push({
+      id: u.id,
+      beds: u.bedrooms,
+      sqftMin: size.sqftMin,
+      sqftMax: size.sqftMax,
       launchPriceAed: u.startingPrice.min,
       launchPriceMaxAed:
         u.startingPrice.max !== u.startingPrice.min
@@ -334,6 +341,12 @@ async function main() {
     units: allUnits.map((u) => {
       const { city, citySlug, area } = parseCity(u.location.fullName);
       const pay = formatPaymentPlan(u.paymentPlan);
+      const size = normalizeUnitSize({
+        beds: u.bedrooms,
+        sqftMin: u.area.min,
+        sqftMax: u.area.max !== u.area.min ? u.area.max : undefined,
+        priceAed: u.startingPrice.min,
+      });
       return {
         id: u.id,
         projectId: u.projectId,
@@ -347,8 +360,8 @@ async function main() {
         locationFull: u.location.fullName,
         propertyType: u.propertyType,
         beds: u.bedrooms,
-        sqftMin: u.area.min,
-        sqftMax: u.area.max !== u.area.min ? u.area.max : undefined,
+        sqftMin: size.sqftMin,
+        sqftMax: size.sqftMax,
         launchPriceAed: u.startingPrice.min,
         launchPriceMaxAed:
           u.startingPrice.max !== u.startingPrice.min
