@@ -7,6 +7,7 @@ import { DeveloperAttribution } from "@/components/developer-attribution";
 import { FavoriteButton } from "@/components/favorite-button";
 import type { Project } from "@/lib/types";
 import { formatPrice } from "@/lib/format";
+import { cardEntrance, cardHoverLift } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 import { unoptimizedProp } from "@/lib/asset-image";
 
@@ -33,10 +34,8 @@ export function ShowcaseProjectCard({
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
+      {...cardEntrance(index)}
+      {...cardHoverLift}
       className={cn(
         "group overflow-hidden rounded-2xl border shadow-sm transition-shadow duration-300 hover:shadow-lg",
         featured ? "lg:col-span-2" : "",

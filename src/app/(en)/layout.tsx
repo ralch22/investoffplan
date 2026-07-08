@@ -3,6 +3,7 @@ import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { Inter, PT_Serif } from "next/font/google";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { CatalogPrefetch } from "@/components/catalog-prefetch";
+import { MotionProvider } from "@/components/motion-provider";
 import "../globals.css";
 
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -74,7 +75,7 @@ export default function RootLayout({
         {gtmId ? <GoogleTagManager gtmId={gtmId} /> : null}
         <SiteJsonLd />
         <CatalogPrefetch />
-        {children}
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   );
