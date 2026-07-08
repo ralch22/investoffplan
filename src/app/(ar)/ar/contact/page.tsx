@@ -21,8 +21,8 @@ export const metadata: Metadata = {
 const CHANNELS = [
   {
     label: "واتساب",
-    value: "‎+971 44 397 620",
-    href: "https://wa.me/97144397620",
+    value: "‎+971 58 527 6222",
+    href: "https://wa.me/971585276222",
     note: "الأسرع للرد — أرسل لنا اسم المشروع وسنوافيك بالتفاصيل والبروشور.",
   },
   {

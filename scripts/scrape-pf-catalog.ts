@@ -253,7 +253,7 @@ async function main() {
     }
   >();
 
-  const DEFAULT_WHATSAPP = process.env.IOP_WHATSAPP || "+971500000000";
+  const DEFAULT_WHATSAPP = process.env.IOP_WHATSAPP || "+971585276222";
 
   for (const u of allUnits) {
     const { city, citySlug, area } = parseCity(u.location.fullName);
