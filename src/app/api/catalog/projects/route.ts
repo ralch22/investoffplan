@@ -57,6 +57,7 @@ export async function GET(request: Request) {
     const result = await queryCatalogProjects(db, {
       page: parseIntParam(searchParams.get("page"), 1),
       pageSize: parseIntParam(searchParams.get("pageSize"), 24),
+      cursor: searchParams.get("cursor") ?? undefined,
       view: (searchParams.get("view") as ViewMode | null) ?? "unit",
       sort: (searchParams.get("sort") as SortOption | null) ?? "featured",
       collection: (searchParams.get("collection") as CollectionFilter | null) ?? "all",
