@@ -108,17 +108,64 @@ export function buildProjectBreadcrumbJsonLd(opts: {
 }
 
 export function buildDeveloperJsonLd(opts: {
-  developer: { name: string; projectCount: number };
+  developer: {
+    name: string;
+    projectCount: number;
+    unitCount?: number;
+    cities?: string[];
+    logoUrl?: string;
+    foundedYear?: number;
+  };
   developerUrl: string;
   siteUrl: string;
 }) {
   const { developer, developerUrl, siteUrl } = opts;
+  const areaServed = (developer.cities ?? [])
+    .map((city) => cityLabel(city))
+    .filter(Boolean);
   return {
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
     name: developer.name,
     url: developerUrl,
-    image: absoluteAsset(siteUrl, "/brand/icon-red.png"),
-    description: `Browse ${developer.projectCount} off-plan projects by ${developer.name} in the UAE.`,
+    image: absoluteAsset(siteUrl, developer.logoUrl) ??
+      absoluteAsset(siteUrl, "/brand/icon-red.png"),
+    logo: absoluteAsset(siteUrl, developer.logoUrl),
+    foundingDate: developer.foundedYear
+      ? String(developer.foundedYear)
+      : undefined,
+    areaServed: areaServed.length
+      ? areaServed.map((name) => ({ "@type": "City", name }))
+      : undefined,
+    description: `Browse ${developer.projectCount} off-plan project${
+      developer.projectCount === 1 ? "" : "s"
+    }${
+      developer.unitCount ? ` and ${developer.unitCount.toLocaleString()} unit options` : ""
+    } by ${developer.name} in the UAE.`,
+  };
+}
+
+export function buildDeveloperItemListJsonLd(opts: {
+  developer: { name: string };
+  projects: Project[];
+  developerUrl: string;
+  siteUrl: string;
+}) {
+  const { developer, projects, developerUrl, siteUrl } = opts;
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `New & Off-Plan Projects by ${developer.name}`,
+    url: developerUrl,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: projects.length,
+      itemListElement: projects.map((project, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: project.name,
+        url: `${siteUrl}/projects/${project.slug}`,
+      })),
+    },
   };
 }
