@@ -144,7 +144,7 @@
 
 ## Guardrails
 
-- **Max 4 concurrent AO workers** (Grok rate limits).
+- **Max 3 concurrent AO workers** — claude-code (Opus 4.8) since 2026-07-08; Grok retired for non-trivial work (reliability).
 - **jpools deprioritized** while IOP is priority.
 - **Antigravity lane:** `tests/**`, `compare-bar`, `mobile-filter-sheet`, `project-about` styling — coordinate on PDP.
 - **Verify before merge:** `npm run build && npm run test:e2e`
