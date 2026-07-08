@@ -6,6 +6,7 @@ import {
   MoreFiltersPanel,
   type DeveloperOption,
 } from "@/components/more-filters-panel";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface MobileFilterSheetProps {
   open: boolean;
@@ -24,6 +25,8 @@ export function MobileFilterSheet({
   developerOptions = [],
   amenityOptions = [],
 }: MobileFilterSheetProps) {
+  const { dict } = useI18n();
+  const f = dict.serp.filters;
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   // Native <dialog>.showModal() gives focus trap, Escape, and focus restore
@@ -38,7 +41,7 @@ export function MobileFilterSheet({
   return (
     <dialog
       ref={dialogRef}
-      aria-label="Filters"
+      aria-label={f.title}
       onClose={onClose}
       onClick={(e) => {
         if (e.target === dialogRef.current) onClose();
@@ -51,22 +54,22 @@ export function MobileFilterSheet({
           className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5 shadow-elevation-lg"
         >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-text-dark">Filters</h2>
+          <h2 className="text-lg font-semibold text-text-dark">{f.title}</h2>
           <button
             type="button"
             onClick={onClose}
             className="rounded-lg px-3 py-1 text-sm font-semibold text-muted hover:text-text-dark"
           >
-            Close
+            {f.close}
           </button>
         </div>
 
         <div className="space-y-4">
           <label className="block text-sm font-semibold text-text-dark">
-            Search
+            {f.search}
             <input
               type="search"
-              placeholder="Search by project, area, developer..."
+              placeholder={f.searchPlaceholderMobile}
               value={filters.query}
               onChange={(e) => onChange({ ...filters, query: e.target.value })}
               className="focus-ring mt-1 w-full rounded-full border border-border px-4 py-2.5 text-sm outline-none"
@@ -74,7 +77,7 @@ export function MobileFilterSheet({
           </label>
 
           <label className="block text-sm font-semibold text-text-dark">
-            Property type
+            {f.propertyType}
             <select
               value={filters.propertyType}
               onChange={(e) =>
@@ -85,16 +88,16 @@ export function MobileFilterSheet({
               }
               className="focus-ring mt-1 w-full rounded-full border border-border bg-white px-4 py-2.5 text-sm outline-none"
             >
-              <option value="all">All types</option>
-              <option value="apartment">Apartment</option>
-              <option value="villa">Villa</option>
-              <option value="townhouse">Townhouse</option>
-              <option value="penthouse">Penthouse</option>
+              <option value="all">{f.allTypes}</option>
+              <option value="apartment">{f.apartment}</option>
+              <option value="villa">{f.villa}</option>
+              <option value="townhouse">{f.townhouse}</option>
+              <option value="penthouse">{f.penthouse}</option>
             </select>
           </label>
 
           <label className="block text-sm font-semibold text-text-dark">
-            Beds
+            {f.beds}
             <select
               value={filters.beds}
               onChange={(e) =>
@@ -110,18 +113,18 @@ export function MobileFilterSheet({
               }
               className="focus-ring mt-1 w-full rounded-full border border-border bg-white px-4 py-2.5 text-sm outline-none"
             >
-              <option value="all">Any</option>
-              <option value="studio">Studio</option>
-              <option value="1">1 Bed</option>
-              <option value="2">2 Beds</option>
-              <option value="3">3 Beds</option>
-              <option value="4">4 Beds</option>
-              <option value="5">5+ Beds</option>
+              <option value="all">{f.any}</option>
+              <option value="studio">{f.studio}</option>
+              <option value="1">{f.bed1}</option>
+              <option value="2">{f.beds2}</option>
+              <option value="3">{f.beds3}</option>
+              <option value="4">{f.beds4}</option>
+              <option value="5">{f.beds5Plus}</option>
             </select>
           </label>
 
           <label className="block text-sm font-semibold text-text-dark">
-            Max price (AED)
+            {f.maxPrice}
             <select
               value={filters.maxPrice ?? "all"}
               onChange={(e) =>
@@ -133,10 +136,10 @@ export function MobileFilterSheet({
               }
               className="focus-ring mt-1 w-full rounded-full border border-border bg-white px-4 py-2.5 text-sm outline-none"
             >
-              <option value="all">Any</option>
-              <option value="1500000">Up to 1.5M</option>
-              <option value="2500000">Up to 2.5M</option>
-              <option value="4000000">Up to 4M</option>
+              <option value="all">{f.any}</option>
+              <option value="1500000">{f.upTo15m}</option>
+              <option value="2500000">{f.upTo25m}</option>
+              <option value="4000000">{f.upTo4m}</option>
             </select>
           </label>
 
@@ -154,7 +157,7 @@ export function MobileFilterSheet({
             onClick={onClose}
             className="iop-btn-press mt-6 w-full rounded-full bg-brand py-3 text-sm font-semibold text-white hover:bg-brand-dark"
           >
-            Show results
+            {f.showResults}
           </button>
         </div>
       ) : null}

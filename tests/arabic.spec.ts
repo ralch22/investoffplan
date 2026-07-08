@@ -31,4 +31,14 @@ test.describe("Arabic locale", () => {
     // Switcher offers Arabic
     await expect(page.getByRole("link", { name: "العربية" })).toBeVisible();
   });
+
+  test("/ar/projects renders RTL with Arabic SERP chrome (filter labels)", async ({ page }) => {
+    await page.goto("/ar/projects");
+    await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
+    await expect(page.locator("html")).toHaveAttribute("lang", "ar");
+    // Arabic filter label from serp dict
+    await expect(page.getByText("نوع العقار").first()).toBeVisible();
+    // Grid view toggle etc localized
+    await expect(page.getByRole("button", { name: "شبكة" }).first()).toBeVisible();
+  });
 });
