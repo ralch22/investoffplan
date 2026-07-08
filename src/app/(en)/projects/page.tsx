@@ -3,11 +3,19 @@ import { getCatalogApi, getDevelopers, getTopAmenities } from "@/lib/catalog";
 import { PAGE_SIZE } from "@/lib/catalog-core";
 import { getMapProjectsFromList } from "@/lib/map-data";
 import { ProjectsPage } from "./projects-page";
+import { getSiteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
   title: "New Off-Plan Projects",
   description:
     "Browse UAE off-plan projects with unit-level pricing, payment plans, and direct WhatsApp contact.",
+  alternates: {
+    canonical: `${getSiteUrl()}/projects`,
+    languages: {
+      en: `${getSiteUrl()}/projects`,
+      ar: `${getSiteUrl()}/ar/projects`,
+    },
+  },
 };
 
 export default async function Page() {

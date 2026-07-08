@@ -2,16 +2,7 @@
 
 import { cn } from "@/lib/cn";
 import type { CollectionFilter } from "@/lib/types";
-
-const COLLECTIONS: Array<{ id: CollectionFilter; label: string }> = [
-  { id: "all", label: "All" },
-  { id: "premium", label: "Premium" },
-  { id: "brochure", label: "Brochure PDF" },
-  { id: "video", label: "Video tour" },
-  { id: "under-2m", label: "Under AED 2M" },
-  { id: "studio", label: "Studio" },
-  { id: "waterfront", label: "Waterfront" },
-];
+import { useI18n } from "@/i18n/locale-provider";
 
 interface CollectionChipsProps {
   value: CollectionFilter;
@@ -19,6 +10,19 @@ interface CollectionChipsProps {
 }
 
 export function CollectionChips({ value, onChange }: CollectionChipsProps) {
+  const { dict } = useI18n();
+  const chips = dict.serp.chips;
+
+  const COLLECTIONS: Array<{ id: CollectionFilter; label: string }> = [
+    { id: "all", label: chips.all },
+    { id: "premium", label: chips.premium },
+    { id: "brochure", label: chips.brochurePdf },
+    { id: "video", label: chips.videoTour },
+    { id: "under-2m", label: chips.under2m },
+    { id: "studio", label: chips.studio },
+    { id: "waterfront", label: chips.waterfront },
+  ];
+
   return (
     <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {COLLECTIONS.map((c) => (

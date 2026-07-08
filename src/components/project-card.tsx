@@ -23,6 +23,24 @@ import { resolveBrochureUrl } from "@/lib/brochure";
 import { unitPricePerSqft } from "@/lib/investment-metrics";
 import { getProjectGalleryImages } from "@/lib/project-gallery-images";
 import { cn } from "@/lib/cn";
+import { interpolate } from "@/i18n";
+import { useI18n } from "@/i18n/locale-provider";
+
+function getTypeLabel(raw: string, dict: any): string {
+  const f = dict.serp.filters;
+  switch (raw) {
+    case "apartment":
+      return f.apartment;
+    case "villa":
+      return f.villa;
+    case "townhouse":
+      return f.townhouse;
+    case "penthouse":
+      return f.penthouse;
+    default:
+      return raw;
+  }
+}
 
 interface ProjectCardProps {
   item: FlatUnit;
@@ -51,10 +69,23 @@ export function ProjectCard({
   const isSoldOut = (catalog?.status ?? project.status) === "sold-out";
   const brochureUrl = resolveBrochureUrl(project);
   const ppsf = unitPricePerSqft({ project, unit, catalog });
-  const paymentLabel = catalog?.paymentPlan || project.paymentPlan || "Payment Plan";
-  const statusLabel = isSoldOut ? "Sold out" : project.isPremium ? "Premium" : "Available";
-  const unitCount = catalog?.projectUnitCount ?? project.unitCount;
-  const unitTypeLabel = unit.propertyType.toLowerCase();
+  const { dict } = useI18n();
+  const c = dict.common;
+
+  const handoverSuffix = handover ? ` · ${interpolate(c.handover, { date: handover })}` : undefined;
+  const paymentLabel = catalog?.paymentPlan || project.paymentPlan || c.paymentPlan;
+  const statusLabel = isSoldOut
+    ? c.soldOut
+    : project.isPremium
+      ? c.premium
+      : c.available;
+  const unitCountNum = catalog?.projectUnitCount ?? project.unitCount;
+  const unitTypeRaw = unit.propertyType.toLowerCase();
+  const unitTypeLabel = getTypeLabel(unitTypeRaw, dict);
+  const unitCountLabel =
+    unitCountNum === 1
+      ? interpolate(c.unitCountSingular, { count: unitCountNum, type: unitTypeLabel })
+      : interpolate(c.unitCountPlural, { count: unitCountNum, type: unitTypeLabel });
 
   if (layout === "list") {
     return (
@@ -96,7 +127,7 @@ export function ProjectCard({
           <div className="flex items-start justify-between gap-3">
             <div className="flex flex-wrap gap-2">
               <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark shadow-sm">
-                {unitCount} {unitTypeLabel} unit{unitCount === 1 ? "" : "s"}
+                {unitCountLabel}
               </span>
               <span className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white shadow-sm">
                 {paymentLabel}
@@ -114,7 +145,7 @@ export function ProjectCard({
             <DeveloperAttribution
               name={project.developer}
               logoUrl={project.developerLogo}
-              suffix={handover ? ` · Handover ${handover}` : undefined}
+              suffix={handoverSuffix}
               variant="light"
             />
             <h3 className="text-2xl font-semibold leading-tight text-white md:text-3xl">
@@ -137,7 +168,7 @@ export function ProjectCard({
                 href={`/projects/${project.slug}`}
                 className="rounded-full border border-white/80 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white hover:text-text-dark"
               >
-                View Details
+                {c.viewDetails}
               </Link>
               <div className="rounded-full border border-white/40 bg-white/5 px-3 py-1.5 backdrop-blur-sm">
                 <CompareCheckbox
@@ -186,10 +217,17 @@ function ListCard({
   const compareId = `${project.id}:${unit.id}` as CompareUnitId;
   const galleryImages = getProjectGalleryImages(project, catalog);
   const handover = catalog?.handover ?? project.handover;
-  const paymentLabel = catalog?.paymentPlan || project.paymentPlan || "Payment Plan";
+  const { dict } = useI18n();
+  const c = dict.common;
+  const paymentLabel = catalog?.paymentPlan || project.paymentPlan || c.paymentPlan;
   const isSoldOut = (catalog?.status ?? project.status) === "sold-out";
-  const unitCount = catalog?.projectUnitCount ?? project.unitCount;
-  const unitTypeLabel = unit.propertyType.toLowerCase();
+  const unitCountNum = catalog?.projectUnitCount ?? project.unitCount;
+  const unitTypeRaw = unit.propertyType.toLowerCase();
+  const unitTypeLabel = getTypeLabel(unitTypeRaw, dict);
+  const unitCountLabel =
+    unitCountNum === 1
+      ? interpolate(c.unitCountSingular, { count: unitCountNum, type: unitTypeLabel })
+      : interpolate(c.unitCountPlural, { count: unitCountNum, type: unitTypeLabel });
 
   return (
     <motion.article
@@ -209,7 +247,7 @@ function ListCard({
             className="h-full rounded-none md:rounded-s-2xl"
           />
           <span className="pointer-events-none absolute start-4 top-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark">
-            {unitCount} {unitTypeLabel} unit{unitCount === 1 ? "" : "s"}
+            {unitCountLabel}
           </span>
           <span className="pointer-events-none absolute bottom-4 start-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
             {paymentLabel}
@@ -251,7 +289,7 @@ function ListCard({
               href={`/projects/${project.slug}`}
               className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark"
             >
-              View Details
+              {c.viewDetails}
             </Link>
             <ContactButton
               phone={catalog?.whatsapp ?? project.whatsapp}

@@ -34,6 +34,8 @@ import type {
   SortOption,
   ViewMode,
 } from "@/lib/types";
+import { interpolate } from "@/i18n";
+import { useI18n } from "@/i18n/locale-provider";
 
 const isApiMode = process.env.NEXT_PUBLIC_CATALOG_API === "1";
 
@@ -97,6 +99,9 @@ export function ProjectsPage({
   const [viewMode, setViewMode] = useState<ViewMode>("unit");
   const [cardLayout, setCardLayout] = useState<"grid" | "list" | "map">("grid");
   const [collection, setCollection] = useState<CollectionFilter>("all");
+
+  const { dict, locale } = useI18n();
+  const s = dict.serp;
 
   const [apiData, setApiData] = useState<{ items: FlatUnit[], meta: any } | null>(null);
   const [apiLoading, setApiLoading] = useState(false);
@@ -230,8 +235,8 @@ export function ProjectsPage({
   const meta = api?.meta ?? initialMeta;
   const heading =
     viewMode === "unit"
-      ? `${meta.unitCount.toLocaleString()} Total unit options in UAE`
-      : `${meta.projectCount.toLocaleString()} New off-plan projects in UAE`;
+      ? interpolate(s.heading, { count: meta.unitCount.toLocaleString() })
+      : interpolate(s.headingProjects, { count: meta.projectCount.toLocaleString() });
 
   const locationLabel =
     filters.city !== "all"
@@ -251,19 +256,23 @@ export function ProjectsPage({
           <div className="absolute inset-0 bg-hero-overlay" />
           <div className="relative mx-auto max-w-[1200px] px-5 py-20 text-center md:px-8 md:py-28">
             <h1 className="font-display text-4xl font-semibold md:text-5xl">
-              Search <em className="italic">Results</em>
+              {locale === "en" ? (
+                <>Search <em className="italic">Results</em></>
+              ) : (
+                s.searchResultsTitle
+              )}
             </h1>
           </div>
         </section>
         <main className="mx-auto max-w-[1200px] px-5 py-16 text-center md:px-8">
-          <p className="text-lg font-medium text-text-dark">Could not load project catalog</p>
+          <p className="text-lg font-medium text-text-dark">{s.error.couldNotLoad}</p>
           <p className="mt-2 text-sm text-muted">{error}</p>
           <button
             type="button"
             onClick={() => window.location.reload()}
             className="iop-btn-press mt-6 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
           >
-            Retry
+            {s.error.retry}
           </button>
         </main>
       </PageShell>
@@ -297,10 +306,14 @@ export function ProjectsPage({
         <div className="absolute inset-0 bg-hero-overlay" />
         <div className="relative mx-auto max-w-[1200px] px-5 py-20 text-center md:px-8 md:py-28">
           <h1 className="font-display text-4xl font-semibold md:text-5xl">
-            Search <em className="italic">Results</em>
+            {locale === "en" ? (
+              <>Search <em className="italic">Results</em></>
+            ) : (
+              s.searchResultsTitle
+            )}
           </h1>
           <p className="mt-3 text-lg text-white/85">
-            Properties in {locationLabel}
+            {interpolate(s.propertiesIn, { location: locationLabel ?? "UAE" })}
           </p>
         </div>
       </section>
@@ -330,7 +343,7 @@ export function ProjectsPage({
                 onClick={() => setMobileFiltersOpen(true)}
                 className="flex-1 rounded-xl border border-border bg-white px-4 py-3 text-start text-sm font-medium text-text-dark"
               >
-                Filters & search
+                {s.filtersAndSearch}
               </button>
             </div>
 
@@ -339,13 +352,15 @@ export function ProjectsPage({
                 {heading}
               </h2>
               <p className="mt-1 text-sm text-muted">
-                {resultCount.toLocaleString()} results
-                {filters.city !== "all" ? ` in ${locationLabel}` : ""}
-                {" · "}Updated{" "}
-                {new Date(meta.scrapedAt).toLocaleDateString("en-GB", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
+                {interpolate(s.resultsCount, { count: resultCount.toLocaleString() })}
+                {filters.city !== "all" ? ` ${interpolate(s.resultsIn, { location: locationLabel ?? "" })}` : ""}
+                {" · "}
+                {interpolate(s.updated, {
+                  date: new Date(meta.scrapedAt).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  }),
                 })}
               </p>
             </div>
@@ -361,7 +376,7 @@ export function ProjectsPage({
                       : "text-muted hover:text-brand"
                   }`}
                 >
-                  Grid
+                  {s.view.grid}
                 </button>
                 <button
                   type="button"
@@ -372,7 +387,7 @@ export function ProjectsPage({
                       : "text-muted hover:text-brand"
                   }`}
                 >
-                  List
+                  {s.view.list}
                 </button>
                 <button
                   type="button"
@@ -383,7 +398,7 @@ export function ProjectsPage({
                       : "text-muted hover:text-brand"
                   }`}
                 >
-                  Map
+                  {s.view.map}
                 </button>
               </div>
               <button
@@ -394,7 +409,7 @@ export function ProjectsPage({
                 }}
                 className="rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
               >
-                {viewMode === "unit" ? "Show project view" : "Show unit view"}
+                {viewMode === "unit" ? s.view.showProjectView : s.view.showUnitView}
               </button>
               <SortSelect value={sort} onChange={setSort} />
             </div>
@@ -438,8 +453,8 @@ export function ProjectsPage({
           >
             {pageItems.length === 0 ? (
               <div className="w-full rounded-2xl border border-dashed border-border bg-surface-alt p-10 text-center">
-                <p className="text-lg font-medium text-text-dark">No units match your filters</p>
-                <p className="mt-2 text-sm text-muted">Try clearing beds, price, or city filters.</p>
+                <p className="text-lg font-medium text-text-dark">{s.empty.title}</p>
+                <p className="mt-2 text-sm text-muted">{s.empty.body}</p>
                 <button
                   type="button"
                   onClick={() => {
@@ -449,7 +464,7 @@ export function ProjectsPage({
                   }}
                   className="iop-btn-press mt-6 rounded-full border border-brand px-6 py-2.5 text-sm font-semibold text-brand hover:bg-brand hover:text-white"
                 >
-                  Clear all filters
+                  {s.empty.clearAllFilters}
                 </button>
               </div>
             ) : (
