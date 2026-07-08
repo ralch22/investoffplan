@@ -121,6 +121,17 @@ export function projectToInsertValues(project: Project, updatedAt: string) {
     amenities: stringifyJsonArray(project.amenities),
     masterPlanUrl: project.masterPlanUrl ?? null,
     videoUrl: project.videoUrl ?? null,
+    floorPlans:
+      project.floorPlans && project.floorPlans.length > 0
+        ? JSON.stringify(project.floorPlans)
+        : null,
+    salesStartDate: project.salesStartDate ?? null,
+    ownershipType: project.ownershipType ?? null,
+    constructionProgress: project.constructionProgress ?? null,
+    pfFaqs:
+      project.pfFaqs && project.pfFaqs.length > 0
+        ? JSON.stringify(project.pfFaqs)
+        : null,
     whatsapp: project.whatsapp,
     updatedAt,
   };

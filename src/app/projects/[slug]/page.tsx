@@ -22,6 +22,9 @@ import { getProjectBySlug, slugify } from "@/lib/catalog";
 import { getAreaInsightsForProject } from "@/lib/area-insights";
 import { ProjectLivingInArea } from "@/components/project-living-in-area";
 import { ProjectMasterplan } from "@/components/project-masterplan";
+import { ProjectFloorPlans } from "@/components/project-floor-plans";
+import { FaqAccordion } from "@/components/faq-accordion";
+import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { ProjectGallery } from "@/components/project-gallery";
 import { getEnrichment } from "@/lib/enrichments";
 import {
@@ -234,6 +237,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <ProjectDetailNav
             sections={PROJECT_DETAIL_SECTIONS.filter((section) => {
               if (section.id === "masterplan") return Boolean(project.masterPlanUrl);
+              if (section.id === "floor-plans")
+                return (project.floorPlans?.length ?? 0) > 0;
               if (section.id === "living-in-area") return Boolean(areaInsights);
               if (section.id === "related") return related.length > 0;
               return true;
@@ -341,6 +346,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <ProjectUnitRanges units={project.units} />
 
         <ProjectMasterplan project={project} />
+
+        <ProjectFloorPlans project={project} />
         </div>
 
         {areaInsights ? <ProjectLivingInArea insights={areaInsights} /> : null}
@@ -368,6 +375,23 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <h2 className="text-xl font-semibold text-text-dark">Unit types</h2>
           <ProjectUnitsTable units={project.units} project={project} />
         </section>
+
+        {project.pfFaqs && project.pfFaqs.length > 0 ? (
+          <section id="project-faq" className="mt-12 scroll-mt-24">
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(buildFaqPageJsonLd(project.pfFaqs)),
+              }}
+            />
+            <h2 className="text-xl font-semibold text-text-dark">
+              {project.name} FAQ
+            </h2>
+            <div className="mt-5">
+              <FaqAccordion faqs={project.pfFaqs} />
+            </div>
+          </section>
+        ) : null}
 
         {related.length > 0 ? (
           <section id="related" className="mt-12 scroll-mt-24">

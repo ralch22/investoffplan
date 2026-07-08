@@ -2,6 +2,7 @@ export const PROJECT_DETAIL_SECTIONS = [
   { id: "overview", label: "Overview" },
   { id: "key-facts", label: "Key info" },
   { id: "masterplan", label: "Masterplan" },
+  { id: "floor-plans", label: "Floor plans" },
   { id: "units", label: "Units" },
   { id: "living-in-area", label: "Area" },
   { id: "location", label: "Location" },

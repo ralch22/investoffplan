@@ -83,8 +83,21 @@ export interface Project {
   amenities?: string[];
   masterPlanUrl?: string;
   videoUrl?: string;
+  floorPlans?: FloorPlan[];
+  salesStartDate?: string;
+  ownershipType?: string;
+  constructionProgress?: number;
+  pfFaqs?: Array<{ q: string; a: string }>;
   whatsapp: string;
   units: UnitType[];
+}
+
+export interface FloorPlan {
+  beds: number;
+  propertyType?: string;
+  area?: number;
+  layoutType?: string;
+  imageUrl: string;
 }
 
 export interface CatalogUnit {
