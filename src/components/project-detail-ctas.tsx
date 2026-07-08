@@ -6,6 +6,7 @@ import { BrochureModal } from "@/components/brochure-modal";
 import { ContactButton } from "@/components/contact-button";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { resolveBrochureUrl } from "@/lib/brochure";
+import { withUtm } from "@/lib/utm";
 
 interface ProjectDetailCtasProps {
   projectName: string;
@@ -24,7 +25,10 @@ export function ProjectDetailCtas({
 }: ProjectDetailCtasProps) {
   const [brochureOpen, setBrochureOpen] = useState(false);
 
-  const whatsappHref = `https://wa.me/${whatsapp.replace(/\D/g, "")}`;
+  const whatsappHref = withUtm(`https://wa.me/${whatsapp.replace(/\D/g, "")}`, {
+    medium: "whatsapp",
+    content: "pdp_mobile_bar",
+  });
 
   function trackWhatsappClick(source: string) {
     trackEvent(ANALYTICS_EVENTS.WHATSAPP_CLICK, {
@@ -76,7 +80,10 @@ export function ProjectDetailCtas({
           </a>
         ) : null}
         <a
-          href={`https://wa.me/${whatsapp.replace(/\D/g, "")}`}
+          href={withUtm(`https://wa.me/${whatsapp.replace(/\D/g, "")}`, {
+            medium: "whatsapp",
+            content: "pdp_pill",
+          })}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => trackWhatsappClick("pdp_pill")}

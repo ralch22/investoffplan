@@ -4,6 +4,7 @@ import { PageHero } from "@/components/page-hero";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { getHeroImage } from "@/lib/area-images";
 import { getSiteUrl } from "@/lib/site-url";
+import { withUtm } from "@/lib/utm";
 
 export const metadata: Metadata = {
   title: "تواصل معنا",
@@ -22,7 +23,10 @@ const CHANNELS = [
   {
     label: "واتساب",
     value: "‎+971 58 527 6222",
-    href: "https://wa.me/971585276222",
+    href: withUtm("https://wa.me/971585276222", {
+      medium: "whatsapp",
+      content: "contact_page_ar",
+    }),
     note: "الأسرع للرد — أرسل لنا اسم المشروع وسنوافيك بالتفاصيل والبروشور.",
   },
   {

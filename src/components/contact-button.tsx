@@ -2,6 +2,7 @@
 
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
+import { withUtm } from "@/lib/utm";
 
 interface ContactButtonProps {
   phone: string;
@@ -19,7 +20,10 @@ export function ContactButton({
   const message = encodeURIComponent(
     `Hi, I'm interested in ${projectName} on InvestOffPlan.`,
   );
-  const href = `https://wa.me/${phone.replace(/\D/g, "")}?text=${message}`;
+  const href = withUtm(
+    `https://wa.me/${phone.replace(/\D/g, "")}?text=${message}`,
+    { medium: "whatsapp", content: "contact_button" },
+  );
 
   return (
     <a
