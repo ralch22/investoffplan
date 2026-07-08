@@ -13,6 +13,7 @@ import {
 import { cn } from "@/lib/cn";
 import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { unoptimizedProp } from "@/lib/asset-image";
 import L from "leaflet";
 
 const isApiMode = process.env.NEXT_PUBLIC_CATALOG_API === "1";
@@ -161,6 +162,7 @@ export function ProjectMapInner({
                     fill
                     className="object-cover"
                     sizes="80px"
+                    {...unoptimizedProp(selected.imageUrl)}
                   />
                 </div>
               ) : null}

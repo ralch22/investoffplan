@@ -8,6 +8,7 @@ import {
 } from "@/components/media-gallery-lightbox";
 import { formatBeds } from "@/lib/format";
 import type { FloorPlan, Project } from "@/lib/types";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 interface ProjectFloorPlansProps {
   project: Project;
@@ -81,6 +82,7 @@ export function ProjectFloorPlans({ project }: ProjectFloorPlansProps) {
                 fill
                 className="object-contain transition group-hover:scale-[1.02]"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                {...unoptimizedProp(plan.imageUrl)}
               />
               <span className="absolute bottom-2 end-2 rounded-full bg-surface-darker/70 p-1.5 text-white opacity-0 transition group-hover:opacity-100">
                 <ExpandIcon />

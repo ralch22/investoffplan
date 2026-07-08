@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 interface PageHeroProps {
   title: string;
@@ -34,6 +35,7 @@ export function PageHero({
           className="object-cover"
           priority
           sizes="100vw"
+          {...unoptimizedProp(imageUrl)}
         />
       ) : null}
       <div className="absolute inset-0 bg-hero-overlay" />

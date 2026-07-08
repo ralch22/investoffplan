@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ResidentialBuilding } from "@/lib/residential-insights";
 import { formatPrice } from "@/lib/format";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 interface ResidentialInsightsTableProps {
   buildings: ResidentialBuilding[];
@@ -45,6 +46,7 @@ export function ResidentialInsightsTable({ buildings }: ResidentialInsightsTable
                         width={48}
                         height={48}
                         className="h-12 w-12 rounded-lg object-cover"
+                        {...unoptimizedProp(b.imageUrl)}
                       />
                     ) : (
                       <span className="flex h-12 w-12 items-center justify-center rounded-lg bg-surface-alt text-xs text-muted">

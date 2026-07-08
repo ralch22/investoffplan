@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { cn } from "@/lib/cn";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 export type BrandLogoVariant =
   | "horizontal-dark"
@@ -59,7 +60,7 @@ export function BrandLogo({
       sizes={logo.sizes}
       className={cn("h-auto w-auto max-w-full", className)}
       priority={priority}
-      unoptimized
+      {...unoptimizedProp(logo.src)}
     />
   );
 }

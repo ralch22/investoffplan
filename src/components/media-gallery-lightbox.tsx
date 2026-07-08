@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 interface MediaGalleryLightboxProps {
   images: string[];
@@ -109,6 +110,7 @@ export function MediaGalleryLightbox({
               className="object-contain"
               sizes="100vw"
               priority
+              {...unoptimizedProp(currentSrc)}
             />
           </div>
 
@@ -150,7 +152,7 @@ export function MediaGalleryLightbox({
                       : "border-transparent opacity-60 hover:opacity-100",
                   )}
                 >
-                  <Image src={src} alt="" fill className="object-cover" sizes="80px" />
+                  <Image src={src} alt="" fill className="object-cover" sizes="80px" {...unoptimizedProp(src)} />
                 </button>
               ))}
             </div>
