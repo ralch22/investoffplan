@@ -1,5 +1,10 @@
 import { asc, count, eq, inArray } from "drizzle-orm";
 import { createCatalogApi, type CatalogFile, PAGE_SIZE } from "@/lib/catalog-core";
+import {
+  catalogQueryKey,
+  decodeCatalogCursor,
+  encodeCatalogCursor,
+} from "@/lib/catalog-cursor";
 import type { CatalogUnit, CollectionFilter, Project, ProjectFilters, SortOption, ViewMode } from "@/lib/types";
 import { getMapProjectsFromList } from "@/lib/map-data";
 import type { CatalogDatabase } from "./client";
@@ -352,6 +357,11 @@ export async function fetchMapPayload(db: CatalogDatabase) {
 export interface CatalogProjectsQuery {
   page?: number;
   pageSize?: number;
+  /**
+   * Opaque cursor from a previous response's `meta.nextCursor`. When present and
+   * valid for the same query, it takes precedence over `page` for the offset.
+   */
+  cursor?: string;
   view?: ViewMode;
   sort?: SortOption;
   collection?: CollectionFilter;
@@ -391,19 +401,49 @@ export async function queryCatalogProjects(
     items = api.aggregateProjectView(items);
   }
 
+  const view = query.view ?? "unit";
+  const sort = query.sort ?? "featured";
+  const collection = query.collection ?? "all";
+
   const total = items.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  const offset = (page - 1) * pageSize;
+
+  // A cursor is scoped to the exact query it was minted for (filters/sort/view/
+  // collection + catalog snapshot). If it decodes and its key matches, resume
+  // from its offset; otherwise fall back to the page-based offset.
+  const queryKey = catalogQueryKey({
+    pageSize,
+    view,
+    sort,
+    collection,
+    filters,
+    scrapedAt: catalog.scrapedAt,
+  });
+  const decodedCursor = decodeCatalogCursor(query.cursor);
+  const cursorApplied = decodedCursor !== null && decodedCursor.key === queryKey;
+
+  const offset = cursorApplied
+    ? Math.min(decodedCursor.offset, total)
+    : (page - 1) * pageSize;
+  const currentPage = Math.floor(offset / pageSize) + 1;
+  const nextOffset = offset + pageSize;
+  const hasMore = nextOffset < total;
 
   return {
     meta: {
-      page,
+      page: currentPage,
       pageSize,
       total,
       totalPages,
-      view: query.view ?? "unit",
-      sort: query.sort ?? "featured",
-      collection: query.collection ?? "all",
+      hasMore,
+      nextCursor: hasMore ? encodeCatalogCursor(nextOffset, queryKey) : null,
+      prevCursor:
+        offset > 0
+          ? encodeCatalogCursor(Math.max(0, offset - pageSize), queryKey)
+          : null,
+      view,
+      sort,
+      collection,
       filters,
       scrapedAt: catalog.scrapedAt,
     },
