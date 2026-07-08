@@ -77,7 +77,7 @@ const dict = {
   },
   "home": {
     "heroEyebrow": "UAE off-plan intelligence for serious buyers",
-    "heroTitle": "UAE's Premier Off-Plan Platform",
+    "heroTitle": "UAE's Premier Off-Plan Investment Platform",
     "heroSubtitle": "{unitCount} unit options across {projectCount} projects — brochures, price per sqft, compare, and a live map in one place.",
     "browseAllProperties": "Browse all properties",
     "openMap": "Open map",

@@ -100,10 +100,12 @@ export default async function HomePage() {
           <p className="reveal text-sm font-medium text-white/80">
             UAE off-plan intelligence for serious buyers
           </p>
-          <h1 className="font-display reveal mt-4 max-w-3xl text-[clamp(2.25rem,5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.03em]">
+          <h1 className="font-display reveal mt-4 max-w-3xl text-[clamp(2.25rem,5vw,4rem)] font-semibold leading-[1.05] tracking-[-0.03em] [text-shadow:0_1px_2px_rgba(0,0,0,0.8),0_2px_10px_rgba(0,0,0,0.65),0_4px_28px_rgba(0,0,0,0.5)]">
             UAE&apos;s{" "}
-            <em className="not-italic italic text-white/90">Premier</em>{" "}
-            Off&#8209;Plan Platform
+            <em className="italic text-brand-light">Premier</em>{" "}
+            Off&#8209;Plan{" "}
+            <em className="italic text-brand-light">Investment</em>{" "}
+            Platform<span className="text-brand-light">.</span>
           </h1>
           <p className="prose-balance reveal mt-5 max-w-2xl text-base leading-relaxed text-white/85 md:text-lg">
             {stats.unitCount.toLocaleString()} unit options across{" "}
