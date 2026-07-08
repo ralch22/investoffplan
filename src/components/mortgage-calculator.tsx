@@ -8,6 +8,7 @@ import {
   type MortgageInput,
 } from "@/lib/mortgage";
 import { formatPrice } from "@/lib/format";
+import { AnimatedCurrency } from "@/components/animated-currency";
 
 const DEFAULTS: MortgageInput = {
   propertyPriceAed: 1_500_000,
@@ -85,8 +86,8 @@ export function MortgageCalculator() {
           <p className="text-sm font-semibold uppercase tracking-wide opacity-90">
             Monthly payment
           </p>
-          <p className="mt-2 text-4xl font-semibold">
-            {formatPrice(result.monthlyPaymentAed, "AED")}
+          <p className="mt-2 text-4xl font-semibold tabular-nums">
+            <AnimatedCurrency value={result.monthlyPaymentAed} currency="AED" />
           </p>
           <p className="mt-2 text-sm text-white/85">
             Stress-tested at +2%: {formatPrice(result.stressedMonthlyPaymentAed, "AED")}
