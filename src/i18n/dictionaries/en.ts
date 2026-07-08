@@ -46,6 +46,10 @@ const dict = {
     "cookies": "Cookies",
     "legal": "© {year} invest off-plan · Powered by Aria Properties LLC · DRN 20678, a licensed real estate brokerage in Dubai"
   },
+  "whatsappFab": {
+    "ariaLabel": "Chat with us on WhatsApp",
+    "message": "Hi, I'd like to know more about off-plan properties in the UAE."
+  },
   "common": {
     "viewDetails": "View Details",
     "whatsapp": "WhatsApp",

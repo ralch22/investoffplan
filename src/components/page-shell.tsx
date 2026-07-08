@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { AdvisorWidget } from "@/components/advisor/advisor-widget";
+import { WhatsAppFab } from "@/components/whatsapp-fab";
 import type { CurrencyCode } from "@/lib/types";
 
 interface PageShellProps {
@@ -39,6 +40,7 @@ export function PageShell({
       </main>
       <SiteFooter />
       <AdvisorWidget />
+      <WhatsAppFab />
     </div>
   );
 }

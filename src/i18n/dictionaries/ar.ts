@@ -48,6 +48,10 @@ export const ar: Dict = {
     "cookies": "ملفات تعريف الارتباط",
     "legal": "© {year} invest off-plan · مشغَّل من Aria Properties LLC · رقم التسجيل DRN 20678، وساطة عقارية مرخّصة في دبي"
   },
+  "whatsappFab": {
+    "ariaLabel": "تحدّث معنا عبر واتساب",
+    "message": "مرحبًا، أودّ معرفة المزيد عن العقارات على الخارطة في الإمارات."
+  },
   "common": {
     "viewDetails": "عرض التفاصيل",
     "whatsapp": "واتساب",
