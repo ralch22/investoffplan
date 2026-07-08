@@ -9,6 +9,7 @@ import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { getArea, getAreas, getProjectsByArea, slugify } from "@/lib/catalog";
 import { DldAreaStatsBand } from "@/components/dld-area-stats";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
+import { getSuggestedComparisons } from "@/lib/area-compare";
 import { getAreaEditorial } from "@/content/areas";
 import { areaTagline } from "@/lib/figma-copy";
 import { getAreaImage } from "@/lib/area-images";
@@ -85,6 +86,7 @@ export default async function AreaDetailPage({ params }: PageProps) {
   const stats = computeAreaStats(projects);
   const dldStats = getAreaStats(area.name);
   const dldSource = getDldSource();
+  const comparisons = await getSuggestedComparisons(slug);
   const similar = allAreas
     .filter((a) => a.slug !== slug && a.city === area.city)
     .slice(0, 4);
@@ -136,6 +138,21 @@ export default async function AreaDetailPage({ params }: PageProps) {
         {/* DLD market data (anonymized aggregates; renders only where we have it) */}
         {dldStats ? (
           <DldAreaStatsBand stats={dldStats} areaName={area.name} source={dldSource.source} />
+        ) : null}
+
+        {comparisons.length > 0 ? (
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="text-sm font-semibold text-text-dark">Compare {area.name} with:</span>
+            {comparisons.map((c) => (
+              <Link
+                key={c.pairSlug}
+                href={`/compare/${c.pairSlug}`}
+                className="iop-btn-press focus-ring rounded-full border border-border bg-white px-3 py-1.5 text-xs font-medium text-text-dark transition hover:border-brand hover:text-brand"
+              >
+                {c.otherName}
+              </Link>
+            ))}
+          </div>
         ) : null}
 
         {/* Editorial intro */}

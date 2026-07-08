@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAreas, getDevelopers, getCatalogApi } from "@/lib/catalog";
+import { getComparablePairSlugs } from "@/lib/area-compare";
 import { GUIDE_CARDS } from "@/lib/figma-copy";
 import { getNewsArticles } from "@/content/articles";
 import { FAQ_TOPICS } from "@/content/faq";
@@ -68,6 +69,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
+  const comparePairs = await getComparablePairSlugs();
+  const compareRoutes = comparePairs.map((pair) => ({
+    url: `${BASE}/compare/${pair}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  }));
+
   const guideRoutes = GUIDE_CARDS.filter((g) => g.href.startsWith("/guides/")).map((g) => ({
     url: `${BASE}${g.href}`,
     lastModified: new Date(),
@@ -116,6 +125,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...projectRoutes,
     ...developerRoutes,
     ...areaRoutes,
+    ...compareRoutes,
     ...guideRoutes,
     ...newsRoutes,
     ...collectionRoutes,
