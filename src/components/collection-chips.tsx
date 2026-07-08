@@ -27,7 +27,7 @@ export function CollectionChips({ value, onChange }: CollectionChipsProps) {
           type="button"
           onClick={() => onChange(c.id)}
           className={cn(
-            "shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition",
+            "iop-btn-press focus-ring shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition",
             value === c.id
               ? "border-brand bg-brand text-white"
               : "border-border bg-white text-text-dark hover:border-brand hover:text-brand",

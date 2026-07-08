@@ -102,7 +102,7 @@ export function ShowcaseProjectCard({
         <div className="flex flex-wrap items-center gap-2">
           <Link
             href={`/projects/${project.slug}`}
-            className="rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
+            className="iop-btn-press focus-ring rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
           >
             View Details
           </Link>
@@ -111,7 +111,7 @@ export function ShowcaseProjectCard({
             <Link
               href={`/map?project=${project.slug}`}
               className={cn(
-                "rounded-full border px-4 py-2 text-sm font-semibold transition",
+                "iop-btn-press focus-ring rounded-full border px-4 py-2 text-sm font-semibold transition",
                 dark
                   ? "border-white/40 text-white hover:bg-white/10"
                   : "border-border text-muted hover:border-brand hover:text-brand",

@@ -373,7 +373,7 @@ export function ProjectsPage({
                 <button
                   type="button"
                   onClick={() => setCardLayout("grid")}
-                  className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
+                  className={`iop-btn-press focus-ring rounded-full px-3 py-1.5 text-xs font-semibold ${
                     cardLayout === "grid"
                       ? "bg-brand text-white"
                       : "text-muted hover:text-brand"
@@ -384,7 +384,7 @@ export function ProjectsPage({
                 <button
                   type="button"
                   onClick={() => setCardLayout("list")}
-                  className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
+                  className={`iop-btn-press focus-ring rounded-full px-3 py-1.5 text-xs font-semibold ${
                     cardLayout === "list"
                       ? "bg-brand text-white"
                       : "text-muted hover:text-brand"
@@ -395,7 +395,7 @@ export function ProjectsPage({
                 <button
                   type="button"
                   onClick={() => setCardLayout("map")}
-                  className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
+                  className={`iop-btn-press focus-ring rounded-full px-3 py-1.5 text-xs font-semibold ${
                     cardLayout === "map"
                       ? "bg-brand text-white"
                       : "text-muted hover:text-brand"
@@ -410,7 +410,7 @@ export function ProjectsPage({
                   setViewMode((v) => (v === "unit" ? "project" : "unit"));
                   setPage(1);
                 }}
-                className="rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
+                className="iop-btn-press focus-ring rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
               >
                 {viewMode === "unit" ? s.view.showProjectView : s.view.showUnitView}
               </button>

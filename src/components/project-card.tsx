@@ -137,7 +137,7 @@ export function ProjectCard({
             <div className="flex flex-wrap gap-2 pt-1">
               <Link
                 href={`/projects/${project.slug}`}
-                className="rounded-full border border-white/80 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white hover:text-text-dark"
+                className="iop-btn-press focus-ring rounded-full border border-white/80 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white hover:text-text-dark"
               >
                 View Details
               </Link>
@@ -153,7 +153,7 @@ export function ProjectCard({
               <ContactButton
                 phone={catalog?.whatsapp ?? project.whatsapp}
                 projectName={project.name}
-                className="rounded-full border border-white/80 bg-transparent px-4 py-2 text-sm font-semibold text-white hover:bg-white hover:text-text-dark"
+                className="iop-btn-press focus-ring rounded-full border border-white/80 bg-transparent px-4 py-2 text-sm font-semibold text-white hover:bg-white hover:text-text-dark"
               />
               <BrochureButton
                 url={brochureUrl ?? "#brochure-request"}
