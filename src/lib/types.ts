@@ -80,6 +80,8 @@ export interface Project {
   coordinates?: Coordinates;
   brochureUrl?: string;
   description?: string;
+  /** Original IOP-voice rewrite (unique-content engine) — preferred over the scraped description. */
+  descriptionUnique?: string;
   amenities?: string[];
   masterPlanUrl?: string;
   videoUrl?: string;

@@ -25,6 +25,7 @@ import { ProjectMasterplan } from "@/components/project-masterplan";
 import { ProjectFloorPlans } from "@/components/project-floor-plans";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
+import { buildProjectFaqs } from "@/lib/project-faqs";
 import { ProjectGallery } from "@/components/project-gallery";
 import { getEnrichment } from "@/lib/enrichments";
 import {
@@ -60,10 +61,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!project) return { title: "Project not found" };
 
   const enrichment = getEnrichment(slug);
-  const description =
-    enrichment?.summary ??
-    stripHtml(project.description)?.slice(0, 160) ??
-    `${project.name} by ${project.developer} in ${project.area}. Off-plan units with payment plan ${project.paymentPlan}.`;
+  const minPriceMeta = Math.min(...project.units.map((u) => u.launchPriceAed).filter((v) => v > 0));
+  const description = [
+    `${project.name} by ${project.developer} in ${project.area}, ${project.city}`,
+    Number.isFinite(minPriceMeta) ? `from AED ${minPriceMeta.toLocaleString("en-US")}` : "",
+    project.handover ? `handover ${project.handover}` : "",
+    project.paymentPlan ? `${project.paymentPlan} payment plan` : "",
+    "floor plans + brochure.",
+  ]
+    .filter(Boolean)
+    .join(" — ")
+    .slice(0, 158);
 
   const imageUrl = project.imageUrl ?? project.imageGallery?.[0];
   const absoluteImage = imageUrl
@@ -120,10 +128,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     (p) => p.slug !== slug && p.city === project.city,
   ).slice(0, 3);
   const areaInsights = await getAreaInsightsForProject(slugify(project.area));
+  const projectFaqs = buildProjectFaqs(project);
 
   const siteUrl = getSiteUrl();
   const projectUrl = `${siteUrl}/projects/${slug}`;
   const description =
+    stripHtml(project.descriptionUnique ?? "")?.slice(0, 300) ??
     enrichment?.summary ??
     stripHtml(project.description)?.slice(0, 300) ??
     `${project.name} by ${project.developer} in ${project.area}.`;
@@ -339,7 +349,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           enrichment={enrichment}
           brochureUrl={project.brochureUrl ?? enrichment?.brochureUrl}
           videoUrl={project.videoUrl ?? enrichment?.videoUrl}
-          description={project.description}
+          description={project.descriptionUnique ?? project.description}
           amenities={amenities}
         />
 
@@ -376,19 +386,19 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <ProjectUnitsTable units={project.units} project={project} />
         </section>
 
-        {project.pfFaqs && project.pfFaqs.length > 0 ? (
+        {projectFaqs.length > 0 ? (
           <section id="project-faq" className="mt-12 scroll-mt-24">
             <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{
-                __html: JSON.stringify(buildFaqPageJsonLd(project.pfFaqs)),
+                __html: JSON.stringify(buildFaqPageJsonLd(projectFaqs)),
               }}
             />
             <h2 className="text-xl font-semibold text-text-dark">
               {project.name} FAQ
             </h2>
             <div className="mt-5">
-              <FaqAccordion faqs={project.pfFaqs} />
+              <FaqAccordion faqs={projectFaqs} />
             </div>
           </section>
         ) : null}

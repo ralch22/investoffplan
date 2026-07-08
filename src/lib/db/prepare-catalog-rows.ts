@@ -118,6 +118,7 @@ export function projectToInsertValues(project: Project, updatedAt: string) {
     lng: project.coordinates?.lng ?? null,
     brochureUrl: project.brochureUrl ?? null,
     description: project.description ?? null,
+    descriptionUnique: project.descriptionUnique ?? null,
     amenities: stringifyJsonArray(project.amenities),
     masterPlanUrl: project.masterPlanUrl ?? null,
     videoUrl: project.videoUrl ?? null,
