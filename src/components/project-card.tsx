@@ -176,6 +176,7 @@ export function ProjectCard({
                   selectedIds={compareIds}
                   onToggle={onCompareToggle}
                   variant="light"
+                  label={project.name}
                 />
               </div>
               <ContactButton
@@ -273,6 +274,7 @@ function ListCard({
                 id={compareId}
                 selectedIds={compareIds}
                 onToggle={onCompareToggle}
+                label={project.name}
               />
             </div>
           </div>

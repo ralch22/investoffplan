@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HoneypotField } from "@/components/honeypot-field";
 import { TurnstileField } from "@/components/turnstile-field";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { isDownloadablePdfUrl } from "@/lib/brochure";
 import { cn } from "@/lib/cn";
 import { submitLead } from "@/lib/leads-client";
+import { WHATSAPP_SECONDARY } from "@/lib/contact-info";
 
 interface BrochureModalProps {
   open: boolean;
@@ -58,6 +59,15 @@ export function BrochureModal({
   const [guardError, setGuardError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   const hasPdf = isDownloadablePdfUrl(brochureUrl);
@@ -101,7 +111,7 @@ export function BrochureModal({
     if (hasPdf) {
       window.open(brochureUrl, "_blank", "noopener,noreferrer");
     } else {
-      const whatsappNumber = whatsapp ? whatsapp.replace(/\D/g, "") : "971508226002";
+      const whatsappNumber = whatsapp ? whatsapp.replace(/\D/g, "") : WHATSAPP_SECONDARY;
       const text = `Hi, I just requested the brochure for ${projectName} on invest off-plan. My name is ${name.trim()}. Phone: ${phone.trim()}. Please send it to me!`;
       // Analytics hook + UTM for WhatsApp brochure fallback CTA (GA4 ready)
       const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}&utm_source=investoffplan&utm_medium=brochure_modal&utm_campaign=whatsapp_fallback`;

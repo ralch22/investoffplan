@@ -23,7 +23,7 @@ const CATALOG = join(process.cwd(), "data", "catalog.json");
 const DEV_BASE = "https://www.propertyfinder.ae/en/new-projects/dev";
 const PAGE_DELAY_MS = 1200;
 const PDP_DELAY_MS = 700;
-const DEFAULT_WHATSAPP = process.env.IOP_WHATSAPP || "+971500000000";
+const DEFAULT_WHATSAPP = process.env.IOP_WHATSAPP || "+971585276222";
 
 interface CatalogFile {
   version: 2;

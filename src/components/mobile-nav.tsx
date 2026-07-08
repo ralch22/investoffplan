@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import { BrandLogo } from "@/components/brand-logo";
 import { useFavoritesCount } from "@/hooks/use-favorites-count";
 import { cn } from "@/lib/cn";
@@ -30,6 +31,15 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
   const pathname = usePathname();
   const favoritesCount = useFavoritesCount();
   const { locale, dict } = useI18n();
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
 
   if (!open) return null;
 
@@ -68,7 +78,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                   className={cn(
                     "iop-btn-press focus-ring block rounded-xl px-4 py-3 text-sm font-medium transition",
                     active
-                      ? "bg-brand-muted text-brand"
+                      ? "bg-brand-muted text-brand-dark"
                       : "text-muted hover:bg-surface-alt hover:text-text-dark",
                   )}
                 >

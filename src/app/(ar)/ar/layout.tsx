@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { CatalogPrefetch } from "@/components/catalog-prefetch";
@@ -8,6 +8,7 @@ import { getDictionary } from "@/i18n";
 import "../../globals.css";
 
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
 
 const plexArabic = IBM_Plex_Sans_Arabic({
   variable: "--font-arabic",
@@ -69,6 +70,7 @@ export default function ArabicRootLayout({
     >
       <body className="min-h-full bg-background text-foreground">
         {gaMeasurementId ? <GoogleAnalytics gaId={gaMeasurementId} /> : null}
+        {gtmId ? <GoogleTagManager gtmId={gtmId} /> : null}
         <SiteJsonLd />
         <CatalogPrefetch />
         <LocaleProvider locale="ar" dict={dict}>

@@ -52,7 +52,9 @@
   // Public Turnstile site key: NEXT_PUBLIC_TURNSTILE_SITE_KEY in vars or .dev.vars
   "vars": {
     "NEXT_PUBLIC_SITE_URL": "https://investoffplan-preview.emerge-digital.workers.dev",
-    "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADxBjx3Slso2Jeoo",
-    "NEXT_PUBLIC_CATALOG_API": "1"
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADxyqgdGGZ6sArrC",
+    "NEXT_PUBLIC_CATALOG_API": "1",
+    "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-7GDZWYG4N2",
+    "NEXT_PUBLIC_GTM_ID": "GTM-PJPK4GP6"
   }
 }
