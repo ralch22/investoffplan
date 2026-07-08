@@ -106,12 +106,18 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
   const enrichment = getEnrichment(slug);
   const minPrice = Math.min(...project.units.map((u) => u.launchPriceAed));
-  const gallery =
+  const catalogGallery =
     project.imageGallery?.length
       ? project.imageGallery
       : project.imageUrl
         ? [project.imageUrl]
         : [];
+  // Append enrichment-discovered images (issue #37); catalog photos lead so the
+  // hero stays a first-party image. ProjectGallery dedupes downstream.
+  const enrichmentImages = Array.isArray(enrichment?.images)
+    ? enrichment.images
+    : [];
+  const gallery = [...catalogGallery, ...enrichmentImages];
   const mapUrl = project.coordinates
     ? `https://www.google.com/maps?q=${project.coordinates.lat},${project.coordinates.lng}`
     : null;

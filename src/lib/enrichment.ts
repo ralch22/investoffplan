@@ -3,6 +3,7 @@ import {
   isFirecrawlConfigured,
   MAX_SCRAPES_PER_ENTITY,
   pickBrochureUrl,
+  pickImages,
   pickVideoUrl,
   searchSources,
 } from "./firecrawl";
@@ -17,6 +18,10 @@ const PROSE_FACT_FIELDS = new Set([
   "description",
   "bio",
   "summary",
+  // Handled as dedicated top-level fields, never stored inside `facts`.
+  "imageUrls",
+  "brochureUrl",
+  "videoUrl",
 ]);
 
 const PER_ENTITY_BUDGET_MS = 40_000;
@@ -28,6 +33,8 @@ export interface ProjectEnrichment {
   sources: string[];
   brochureUrl?: string;
   videoUrl?: string;
+  /** Extra gallery images discovered on official developer pages. */
+  images?: string[];
   enrichedAt: string;
 }
 
@@ -42,6 +49,7 @@ function projectFactSchema(): Record<string, unknown> {
       location: { type: "string" },
       brochureUrl: { type: "string" },
       videoUrl: { type: "string" },
+      imageUrls: { type: "array", items: { type: "string" } },
     },
     additionalProperties: false,
   };
@@ -55,7 +63,9 @@ function extractPrompt(project: Project): string {
   return (
     `Extract only verifiable STRUCTURAL facts about the off-plan project "${project.name}" ` +
     `by ${project.developer} in ${project.area}. Include brochureUrl or videoUrl if found on official ` +
-    `developer pages. Do NOT include prices, contact details, agent names, or marketing copy.`
+    `developer pages. Include imageUrls: absolute URLs of official render/gallery/exterior photos ` +
+    `of the project (not logos, icons, or agent portraits). Do NOT include prices, contact details, ` +
+    `agent names, or marketing copy.`
   );
 }
 
@@ -172,12 +182,14 @@ export async function enrichProject(
   const summary = synthesizeFromFacts(project, merged);
   const brochureUrl = pickBrochureUrl(foundSources ?? [], extracted);
   const videoUrl = pickVideoUrl(foundSources ?? [], extracted);
+  const images = pickImages(extracted);
 
   const hasContent =
     summary ||
     Object.keys(facts).length > 0 ||
     brochureUrl ||
-    videoUrl;
+    videoUrl ||
+    images.length > 0;
   if (!hasContent) return null;
 
   return {
@@ -187,6 +199,7 @@ export async function enrichProject(
     sources,
     brochureUrl,
     videoUrl,
+    ...(images.length > 0 ? { images } : {}),
     enrichedAt: new Date().toISOString(),
   };
 }

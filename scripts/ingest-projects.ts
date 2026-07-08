@@ -20,6 +20,8 @@ import { loadEnrichments, saveEnrichments } from "../src/lib/enrichment-storage"
 
 function parseArgs(argv: string[]) {
   const dryRun = argv.includes("--dry-run");
+  const premiumOnly = argv.includes("--premium");
+  const skipExisting = argv.includes("--skip-existing");
   const limitIdx = argv.indexOf("--limit");
   const limit =
     limitIdx >= 0 && argv[limitIdx + 1]
@@ -27,11 +29,16 @@ function parseArgs(argv: string[]) {
       : PROJECTS.length;
   const slugIdx = argv.indexOf("--slug");
   const slug = slugIdx >= 0 ? argv[slugIdx + 1] : undefined;
-  return { dryRun, limit, slug };
+  const maxIdx = argv.indexOf("--max");
+  const max =
+    maxIdx >= 0 && argv[maxIdx + 1] ? Number(argv[maxIdx + 1]) : undefined;
+  return { dryRun, limit, slug, premiumOnly, skipExisting, max };
 }
 
 async function main() {
-  const { dryRun, limit, slug } = parseArgs(process.argv.slice(2));
+  const { dryRun, limit, slug, premiumOnly, skipExisting, max } = parseArgs(
+    process.argv.slice(2),
+  );
 
   if (!isFirecrawlConfigured()) {
     console.log(
@@ -40,9 +47,19 @@ async function main() {
     process.exit(0);
   }
 
-  const targets = slug
+  const store = loadEnrichments();
+
+  const pool = premiumOnly ? PROJECTS.filter((p) => p.isPremium) : PROJECTS;
+  // `limit` defines the universe (e.g. top-100 premium); `--skip-existing` then
+  // removes already-enriched slugs so a killed run resumes without drifting past it.
+  const universe = slug
     ? PROJECTS.filter((p) => p.slug === slug)
-    : PROJECTS.slice(0, limit);
+    : pool.slice(0, limit);
+  const remaining = universe.filter(
+    (p) => !skipExisting || !store.projects[p.slug],
+  );
+  // `--max` caps a single invocation so foreground batches finish inside the run window.
+  const targets = max != null ? remaining.slice(0, max) : remaining;
 
   if (targets.length === 0) {
     console.error("[ingest] No matching projects.");
@@ -50,14 +67,18 @@ async function main() {
   }
 
   console.log(
-    `[ingest] ${dryRun ? "DRY RUN" : "WRITE"} — ${targets.length} project(s)`,
+    `[ingest] ${dryRun ? "DRY RUN" : "WRITE"} — ${targets.length} project(s)` +
+      `${premiumOnly ? " (premium)" : ""}`,
   );
 
-  const store = loadEnrichments();
   let ok = 0;
   let skipped = 0;
+  let first = true;
 
   for (const project of targets) {
+    // Gentle pacing between entities keeps the hobby-tier rate limiter happy.
+    if (!first) await new Promise((r) => setTimeout(r, 500));
+    first = false;
     process.stdout.write(`  • ${project.slug} … `);
     const result = await enrichProject(project);
     if (!result) {
@@ -72,6 +93,7 @@ async function main() {
         result.summary ? "summary" : null,
         result.brochureUrl ? "brochure" : null,
         result.videoUrl ? "video" : null,
+        result.images?.length ? `${result.images.length} image(s)` : null,
         `${result.sources.length} scrape(s)`,
       ]
         .filter(Boolean)
@@ -80,6 +102,8 @@ async function main() {
 
     if (!dryRun) {
       store.projects[result.slug] = result;
+      // Persist incrementally so a long premium run survives a timeout/crash.
+      if (ok % 5 === 0) saveEnrichments(store);
     }
   }
 

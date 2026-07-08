@@ -4,6 +4,14 @@ const FIRECRAWL_BASE = (
   process.env.FIRECRAWL_API_BASE || "https://api.firecrawl.dev/v2"
 ).replace(/\/$/, "");
 const REQUEST_TIMEOUT_MS = 15_000;
+// Firecrawl's hobby tier intermittently returns 402/429 under burst load even
+// with credits available; a short backoff clears it. 5xx are also retried.
+const MAX_ATTEMPTS = 3;
+const RETRYABLE_STATUS = new Set([402, 408, 429, 500, 502, 503, 504]);
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 const PORTAL = "property" + "finder";
 
 const SOCIAL_BLOCKED = [
@@ -72,29 +80,43 @@ async function firecrawlPost<T>(path: string, body: unknown): Promise<T | null> 
   const key = process.env.FIRECRAWL_API_KEY;
   if (!key) return null;
 
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
-  try {
-    const res = await fetch(`${FIRECRAWL_BASE}${path}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${key}`,
-      },
-      body: JSON.stringify(body),
-      signal: controller.signal,
-    });
-    if (!res.ok) {
-      console.warn(`[firecrawl] ${path} → ${res.status}`);
-      return null;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+    try {
+      const res = await fetch(`${FIRECRAWL_BASE}${path}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${key}`,
+        },
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      });
+      if (!res.ok) {
+        if (RETRYABLE_STATUS.has(res.status) && attempt < MAX_ATTEMPTS) {
+          console.warn(`[firecrawl] ${path} → ${res.status} (retry ${attempt})`);
+          await sleep(1000 * attempt);
+          continue;
+        }
+        console.warn(`[firecrawl] ${path} → ${res.status}`);
+        return null;
+      }
+      return (await res.json()) as T;
+    } catch (e) {
+      // AbortError (timeout) is not worth retrying against the same slow URL.
+      const msg = (e as Error).message;
+      if ((e as Error).name === "AbortError" || attempt >= MAX_ATTEMPTS) {
+        console.warn(`[firecrawl] ${path} failed:`, msg);
+        return null;
+      }
+      console.warn(`[firecrawl] ${path} error (retry ${attempt}):`, msg);
+      await sleep(1000 * attempt);
+    } finally {
+      clearTimeout(timer);
     }
-    return (await res.json()) as T;
-  } catch (e) {
-    console.warn(`[firecrawl] ${path} failed:`, (e as Error).message);
-    return null;
-  } finally {
-    clearTimeout(timer);
   }
+  return null;
 }
 
 export async function searchSources(
@@ -201,6 +223,35 @@ export function pickBrochureUrl(
     }
   }
   return undefined;
+}
+
+const IMAGE_EXT_RE = /\.(?:jpe?g|png|webp|avif)(?:\?|$)/i;
+const IMAGE_REJECT_RE = /logo|icon|sprite|avatar|favicon|placeholder|thumb(?:nail)?|\/agent/i;
+
+/**
+ * Collect absolute, on-allowed-host image URLs the extractor found on official
+ * developer pages. Rejects logos/icons/avatars and caps the list so a PDP gallery
+ * stays reasonable.
+ */
+export function pickImages(
+  facts: Record<string, unknown> | null,
+  limit = 6,
+): string[] {
+  const raw = Array.isArray(facts?.imageUrls) ? facts!.imageUrls : [];
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const item of raw) {
+    if (typeof item !== "string") continue;
+    const u = item.trim();
+    if (!u || seen.has(u)) continue;
+    if (!allowedUrl(u)) continue;
+    if (!IMAGE_EXT_RE.test(u)) continue;
+    if (IMAGE_REJECT_RE.test(u)) continue;
+    seen.add(u);
+    out.push(u);
+    if (out.length >= limit) break;
+  }
+  return out;
 }
 
 export function pickVideoUrl(

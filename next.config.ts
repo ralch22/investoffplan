@@ -65,6 +65,13 @@ const nextConfig: NextConfig = {
         hostname: "new-projects-media.propertyfinder.com",
         pathname: "/**",
       },
+      // Enrichment gallery images are discovered on arbitrary official developer
+      // domains (issue #37), so the optimizer must accept any https host.
+      {
+        protocol: "https",
+        hostname: "**",
+        pathname: "/**",
+      },
     ],
   },
 };
