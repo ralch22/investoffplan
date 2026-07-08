@@ -30,6 +30,7 @@
     "db:upsert:remote": "tsx scripts/upsert-catalog-to-d1.ts --remote",
     "ingest:catalog": "tsx scripts/catalog-ingest-pipeline.ts",
     "ingest:catalog:smoke": "tsx scripts/catalog-ingest-pipeline.ts --smoke --remote",
+    "smoke:catalog-upsert": "tsx scripts/smoke-catalog-upsert.ts",
     "assets:migrate:local": "tsx scripts/migrate-assets-to-r2.ts --resume",
     "assets:migrate:remote": "tsx scripts/migrate-assets-to-r2.ts --remote --resume --concurrency=8",
     "assets:migrate:production": "tsx scripts/migrate-assets-to-r2.ts --remote --resume --concurrency=8 --force --config=wrangler.production.jsonc",
