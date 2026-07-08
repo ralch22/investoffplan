@@ -15,6 +15,7 @@ import { DeveloperAttribution } from "@/components/developer-attribution";
 import { ShowcaseProjectCard } from "@/components/showcase-project-card";
 import { ProjectPaymentCalculator } from "@/components/project-payment-calculator";
 import { ProjectDetailNav } from "@/components/project-detail-nav";
+import { ProjectSummaryRail } from "@/components/project-summary-rail";
 import { PROJECT_DETAIL_SECTIONS } from "@/lib/project-detail-sections";
 import { ProjectUnitsTable } from "@/components/project-units-table";
 import { ShareButton } from "@/components/share-button";
@@ -154,6 +155,13 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     ? [...new Set(gallery.filter(Boolean))].filter((src) => src !== heroImage).length
     : gallery.length;
 
+  const firstUnitPpsf = project.units[0]
+    ? unitPricePerSqft({ project, unit: project.units[0] })
+    : null;
+  const pricePerSqftLabel = firstUnitPpsf
+    ? `AED ${firstUnitPpsf.toLocaleString()}/sqft`
+    : null;
+
   return (
     <PageShell headerVariant="transparent">
       <script
@@ -249,6 +257,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           />
         </div>
 
+        <div className="mt-4 lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-8">
+          <div className="min-w-0">
         <div id="overview">
         <ProjectGallery
           images={gallery}
@@ -404,6 +414,22 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </div>
           </section>
         ) : null}
+          </div>
+
+          <aside className="hidden lg:block lg:sticky lg:top-24">
+            <ProjectSummaryRail
+              projectName={project.name}
+              projectSlug={project.slug}
+              priceLabel={formatPrice(minPrice, "AED")}
+              pricePerSqft={pricePerSqftLabel}
+              paymentPlan={project.paymentPlan}
+              unitCount={project.unitCount}
+              handover={project.handover ?? "To be announced"}
+              whatsapp={project.whatsapp}
+              brochureUrl={project.brochureUrl ?? enrichment?.brochureUrl}
+            />
+          </aside>
+        </div>
       </main>
     </PageShell>
   );
