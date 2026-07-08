@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: npm
 
       - name: Install dependencies
@@ -45,8 +45,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Setup local D1 (migrations + seed for e2e)
-        run: npm run db:migrate:local && npm run db:seed:local
+      - name: Seed local D1 for e2e
+        run: |
+          npm run db:migrate:local
+          npm run db:seed:local
 
       - name: End-to-end tests
         run: npm run test:e2e
