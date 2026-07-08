@@ -10,6 +10,7 @@ import { DeveloperAttribution } from "@/components/developer-attribution";
 import { CompareCheckbox } from "@/components/compare-bar";
 import { ContactButton } from "@/components/contact-button";
 import { FavoriteButton } from "@/components/favorite-button";
+import { PaymentRibbon } from "@/components/payment-ribbon";
 import type { CompareUnitId } from "@/lib/compare";
 import type { FlatUnit } from "@/lib/catalog-core";
 import type { CurrencyCode } from "@/lib/types";
@@ -90,6 +91,7 @@ export function ProjectCard({
             sizes={featured ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 768px) 100vw, 400px"}
             className="rounded-none"
           />
+          {paymentLabel !== "Payment Plan" ? <PaymentRibbon label={paymentLabel} /> : null}
         </div>
 
         <div className="relative flex flex-1 flex-col p-5">
@@ -97,9 +99,6 @@ export function ProjectCard({
             <div className="flex flex-wrap gap-2">
               <span className="rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark shadow-sm">
                 {unitCount} {unitTypeLabel} unit{unitCount === 1 ? "" : "s"}
-              </span>
-              <span className="rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white shadow-sm">
-                {paymentLabel}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -114,9 +113,13 @@ export function ProjectCard({
             <DeveloperAttribution
               name={project.developer}
               logoUrl={project.developerLogo}
-              suffix={handover ? ` · Handover ${handover}` : undefined}
               variant="light"
             />
+            {handover ? (
+              <p className="font-display text-sm italic text-white/85">
+                Handover {handover}
+              </p>
+            ) : null}
             <h3 className="text-2xl font-semibold leading-tight text-white md:text-3xl">
               <Link href={`/projects/${project.slug}`} className="hover:text-white/90">
                 {project.name}
@@ -134,7 +137,7 @@ export function ProjectCard({
             <div className="flex flex-wrap gap-2 pt-1">
               <Link
                 href={`/projects/${project.slug}`}
-                className="rounded-full border border-white/80 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white hover:text-text-dark"
+                className="iop-btn-press focus-ring rounded-full border border-white/80 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white hover:text-text-dark"
               >
                 View Details
               </Link>
@@ -150,7 +153,7 @@ export function ProjectCard({
               <ContactButton
                 phone={catalog?.whatsapp ?? project.whatsapp}
                 projectName={project.name}
-                className="rounded-full border border-white/80 bg-transparent px-4 py-2 text-sm font-semibold text-white hover:bg-white hover:text-text-dark"
+                className="iop-btn-press focus-ring rounded-full border border-white/80 bg-transparent px-4 py-2 text-sm font-semibold text-white hover:bg-white hover:text-text-dark"
               />
               <BrochureButton
                 url={brochureUrl ?? "#brochure-request"}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { DeveloperAttribution } from "@/components/developer-attribution";
 import { FavoriteButton } from "@/components/favorite-button";
+import { PaymentRibbon } from "@/components/payment-ribbon";
 import type { Project } from "@/lib/types";
 import { formatPrice } from "@/lib/format";
 import { cardEntrance, cardHoverLift } from "@/lib/motion";
@@ -28,9 +29,6 @@ export function ShowcaseProjectCard({
 }: ShowcaseProjectCardProps) {
   const minPrice = Math.min(...project.units.map((u) => u.launchPriceAed));
   const isSoldOut = project.status === "sold-out";
-  const badge = isSoldOut
-    ? "Sold out"
-    : project.paymentPlan || "Coming Soon";
 
   return (
     <motion.article
@@ -63,14 +61,17 @@ export function ShowcaseProjectCard({
           <div className={cn("h-full bg-gradient-to-br", project.imageGradient)} />
         )}
         <div className="card-photo-overlay absolute inset-0" />
-        <span className="absolute start-4 top-4 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
-          {badge}
-        </span>
-        {project.handover ? (
-          <span className="absolute end-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-text-dark">
-            {project.handover}
+        {isSoldOut ? (
+          <span className="absolute start-4 top-4 rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white">
+            Sold out
           </span>
-        ) : null}
+        ) : project.paymentPlan ? (
+          <PaymentRibbon label={project.paymentPlan} />
+        ) : (
+          <span className="absolute start-4 top-4 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
+            Coming Soon
+          </span>
+        )}
       </Link>
 
       <div className={cn("space-y-3 p-5", dark ? "text-white" : "text-text-dark")}>
@@ -81,7 +82,12 @@ export function ShowcaseProjectCard({
             suffix={project.area ? ` · ${project.area}` : undefined}
             variant={dark ? "dark" : "muted"}
           />
-          <h3 className="text-lg font-semibold">
+          {project.handover ? (
+            <p className={cn("mt-1 font-display text-sm italic", dark ? "text-white/85" : "text-muted")}>
+              Handover {project.handover}
+            </p>
+          ) : null}
+          <h3 className="mt-1 text-lg font-semibold">
             <Link
               href={`/projects/${project.slug}`}
               className={dark ? "hover:text-brand-light" : "hover:text-brand"}
@@ -96,7 +102,7 @@ export function ShowcaseProjectCard({
         <div className="flex flex-wrap items-center gap-2">
           <Link
             href={`/projects/${project.slug}`}
-            className="rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
+            className="iop-btn-press focus-ring rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
           >
             View Details
           </Link>
@@ -105,7 +111,7 @@ export function ShowcaseProjectCard({
             <Link
               href={`/map?project=${project.slug}`}
               className={cn(
-                "rounded-full border px-4 py-2 text-sm font-semibold transition",
+                "iop-btn-press focus-ring rounded-full border px-4 py-2 text-sm font-semibold transition",
                 dark
                   ? "border-white/40 text-white hover:bg-white/10"
                   : "border-border text-muted hover:border-brand hover:text-brand",
