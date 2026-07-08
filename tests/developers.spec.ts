@@ -26,4 +26,27 @@ test.describe("Developers directory", () => {
       page.locator('img[alt="Emaar Properties logo"]').first(),
     ).toBeVisible();
   });
+
+  test("developer detail emits ItemList structured data", async ({ page }) => {
+    await page.goto("/developers/emaar-properties");
+
+    const blocks = await page
+      .locator('script[type="application/ld+json"]')
+      .allTextContents();
+    const schemas = blocks.map((block) => JSON.parse(block));
+
+    const itemList = schemas.find(
+      (schema) => schema.mainEntity?.["@type"] === "ItemList",
+    );
+    expect(itemList).toBeTruthy();
+    expect(itemList.mainEntity.numberOfItems).toBeGreaterThan(0);
+    expect(itemList.mainEntity.itemListElement.length).toBe(
+      itemList.mainEntity.numberOfItems,
+    );
+    expect(itemList.mainEntity.itemListElement[0]).toMatchObject({
+      "@type": "ListItem",
+      position: 1,
+    });
+    expect(itemList.mainEntity.itemListElement[0].url).toContain("/projects/");
+  });
 });

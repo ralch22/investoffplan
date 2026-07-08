@@ -11,7 +11,10 @@ import { DeveloperProjectCard } from "@/components/developer-project-card";
 import { DeveloperSortControl } from "@/components/developer-sort-control";
 import { getDeveloper, getDevelopers, getProjectsByDeveloper } from "@/lib/catalog";
 import { developerDescription, sortDeveloperProjects } from "@/lib/developer-utils";
-import { buildDeveloperJsonLd } from "@/lib/project-json-ld";
+import {
+  buildDeveloperItemListJsonLd,
+  buildDeveloperJsonLd,
+} from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { DEVELOPER_PAGE_SIZE, type SortOption } from "@/lib/types";
 
@@ -32,6 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `New & Off-Plan Projects by ${developer.name}`,
     description: `Browse ${developer.projectCount} off-plan projects by ${developer.name} in the UAE with launch prices, payment plans, and brochures.`,
+    alternates: { canonical: `${getSiteUrl()}/developers/${slug}` },
   };
 }
 
@@ -67,6 +71,12 @@ export default async function DeveloperDetailPage({
     developerUrl,
     siteUrl,
   });
+  const itemListJsonLd = buildDeveloperItemListJsonLd({
+    developer,
+    projects: sorted,
+    developerUrl,
+    siteUrl,
+  });
   const heroExcerpt = developerDescription(slug, developer.description);
 
   return (
@@ -75,6 +85,12 @@ export default async function DeveloperDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {sorted.length > 0 ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
+      ) : null}
 
       <section className="border-b border-border bg-surface-alt">
         <div className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
