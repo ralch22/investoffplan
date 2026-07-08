@@ -38,7 +38,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
         aria-label="Close menu"
         onClick={onClose}
       />
-      <nav className="absolute right-0 top-0 flex h-full w-[min(100%,20rem)] flex-col bg-surface shadow-elevation-lg">
+      <nav className="absolute end-0 top-0 flex h-full w-[min(100%,20rem)] flex-col bg-surface shadow-elevation-lg">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <BrandLogo variant="horizontal-dark" className="h-7 w-auto" />
           <button

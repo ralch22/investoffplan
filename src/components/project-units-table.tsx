@@ -14,7 +14,7 @@ export function ProjectUnitsTable({ units, project }: ProjectUnitsTableProps) {
   return (
     <>
       <div className="mt-4 hidden overflow-hidden rounded-xl border border-border bg-white md:block">
-        <table className="w-full text-left text-sm">
+        <table className="w-full text-start text-sm">
           <thead className="border-b border-border bg-surface-alt text-muted">
             <tr>
               <th className="px-4 py-3 font-medium">Beds</th>
@@ -59,7 +59,7 @@ export function ProjectUnitsTable({ units, project }: ProjectUnitsTableProps) {
                   {formatSqft(unit.sqftMin, unit.sqftMax)}
                 </p>
               </div>
-              <p className="shrink-0 text-right font-semibold text-brand">
+              <p className="shrink-0 text-end font-semibold text-brand">
                 {formatLaunchPrice(
                   unit.launchPriceAed,
                   unit.launchPriceMaxAed,

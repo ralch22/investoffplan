@@ -17,7 +17,7 @@ export function PageHero({
   align = "center",
   children,
 }: PageHeroProps) {
-  const alignClass = align === "center" ? "text-center" : "text-left";
+  const alignClass = align === "center" ? "text-center" : "text-start";
 
   // Split title on last word for italic rendering
   const words = title.split(" ");

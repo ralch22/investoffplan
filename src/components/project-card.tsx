@@ -206,12 +206,12 @@ function ListCard({
             projectHref={`/projects/${project.slug}`}
             fallbackClassName={cn("bg-gradient-to-br", project.imageGradient)}
             sizes="320px"
-            className="h-full rounded-none md:rounded-l-2xl"
+            className="h-full rounded-none md:rounded-s-2xl"
           />
-          <span className="pointer-events-none absolute left-4 top-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark">
+          <span className="pointer-events-none absolute start-4 top-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark">
             {unitCount} {unitTypeLabel} unit{unitCount === 1 ? "" : "s"}
           </span>
-          <span className="pointer-events-none absolute bottom-4 left-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
+          <span className="pointer-events-none absolute bottom-4 start-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
             {paymentLabel}
           </span>
         </div>

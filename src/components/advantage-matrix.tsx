@@ -18,7 +18,7 @@ export async function AdvantageMatrix() {
         </p>
 
         <div className="mt-10 overflow-x-auto rounded-2xl border border-[rgba(192,212,232,0.5)] bg-white">
-          <table className="w-full min-w-[640px] text-left text-sm">
+          <table className="w-full min-w-[640px] text-start text-sm">
             <thead className="border-b border-border bg-brand/5">
               <tr>
                 <th className="px-5 py-4 font-semibold text-text-dark">Feature</th>

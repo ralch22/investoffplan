@@ -42,7 +42,7 @@ export function ProjectTimeline({ project }: ProjectTimelineProps) {
       >
         Project <em className="italic">timeline</em>
       </h2>
-      <ol className="relative mt-6 border-l border-border pl-6">
+      <ol className="relative mt-6 border-s border-border ps-6">
         {milestones.map((milestone, index) => (
           <li key={milestone.label} className="relative pb-8 last:pb-0">
             <span

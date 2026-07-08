@@ -161,7 +161,7 @@ export function ComparePage({ initialIds, initialItems }: ComparePageProps) {
               <table className="w-full min-w-[720px] border-collapse text-sm">
                 <thead>
                   <tr className="border-b border-border bg-surface-alt/60">
-                    <th className="w-36 p-4 text-left text-xs font-semibold uppercase tracking-wide text-muted">
+                    <th className="w-36 p-4 text-start text-xs font-semibold uppercase tracking-wide text-muted">
                       Attribute
                     </th>
                     <AnimatePresence mode="popLayout">
@@ -180,7 +180,7 @@ export function ComparePage({ initialIds, initialItems }: ComparePageProps) {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             key={unitId}
-                            className="min-w-[220px] border-l border-border p-4 text-left align-top"
+                            className="min-w-[220px] border-s border-border p-4 text-start align-top"
                           >
                             <div className="relative mb-3 h-36 overflow-hidden rounded-xl">
                               <CompactMediaGallery
@@ -228,7 +228,7 @@ export function ComparePage({ initialIds, initialItems }: ComparePageProps) {
                     {Array.from({ length: emptySlots }).map((_, i) => (
                       <th
                         key={`empty-${i}`}
-                        className="min-w-[200px] border-l border-dashed border-border p-4 text-left align-top"
+                        className="min-w-[200px] border-s border-dashed border-border p-4 text-start align-top"
                       >
                         <div className="flex h-28 items-center justify-center rounded-xl border border-dashed border-border bg-surface-alt/50">
                           <PrimaryButton
@@ -254,7 +254,7 @@ export function ComparePage({ initialIds, initialItems }: ComparePageProps) {
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             key={`${item.project.id}:${item.unit.id}-${row.label}`}
-                            className="border-l border-border p-4 font-medium text-text-dark"
+                            className="border-s border-border p-4 font-medium text-text-dark"
                           >
                             {row.render(item, currency)}
                           </motion.td>
@@ -263,7 +263,7 @@ export function ComparePage({ initialIds, initialItems }: ComparePageProps) {
                       {Array.from({ length: emptySlots }).map((_, i) => (
                         <td
                           key={`empty-${row.label}-${i}`}
-                          className="border-l border-dashed border-border p-4 text-muted"
+                          className="border-s border-dashed border-border p-4 text-muted"
                         >
                           —
                         </td>

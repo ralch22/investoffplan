@@ -115,7 +115,7 @@ export function ProjectGallery({
                 <button
                   type="button"
                   onClick={goPrev}
-                  className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/65 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:left-4 md:opacity-0 md:group-hover/stage:opacity-100"
+                  className="absolute start-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/65 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:start-4 md:opacity-0 md:group-hover/stage:opacity-100"
                   aria-label="Previous photo"
                 >
                   <ChevronIcon direction="left" />
@@ -123,7 +123,7 @@ export function ProjectGallery({
                 <button
                   type="button"
                   onClick={goNext}
-                  className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/65 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:right-4 md:opacity-0 md:group-hover/stage:opacity-100"
+                  className="absolute end-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/45 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/65 focus-visible:opacity-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:end-4 md:opacity-0 md:group-hover/stage:opacity-100"
                   aria-label="Next photo"
                 >
                   <ChevronIcon direction="right" />
@@ -134,7 +134,7 @@ export function ProjectGallery({
             <button
               type="button"
               onClick={() => setLightboxOpen(true)}
-              className="absolute right-3 top-3 z-10 inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/45 px-3 py-2 text-xs font-semibold text-white backdrop-blur-sm transition hover:bg-black/65 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="absolute end-3 top-3 z-10 inline-flex items-center gap-2 rounded-full border border-white/25 bg-black/45 px-3 py-2 text-xs font-semibold text-white backdrop-blur-sm transition hover:bg-black/65 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               aria-label={`View ${alt} photos fullscreen`}
             >
               <ExpandIcon />
@@ -143,7 +143,7 @@ export function ProjectGallery({
 
             {count > 1 ? (
               <div
-                className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-1.5 rounded-full bg-black/45 px-2 py-1.5 backdrop-blur-sm"
+                className="absolute bottom-3 start-1/2 z-10 flex -translate-x-1/2 gap-1.5 rounded-full bg-black/45 px-2 py-1.5 backdrop-blur-sm"
                 aria-hidden
               >
                 {gallery.map((_, i) => (
@@ -162,8 +162,8 @@ export function ProjectGallery({
 
         {count > 1 ? (
           <div className="relative mt-3">
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-[var(--background)] to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-[var(--background)] to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 start-0 z-10 w-8 bg-gradient-to-r from-[var(--background)] to-transparent" />
+            <div className="pointer-events-none absolute inset-y-0 end-0 z-10 w-8 bg-gradient-to-l from-[var(--background)] to-transparent" />
             <div
               ref={thumbStripRef}
               className="flex snap-x snap-mandatory gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"

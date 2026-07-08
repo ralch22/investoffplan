@@ -328,7 +328,7 @@ export function ProjectsPage({
               <button
                 type="button"
                 onClick={() => setMobileFiltersOpen(true)}
-                className="flex-1 rounded-xl border border-border bg-white px-4 py-3 text-left text-sm font-medium text-text-dark"
+                className="flex-1 rounded-xl border border-border bg-white px-4 py-3 text-start text-sm font-medium text-text-dark"
               >
                 Filters & search
               </button>

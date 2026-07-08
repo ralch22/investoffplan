@@ -308,7 +308,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <p className="mt-4 text-2xl font-semibold text-brand">
           FROM {formatPrice(minPrice, "AED")}
           {project.units[0] ? (
-            <span className="ml-3 text-base font-medium text-muted">
+            <span className="ms-3 text-base font-medium text-muted">
               {(() => {
                 const ppsf = unitPricePerSqft({
                   project,

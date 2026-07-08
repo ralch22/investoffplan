@@ -72,7 +72,7 @@ export function ProjectFloorPlans({ project }: ProjectFloorPlansProps) {
               setActive(index);
               setOpen(true);
             }}
-            className="group relative overflow-hidden rounded-2xl border border-border bg-white p-3 text-left shadow-sm transition hover:border-brand hover:shadow-md"
+            className="group relative overflow-hidden rounded-2xl border border-border bg-white p-3 text-start shadow-sm transition hover:border-brand hover:shadow-md"
           >
             <div className="relative h-48 w-full overflow-hidden rounded-xl bg-surface-alt">
               <Image
@@ -82,7 +82,7 @@ export function ProjectFloorPlans({ project }: ProjectFloorPlansProps) {
                 className="object-contain transition group-hover:scale-[1.02]"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
-              <span className="absolute bottom-2 right-2 rounded-full bg-surface-darker/70 p-1.5 text-white opacity-0 transition group-hover:opacity-100">
+              <span className="absolute bottom-2 end-2 rounded-full bg-surface-darker/70 p-1.5 text-white opacity-0 transition group-hover:opacity-100">
                 <ExpandIcon />
               </span>
             </div>

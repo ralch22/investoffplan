@@ -53,11 +53,11 @@ export function DeveloperProjectCard({
         ) : (
           <div className={cn("h-full bg-gradient-to-br", project.imageGradient)} />
         )}
-        <span className="absolute left-3 top-3 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
+        <span className="absolute start-3 top-3 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
           {statusBadge}
         </span>
         {project.handover ? (
-          <span className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-text-dark shadow-sm">
+          <span className="absolute end-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-text-dark shadow-sm">
             {project.handover}
           </span>
         ) : null}

@@ -19,7 +19,7 @@ export function ArticleBody({ sections }: { sections: ArticleSection[] }) {
             ))}
           </div>
           {section.bullets && section.bullets.length > 0 ? (
-            <ul className="mt-4 list-disc space-y-2 pl-6 text-muted">
+            <ul className="mt-4 list-disc space-y-2 ps-6 text-muted">
               {section.bullets.map((bullet, bIndex) => (
                 <li key={bIndex} className="leading-relaxed">
                   {bullet}
