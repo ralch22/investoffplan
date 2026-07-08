@@ -5,7 +5,7 @@ test.describe("InvestOffPlan extended flows", () => {
   test("compare page shows unified table", async ({ page }) => {
     await page.goto("/projects");
     await waitForCatalog(page);
-    const boxes = page.getByRole("checkbox", { name: "Compare unit" });
+    const boxes = page.getByRole("checkbox", { name: /^Compare / });
     await boxes.nth(0).check();
     await boxes.nth(1).check();
     await expect(page.getByTestId("compare-count")).toHaveText("2");
@@ -56,7 +56,7 @@ test.describe("InvestOffPlan extended flows", () => {
 
   test("contact CTA validates on about page", async ({ page }) => {
     await page.goto("/about");
-    await page.getByRole("button", { name: "Submit via WhatsApp" }).click();
+    await page.getByRole("button", { name: "Submit enquiry" }).click();
     await expect(page.getByText("Name is required")).toBeVisible();
     await expect(page.getByText("Tell us what you're looking for")).toBeVisible();
   });

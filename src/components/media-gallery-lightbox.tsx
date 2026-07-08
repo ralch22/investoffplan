@@ -141,6 +141,7 @@ export function MediaGalleryLightbox({
                 <button
                   key={`lb-thumb-${i}-${src}`}
                   type="button"
+                  aria-label={`Show image ${i + 1} of ${count}`}
                   onClick={() => onSelect(i)}
                   className={cn(
                     "relative h-14 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition",

@@ -81,11 +81,13 @@ export function CompareCheckbox({
   selectedIds,
   onToggle,
   variant = "default",
+  label,
 }: {
   id: CompareUnitId;
   selectedIds: CompareUnitId[];
   onToggle: (id: CompareUnitId) => void;
   variant?: "default" | "light";
+  label?: string;
 }) {
   const checked = selectedIds.includes(id);
   const disabled = !checked && selectedIds.length >= 3;
@@ -103,7 +105,7 @@ export function CompareCheckbox({
         checked={checked}
         disabled={disabled}
         onChange={() => onToggle(id)}
-        aria-label="Compare unit"
+        aria-label={label ? `Compare ${label}` : "Compare unit"}
         className="focus-ring h-4 w-4 rounded border-border text-brand"
       />
       Compare

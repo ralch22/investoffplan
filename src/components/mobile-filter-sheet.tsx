@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import type { ProjectFilters as Filters } from "@/lib/types";
 import {
   MoreFiltersPanel,
@@ -23,10 +24,19 @@ export function MobileFilterSheet({
   developerOptions = [],
   amenityOptions = [],
 }: MobileFilterSheetProps) {
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
+
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 md:hidden">
+    <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true" aria-label="Filters">
       <button
         type="button"
         aria-label="Close filters"

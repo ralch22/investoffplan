@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HoneypotField } from "@/components/honeypot-field";
 import { TurnstileField } from "@/components/turnstile-field";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
@@ -58,6 +58,15 @@ export function BrochureModal({
   const [turnstileToken, setTurnstileToken] = useState("");
   const [guardError, setGuardError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, onClose]);
 
   if (!open) return null;
 

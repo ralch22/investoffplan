@@ -100,7 +100,7 @@ export function SiteHeader({
                         ? "bg-white/15 text-white"
                         : "text-white/85 hover:bg-white/10 hover:text-white"
                       : active
-                        ? "bg-brand-muted text-brand"
+                        ? "bg-brand-muted text-brand-dark"
                         : "text-muted hover:bg-surface-alt hover:text-text-dark",
                   )}
                   aria-current={active ? "page" : undefined}

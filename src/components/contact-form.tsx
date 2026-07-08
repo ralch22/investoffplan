@@ -119,6 +119,8 @@ export function ContactForm() {
         <input
           type="email"
           placeholder="Email address"
+          aria-label="Email address"
+          autoComplete="email"
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
           aria-invalid={Boolean(errors.email)}
@@ -136,6 +138,7 @@ export function ContactForm() {
         <input
           type="text"
           placeholder="Subject"
+          aria-label="Subject"
           value={values.subject}
           onChange={(e) => updateField("subject", e.target.value)}
           aria-invalid={Boolean(errors.subject)}
@@ -152,6 +155,7 @@ export function ContactForm() {
       <div>
         <textarea
           placeholder="Message"
+          aria-label="Message"
           rows={6}
           value={values.message}
           onChange={(e) => updateField("message", e.target.value)}

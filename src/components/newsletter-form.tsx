@@ -104,16 +104,20 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
           <input
             type="text"
             placeholder="Name..."
+            aria-label="Name"
+            autoComplete="name"
             value={values.name}
             onChange={(e) => updateField("name", e.target.value)}
             aria-invalid={Boolean(errors.name)}
             className={cn(inputCls, errors.name && "border-red-400")}
           />
-          {errors.name ? <p className="mt-1 px-2 text-xs font-medium text-red-400">{errors.name}</p> : null}
+          {errors.name ? <p role="alert" className="iop-field-error px-2">{errors.name}</p> : null}
         </div>
         <input
           type="tel"
           placeholder="Phone..."
+          aria-label="Phone"
+          autoComplete="tel"
           value={values.phone}
           onChange={(e) => updateField("phone", e.target.value)}
           className={inputCls}
@@ -123,12 +127,14 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
         <input
           type="email"
           placeholder="Email..."
+          aria-label="Email"
+          autoComplete="email"
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
           aria-invalid={Boolean(errors.email)}
           className={cn(inputCls, errors.email && "border-red-400")}
         />
-        {errors.email ? <p className="mt-1 px-2 text-xs font-medium text-red-400">{errors.email}</p> : null}
+        {errors.email ? <p role="alert" className="iop-field-error px-2">{errors.email}</p> : null}
       </div>
       <label className={cn("flex cursor-pointer items-center gap-2 text-xs", dark ? "text-white/70" : "text-muted")}>
         <input

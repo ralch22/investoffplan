@@ -115,6 +115,8 @@ export function MortgagePreapprovalForm() {
           <input
             type="text"
             placeholder="Full name"
+            aria-label="Full name"
+            autoComplete="name"
             value={values.name}
             onChange={(e) => updateField("name", e.target.value)}
             aria-invalid={Boolean(errors.name)}
@@ -126,6 +128,8 @@ export function MortgagePreapprovalForm() {
           <input
             type="tel"
             placeholder="Phone (with country code)"
+            aria-label="Phone (with country code)"
+            autoComplete="tel"
             value={values.phone}
             onChange={(e) => updateField("phone", e.target.value)}
             aria-invalid={Boolean(errors.phone)}
@@ -138,6 +142,8 @@ export function MortgagePreapprovalForm() {
         <input
           type="email"
           placeholder="Email address"
+          aria-label="Email address"
+          autoComplete="email"
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
           aria-invalid={Boolean(errors.email)}

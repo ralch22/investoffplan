@@ -133,6 +133,8 @@ export function ContactCtaForm() {
         <input
           type="text"
           placeholder="Name"
+          aria-label="Name"
+          autoComplete="name"
           value={values.name}
           onChange={(e) => updateField("name", e.target.value)}
           className={cn(inputClass, errors.name && "ring-2 ring-brand")}
@@ -145,6 +147,8 @@ export function ContactCtaForm() {
         <input
           type="tel"
           placeholder="Phone"
+          aria-label="Phone"
+          autoComplete="tel"
           value={values.phone}
           onChange={(e) => updateField("phone", e.target.value)}
           className={cn(inputClass, errors.phone && "ring-2 ring-brand")}
@@ -157,6 +161,8 @@ export function ContactCtaForm() {
         <input
           type="email"
           placeholder="Email"
+          aria-label="Email"
+          autoComplete="email"
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
           className={cn(inputClass, errors.email && "ring-2 ring-brand")}
@@ -169,6 +175,8 @@ export function ContactCtaForm() {
         <input
           type="text"
           placeholder="Country of residence"
+          aria-label="Country of residence"
+          autoComplete="country-name"
           value={values.country}
           onChange={(e) => updateField("country", e.target.value)}
           className={inputClass}
@@ -177,6 +185,7 @@ export function ContactCtaForm() {
       <div className="sm:col-span-2">
         <textarea
           placeholder="What are you looking for?"
+          aria-label="What are you looking for?"
           rows={4}
           value={values.message}
           onChange={(e) => updateField("message", e.target.value)}
@@ -194,7 +203,7 @@ export function ContactCtaForm() {
         {guardError ? <p className="px-2 text-xs text-brand-light">{guardError}</p> : null}
         <div className="flex justify-end">
           <PrimaryButton type="submit" showArrow={false} disabled={submitting}>
-            {submitting ? "Submitting…" : "Submit via WhatsApp"}
+            {submitting ? "Submitting…" : "Submit enquiry"}
           </PrimaryButton>
         </div>
       </div>

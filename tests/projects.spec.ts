@@ -32,7 +32,7 @@ test.describe("InvestOffPlan projects page", () => {
   }) => {
     await page.goto("/projects");
     await waitForCatalog(page);
-    const boxes = page.getByRole("checkbox", { name: "Compare unit" });
+    const boxes = page.getByRole("checkbox", { name: /^Compare / });
     await boxes.nth(0).check();
     await boxes.nth(1).check();
     await boxes.nth(2).check();
