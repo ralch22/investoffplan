@@ -14,6 +14,7 @@ import {
   getDevelopers,
 } from "@/lib/catalog";
 import { unoptimizedProp } from "@/lib/asset-image";
+import { getAreaImage } from "@/lib/area-images";
 import { AdvantageMatrix } from "@/components/advantage-matrix";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
@@ -74,6 +75,7 @@ export default async function HomePage() {
   const featured = await getFeaturedProjects(6);
   const latest = await getFeaturedProjects(4);
   const topAreas = (await getAreas()).slice(0, 6);
+  const areaImages = await Promise.all(topAreas.map((a) => getAreaImage(a.name)));
   const topDevelopers = (await getDevelopers()).slice(0, 8);
   const heroImage = featured[0]?.imageUrl;
 
@@ -189,29 +191,43 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {topAreas.map((area, index) => (
-              <Link
-                key={area.slug}
-                href={`/areas/${area.slug}`}
-                className="group overflow-hidden rounded-2xl border border-border bg-white transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
-              >
-                <div className="area-card-accent relative px-6 py-5">
-                  <span className="font-display text-5xl font-semibold leading-none text-brand/15">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <p className="mt-3 text-xl font-semibold text-text-dark transition group-hover:text-brand">
-                    {area.name}
-                  </p>
-                  <p className="mt-2 text-sm text-muted">
-                    {area.cityLabel} · {area.projectCount} projects
-                  </p>
-                </div>
-                <div className="flex items-center justify-between border-t border-border px-6 py-4">
-                  <span className="text-sm font-semibold text-brand">Explore area</span>
-                  <span className="text-brand transition group-hover:translate-x-0.5" aria-hidden>→</span>
-                </div>
-              </Link>
-            ))}
+            {topAreas.map((area, index) => {
+              const areaImage = areaImages[index];
+              return (
+                <Link
+                  key={area.slug}
+                  href={`/areas/${area.slug}`}
+                  className="iop-btn-press focus-ring group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-2xl border border-border shadow-elevation-sm transition hover:-translate-y-0.5 hover:shadow-elevation-md"
+                >
+                  {areaImage ? (
+                    <Image
+                      src={areaImage}
+                      alt=""
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+                      className="object-cover transition duration-500 group-hover:scale-[1.04]"
+                      {...unoptimizedProp(areaImage)}
+                    />
+                  ) : (
+                    <div className="area-card-accent absolute inset-0" />
+                  )}
+                  <div className="card-photo-overlay absolute inset-0" />
+                  <div className="relative p-6 text-white">
+                    <span className="font-display text-4xl font-semibold italic leading-none text-white/40">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <p className="mt-3 text-xl font-semibold">{area.name}</p>
+                    <p className="mt-1 text-sm text-white/80">
+                      {area.cityLabel} · {area.projectCount} projects
+                    </p>
+                    <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-light">
+                      Explore area
+                      <span className="transition group-hover:translate-x-0.5" aria-hidden>→</span>
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
