@@ -29,6 +29,8 @@ import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { buildProjectFaqs } from "@/lib/project-faqs";
 import { ProjectGallery } from "@/components/project-gallery";
 import { getEnrichment } from "@/lib/enrichments";
+import { DldAreaStatsBand } from "@/components/dld-area-stats";
+import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
 import {
   cityLabel,
   formatPrice,
@@ -115,6 +117,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   if (!project) notFound();
 
   const enrichment = getEnrichment(slug);
+  const dldStats = getAreaStats(project.area);
+  const dldSource = getDldSource();
   const pfFaqs = project.pfFaqs ?? [];
   const minPrice = Math.min(...project.units.map((u) => u.launchPriceAed));
   const catalogGallery =
@@ -400,6 +404,16 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <h2 className="text-xl font-semibold text-text-dark">Unit types</h2>
           <ProjectUnitsTable units={project.units} project={project} />
         </section>
+
+        {dldStats ? (
+          <div id="market-data" className="mt-4 scroll-mt-24">
+            <DldAreaStatsBand
+              stats={dldStats}
+              areaName={project.area.split(",")[0]}
+              source={dldSource.source}
+            />
+          </div>
+        ) : null}
 
         {projectFaqs.length > 0 ? (
           <section id="project-faq" className="mt-12 scroll-mt-24">

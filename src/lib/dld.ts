@@ -292,6 +292,15 @@ export const AREA_ALIASES: Record<string, string> = {
   'DUBAI ISLANDS': 'PALM DEIRA',
   'AL JADDAF': 'AL JADAF',
   'NAD AL SHEBA': 'NAD AL SHIBA FIRST',
+  // IOP marketing names → the DLD community that carries the data (targets
+  // verified present in the 2025 dataset). Ambiguous masters (Dubai Land,
+  // Meydan-wide) deliberately left out to avoid wrong-area stats.
+  'ARABIAN RANCHES 3': 'ARABIAN RANCHES III',
+  'ARABIAN RANCHES 2': 'ARABIAN RANCHES II',
+  'PALM JEBEL ALI': 'PALM JABAL ALI',
+  'MOHAMMED BIN RASHID CITY': 'HADAEQ SHEIKH MOHAMMED BIN RASHID',
+  'DUBAI INVESTMENT PARK DIP': 'DUBAI INVESTMENT PARK SECOND',
+  'DUBAI INVESTMENT PARK': 'DUBAI INVESTMENT PARK SECOND',
 };
 
 /**
