@@ -8,6 +8,7 @@ import {
   MediaGalleryLightbox,
 } from "@/components/media-gallery-lightbox";
 import { cn } from "@/lib/cn";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 interface ProjectGalleryProps {
   images: string[];
@@ -107,6 +108,7 @@ export function ProjectGallery({
               priority={active === 0}
               fetchPriority={active === 0 ? "high" : "auto"}
               sizes="(max-width: 768px) 100vw, 1200px"
+              {...unoptimizedProp(currentSrc)}
             />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10" />
 
@@ -186,7 +188,7 @@ export function ProjectGallery({
                       : "border-transparent opacity-80 hover:border-border hover:opacity-100",
                   )}
                 >
-                  <Image src={src} alt="" fill className="object-cover" sizes="120px" />
+                  <Image src={src} alt="" fill className="object-cover" sizes="120px" {...unoptimizedProp(src)} />
                 </button>
               ))}
             </div>

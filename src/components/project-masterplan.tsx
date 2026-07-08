@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Project } from "@/lib/types";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 interface ProjectMasterplanProps {
   project: Project;
@@ -31,6 +32,7 @@ export function ProjectMasterplan({ project }: ProjectMasterplanProps) {
           height={900}
           className="h-auto w-full object-contain"
           sizes="(max-width: 1200px) 100vw, 1200px"
+          {...unoptimizedProp(project.masterPlanUrl)}
         />
       </div>
     </section>

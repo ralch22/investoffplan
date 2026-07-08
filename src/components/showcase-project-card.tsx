@@ -8,6 +8,7 @@ import { FavoriteButton } from "@/components/favorite-button";
 import type { Project } from "@/lib/types";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 interface ShowcaseProjectCardProps {
   project: Project;
@@ -54,8 +55,10 @@ export function ShowcaseProjectCard({
             alt={project.name}
             fill
             priority={priorityImage || featured}
+            fetchPriority={priorityImage || featured ? "high" : "auto"}
             sizes={featured ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 640px) 100vw, 25vw"}
             className="object-cover transition duration-500 group-hover:scale-[1.02]"
+            {...unoptimizedProp(project.imageUrl)}
           />
         ) : (
           <div className={cn("h-full bg-gradient-to-br", project.imageGradient)} />

@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib/format";
 import type { AreaInsights } from "@/lib/area-insights";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 interface ProjectLivingInAreaProps {
   insights: AreaInsights;
@@ -32,6 +33,7 @@ export function ProjectLivingInArea({ insights }: ProjectLivingInAreaProps) {
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
+                {...unoptimizedProp(insights.heroImage)}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-surface-darker/50 to-transparent" />
             </div>

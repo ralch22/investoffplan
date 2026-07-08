@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
+import { unoptimizedProp } from "@/lib/asset-image";
 import {
   ChevronIcon,
   ExpandIcon,
@@ -107,7 +108,9 @@ export function CompactMediaGallery({
         !fill && "h-full w-full",
       )}
       priority={priority && active === 0}
+      fetchPriority={priority && active === 0 ? "high" : "auto"}
       sizes={sizes}
+      {...unoptimizedProp(currentSrc)}
     />
   );
 

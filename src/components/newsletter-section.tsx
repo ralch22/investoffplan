@@ -1,5 +1,4 @@
 import { NewsletterForm } from "@/components/newsletter-form";
-import Image from "next/image";
 
 export function NewsletterSection() {
   return (

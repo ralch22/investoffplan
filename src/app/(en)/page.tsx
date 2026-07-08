@@ -12,6 +12,7 @@ import {
   getAreas,
   getDevelopers,
 } from "@/lib/catalog";
+import { unoptimizedProp } from "@/lib/asset-image";
 import { AdvantageMatrix } from "@/components/advantage-matrix";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
@@ -89,7 +90,9 @@ export default async function HomePage() {
             fill
             className="object-cover"
             priority
+            fetchPriority="high"
             sizes="100vw"
+            {...unoptimizedProp(heroImage)}
           />
         ) : null}
         <div className="absolute inset-0 bg-hero-overlay" />

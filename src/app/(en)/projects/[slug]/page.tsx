@@ -37,6 +37,7 @@ import {
   buildProjectBreadcrumbJsonLd,
   buildProjectJsonLd,
 } from "@/lib/project-json-ld";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -171,7 +172,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             fill
             className="object-cover"
             priority
+            fetchPriority="high"
             sizes="100vw"
+            {...unoptimizedProp(heroImage)}
           />
         ) : (
           <div className={`absolute inset-0 bg-gradient-to-br ${project.imageGradient}`} />

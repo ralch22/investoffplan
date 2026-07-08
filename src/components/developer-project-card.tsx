@@ -6,6 +6,7 @@ import { projectBedsLabel, projectTypeLabel } from "@/lib/developer-utils";
 import { cityLabel, formatLaunchPrice, formatPrice } from "@/lib/format";
 import type { Project } from "@/lib/types";
 import { cn } from "@/lib/cn";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 interface DeveloperProjectCardProps {
   project: Project;
@@ -49,6 +50,7 @@ export function DeveloperProjectCard({
               "object-cover transition duration-500 group-hover:scale-[1.02]",
               isSoldOut && "grayscale",
             )}
+            {...unoptimizedProp(project.imageUrl)}
           />
         ) : (
           <div className={cn("h-full bg-gradient-to-br", project.imageGradient)} />

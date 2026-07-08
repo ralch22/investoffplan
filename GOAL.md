@@ -26,8 +26,15 @@
 | Compare units | None | Up to 3 side-by-side | **Exceed** |
 | Price/sqft | None | On SERP + PDP | **Exceed** |
 | Accessibility | Unknown | WCAG 2.2 AA on SERP + PDP | **In progress** |
-| Core Web Vitals | Industry leader | LCP <2.5s, CLS <0.1 | **Monitor** |
+| Core Web Vitals | Industry leader | LCP <2.5s, CLS <0.1 | **In progress** (#58) |
 | Production domain | Live | `investoffplan.com` live | **LIVE** (2026-07-08) |
+
+**PSI / Lighthouse mobile (prod, before #58 perf changes, 2026-07-08):**
+- `/` : 64 (LCP 7.6s)
+- `/projects` : 78 (LCP 4.9s)
+- PDP e.g. `/projects/105-residences` : 55 (LCP 15.4s)
+- CLS: 0 (good) across.
+- Target after: ≥90, LCP <2.5s. (feat/58: explicit font display:swap; unoptimized only on SVGs+/cdn R2; priority/sizes + fetchPriority on LCP images.)
 
 ---
 

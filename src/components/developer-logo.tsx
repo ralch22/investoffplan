@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { slugify } from "@/lib/slugify";
+import { unoptimizedProp } from "@/lib/asset-image";
 
 const SIZE_CLASSES = {
   xs: "h-6 w-6 text-[10px]",
@@ -53,6 +54,7 @@ export function DeveloperLogo({
         roundedClass,
         className,
       )}
+      {...unoptimizedProp(logoUrl)}
     />
   ) : (
     <span
