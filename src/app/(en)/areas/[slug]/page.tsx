@@ -10,6 +10,7 @@ import { getArea, getAreas, getProjectsByArea, slugify } from "@/lib/catalog";
 import { DldAreaStatsBand } from "@/components/dld-area-stats";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
 import { getSuggestedComparisons } from "@/lib/area-compare";
+import { MarketAdviceCta } from "@/components/market-advice-cta";
 import { getAreaEditorial } from "@/content/areas";
 import { areaTagline } from "@/lib/figma-copy";
 import { getAreaImage } from "@/lib/area-images";
@@ -153,6 +154,13 @@ export default async function AreaDetailPage({ params }: PageProps) {
               </Link>
             ))}
           </div>
+        ) : null}
+
+        {dldStats ? (
+          <MarketAdviceCta
+            context={`investing in ${area.name}`}
+            heading={`Thinking about ${area.name}?`}
+          />
         ) : null}
 
         {/* Editorial intro */}
