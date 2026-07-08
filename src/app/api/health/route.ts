@@ -5,7 +5,7 @@ import { getEnrichmentMeta } from "@/lib/enrichments";
 import { isTurnstileEnabled } from "@/lib/turnstile";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getDb } from "@/lib/db/client";
-import { fetchCatalogMeta, isCatalogDbSeeded } from "@/lib/db/catalog-queries";
+import { fetchCatalogMeta, isCatalogDbSeeded, verifyCatalogSeed } from "@/lib/db/catalog-queries";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +15,12 @@ export async function GET() {
   const db = await getDb();
   const dbSeeded = db ? await isCatalogDbSeeded(db) : false;
   const dbMeta = db && dbSeeded ? await fetchCatalogMeta(db) : null;
+  const seedVerification = db
+    ? await verifyCatalogSeed(db, {
+        projects: analytics.projectCount,
+        units: analytics.unitCount,
+      })
+    : null;
 
   let assetsBucketAvailable = false;
   try {
@@ -24,8 +30,12 @@ export async function GET() {
     assetsBucketAvailable = false;
   }
 
+  // Overall status is degraded when D1 is bound but its seed fails verification
+  // (partial seed, stale seed, or empty tables) — surfaces prod seed drift.
+  const status = seedVerification && !seedVerification.ok ? "degraded" : "ok";
+
   return NextResponse.json({
-    status: "ok",
+    status,
     catalog: {
       units: analytics.unitCount,
       projects: analytics.projectCount,
@@ -42,6 +52,7 @@ export async function GET() {
         seeded: dbSeeded,
         scrapedAt: dbMeta?.scrapedAt ?? null,
         apiBase: "/api/catalog",
+        seed: seedVerification,
       },
     },
     enrichment: {

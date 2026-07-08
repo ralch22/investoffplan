@@ -1,4 +1,4 @@
-import { asc, eq, inArray } from "drizzle-orm";
+import { asc, count, eq, inArray } from "drizzle-orm";
 import { createCatalogApi, type CatalogFile, PAGE_SIZE } from "@/lib/catalog-core";
 import type { CatalogUnit, CollectionFilter, Project, ProjectFilters, SortOption, ViewMode } from "@/lib/types";
 import { getMapProjectsFromList } from "@/lib/map-data";
@@ -17,6 +17,143 @@ import {
 export async function isCatalogDbSeeded(db: CatalogDatabase): Promise<boolean> {
   const meta = await db.select().from(catalogMeta).where(eq(catalogMeta.id, 1)).get();
   return Boolean(meta);
+}
+
+/**
+ * Minimum fraction of the expected catalog size that must be present in D1 for a
+ * seed to pass. The seed intentionally drops a handful of duplicate slugs / orphan
+ * units (typically <1%), so exact equality would flag a healthy seed. A partial,
+ * halted, or missing seed falls far below this floor.
+ */
+export const SEED_COVERAGE_THRESHOLD = 0.97;
+
+interface SeedEntityCheck {
+  /** Live row count in D1. */
+  actual: number;
+  /** Source-of-truth count from the bundled catalog. */
+  expected: number;
+  /** actual / expected, rounded to 4 decimals (0 when nothing is expected). */
+  coverage: number;
+  /** True when the table clears the coverage floor (and is non-empty). */
+  ok: boolean;
+}
+
+export interface CatalogSeedVerification {
+  /** True when D1 is seeded and every verified table clears the coverage floor. */
+  ok: boolean;
+  /** True when the catalog_meta row exists (seed ran at least partially). */
+  seeded: boolean;
+  /** Minimum coverage fraction each table must meet to pass. */
+  threshold: number;
+  /** Per-table row-count checks against the expected catalog size. */
+  checks: {
+    projects: SeedEntityCheck;
+    catalogUnits: SeedEntityCheck;
+  };
+  /** Informational row counts not tied to the expected catalog size. */
+  counts: {
+    projectUnits: number;
+    developers: number;
+  };
+  /** Counts the seed declared in catalog_meta (null when unseeded). */
+  meta: { projects: number; units: number } | null;
+  /** True when catalog_meta's declared size matches the deployed bundle. */
+  metaMatchesBundle: boolean;
+  /** Timestamp the seeded catalog was scraped (null when unseeded). */
+  scrapedAt: string | null;
+  /** Human-readable descriptions of every check that failed. */
+  mismatches: string[];
+}
+
+function evaluateEntity(actual: number, expected: number): SeedEntityCheck {
+  const coverage = expected > 0 ? Math.round((actual / expected) * 1e4) / 1e4 : 0;
+  return {
+    actual,
+    expected,
+    coverage,
+    ok: actual > 0 && coverage >= SEED_COVERAGE_THRESHOLD,
+  };
+}
+
+/**
+ * Verify a production/preview D1 seed by comparing live row counts against the
+ * expected catalog size (source of truth). Catches the seed failures that matter
+ * on production — an unseeded, partial, halted, or stale seed — while tolerating
+ * the small, deterministic dedup drops the seed makes.
+ */
+export async function verifyCatalogSeed(
+  db: CatalogDatabase,
+  expected: { projects: number; units: number },
+): Promise<CatalogSeedVerification> {
+  const [metaRow, projectsRow, catalogUnitsRow, projectUnitsRow, developersRow] =
+    await Promise.all([
+      db.select().from(catalogMeta).where(eq(catalogMeta.id, 1)).get(),
+      db.select({ value: count() }).from(projects).get(),
+      db.select({ value: count() }).from(catalogUnits).get(),
+      db.select({ value: count() }).from(projectUnits).get(),
+      db.select({ value: count() }).from(developers).get(),
+    ]);
+
+  const checks = {
+    projects: evaluateEntity(projectsRow?.value ?? 0, expected.projects),
+    catalogUnits: evaluateEntity(catalogUnitsRow?.value ?? 0, expected.units),
+  };
+  const counts = {
+    projectUnits: projectUnitsRow?.value ?? 0,
+    developers: developersRow?.value ?? 0,
+  };
+
+  const meta = metaRow
+    ? { projects: metaRow.projectCount, units: metaRow.unitCount }
+    : null;
+  const metaMatchesBundle =
+    meta !== null &&
+    meta.projects === expected.projects &&
+    meta.units === expected.units;
+
+  const mismatches: string[] = [];
+
+  if (!metaRow) {
+    mismatches.push("catalog_meta row missing — D1 is not seeded");
+  }
+  if (!checks.projects.ok) {
+    mismatches.push(
+      `projects: ${checks.projects.actual} rows vs expected ${expected.projects} ` +
+        `(${(checks.projects.coverage * 100).toFixed(1)}% < ${(SEED_COVERAGE_THRESHOLD * 100).toFixed(0)}%)`,
+    );
+  }
+  if (!checks.catalogUnits.ok) {
+    mismatches.push(
+      `catalog_units: ${checks.catalogUnits.actual} rows vs expected ${expected.units} ` +
+        `(${(checks.catalogUnits.coverage * 100).toFixed(1)}% < ${(SEED_COVERAGE_THRESHOLD * 100).toFixed(0)}%)`,
+    );
+  }
+  if (counts.projectUnits === 0) {
+    mismatches.push("project_units: 0 rows — unit-level table is empty");
+  }
+  if (counts.developers === 0) {
+    mismatches.push("developers: 0 rows — developer table is empty");
+  }
+  // A stale seed: catalog_meta claims a size that no longer matches the deployed
+  // bundle (redeployed catalog but D1 was never reseeded).
+  if (meta && !metaMatchesBundle) {
+    mismatches.push(
+      `catalog_meta declares ${meta.projects}/${meta.units} but bundle expects ` +
+        `${expected.projects}/${expected.units} — seed is stale`,
+    );
+  }
+
+  return {
+    ok: Boolean(metaRow) && mismatches.length === 0,
+    seeded: Boolean(metaRow),
+    threshold: SEED_COVERAGE_THRESHOLD,
+    checks,
+    counts,
+    meta,
+    metaMatchesBundle,
+    scrapedAt: metaRow?.scrapedAt ?? null,
+    mismatches,
+  };
 }
 
 export async function fetchCatalogMeta(db: CatalogDatabase) {
