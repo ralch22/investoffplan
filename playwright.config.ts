@@ -13,8 +13,10 @@ export default defineConfig({
   },
 
   webServer: {
-    // Production server — avoids Turbopack dev-cache corruption during e2e
-    command: `npm run prebuild && NEXT_IS_BUILD=1 npm run build && npx next start --port ${E2E_PORT}`,
+    // Production server — avoids Turbopack dev-cache corruption during e2e.
+    // D1 migrations + seed are required so /api/leads inserts and /api/catalog
+    // queries (isCatalogDbSeeded on catalog_meta) succeed instead of 500s.
+    command: `npm run prebuild && npm run db:migrate:local && npm run db:seed:local && NEXT_IS_BUILD=1 npm run build && npx next start --port ${E2E_PORT}`,
     url: `${E2E_BASE}/projects`,
     reuseExistingServer: process.env.PW_REUSE_SERVER === "1",
     timeout: 300_000,
