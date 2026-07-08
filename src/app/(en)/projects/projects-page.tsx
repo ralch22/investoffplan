@@ -291,6 +291,7 @@ export function ProjectsPage({
             alt=""
             fill
             priority
+            fetchPriority="high"
             sizes="100vw"
             className="object-cover"
             {...unoptimizedProp(heroImage)}

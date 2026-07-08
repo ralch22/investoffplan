@@ -172,6 +172,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             fill
             className="object-cover"
             priority
+            fetchPriority="high"
             sizes="100vw"
             {...unoptimizedProp(heroImage)}
           />

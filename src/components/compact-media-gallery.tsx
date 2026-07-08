@@ -108,6 +108,7 @@ export function CompactMediaGallery({
         !fill && "h-full w-full",
       )}
       priority={priority && active === 0}
+      fetchPriority={priority && active === 0 ? "high" : "auto"}
       sizes={sizes}
       {...unoptimizedProp(currentSrc)}
     />
