@@ -13,7 +13,7 @@ import { ProjectDetailFavorite } from "@/components/project-detail-favorite";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DeveloperAttribution } from "@/components/developer-attribution";
 import { ShowcaseProjectCard } from "@/components/showcase-project-card";
-import { PaymentCalculator } from "@/components/payment-calculator";
+import { ProjectPaymentCalculator } from "@/components/project-payment-calculator";
 import { ProjectDetailNav } from "@/components/project-detail-nav";
 import { PROJECT_DETAIL_SECTIONS } from "@/lib/project-detail-sections";
 import { ProjectUnitsTable } from "@/components/project-units-table";
@@ -355,11 +355,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <ProjectLocationSection project={project} />
 
         <div id="calculator" className="mt-10 scroll-mt-24">
-          <PaymentCalculator
-            priceAed={minPrice}
-            paymentPlan={project.paymentPlan}
-            projectName={project.name}
-          />
+          <ProjectPaymentCalculator project={project} />
           <p className="mt-4 text-sm text-muted">
             Financing part of the purchase?{" "}
             <Link
