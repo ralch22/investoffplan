@@ -145,6 +145,8 @@ export interface DevListEntry {
   devPageEnabled?: boolean;
 }
 
+export type PaymentPlanFilter = "all" | "post-handover" | "multiple";
+
 export interface ProjectFilters {
   query: string;
   city: CitySlug;
@@ -152,4 +154,11 @@ export interface ProjectFilters {
   beds: number | "studio" | "all";
   minPrice: number | null;
   maxPrice: number | null;
+  /** Developer slug (slugified developer name) or "all". */
+  developer: string;
+  paymentPlan: PaymentPlanFilter;
+  /** Latest acceptable handover year, or "all". */
+  handoverBy: number | "all";
+  /** Every selected amenity must be present on the project. */
+  amenities: string[];
 }

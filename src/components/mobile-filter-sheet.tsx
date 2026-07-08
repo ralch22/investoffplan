@@ -1,12 +1,18 @@
 "use client";
 
 import type { ProjectFilters as Filters } from "@/lib/types";
+import {
+  MoreFiltersPanel,
+  type DeveloperOption,
+} from "@/components/more-filters-panel";
 
 interface MobileFilterSheetProps {
   open: boolean;
   filters: Filters;
   onChange: (filters: Filters) => void;
   onClose: () => void;
+  developerOptions?: DeveloperOption[];
+  amenityOptions?: string[];
 }
 
 export function MobileFilterSheet({
@@ -14,6 +20,8 @@ export function MobileFilterSheet({
   filters,
   onChange,
   onClose,
+  developerOptions = [],
+  amenityOptions = [],
 }: MobileFilterSheetProps) {
   if (!open) return null;
 
@@ -118,6 +126,14 @@ export function MobileFilterSheet({
               <option value="4000000">Up to 4M</option>
             </select>
           </label>
+
+          <MoreFiltersPanel
+            filters={filters}
+            onChange={onChange}
+            developerOptions={developerOptions}
+            amenityOptions={amenityOptions}
+            variant="sheet"
+          />
         </div>
 
         <button

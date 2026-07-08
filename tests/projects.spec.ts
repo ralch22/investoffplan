@@ -116,3 +116,52 @@ test.describe("InvestOffPlan site routes", () => {
     ).toBeVisible();
   });
 });
+test.describe("Advanced SERP filters", () => {
+  test("API filters by developer + handover year", async ({ request }) => {
+    const res = await request.get(
+      "/api/catalog/projects?developer=emaar-properties&handoverBy=2028&pageSize=50",
+    );
+    expect(res.status()).toBe(200);
+    const body = await res.json();
+    expect(body.meta.total).toBeGreaterThan(0);
+    for (const item of body.items) {
+      expect(item.project.developer.toLowerCase()).toContain("emaar");
+    }
+  });
+
+  test("API filters by post-handover payment plan", async ({ request }) => {
+    const res = await request.get(
+      "/api/catalog/projects?payment=post-handover&pageSize=10",
+    );
+    expect(res.status()).toBe(200);
+    const body = await res.json();
+    expect(body.meta.total).toBeGreaterThan(0);
+    for (const item of body.items) {
+      const plan = item.catalog?.paymentPlan ?? item.project.paymentPlan;
+      const segments = String(plan).split("/");
+      expect(segments.length).toBeGreaterThanOrEqual(4);
+    }
+  });
+
+  test("more-filters panel syncs developer to URL and results", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/projects");
+    await waitForCatalog(page);
+    await page.getByRole("button", { name: /More filters/i }).click();
+    await page.getByLabel("Developer").selectOption({ label: "Emaar Properties" });
+    await expect(page).toHaveURL(/dev=emaar-properties/, { timeout: 10_000 });
+    await page
+      .getByRole("link", { name: "View Details" })
+      .first()
+      .waitFor({ state: "visible", timeout: 15_000 });
+  });
+
+  test("URL params hydrate advanced filters", async ({ page }) => {
+    await page.goto("/projects?dev=emaar-properties&handover=2028");
+    await waitForCatalogHydration(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.getByRole("button", { name: /More filters/i }).click();
+    await expect(page.getByLabel("Developer")).toHaveValue("emaar-properties");
+    await expect(page.getByLabel("Handover by")).toHaveValue("2028");
+  });
+});

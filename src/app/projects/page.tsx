@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCatalogApi } from "@/lib/catalog";
+import { getCatalogApi, getDevelopers, getTopAmenities } from "@/lib/catalog";
 import { PAGE_SIZE } from "@/lib/catalog-core";
 import { getMapProjectsFromList } from "@/lib/map-data";
 import { ProjectsPage } from "./projects-page";
@@ -15,6 +15,13 @@ export default async function Page() {
   const initialPageItems = api.sortUnits(api.flattenCatalogUnits(), "featured").slice(0, PAGE_SIZE);
   const initialCityCounts = api.getCityCounts();
   const initialMapProjects = getMapProjectsFromList(api.projects);
+  const [developers, amenityOptions] = await Promise.all([
+    getDevelopers(),
+    getTopAmenities(18),
+  ]);
+  const developerOptions = developers
+    .slice(0, 60)
+    .map((dev) => ({ slug: dev.slug, name: dev.name }));
 
   return (
     <>
@@ -28,6 +35,8 @@ export default async function Page() {
         initialCityCounts={initialCityCounts}
         initialResultCount={api.meta.unitCount}
         initialMapProjects={initialMapProjects}
+        developerOptions={developerOptions}
+        amenityOptions={amenityOptions}
       />
     </>
   );

@@ -50,6 +50,10 @@ const DEFAULT_FILTERS: Filters = {
   beds: "all",
   minPrice: null,
   maxPrice: null,
+  developer: "all",
+  paymentPlan: "all",
+  handoverBy: "all",
+  amenities: [],
 };
 
 export interface ProjectsPageMeta {
@@ -64,6 +68,8 @@ interface ProjectsPageProps {
   initialCityCounts: CityCount[];
   initialResultCount: number;
   initialMapProjects?: MapProject[];
+  developerOptions?: Array<{ slug: string; name: string }>;
+  amenityOptions?: string[];
 }
 
 export function ProjectsPage({
@@ -72,6 +78,8 @@ export function ProjectsPage({
   initialCityCounts,
   initialResultCount,
   initialMapProjects = [],
+  developerOptions = [],
+  amenityOptions = [],
 }: ProjectsPageProps) {
   const { api, loading, error } = useCatalog();
   const [currency, setCurrency] = useState<CurrencyCode>("AED");
@@ -108,6 +116,12 @@ export function ProjectsPage({
     url.searchParams.set("beds", filters.beds.toString());
     if (filters.minPrice) url.searchParams.set("minPrice", filters.minPrice.toString());
     if (filters.maxPrice) url.searchParams.set("maxPrice", filters.maxPrice.toString());
+    if (filters.developer !== "all") url.searchParams.set("developer", filters.developer);
+    if (filters.paymentPlan !== "all") url.searchParams.set("payment", filters.paymentPlan);
+    if (filters.handoverBy !== "all")
+      url.searchParams.set("handoverBy", String(filters.handoverBy));
+    if (filters.amenities.length > 0)
+      url.searchParams.set("amenities", filters.amenities.join(","));
 
     let active = true;
     fetch(url)
@@ -137,6 +151,10 @@ export function ProjectsPage({
     filters.beds === "all" &&
     filters.minPrice === null &&
     filters.maxPrice === null &&
+    filters.developer === "all" &&
+    filters.paymentPlan === "all" &&
+    filters.handoverBy === "all" &&
+    filters.amenities.length === 0 &&
     collection === "all" &&
     sort === "featured" &&
     viewMode === "unit" &&
@@ -298,7 +316,8 @@ export function ProjectsPage({
             <ProjectFilters
               filters={filters}
               onChange={updateFilters}
-              onOpenMore={() => setMobileFiltersOpen(true)}
+              developerOptions={developerOptions}
+              amenityOptions={amenityOptions}
             />
           </div>
         </div>
@@ -467,6 +486,8 @@ export function ProjectsPage({
         filters={filters}
         onChange={updateFilters}
         onClose={() => setMobileFiltersOpen(false)}
+        developerOptions={developerOptions}
+        amenityOptions={amenityOptions}
       />
     </PageShell>
   );
