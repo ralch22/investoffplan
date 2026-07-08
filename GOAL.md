@@ -77,6 +77,7 @@
 
 ### Exceed lanes (IOP-only)
 
+- **Off-Plan Advisor** — AI CX agent (Cloudflare AI Search + Workers AI) grounded on the live catalog; neither PF nor opr.ae has one
 - Compare up to 3 units with brochure status
 - Payment plan calculator on PDP
 - Favorites without 8MB catalog download
