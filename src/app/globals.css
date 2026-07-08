@@ -19,9 +19,11 @@
   --text-muted: #525252;
   --text-muted-light: #6b6b6b;
   --text-dark: #171717;
+  /* Top stop raised to 0.65 so white hero text clears 4.5:1 (WCAG 1.4.3)
+     over any catalog image, including light photos (a11y audit P4). */
   --hero-overlay: linear-gradient(
     180deg,
-    rgba(18, 19, 18, 0.55) 0%,
+    rgba(18, 19, 18, 0.65) 0%,
     rgba(18, 19, 18, 0.82) 55%,
     rgba(18, 19, 18, 0.94) 100%
   );
