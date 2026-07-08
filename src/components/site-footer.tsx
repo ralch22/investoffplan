@@ -43,7 +43,15 @@ export function SiteFooter() {
         <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-0 md:grid-cols-2">
           {/* Left: dark aerial photo panel */}
           <div className="relative flex flex-col justify-between overflow-hidden bg-surface-dark px-8 py-12 md:min-h-[320px]">
-            <div className="absolute inset-0 bg-gradient-to-br from-surface-darker/60 to-surface-dark/90" />
+            {/* eslint-disable-next-line @next/next/no-img-element -- static public asset, Workers optimizer bypassed */}
+            <img
+              src="/images/skyline-terraces.jpg"
+              alt=""
+              aria-hidden
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-surface-darker/70 to-surface-dark/90" />
             <div className="relative">
               <BrandLogo
                 variant="stacked-white-arlo"

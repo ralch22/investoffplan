@@ -6,7 +6,15 @@ export function NewsletterSection() {
       <div className="mx-auto grid max-w-[1200px] md:grid-cols-2">
         {/* Left: image + headline */}
         <div className="relative flex min-h-[280px] flex-col justify-end overflow-hidden bg-surface-dark md:min-h-[420px]">
-          {/* Background image placeholder with brand overlay */}
+          {/* eslint-disable-next-line @next/next/no-img-element -- static public asset, Workers optimizer bypassed */}
+          <img
+            src="/images/marina-heights.jpg"
+            alt=""
+            aria-hidden
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          {/* Brand overlay for legibility over the property imagery */}
           <div className="absolute inset-0 bg-gradient-to-br from-brand/80 via-surface-dark/70 to-surface-darker/90" />
           <div className="relative p-8 md:p-12">
             <p className="font-display text-[clamp(2rem,4vw,3.5rem)] font-semibold italic leading-tight text-white">
