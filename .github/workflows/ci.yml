@@ -45,5 +45,10 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Seed local D1 for e2e
+        run: |
+          npm run db:migrate:local
+          npm run db:seed:local
+
       - name: End-to-end tests
         run: npm run test:e2e
