@@ -14,7 +14,10 @@ test.describe("Project gallery", () => {
     const next = page.getByRole("button", { name: "Next photo" }).first();
     if (await next.isVisible()) {
       await next.click();
-      await expect(page.locator("#project-gallery").getByText("2 of 6")).toBeVisible();
+      // Total may grow when enrichment contributes extra gallery images (issue #37).
+      await expect(
+        page.locator("#project-gallery").getByText(/2 of \d+/),
+      ).toBeVisible();
     }
 
     await fullscreen.click();
