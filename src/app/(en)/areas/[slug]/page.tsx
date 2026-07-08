@@ -7,6 +7,8 @@ import { ShowcaseProjectCard } from "@/components/showcase-project-card";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { getArea, getAreas, getProjectsByArea, slugify } from "@/lib/catalog";
+import { DldAreaStatsBand } from "@/components/dld-area-stats";
+import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
 import { getAreaEditorial } from "@/content/areas";
 import { areaTagline } from "@/lib/figma-copy";
 import { getAreaImage } from "@/lib/area-images";
@@ -81,6 +83,8 @@ export default async function AreaDetailPage({ params }: PageProps) {
   const allAreas = await getAreas();
   const editorial = getAreaEditorial(slug);
   const stats = computeAreaStats(projects);
+  const dldStats = getAreaStats(area.name);
+  const dldSource = getDldSource();
   const similar = allAreas
     .filter((a) => a.slug !== slug && a.city === area.city)
     .slice(0, 4);
@@ -127,6 +131,11 @@ export default async function AreaDetailPage({ params }: PageProps) {
               .map((entry) => `${entry.year} (${entry.count})`)
               .join(" · ")}
           </p>
+        ) : null}
+
+        {/* DLD market data (anonymized aggregates; renders only where we have it) */}
+        {dldStats ? (
+          <DldAreaStatsBand stats={dldStats} areaName={area.name} source={dldSource.source} />
         ) : null}
 
         {/* Editorial intro */}
