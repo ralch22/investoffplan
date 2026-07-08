@@ -2,8 +2,6 @@
 
 import type { ProjectFilters as Filters } from "@/lib/types";
 import { cn } from "@/lib/cn";
-import { interpolate } from "@/i18n";
-import { useI18n } from "@/i18n/locale-provider";
 
 export interface DeveloperOption {
   slug: string;
@@ -19,6 +17,16 @@ interface MoreFiltersPanelProps {
   variant?: "sheet" | "popover";
 }
 
+const HANDOVER_YEARS = [2026, 2027, 2028, 2029, 2030, 2031];
+
+const MIN_PRICE_OPTIONS: Array<{ value: number | "all"; label: string }> = [
+  { value: "all", label: "No minimum" },
+  { value: 500_000, label: "From 500K" },
+  { value: 1_000_000, label: "From 1M" },
+  { value: 2_000_000, label: "From 2M" },
+  { value: 5_000_000, label: "From 5M" },
+];
+
 export function MoreFiltersPanel({
   filters,
   onChange,
@@ -26,9 +34,6 @@ export function MoreFiltersPanel({
   amenityOptions,
   variant = "sheet",
 }: MoreFiltersPanelProps) {
-  const { dict } = useI18n();
-  const f = dict.serp.filters;
-
   const labelCls =
     variant === "sheet"
       ? "block text-sm font-semibold text-text-dark"
@@ -37,16 +42,6 @@ export function MoreFiltersPanel({
     variant === "sheet"
       ? "focus-ring mt-1 w-full rounded-full border border-border bg-white px-4 py-2.5 text-sm outline-none"
       : "iop-input";
-
-  const MIN_PRICE_OPTIONS: Array<{ value: number | "all"; label: string }> = [
-    { value: "all", label: f.noMinimum },
-    { value: 500_000, label: f.from500k },
-    { value: 1_000_000, label: f.from1m },
-    { value: 2_000_000, label: f.from2m },
-    { value: 5_000_000, label: f.from5m },
-  ];
-
-  const HANDOVER_YEARS = [2026, 2027, 2028, 2029, 2030, 2031];
 
   function toggleAmenity(amenity: string) {
     const has = filters.amenities.includes(amenity);
@@ -67,13 +62,13 @@ export function MoreFiltersPanel({
       )}
     >
       <label className={labelCls}>
-        {f.developer}
+        Developer
         <select
           value={filters.developer}
           onChange={(e) => onChange({ ...filters, developer: e.target.value })}
           className={inputCls}
         >
-          <option value="all">{f.allDevelopers}</option>
+          <option value="all">All developers</option>
           {developerOptions.map((dev) => (
             <option key={dev.slug} value={dev.slug}>
               {dev.name}
@@ -83,7 +78,7 @@ export function MoreFiltersPanel({
       </label>
 
       <label className={labelCls}>
-        {f.minPrice}
+        Min price (AED)
         <select
           value={filters.minPrice ?? "all"}
           onChange={(e) =>
@@ -103,7 +98,7 @@ export function MoreFiltersPanel({
       </label>
 
       <label className={labelCls}>
-        {f.paymentPlan}
+        Payment plan
         <select
           value={filters.paymentPlan}
           onChange={(e) =>
@@ -114,14 +109,14 @@ export function MoreFiltersPanel({
           }
           className={inputCls}
         >
-          <option value="all">{f.anyPlan}</option>
-          <option value="post-handover">{f.postHandoverPlan}</option>
-          <option value="multiple">{f.multiplePlans}</option>
+          <option value="all">Any plan</option>
+          <option value="post-handover">Post-handover plan</option>
+          <option value="multiple">Multiple plans</option>
         </select>
       </label>
 
       <label className={labelCls}>
-        {f.handoverBy}
+        Handover by
         <select
           value={filters.handoverBy}
           onChange={(e) =>
@@ -132,10 +127,10 @@ export function MoreFiltersPanel({
           }
           className={inputCls}
         >
-          <option value="all">{f.anyDate}</option>
+          <option value="all">Any date</option>
           {HANDOVER_YEARS.map((year) => (
             <option key={year} value={year}>
-              {interpolate(f.endOfYear, { year })}
+              End of {year}
             </option>
           ))}
         </select>
@@ -150,7 +145,7 @@ export function MoreFiltersPanel({
                 : "text-xs font-medium text-muted"
             }
           >
-            {f.amenities}
+            Amenities
           </legend>
           <div className="mt-2 flex flex-wrap gap-2">
             {amenityOptions.map((amenity) => {

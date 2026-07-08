@@ -1,30 +1,25 @@
 "use client";
 
 import type { SortOption } from "@/lib/types";
-import { useI18n } from "@/i18n/locale-provider";
 
 interface SortSelectProps {
   value: SortOption;
   onChange: (value: SortOption) => void;
 }
 
+const OPTIONS: { value: SortOption; label: string }[] = [
+  { value: "featured", label: "Featured" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+  { value: "value-asc", label: "Best value (AED/sqft)" },
+  { value: "handover-asc", label: "Handover: Soonest" },
+  { value: "handover-desc", label: "Handover: Latest" },
+];
 
 export function SortSelect({ value, onChange }: SortSelectProps) {
-  const { dict } = useI18n();
-  const s = dict.serp.sort;
-
-  const OPTIONS: { value: SortOption; label: string }[] = [
-    { value: "featured", label: s.featured },
-    { value: "price-asc", label: s.priceAsc },
-    { value: "price-desc", label: s.priceDesc },
-    { value: "value-asc", label: s.bestValue },
-    { value: "handover-asc", label: s.handoverSoonest },
-    { value: "handover-desc", label: s.handoverLatest },
-  ];
-
   return (
     <label className="inline-flex items-center gap-2 text-sm text-slate-600">
-      <span className="hidden sm:inline">{s.sortBy}</span>
+      <span className="hidden sm:inline">Sort by:</span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as SortOption)}

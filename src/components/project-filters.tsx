@@ -7,8 +7,6 @@ import {
   MoreFiltersPanel,
   type DeveloperOption,
 } from "@/components/more-filters-panel";
-import { interpolate } from "@/i18n";
-import { useI18n } from "@/i18n/locale-provider";
 
 interface ProjectFiltersProps {
   filters: Filters;
@@ -39,8 +37,6 @@ export function ProjectFilters({
 }: ProjectFiltersProps) {
   const [moreOpen, setMoreOpen] = useState(false);
   const moreCount = countMoreFilters(filters);
-  const { dict } = useI18n();
-  const f = dict.serp.filters;
 
   return (
     <div
@@ -50,10 +46,10 @@ export function ProjectFilters({
       )}
     >
       <label className={cn("flex flex-col gap-1.5", labelClass)}>
-        {f.search}
+        Search
         <input
           type="search"
-          placeholder={f.searchPlaceholder}
+          placeholder="Project, developer, area..."
           value={filters.query}
           onChange={(e) => onChange({ ...filters, query: e.target.value })}
           className="iop-input"
@@ -61,7 +57,7 @@ export function ProjectFilters({
       </label>
 
       <label className={cn("flex flex-col gap-1.5", labelClass)}>
-        {f.propertyType}
+        Property type
         <select
           value={filters.propertyType}
           onChange={(e) =>
@@ -72,16 +68,16 @@ export function ProjectFilters({
           }
           className="iop-input"
         >
-          <option value="all">{f.allTypes}</option>
-          <option value="apartment">{f.apartment}</option>
-          <option value="villa">{f.villa}</option>
-          <option value="townhouse">{f.townhouse}</option>
-          <option value="penthouse">{f.penthouse}</option>
+          <option value="all">All types</option>
+          <option value="apartment">Apartment</option>
+          <option value="villa">Villa</option>
+          <option value="townhouse">Townhouse</option>
+          <option value="penthouse">Penthouse</option>
         </select>
       </label>
 
       <label className={cn("flex flex-col gap-1.5", labelClass)}>
-        {f.beds}
+        Beds
         <select
           value={filters.beds}
           onChange={(e) =>
@@ -97,18 +93,18 @@ export function ProjectFilters({
           }
           className="iop-input"
         >
-          <option value="all">{f.any}</option>
-          <option value="studio">{f.studio}</option>
-          <option value="1">{f.bed1}</option>
-          <option value="2">{f.beds2}</option>
-          <option value="3">{f.beds3}</option>
-          <option value="4">{f.beds4}</option>
-          <option value="5">{f.beds5Plus}</option>
+          <option value="all">Any</option>
+          <option value="studio">Studio</option>
+          <option value="1">1 Bed</option>
+          <option value="2">2 Beds</option>
+          <option value="3">3 Beds</option>
+          <option value="4">4 Beds</option>
+          <option value="5">5+ Beds</option>
         </select>
       </label>
 
       <label className={cn("flex flex-col gap-1.5", labelClass)}>
-        {f.maxPrice}
+        Max price (AED)
         <select
           value={filters.maxPrice ?? "all"}
           onChange={(e) =>
@@ -120,10 +116,10 @@ export function ProjectFilters({
           }
           className="iop-input"
         >
-          <option value="all">{f.any}</option>
-          <option value="1500000">{f.upTo15m}</option>
-          <option value="2500000">{f.upTo25m}</option>
-          <option value="4000000">{f.upTo4m}</option>
+          <option value="all">Any</option>
+          <option value="1500000">Up to 1.5M</option>
+          <option value="2500000">Up to 2.5M</option>
+          <option value="4000000">Up to 4M</option>
         </select>
       </label>
 
@@ -138,7 +134,7 @@ export function ProjectFilters({
             : "border-brand text-brand hover:bg-brand-muted",
         )}
       >
-        {f.moreFilters}
+        More filters
         {moreCount > 0 ? (
           <span className="rounded-full bg-white/25 px-2 py-0.5 text-xs">
             {moreCount}

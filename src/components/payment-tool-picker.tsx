@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { PaymentCalculator } from "@/components/payment-calculator";
+import { ProjectPaymentCalculator } from "@/components/project-payment-calculator";
 import type { Project } from "@/lib/types";
 
 interface PaymentToolPickerProps {
@@ -17,8 +17,6 @@ export function PaymentToolPicker({ projects }: PaymentToolPickerProps) {
   );
 
   if (!selected) return null;
-
-  const minPrice = Math.min(...selected.units.map((u) => u.launchPriceAed));
 
   return (
     <div className="space-y-6">
@@ -36,12 +34,7 @@ export function PaymentToolPicker({ projects }: PaymentToolPickerProps) {
           ))}
         </select>
       </label>
-      <PaymentCalculator
-        key={selected.slug}
-        priceAed={minPrice}
-        paymentPlan={selected.paymentPlan}
-        projectName={selected.name}
-      />
+      <ProjectPaymentCalculator key={selected.slug} project={selected} />
     </div>
   );
 }
