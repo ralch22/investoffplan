@@ -106,7 +106,7 @@ export function ContactCtaForm() {
         <p className="mt-2 text-sm text-white/75">
           We&apos;ll reach out shortly. Prefer instant chat?{" "}
           <a
-            href="https://wa.me/97144397620"
+            href="https://wa.me/971585276222"
             target="_blank"
             rel="noopener noreferrer"
             className="font-semibold text-brand-light hover:text-white"

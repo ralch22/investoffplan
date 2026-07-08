@@ -1,9 +1,10 @@
 "use client";
 
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
+import { WHATSAPP_PRIMARY } from "@/lib/contact-info";
 
 const SITE_EMAIL = "admin@investoffplan.com";
-const SITE_WHATSAPP = "97144397620";
+const SITE_WHATSAPP = WHATSAPP_PRIMARY;
 
 interface DeveloperContactPanelProps {
   developerName: string;

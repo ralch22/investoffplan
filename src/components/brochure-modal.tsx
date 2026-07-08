@@ -7,6 +7,7 @@ import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { isDownloadablePdfUrl } from "@/lib/brochure";
 import { cn } from "@/lib/cn";
 import { submitLead } from "@/lib/leads-client";
+import { WHATSAPP_SECONDARY } from "@/lib/contact-info";
 
 interface BrochureModalProps {
   open: boolean;
@@ -101,7 +102,7 @@ export function BrochureModal({
     if (hasPdf) {
       window.open(brochureUrl, "_blank", "noopener,noreferrer");
     } else {
-      const whatsappNumber = whatsapp ? whatsapp.replace(/\D/g, "") : "971508226002";
+      const whatsappNumber = whatsapp ? whatsapp.replace(/\D/g, "") : WHATSAPP_SECONDARY;
       const text = `Hi, I just requested the brochure for ${projectName} on invest off-plan. My name is ${name.trim()}. Phone: ${phone.trim()}. Please send it to me!`;
       // Analytics hook + UTM for WhatsApp brochure fallback CTA (GA4 ready)
       const waUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}&utm_source=investoffplan&utm_medium=brochure_modal&utm_campaign=whatsapp_fallback`;
