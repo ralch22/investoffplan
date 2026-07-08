@@ -106,6 +106,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   if (!project) notFound();
 
   const enrichment = getEnrichment(slug);
+  const pfFaqs = project.pfFaqs ?? [];
   const minPrice = Math.min(...project.units.map((u) => u.launchPriceAed));
   const gallery =
     project.imageGallery?.length
@@ -379,19 +380,19 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <ProjectUnitsTable units={project.units} project={project} />
         </section>
 
-        {project.pfFaqs && project.pfFaqs.length > 0 ? (
+        {pfFaqs.length > 0 ? (
           <section id="project-faq" className="mt-12 scroll-mt-24">
             <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{
-                __html: JSON.stringify(buildFaqPageJsonLd(project.pfFaqs)),
+                __html: JSON.stringify(buildFaqPageJsonLd(pfFaqs)),
               }}
             />
             <h2 className="text-xl font-semibold text-text-dark">
               {project.name} FAQ
             </h2>
             <div className="mt-5">
-              <FaqAccordion faqs={project.pfFaqs} />
+              <FaqAccordion faqs={pfFaqs} />
             </div>
           </section>
         ) : null}

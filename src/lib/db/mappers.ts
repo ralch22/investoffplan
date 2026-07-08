@@ -1,4 +1,5 @@
 import type { CatalogUnit, DevListEntry, Project, UnitType } from "@/lib/types";
+import { sanitizePfFaqs, type PfFaq } from "@/lib/sanitize-html";
 import type {
   catalogUnits,
   developers,
@@ -69,7 +70,7 @@ export function rowToProject(row: ProjectRow, units: ProjectUnitRow[]): Project 
     salesStartDate: row.salesStartDate ?? undefined,
     ownershipType: row.ownershipType ?? undefined,
     constructionProgress: row.constructionProgress ?? undefined,
-    pfFaqs: parseJson(row.pfFaqs),
+    pfFaqs: sanitizeRowFaqs(row.pfFaqs),
     whatsapp: row.whatsapp,
     units: units.map(rowToUnitType),
   };
@@ -82,6 +83,11 @@ function parseJson<T>(value: string | null): T | undefined {
   } catch {
     return undefined;
   }
+}
+
+function sanitizeRowFaqs(value: string | null): PfFaq[] | undefined {
+  const faqs = sanitizePfFaqs(parseJson<PfFaq[]>(value));
+  return faqs.length > 0 ? faqs : undefined;
 }
 
 export function rowToCatalogUnit(row: CatalogUnitRow): CatalogUnit {

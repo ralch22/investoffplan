@@ -13,6 +13,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { chromium } from "playwright";
+import { sanitizePfFaqs } from "../src/lib/sanitize-html";
 
 const CATALOG = join(process.cwd(), "data", "catalog.json");
 const DELAY_MS = 1000;
@@ -65,7 +66,7 @@ async function fetchPdpExtras(
     { timeout: 90000 },
   );
 
-  return page.evaluate((maxPlans) => {
+  const extras = await page.evaluate((maxPlans) => {
     const el = document.getElementById("__NEXT_DATA__");
     const detail = JSON.parse(el!.textContent!).props.pageProps.detailResult;
     // Selector-drift guard: `units` disappearing means PF changed the payload.
@@ -128,6 +129,11 @@ async function fetchPdpExtras(
       pfFaqs: faqs && faqs.length > 0 ? faqs : undefined,
     };
   }, MAX_PLANS_PER_PROJECT);
+
+  // Sanitize FAQs in Node context (the browser sandbox can't import the lib):
+  // plain-text only, q≤200/a≤600, and drop source-attribution sentences.
+  const cleanedFaqs = sanitizePfFaqs(extras.pfFaqs ?? null);
+  return { ...extras, pfFaqs: cleanedFaqs.length > 0 ? cleanedFaqs : undefined };
 }
 
 async function main() {

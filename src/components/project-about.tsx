@@ -1,5 +1,9 @@
 import type { ProjectEnrichment } from "@/lib/enrichment";
 import { htmlToPlainText, sanitizeProjectHtml } from "@/lib/sanitize-html";
+import { ExpandableRichText } from "@/components/expandable-rich-text";
+
+// Descriptions past this render clamped behind a "Read more" toggle.
+const DESCRIPTION_TRUNCATE_CHARS = 4000;
 
 interface ProjectAboutProps {
   enrichment: ProjectEnrichment | null;
@@ -48,9 +52,10 @@ export function ProjectAbout({
           >
             About the <em className="italic">project</em>
           </h2>
-          <div
+          <ExpandableRichText
+            html={sanitizedHtml}
+            truncate={sanitizedHtml.length > DESCRIPTION_TRUNCATE_CHARS}
             className="prose-balance mt-4 max-w-none space-y-4 text-base leading-relaxed text-text-dark/85 [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-semibold [&_li]:ms-4 [&_li]:list-disc [&_p]:mt-3 [&_ul]:mt-3 [&_ul]:space-y-1"
-            dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
           />
         </div>
       ) : aboutText ? (
