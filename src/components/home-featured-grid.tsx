@@ -43,31 +43,38 @@ export function HomeFeaturedGrid({ latest, featured }: HomeFeaturedGridProps) {
         </div>
       </section>
 
-      <section className="bg-surface-alt py-14">
-        <div className="mx-auto max-w-[1200px] px-5 md:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <h2 className="font-display text-3xl font-semibold text-text-dark md:text-4xl">
-              Featured <em className="italic">Projects.</em>
-            </h2>
-            <Link
-              href="/projects"
-              className="text-sm font-semibold text-brand hover:text-brand-dark"
-            >
-              View All →
-            </Link>
+      {featured.length > 0 ? (
+        <section className="bg-surface-darker py-16 md:py-20">
+          <div className="mx-auto max-w-[1200px] px-5 md:px-8">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <h2 className="font-display text-3xl font-semibold text-white md:text-4xl">
+                Featured <em className="italic text-brand-light">Projects.</em>
+              </h2>
+              <Link
+                href="/projects"
+                className="iop-btn-press focus-ring rounded-full text-sm font-semibold text-brand-light hover:text-white"
+              >
+                View All →
+              </Link>
+            </div>
+            {/* 1 hero + 4 support — a bento rhythm break, not two full-width slabs */}
+            <div className="mt-8 grid gap-5 lg:grid-cols-3">
+              <div className="lg:col-span-2">
+                <ShowcaseProjectCard
+                  project={featured[0]}
+                  featured
+                  dark
+                  index={0}
+                  priorityImage
+                />
+              </div>
+              {featured.slice(1, 5).map((project, i) => (
+                <ShowcaseProjectCard key={project.id} project={project} dark index={i + 1} />
+              ))}
+            </div>
           </div>
-          <div className="mt-8 grid gap-5 lg:grid-cols-2">
-            {featured.slice(0, 2).map((project, i) => (
-              <ShowcaseProjectCard key={project.id} project={project} featured index={i} />
-            ))}
-          </div>
-          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.slice(2, 6).map((project, i) => (
-              <ShowcaseProjectCard key={project.id} project={project} index={i + 2} />
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
     </>
   );
 }

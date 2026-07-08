@@ -5,6 +5,7 @@ import { PageShell } from "@/components/page-shell";
 import { HeroSearch } from "@/components/hero-search";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { HomeFeaturedGrid } from "@/components/home-featured-grid";
+import { CountUp } from "@/components/count-up";
 import { DeveloperLogo } from "@/components/developer-logo";
 import {
   getFeaturedProjects,
@@ -153,17 +154,17 @@ export default async function HomePage() {
         <p className="section-eyebrow text-center">Live catalog intelligence</p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: "Unit options", value: stats.unitCount.toLocaleString(), hint: "Across all emirates" },
-            { label: "Brochure PDFs", value: analytics.brochureCount.toLocaleString(), hint: "Download or WhatsApp" },
-            { label: "Map-ready projects", value: analytics.withCoords.toLocaleString(), hint: "With coordinates" },
-            { label: "Avg AED/sqft", value: analytics.avgPpsf.toLocaleString(), hint: "Catalog benchmark" },
+            { label: "Unit options", value: stats.unitCount, hint: "Across all emirates" },
+            { label: "Brochure PDFs", value: analytics.brochureCount, hint: "Download or WhatsApp" },
+            { label: "Map-ready projects", value: analytics.withCoords, hint: "With coordinates" },
+            { label: "Avg AED/sqft", value: analytics.avgPpsf, hint: "Catalog benchmark" },
           ].map((item) => (
             <div
               key={item.label}
               className="group rounded-2xl border border-border bg-surface p-5 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-elevation-md"
             >
               <p className="font-display text-3xl font-semibold tabular-nums text-brand md:text-4xl">
-                {item.value}
+                <CountUp value={item.value} />
               </p>
               <p className="mt-1 text-sm font-semibold text-text-dark">{item.label}</p>
               <p className="mt-0.5 text-xs text-muted-light">{item.hint}</p>
