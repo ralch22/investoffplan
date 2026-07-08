@@ -21,7 +21,7 @@
   --text-dark: #171717;
   --hero-overlay: linear-gradient(
     180deg,
-    rgba(18, 19, 18, 0.55) 0%,
+    rgba(18, 19, 18, 0.60) 0%,
     rgba(18, 19, 18, 0.82) 55%,
     rgba(18, 19, 18, 0.94) 100%
   );
@@ -135,6 +135,12 @@ h3 {
     var(--guide-hero-from) 0%,
     var(--guide-hero-to) 100%
   );
+}
+
+/* Ensure closed native dialogs never intercept or occupy layout (critical for always-mounted controlled <dialog> modals) */
+dialog:not([open]) {
+  display: none !important;
+  pointer-events: none;
 }
 
 .card-photo-overlay {

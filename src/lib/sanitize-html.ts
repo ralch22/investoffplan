@@ -26,6 +26,7 @@ export function sanitizeProjectHtml(html: string): string {
       if (match.startsWith("</")) return `</${name}>`;
       return `<${name}>`;
     })
+    .replace(/<h[23]>\s*<\/h[23]>/gi, "")
     .replace(/\s+/g, " ")
     .trim();
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { BrandLogo } from "@/components/brand-logo";
 import { useFavoritesCount } from "@/hooks/use-favorites-count";
 import { cn } from "@/lib/cn";
@@ -31,16 +32,24 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
   const favoritesCount = useFavoritesCount();
   const { locale, dict } = useI18n();
 
-  if (!open) return null;
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (open && !dialog.open) dialog.showModal();
+    else if (!open && dialog.open) dialog.close();
+  }, [open]);
 
   return (
-    <div className="fixed inset-0 z-[var(--z-overlay)] lg:hidden" role="dialog" aria-modal="true">
-      <button
-        type="button"
-        className="absolute inset-0 bg-surface-darker/60 backdrop-blur-sm"
-        aria-label={dict.nav.closeMenu}
-        onClick={onClose}
-      />
+    <dialog
+      ref={dialogRef}
+      className="fixed inset-0 z-[var(--z-overlay)] m-0 h-full max-h-none w-full max-w-none border-0 bg-transparent p-0 backdrop:bg-surface-darker/60"
+      onClose={onClose}
+      onClick={(e) => {
+        if (e.target === dialogRef.current) onClose();
+      }}
+    >
       <nav className="absolute end-0 top-0 flex h-full w-[min(100%,20rem)] flex-col bg-surface shadow-elevation-lg">
         <div className="flex items-center justify-between border-b border-border px-5 py-4">
           <BrandLogo variant="horizontal-dark" className="h-7 w-auto" />
@@ -95,6 +104,6 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
           </Link>
         </div>
       </nav>
-    </div>
+    </dialog>
   );
 }

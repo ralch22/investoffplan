@@ -46,13 +46,11 @@ export function MediaGalleryLightbox({
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
         onNext();
-      } else if (e.key === "Escape") {
-        onClose();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, onPrev, onNext, onClose]);
+  }, [open, onPrev, onNext]);
 
   function handleTouchStart(clientX: number) {
     touchStartX.current = clientX;
