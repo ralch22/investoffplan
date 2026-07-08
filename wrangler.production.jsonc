@@ -45,13 +45,15 @@
   // 2. Uncomment routes below
   // 3. npm run deploy:verify:production && npm run deploy:production
   // 4. Add www → apex redirect in Cloudflare dashboard if needed
-  // "routes": [
-  //   { "pattern": "investoffplan.com/*", "zone_name": "investoffplan.com" },
-  //   { "pattern": "www.investoffplan.com/*", "zone_name": "investoffplan.com" }
-  // ],
+  "routes": [
+    { "pattern": "investoffplan.com/*", "zone_name": "investoffplan.com" },
+    { "pattern": "www.investoffplan.com/*", "zone_name": "investoffplan.com" }
+  ],
   "vars": {
     "NEXT_PUBLIC_SITE_URL": "https://investoffplan.com",
-    "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADxBjx3Slso2Jeoo",
-    "NEXT_PUBLIC_CATALOG_API": "1"
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADxyqgdGGZ6sArrC",
+    "NEXT_PUBLIC_CATALOG_API": "1",
+    "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-7GDZWYG4N2",
+    "NEXT_PUBLIC_GTM_ID": "GTM-PJPK4GP6"
   }
 }
