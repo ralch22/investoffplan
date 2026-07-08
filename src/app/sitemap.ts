@@ -97,8 +97,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  // Arabic mirror pages (partial tree — homepage, about, contact).
+  const arabicRoutes = ["/ar", "/ar/about", "/ar/contact"].map((path) => ({
+    url: `${BASE}${path}`,
+    lastModified: catalogUpdated,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+    alternates: {
+      languages: {
+        en: path === "/ar" ? `${BASE}/` : `${BASE}${path.slice(3)}`,
+        ar: `${BASE}${path}`,
+      },
+    },
+  }));
+
   return [
     ...staticRoutes,
+    ...arabicRoutes,
     ...projectRoutes,
     ...developerRoutes,
     ...areaRoutes,

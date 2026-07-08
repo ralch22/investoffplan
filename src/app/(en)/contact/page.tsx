@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getSiteUrl } from "@/lib/site-url";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { ContactCta } from "@/components/contact-cta";
@@ -9,6 +10,13 @@ export const metadata: Metadata = {
   title: "Contact",
   description:
     "Contact invest off-plan for off-plan enquiries, brochures, and consultation across Dubai and the UAE.",
+  alternates: {
+    canonical: `${getSiteUrl()}/contact`,
+    languages: {
+      en: `${getSiteUrl()}/contact`,
+      ar: `${getSiteUrl()}/ar/contact`,
+    },
+  },
 };
 
 export default async function ContactPage() {

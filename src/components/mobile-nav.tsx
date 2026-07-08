@@ -5,19 +5,21 @@ import { usePathname } from "next/navigation";
 import { BrandLogo } from "@/components/brand-logo";
 import { useFavoritesCount } from "@/hooks/use-favorites-count";
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/i18n/locale-provider";
+import { localePath } from "@/i18n/config";
 
-const NAV = [
-  { href: "/projects", label: "Projects" },
-  { href: "/tools", label: "Data toolkit" },
-  { href: "/developers", label: "Developers" },
-  { href: "/areas", label: "Areas" },
-  { href: "/map", label: "Map" },
-  { href: "/guides", label: "Guides" },
-  { href: "/news", label: "News" },
-  { href: "/favorites", label: "Favorites" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
+const NAV_KEYS = [
+  { href: "/projects", key: "projects" },
+  { href: "/tools", key: "dataToolkit" },
+  { href: "/developers", key: "developers" },
+  { href: "/areas", key: "areas" },
+  { href: "/map", key: "map" },
+  { href: "/guides", key: "guides" },
+  { href: "/news", key: "news" },
+  { href: "/favorites", key: "favorites" },
+  { href: "/about", key: "about" },
+  { href: "/contact", key: "contact" },
+] as const;
 
 interface MobileNavProps {
   open: boolean;
@@ -27,6 +29,7 @@ interface MobileNavProps {
 export function MobileNav({ open, onClose }: MobileNavProps) {
   const pathname = usePathname();
   const favoritesCount = useFavoritesCount();
+  const { locale, dict } = useI18n();
 
   if (!open) return null;
 
@@ -35,7 +38,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
       <button
         type="button"
         className="absolute inset-0 bg-surface-darker/60 backdrop-blur-sm"
-        aria-label="Close menu"
+        aria-label={dict.nav.closeMenu}
         onClick={onClose}
       />
       <nav className="absolute end-0 top-0 flex h-full w-[min(100%,20rem)] flex-col bg-surface shadow-elevation-lg">
@@ -45,21 +48,22 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             type="button"
             onClick={onClose}
             className="iop-btn-press focus-ring flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted"
-            aria-label="Close navigation"
+            aria-label={dict.nav.closeNavigation}
           >
             ✕
           </button>
         </div>
         <ul className="flex-1 overflow-y-auto px-3 py-4">
-          {NAV.map((item) => {
+          {NAV_KEYS.map((item) => {
+            const href = localePath(locale, item.href);
             const active =
-              item.href === "/"
+              href === "/"
                 ? pathname === "/"
-                : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                : pathname === href || pathname.startsWith(`${href}/`);
             return (
               <li key={item.href}>
                 <Link
-                  href={item.href}
+                  href={href}
                   onClick={onClose}
                   className={cn(
                     "iop-btn-press focus-ring block rounded-xl px-4 py-3 text-sm font-medium transition",
@@ -69,7 +73,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
                   )}
                 >
                   <span className="flex items-center justify-between gap-2">
-                    {item.label}
+                    {dict.nav[item.key]}
                     {item.href === "/favorites" && favoritesCount > 0 ? (
                       <span className="rounded-full bg-brand px-2 py-0.5 text-xs font-bold text-white">
                         {favoritesCount}
@@ -83,11 +87,11 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
         </ul>
         <div className="border-t border-border p-4">
           <Link
-            href="/projects"
+            href={localePath(locale, "/projects")}
             onClick={onClose}
             className="iop-btn-press focus-ring flex w-full items-center justify-center rounded-full bg-brand py-3 text-sm font-semibold text-white hover:bg-brand-dark"
           >
-            Browse properties
+            {dict.nav.browseProperties}
           </Link>
         </div>
       </nav>

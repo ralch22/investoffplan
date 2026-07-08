@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getSiteUrl } from "@/lib/site-url";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { ContactCta } from "@/components/contact-cta";
@@ -10,6 +11,13 @@ export const metadata: Metadata = {
   title: "About us",
   description:
     "Meet the team behind invest off-plan — UAE off-plan intelligence with brochures, compare, and unit-level pricing.",
+  alternates: {
+    canonical: `${getSiteUrl()}/about`,
+    languages: {
+      en: `${getSiteUrl()}/about`,
+      ar: `${getSiteUrl()}/ar/about`,
+    },
+  },
 };
 
 export default async function AboutPage() {

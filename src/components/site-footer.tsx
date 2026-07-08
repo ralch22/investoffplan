@@ -1,35 +1,40 @@
+"use client";
+
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
 import { NewsletterSection } from "@/components/newsletter-section";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate, localePath } from "@/i18n/config";
 
 const MAIN_LINKS = [
-  { href: "/projects", label: "Projects" },
-  { href: "/developers", label: "Developers" },
-  { href: "/areas", label: "Areas" },
-  { href: "/guides", label: "Guides" },
-  { href: "/news", label: "News" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-];
+  { href: "/projects", key: "projects" },
+  { href: "/developers", key: "developers" },
+  { href: "/areas", key: "areas" },
+  { href: "/guides", key: "guides" },
+  { href: "/news", key: "news" },
+  { href: "/faq", key: "faq" },
+  { href: "/about", key: "about" },
+  { href: "/contact", key: "contact" },
+] as const;
 
 const COLLECTION_LINKS = [
-  { href: "/collections/waterfront", label: "Waterfront Projects" },
-  { href: "/collections/branded", label: "Branded Residences" },
-  { href: "/collections/under-2m", label: "Under AED 2M" },
-  { href: "/collections/dubai", label: "Dubai Off-Plan" },
-  { href: "/collections/ras-al-khaimah", label: "Ras Al Khaimah" },
-];
+  { href: "/collections/waterfront", key: "waterfrontProjects" },
+  { href: "/collections/branded", key: "brandedResidences" },
+  { href: "/collections/under-2m", key: "underAed2m" },
+  { href: "/collections/dubai", key: "dubaiOffPlan" },
+  { href: "/collections/ras-al-khaimah", key: "rasAlKhaimah" },
+] as const;
 
 const GUIDE_LINKS = [
-  { href: "/guides/why-invest-off-plan-dubai", label: "Buying Off-Plan" },
-  { href: "/developers", label: "Finding the Right Developer" },
-  { href: "/guides/understanding-payment-plans", label: "Understanding Payment Plans" },
-  { href: "/guides/foreign-investor-guide", label: "Off-Plan for Foreign Investors" },
-  { href: "/faq/golden-visa", label: "Acquiring the Golden Visa" },
-];
+  { href: "/guides/why-invest-off-plan-dubai", key: "buyingOffPlan" },
+  { href: "/developers", key: "findingRightDeveloper" },
+  { href: "/guides/understanding-payment-plans", key: "understandingPaymentPlans" },
+  { href: "/guides/foreign-investor-guide", key: "foreignInvestors" },
+  { href: "/faq/golden-visa", key: "goldenVisa" },
+] as const;
 
 export function SiteFooter() {
+  const { locale, dict } = useI18n();
   return (
     <footer className="mt-auto">
       <NewsletterSection />
@@ -47,11 +52,11 @@ export function SiteFooter() {
               <nav className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
                 {MAIN_LINKS.map((link) => (
                   <Link
-                    key={link.label}
-                    href={link.href}
+                    key={link.key}
+                    href={localePath(locale, link.href)}
                     className="text-sm text-white/70 transition hover:text-white"
                   >
-                    {link.label}
+                    {dict.nav[link.key]}
                   </Link>
                 ))}
               </nav>
@@ -62,16 +67,16 @@ export function SiteFooter() {
           <div className="grid gap-10 px-8 py-12 sm:grid-cols-2">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-brand">
-                Guides
+                {dict.footer.columns.guides}
               </p>
               <ul className="mt-4 space-y-2">
                 {GUIDE_LINKS.map((link) => (
-                  <li key={link.label}>
+                  <li key={link.key}>
                     <Link
-                      href={link.href}
+                      href={localePath(locale, link.href)}
                       className="text-sm text-white/70 transition hover:text-white"
                     >
-                      {link.label}
+                      {dict.footer.links[link.key]}
                     </Link>
                   </li>
                 ))}
@@ -79,16 +84,16 @@ export function SiteFooter() {
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-brand">
-                Collections
+                {dict.footer.columns.collections}
               </p>
               <ul className="mt-4 space-y-2">
                 {COLLECTION_LINKS.map((link) => (
-                  <li key={link.label}>
+                  <li key={link.key}>
                     <Link
-                      href={link.href}
+                      href={localePath(locale, link.href)}
                       className="text-sm text-white/70 transition hover:text-white"
                     >
-                      {link.label}
+                      {dict.footer.links[link.key]}
                     </Link>
                   </li>
                 ))}
@@ -113,17 +118,17 @@ export function SiteFooter() {
               </a>
             </div>
             <div className="flex flex-wrap gap-5">
-              <span>Telephone: +971 44 321 620</span>
-              <span>Email: iop@investoffplan.com</span>
-              <span>Address: Business Bay, Dubai</span>
+              <span dir="ltr">{interpolate(dict.footer.contact.telephone, { phone: "+971 44 321 620" })}</span>
+              <span>{interpolate(dict.footer.contact.email, { email: "iop@investoffplan.com" })}</span>
+              <span>{dict.footer.contact.address}</span>
             </div>
             <div className="flex gap-5">
-              <Link href="/privacy-policy" className="hover:text-white">Privacy</Link>
-              <Link href="/cookie-policy" className="hover:text-white">Cookies</Link>
+              <Link href="/privacy-policy" className="hover:text-white">{dict.footer.privacy}</Link>
+              <Link href="/cookie-policy" className="hover:text-white">{dict.footer.cookies}</Link>
             </div>
           </div>
           <div className="border-t border-white/5 px-8 py-4 text-center text-xs text-white/40">
-            <p>© {new Date().getFullYear()} invest off-plan · Powered by Aria Properties LLC · DRN 20678, a licensed real estate brokerage in Dubai</p>
+            <p>{interpolate(dict.footer.legal, { year: new Date().getFullYear() })}</p>
           </div>
         </div>
       </div>

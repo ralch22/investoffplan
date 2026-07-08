@@ -22,7 +22,10 @@ export const metadata: Metadata = {
   title: "UAE Off-Plan Properties",
   description:
     "Browse 2,000+ off-plan units with brochures, compare tools, payment plans, and live map intelligence across Dubai and the UAE.",
-  alternates: { canonical: getSiteUrl() },
+  alternates: {
+    canonical: getSiteUrl(),
+    languages: { en: getSiteUrl() || "/", ar: `${getSiteUrl()}/ar` },
+  },
 };
 
 const PROPERTY_TYPES = [
