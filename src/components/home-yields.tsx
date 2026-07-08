@@ -1,0 +1,64 @@
+import Link from "next/link";
+import type { CoveredArea } from "@/lib/area-compare";
+import { formatPrice } from "@/lib/format";
+
+/**
+ * "Where the yields are" — top areas by real DLD gross rental yield. Grounds the
+ * homepage in actual Dubai Land Department sold/rent data (2025), not marketing.
+ */
+export function HomeYields({ areas }: { areas: CoveredArea[] }) {
+  if (areas.length === 0) return null;
+  return (
+    <section className="bg-surface py-16 md:py-20">
+      <div className="mx-auto max-w-[1200px] px-5 md:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className="section-eyebrow">Real market data · Dubai Land Department 2025</p>
+            <h2 className="mt-2 font-display text-3xl font-semibold text-text-dark md:text-4xl">
+              Where the <em className="italic text-brand">yields</em> are.
+            </h2>
+            <p className="mt-2 max-w-xl text-sm text-muted">
+              Highest gross rental yields by community — median annual rent ÷ median
+              sold price from official 2025 transactions.
+            </p>
+          </div>
+          <Link
+            href="/areas"
+            className="iop-btn-press focus-ring rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark"
+          >
+            All areas →
+          </Link>
+        </div>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {areas.map((a) => (
+            <Link
+              key={a.area.slug}
+              href={`/areas/${a.area.slug}`}
+              className="iop-btn-press focus-ring group flex items-center justify-between gap-4 rounded-2xl border border-border bg-white p-5 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
+            >
+              <div className="min-w-0">
+                <p className="truncate text-base font-semibold text-text-dark group-hover:text-brand">
+                  {a.area.name}
+                </p>
+                <p className="mt-1 text-xs text-muted-light">
+                  {a.stats.medianPrice != null
+                    ? `Median sold ${formatPrice(Math.round(a.stats.medianPrice), "AED")}`
+                    : `${a.stats.saleSample.toLocaleString()} sales in 2025`}
+                </p>
+              </div>
+              <div className="shrink-0 text-end">
+                <p className="font-display text-2xl font-semibold tabular-nums text-brand">
+                  {a.stats.grossYieldPct}%
+                </p>
+                <p className="text-[10px] font-medium uppercase tracking-wide text-muted-light">
+                  gross yield
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

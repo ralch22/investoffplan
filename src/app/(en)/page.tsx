@@ -6,6 +6,7 @@ import { HeroSearch } from "@/components/hero-search";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { HomeFeaturedGrid } from "@/components/home-featured-grid";
 import { CountUp } from "@/components/count-up";
+import { HomeYields } from "@/components/home-yields";
 import { DeveloperLogo } from "@/components/developer-logo";
 import {
   getFeaturedProjects,
@@ -16,6 +17,7 @@ import {
 import { unoptimizedProp } from "@/lib/asset-image";
 import { getAreaImage, isServableImage } from "@/lib/area-images";
 import { getCatalogApi } from "@/lib/catalog";
+import { getTopCoveredAreas } from "@/lib/area-compare";
 import { AdvantageMatrix } from "@/components/advantage-matrix";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
@@ -78,6 +80,7 @@ export default async function HomePage() {
   const topAreas = (await getAreas()).slice(0, 6);
   const areaImages = await Promise.all(topAreas.map((a) => getAreaImage(a.name)));
   const topDevelopers = (await getDevelopers()).slice(0, 8);
+  const topYieldAreas = await getTopCoveredAreas("yield", 6);
   const heroImage = featured[0]?.imageUrl;
 
   // Priced property-type tiles — a real project photo + cheapest launch price
@@ -207,6 +210,8 @@ export default async function HomePage() {
       </section>
 
       <HomeFeaturedGrid latest={latest} featured={featured} />
+
+      <HomeYields areas={topYieldAreas} />
 
       <section className="py-14">
         <div className="mx-auto max-w-[1200px] px-5 md:px-8">

@@ -11,12 +11,14 @@ export const metadata: Metadata = {
 import { PageHero } from "@/components/page-hero";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { getAreas } from "@/lib/catalog";
+import { getComparisonList } from "@/lib/area-compare";
 import { areaTagline } from "@/lib/figma-copy";
 import { getAreaImage, getHeroImage } from "@/lib/area-images";
 import { unoptimizedProp } from "@/lib/asset-image";
 
 export default async function AreasPage() {
   const areas = (await getAreas()).slice(0, 6);
+  const comparisons = (await getComparisonList()).slice(0, 9);
   const heroImage = await getHeroImage();
   const areasWithImages = await Promise.all(
     areas.map(async (area) => ({
@@ -79,6 +81,38 @@ export default async function AreasPage() {
           </div>
         </div>
       </section>
+
+      {comparisons.length > 0 ? (
+        <section className="py-14">
+          <div className="mx-auto max-w-[1200px] px-5 md:px-8">
+            <p className="section-eyebrow">Real DLD data</p>
+            <h2 className="mt-2 font-display text-2xl font-semibold text-text-dark md:text-3xl">
+              Compare areas<span className="text-brand">.</span>
+            </h2>
+            <p className="mt-2 max-w-xl text-sm text-muted">
+              Side-by-side on real 2025 sold prices and gross rental yields.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {comparisons.map((c) => (
+                <Link
+                  key={c.pairSlug}
+                  href={`/compare/${c.pairSlug}`}
+                  className="iop-btn-press focus-ring group rounded-2xl border border-border bg-white p-4 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
+                >
+                  <p className="text-sm font-semibold text-text-dark group-hover:text-brand">
+                    {c.aName} <span className="text-muted-light">vs</span> {c.bName}
+                  </p>
+                  {c.aYield != null && c.bYield != null ? (
+                    <p className="mt-1 text-xs tabular-nums text-muted">
+                      Gross yield {c.aYield}% vs {c.bYield}%
+                    </p>
+                  ) : null}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="border-t border-border bg-surface-alt py-14">
         <div className="mx-auto max-w-[1200px] px-5 md:px-8">
