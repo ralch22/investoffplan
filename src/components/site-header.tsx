@@ -142,12 +142,14 @@ export function SiteHeader({
                 </span>
               ) : null}
             </Link>
-            <PrimaryButton
-              href={localePath(locale, "/areas")}
-              className="hidden px-4 py-2 text-xs sm:inline-flex"
-            >
-              {dict.nav.areaProperties}
-            </PrimaryButton>
+            <span className="hidden sm:block">
+              <PrimaryButton
+                href={localePath(locale, "/areas")}
+                className="px-4 py-2 text-xs"
+              >
+                {dict.nav.areaProperties}
+              </PrimaryButton>
+            </span>
             <LanguageSwitcher solid={showSolidHeader} />
             {onCurrencyChange ? (
               <CurrencySelector value={currency} onChange={onCurrencyChange} />
