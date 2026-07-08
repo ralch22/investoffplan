@@ -49,3 +49,6 @@ data/.asset-migration.lock
 *.tsbuildinfo
 next-env.d.ts
 .ao/
+
+# public analytics IDs are committed
+!.env.production
