@@ -16,6 +16,7 @@ const FORM_TYPES = new Set([
   "brochure",
   "newsletter",
   "mortgage-preapproval",
+  "advisor",
 ]);
 
 interface LeadBody {

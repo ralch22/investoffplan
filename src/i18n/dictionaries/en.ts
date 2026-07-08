@@ -344,6 +344,27 @@ const dict = {
     "sqft": "{value} sqft",
     "sqftRange": "{min} - {max} sqft",
     "pricePerSqft": "AED {value}/sqft"
+  },
+  "advisor": {
+    "launcher": "Off-Plan Advisor",
+    "title": "Off-Plan Advisor",
+    "subtitle": "Grounded in our live catalog — ask anything about UAE off-plan.",
+    "placeholder": "Ask about projects, areas, payment plans…",
+    "send": "Send",
+    "thinking": "Thinking…",
+    "viewProject": "View project",
+    "whatsapp": "WhatsApp us",
+    "from": "From",
+    "leadTitle": "Leave your details — our team will call you back",
+    "leadName": "Your name",
+    "leadPhone": "Phone (with country code)",
+    "leadSubmit": "Request callback",
+    "leadThanks": "Thanks — our team will be in touch shortly.",
+    "error": "Something went wrong — try again or WhatsApp us.",
+    "close": "Close advisor",
+    "starterProjects": "Show me 2-beds under AED 2M in Dubai",
+    "starterAreas": "Which areas have the most launches?",
+    "starterProcess": "How does buying off-plan work?"
   }
 } as const;
 

@@ -36,6 +36,17 @@
   "images": {
     "binding": "IMAGES"
   },
+  "ai": {
+    "binding": "AI",
+    "remote": true
+  },
+  "ai_search": [
+    {
+      "binding": "ADVISOR_SEARCH",
+      "instance_name": "iop-advisor",
+      "remote": true
+    }
+  ],
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1

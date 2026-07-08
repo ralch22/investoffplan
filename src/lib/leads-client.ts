@@ -1,7 +1,7 @@
 import { isHoneypotTripped } from "@/lib/form-guard";
 
 export interface LeadSubmission {
-  formType: "contact" | "contact-cta" | "brochure" | "newsletter" | "mortgage-preapproval";
+  formType: "contact" | "contact-cta" | "brochure" | "newsletter" | "mortgage-preapproval" | "advisor";
   name?: string;
   email?: string;
   phone?: string;
