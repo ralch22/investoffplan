@@ -131,7 +131,7 @@ export function ComparePage({ initialIds, initialItems }: ComparePageProps) {
             { label: "Compare" },
           ]}
         />
-        {loading && items.length === 0 ? (
+        {loading && compareIds.length > 0 && items.length === 0 ? (
           <div className="mt-8 rounded-2xl border border-border bg-surface-alt p-10 text-center">
             <p className="text-sm text-muted">Loading compare data…</p>
           </div>

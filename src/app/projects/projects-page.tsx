@@ -151,8 +151,10 @@ export function ProjectsPage({
   }, [api, allUnits, filters, sort, viewMode, collection]);
 
   const catalogReady = Boolean(api);
+  // Before the first API response lands (and in the SSR HTML), fall back to
+  // the server-provided defaults so the page never paints "0 results".
   const resultCount = isApiMode
-    ? (apiData?.meta?.total ?? 0)
+    ? (apiData?.meta?.total ?? (isDefaultView ? initialResultCount : 0))
     : catalogReady
       ? filtered.length
       : isDefaultView
@@ -160,7 +162,8 @@ export function ProjectsPage({
         : 0;
 
   const totalPages = isApiMode
-    ? (apiData?.meta?.totalPages ?? 1)
+    ? (apiData?.meta?.totalPages ??
+      (isDefaultView ? Math.max(1, Math.ceil(initialResultCount / PAGE_SIZE)) : 1))
     : catalogReady
       ? Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
       : isDefaultView
@@ -169,7 +172,7 @@ export function ProjectsPage({
   const currentPage = Math.min(page, totalPages);
 
   const pageItems = isApiMode
-    ? (apiData?.items ?? [])
+    ? (apiData?.items ?? (isDefaultView ? initialPageItems : []))
     : catalogReady
       ? filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
       : isDefaultView
@@ -217,8 +220,10 @@ export function ProjectsPage({
       ? cities.find((c) => c.slug === filters.city)?.label
       : "UAE";
 
+  // Suppress the skeleton on first load in the default view — the SSR-provided
+  // cards are already on screen and the first API response only confirms them.
   const showCardSkeleton = isApiMode
-    ? apiLoading
+    ? apiLoading && !(isDefaultView && !apiData && initialPageItems.length > 0)
     : loading && !catalogReady && (!isDefaultView || initialPageItems.length === 0);
 
   if (error && !api) {

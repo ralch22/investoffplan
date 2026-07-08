@@ -4,6 +4,8 @@ import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { DevelopersDirectory } from "@/components/developers-directory";
+import { DevelopersList } from "@/components/developers-list";
+import { DEVELOPER_PAGE_SIZE } from "@/lib/types";
 import { TopDevelopersChart } from "@/components/top-developers-chart";
 import { getDeveloperCityCounts, getDevelopers } from "@/lib/catalog";
 import { getHeroImage } from "@/lib/area-images";
@@ -34,7 +36,9 @@ export default async function DevelopersPage() {
         <TopDevelopersChart developers={developers} />
 
         <div className="mt-12">
-          <Suspense fallback={<p className="text-muted">Loading developers…</p>}>
+          <Suspense
+            fallback={<DevelopersList items={developers.slice(0, DEVELOPER_PAGE_SIZE)} />}
+          >
             <DevelopersDirectory developers={developers} cityCounts={cityCounts} />
           </Suspense>
         </div>

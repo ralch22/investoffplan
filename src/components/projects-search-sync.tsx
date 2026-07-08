@@ -25,7 +25,7 @@ export function ProjectsSearchSync({ filters, collection, onSync }: ProjectsSear
     const newFilters = { ...filters };
     let newCollection = collection;
 
-    const q = searchParams.get("q");
+    const q = searchParams.get("q") ?? searchParams.get("query");
     if (q) { newFilters.query = q; hasUpdates = true; }
 
     const c = searchParams.get("collection");

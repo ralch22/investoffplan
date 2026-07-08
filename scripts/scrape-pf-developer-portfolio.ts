@@ -14,6 +14,7 @@ import {
   formatPaymentPlanFromPhases,
   initials,
   mapStockStatus,
+  normalizeUnitSize,
   parseCity,
   projectSlugFromPf,
 } from "./lib/pf-ingest-helpers";
@@ -286,11 +287,17 @@ function detailToProject(detail: PfDetailResult): CatalogProject {
           band.startingPrice > 0
             ? band.startingPrice
             : (detail.startingPrice ?? 0);
-        unitRows.push({
-          id: `${detail.id}::${group.propertyType}::${band.bedrooms}::${band.areaFrom}`,
+        const size = normalizeUnitSize({
           beds: band.bedrooms,
           sqftMin: band.areaFrom,
           sqftMax: band.areaTo !== band.areaFrom ? band.areaTo : undefined,
+          priceAed: launchPriceAed,
+        });
+        unitRows.push({
+          id: `${detail.id}::${group.propertyType}::${band.bedrooms}::${band.areaFrom}`,
+          beds: band.bedrooms,
+          sqftMin: size.sqftMin,
+          sqftMax: size.sqftMax,
           launchPriceAed,
           propertyType: group.propertyType,
         });

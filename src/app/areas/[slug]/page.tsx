@@ -54,7 +54,7 @@ export default async function AreaDetailPage({ params }: PageProps) {
             Current Projects<span className="text-brand">.</span>
           </h2>
           <Link
-            href={`/projects?query=${encodeURIComponent(area.name)}`}
+            href={`/projects?q=${encodeURIComponent(area.name)}`}
             className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white"
           >
             View all

@@ -256,7 +256,7 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
                 Explore community
               </Link>
               <Link
-                href={`/projects?query=${encodeURIComponent(selected.name)}`}
+                href={`/projects?q=${encodeURIComponent(selected.name)}`}
                 className="rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-text-dark"
               >
                 View projects

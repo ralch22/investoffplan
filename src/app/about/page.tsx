@@ -4,6 +4,7 @@ import { PageHero } from "@/components/page-hero";
 import { ContactCta } from "@/components/contact-cta";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { getHeroImage } from "@/lib/area-images";
+import { getSiteStats } from "@/lib/catalog";
 
 export const metadata: Metadata = {
   title: "About us",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 
 export default async function AboutPage() {
   const heroImage = await getHeroImage();
+  const stats = await getSiteStats();
 
   return (
     <PageShell headerVariant="transparent">
@@ -37,7 +39,10 @@ export default async function AboutPage() {
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { name: "Catalog Intelligence", role: "1,501 unit options" },
+            {
+              name: "Catalog Intelligence",
+              role: `${stats.unitCount.toLocaleString("en-US")} unit options`,
+            },
             { name: "Brochure Access", role: "PDF + WhatsApp fallback" },
             { name: "Compare Tools", role: "Up to 3 units" },
             { name: "Market Insights", role: "Live analytics" },

@@ -1,7 +1,9 @@
 import { getAdvantageMatrix } from "@/lib/catalog-analytics";
+import { getSiteStats } from "@/lib/catalog";
 
-export function AdvantageMatrix() {
-  const rows = getAdvantageMatrix();
+export async function AdvantageMatrix() {
+  const stats = await getSiteStats();
+  const rows = getAdvantageMatrix(stats.unitCount);
 
   return (
     <section className="bg-surface-alt py-14">

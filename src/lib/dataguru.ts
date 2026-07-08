@@ -49,7 +49,7 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     slug: "new-projects",
     title: "New Projects",
     description:
-      "Browse 1,500+ off-plan unit options with brochures, compare, and payment calculators.",
+      "Browse 2,000+ off-plan unit options with brochures, compare, and payment calculators.",
     href: "/projects",
     pfHref: "https://www.propertyfinder.ae/en/new-projects",
     pfFeature: "New Projects",

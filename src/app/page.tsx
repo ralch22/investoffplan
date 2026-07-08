@@ -19,7 +19,7 @@ import { getSiteUrl } from "@/lib/site-url";
 export const metadata: Metadata = {
   title: "UAE Off-Plan Properties",
   description:
-    "Browse 1,500+ off-plan units with brochures, compare tools, payment plans, and live map intelligence across Dubai and the UAE.",
+    "Browse 2,000+ off-plan units with brochures, compare tools, payment plans, and live map intelligence across Dubai and the UAE.",
   alternates: { canonical: getSiteUrl() },
 };
 

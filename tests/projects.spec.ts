@@ -2,10 +2,10 @@ import { test, expect } from "./fixtures";
 import { waitForCatalog, waitForCatalogHydration } from "./helpers";
 
 test.describe("InvestOffPlan projects page", () => {
-  test("loads listing with 1501 units heading", async ({ page }) => {
+  test("loads listing with unit-count heading", async ({ page }) => {
     await page.goto("/projects");
     await expect(
-      page.getByRole("heading", { name: /1,501 Off-Plan Unit Options in UAE/i }),
+      page.getByRole("heading", { name: /Total unit options in UAE/i }),
     ).toBeVisible();
     await waitForCatalog(page);
   });
@@ -112,7 +112,7 @@ test.describe("InvestOffPlan site routes", () => {
     await page.getByRole("button", { name: "Clear all filters" }).click();
     await waitForCatalog(page);
     await expect(
-      page.getByRole("heading", { name: /1,501 Off-Plan Unit Options in UAE/i }),
+      page.getByRole("heading", { name: /Total unit options in UAE/i }),
     ).toBeVisible();
   });
 });
