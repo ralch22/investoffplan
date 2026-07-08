@@ -8,7 +8,7 @@
 - [opr.ae](https://opr.ae/) (added 2026-07-08): editorial area pages, FAQ hub, real blog/news, mortgage calc + pre-approval lead engine, collection SEO URLs, Arabic locale
 
 **Preview:** https://investoffplan-preview.emerge-digital.workers.dev  
-**Production:** https://investoffplan.com (cutover pending)
+**Production:** https://investoffplan.com — **LIVE 2026-07-08** (zone in Emerge acct, worker routes, GA4 G-7GDZWYG4N2 + GTM)
 
 ---
 
@@ -27,7 +27,7 @@
 | Price/sqft | None | On SERP + PDP | **Exceed** |
 | Accessibility | Unknown | WCAG 2.2 AA on SERP + PDP | **In progress** |
 | Core Web Vitals | Industry leader | LCP <2.5s, CLS <0.1 | **Monitor** |
-| Production domain | Live | `investoffplan.com` live | **Blocked** (DNS/Worker) |
+| Production domain | Live | `investoffplan.com` live | **LIVE** (2026-07-08) |
 
 ---
 
@@ -136,7 +136,7 @@
 - [ ] A11y structural: port brochure modal / mobile nav / filter sheet to <dialog>.showModal() (focus trap); hero-overlay contrast guarantee; sanitizer empty-heading strip
 
 ### Phase 3 — Exceed + production
-- [ ] Production cutover + GA4 measurement ID
+- [x] Production cutover + GA4 measurement ID (2026-07-08: zone moved Arlo→Emerge, WP Engine SaaS claim released, SPF added, Turnstile widget rewired, GA4+GTM live)
 - [ ] Sold-history / resale (if licensable)
 - [ ] Lighthouse 90+ mobile on SERP + PDP
 
