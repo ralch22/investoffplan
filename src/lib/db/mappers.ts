@@ -63,6 +63,7 @@ export function rowToProject(row: ProjectRow, units: ProjectUnitRow[]): Project 
         : undefined,
     brochureUrl: row.brochureUrl ?? undefined,
     description: row.description ?? undefined,
+    descriptionUnique: row.descriptionUnique ?? undefined,
     amenities: parseJsonArray(row.amenities),
     masterPlanUrl: row.masterPlanUrl ?? undefined,
     videoUrl: row.videoUrl ?? undefined,

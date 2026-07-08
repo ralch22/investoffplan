@@ -61,6 +61,7 @@ export const projects = sqliteTable(
     lng: real("lng"),
     brochureUrl: text("brochure_url"),
     description: text("description"),
+    descriptionUnique: text("description_unique"),
     amenities: text("amenities"),
     masterPlanUrl: text("master_plan_url"),
     videoUrl: text("video_url"),
