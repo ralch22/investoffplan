@@ -2,6 +2,7 @@
 
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { WHATSAPP_PRIMARY } from "@/lib/contact-info";
+import { withUtm } from "@/lib/utm";
 
 const SITE_EMAIL = "admin@investoffplan.com";
 const SITE_WHATSAPP = WHATSAPP_PRIMARY;
@@ -18,7 +19,10 @@ export function DeveloperContactPanel({
   const whatsappText = encodeURIComponent(
     `Hi, I'm interested in off-plan projects by ${developerName} on InvestOffPlan.`,
   );
-  const whatsappHref = `https://wa.me/${SITE_WHATSAPP}?text=${whatsappText}`;
+  const whatsappHref = withUtm(
+    `https://wa.me/${SITE_WHATSAPP}?text=${whatsappText}`,
+    { medium: "whatsapp", content: "developer_panel" },
+  );
 
   return (
     <div className="w-full max-w-sm shrink-0 rounded-2xl border border-border bg-white p-5 shadow-sm">

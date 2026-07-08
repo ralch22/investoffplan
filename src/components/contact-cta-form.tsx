@@ -7,6 +7,7 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import { submitLead } from "@/lib/leads-client";
+import { withUtm } from "@/lib/utm";
 
 interface FormState {
   name: string;
@@ -106,7 +107,10 @@ export function ContactCtaForm() {
         <p className="mt-2 text-sm text-white/75">
           We&apos;ll reach out shortly. Prefer instant chat?{" "}
           <a
-            href="https://wa.me/971585276222"
+            href={withUtm("https://wa.me/971585276222", {
+              medium: "whatsapp",
+              content: "contact_form_success",
+            })}
             target="_blank"
             rel="noopener noreferrer"
             className="font-semibold text-brand-light hover:text-white"
