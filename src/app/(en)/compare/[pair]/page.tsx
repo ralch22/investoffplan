@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
+import { MarketAdviceCta } from "@/components/market-advice-cta";
 import { formatPrice } from "@/lib/format";
 import { getSiteUrl } from "@/lib/site-url";
 import {
@@ -191,6 +192,8 @@ export default async function CompareAreasPage({ params }: PageProps) {
             </Link>
           ))}
         </div>
+
+        <MarketAdviceCta context={`${a.area.name} vs ${b.area.name}`} />
       </main>
     </PageShell>
   );
