@@ -317,6 +317,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         <ProjectDetailCtas
           projectName={project.name}
+          projectSlug={project.slug}
           whatsapp={project.whatsapp}
           brochureUrl={project.brochureUrl ?? enrichment?.brochureUrl}
           videoUrl={project.videoUrl ?? enrichment?.videoUrl}

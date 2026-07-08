@@ -4,7 +4,7 @@ import { useState } from "react";
 import { HoneypotField } from "@/components/honeypot-field";
 import { TurnstileField } from "@/components/turnstile-field";
 import { cn } from "@/lib/cn";
-import { guardFormSubmit } from "@/lib/form-guard";
+import { submitLead } from "@/lib/leads-client";
 
 interface FormState {
   name: string;
@@ -53,14 +53,22 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
     if (Object.keys(nextErrors).length > 0) return;
 
     setSubmitting(true);
-    const guard = await guardFormSubmit({ honeypot, turnstileToken });
+    const result = await submitLead({
+      formType: "newsletter",
+      name: values.name.trim(),
+      phone: values.phone.trim() || undefined,
+      email: values.email.trim(),
+      honeypot,
+      turnstileToken,
+      extra: { whatsappOptIn: values.whatsapp },
+    });
     setSubmitting(false);
-    if (guard.bot) {
+    if (result.bot) {
       setSubmitted(true);
       return;
     }
-    if (!guard.ok) {
-      setGuardError(guard.error ?? "Unable to subscribe. Please try again.");
+    if (!result.ok) {
+      setGuardError(result.error ?? "Unable to subscribe. Please try again.");
       return;
     }
 

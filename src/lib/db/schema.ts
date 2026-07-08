@@ -139,3 +139,30 @@ export const catalogUnits = sqliteTable(
     index("catalog_units_property_type_idx").on(table.propertyType),
   ],
 );
+export const leads = sqliteTable(
+  "leads",
+  {
+    id: text("id").primaryKey(),
+    createdAt: text("created_at").notNull(),
+    formType: text("form_type").notNull(),
+    name: text("name"),
+    email: text("email"),
+    phone: text("phone"),
+    country: text("country"),
+    message: text("message"),
+    projectSlug: text("project_slug"),
+    pagePath: text("page_path"),
+    payload: text("payload"),
+    turnstileOk: integer("turnstile_ok", { mode: "boolean" })
+      .notNull()
+      .default(false),
+    ghlStatus: text("ghl_status").notNull().default("pending"),
+    ghlContactId: text("ghl_contact_id"),
+    ghlAttempts: integer("ghl_attempts").notNull().default(0),
+    ghlLastError: text("ghl_last_error"),
+  },
+  (table) => [
+    index("leads_ghl_status_idx").on(table.ghlStatus),
+    index("leads_created_at_idx").on(table.createdAt),
+  ],
+);

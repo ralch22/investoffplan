@@ -9,6 +9,7 @@ import { resolveBrochureUrl } from "@/lib/brochure";
 
 interface ProjectDetailCtasProps {
   projectName: string;
+  projectSlug?: string;
   whatsapp: string;
   brochureUrl?: string;
   videoUrl?: string;
@@ -16,6 +17,7 @@ interface ProjectDetailCtasProps {
 
 export function ProjectDetailCtas({
   projectName,
+  projectSlug,
   whatsapp,
   brochureUrl,
   videoUrl,
@@ -113,6 +115,7 @@ export function ProjectDetailCtas({
         open={brochureOpen}
         onClose={() => setBrochureOpen(false)}
         projectName={projectName}
+        projectSlug={projectSlug}
         brochureUrl={brochureUrl || "#brochure-request"}
         whatsapp={whatsapp}
       />

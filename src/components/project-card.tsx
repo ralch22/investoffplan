@@ -167,6 +167,7 @@ export function ProjectCard({
         open={brochureOpen}
         onClose={() => setBrochureOpen(false)}
         projectName={project.name}
+        projectSlug={project.slug}
         brochureUrl={brochureUrl ?? "#brochure-request"}
         whatsapp={catalog?.whatsapp ?? project.whatsapp}
       />

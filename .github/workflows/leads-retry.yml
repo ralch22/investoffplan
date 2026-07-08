@@ -1,0 +1,27 @@
+name: Leads retry
+
+# Re-forwards stored leads whose GoHighLevel delivery is pending/failed/skipped.
+# Required GitHub repository secret:
+#   - LEADS_RETRY_TOKEN  (must match the worker secret of the same name)
+# No-ops cleanly while GHL secrets are not configured on the worker.
+
+on:
+  schedule:
+    # Every 6 hours
+    - cron: "17 */6 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retry lead forwarding
+        run: |
+          status=$(curl -s -o /tmp/body -w "%{http_code}" -X POST \
+            -H "x-retry-token: ${{ secrets.LEADS_RETRY_TOKEN }}" \
+            https://investoffplan-preview.emerge-digital.workers.dev/api/leads/retry)
+          cat /tmp/body
+          if [ "$status" != "200" ]; then
+            echo "Retry endpoint returned $status" >&2
+            exit 1
+          fi

@@ -6,7 +6,7 @@ import { TurnstileField } from "@/components/turnstile-field";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
-import { guardFormSubmit } from "@/lib/form-guard";
+import { submitLead } from "@/lib/leads-client";
 
 interface FormState {
   email: string;
@@ -73,36 +73,33 @@ export function ContactForm() {
     if (Object.keys(nextErrors).length > 0) return;
 
     setSubmitting(true);
-    const guard = await guardFormSubmit({ honeypot, turnstileToken });
+    const result = await submitLead({
+      formType: "contact",
+      email: values.email.trim(),
+      message: `${values.subject.trim()}\n\n${values.message.trim()}`,
+      honeypot,
+      turnstileToken,
+    });
     setSubmitting(false);
-    if (guard.bot) {
+    if (result.bot) {
       setSubmitted(true);
       return;
     }
-    if (!guard.ok) {
-      setGuardError(guard.error ?? "Unable to submit. Please try again.");
+    if (!result.ok) {
+      setGuardError(result.error ?? "Unable to submit. Please try again.");
       return;
     }
 
-    const body = [
-      `Email: ${values.email.trim()}`,
-      `Subject: ${values.subject.trim()}`,
-      "",
-      values.message.trim(),
-    ].join("\n");
-
     trackEvent(ANALYTICS_EVENTS.CONTACT_SUBMIT, { form: "contact_page" });
-
-    window.location.href = `mailto:admin@investoffplan.com?subject=${encodeURIComponent(values.subject.trim())}&body=${encodeURIComponent(body)}`;
     setSubmitted(true);
   }
 
   if (submitted) {
     return (
       <div className="mt-6 rounded-xl border border-border bg-surface-alt p-6 text-center">
-        <p className="font-semibold text-text-dark">Thanks — your email client should open shortly.</p>
+        <p className="font-semibold text-text-dark">Thanks — your message has been sent.</p>
         <p className="mt-2 text-sm text-muted">
-          If it didn&apos;t open, email us at admin@investoffplan.com
+          Our team will get back to you shortly. You can also email admin@investoffplan.com
         </p>
         <button
           type="button"
