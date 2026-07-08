@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
+import { HeroSearch } from "@/components/hero-search";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { getAreas, getSiteStats } from "@/lib/catalog";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
@@ -54,7 +55,22 @@ export default async function ArabicHomePage() {
               projectCount: stats.projectCount.toLocaleString(),
             })}
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8">
+            <HeroSearch
+              locale="ar"
+              placeholder={dict.serp.filters.searchPlaceholder}
+              searchLabel={dict.serp.filters.search}
+              popularLabel="الأكثر بحثاً:"
+              quickFilters={[
+                { label: "شقق", href: "/projects?type=apartment" },
+                { label: "فلل", href: "/projects?type=villa" },
+                { label: "إعمار", href: "/developers/emaar-properties" },
+                { label: "قرية جميرا الدائرية", href: "/areas/jumeirah-village-circle" },
+                { label: "أقل من مليون درهم", href: "/projects?maxP=1000000" },
+              ]}
+            />
+          </div>
+          <div className="mt-6 flex flex-wrap gap-3">
             <PrimaryButton href="/projects">
               {dict.home.browseAllProperties}
             </PrimaryButton>

@@ -3,20 +3,39 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
+import { localePath, type Locale } from "@/i18n/config";
 
-const QUICK_FILTERS = [
+interface QuickFilter {
+  label: string;
+  href: string;
+}
+
+const DEFAULT_QUICK_FILTERS: readonly QuickFilter[] = [
   { label: "Apartments", href: "/projects?type=apartment" },
   { label: "Villas", href: "/projects?type=villa" },
   { label: "Emaar", href: "/developers/emaar-properties" },
   { label: "JVC", href: "/areas/jumeirah-village-circle" },
   { label: "Under AED 1M", href: "/projects?maxP=1000000" },
-] as const;
+];
 
 interface HeroSearchProps {
   className?: string;
+  /** Drives route localization — "ar" routes go to /ar/*. */
+  locale?: Locale;
+  placeholder?: string;
+  searchLabel?: string;
+  popularLabel?: string;
+  quickFilters?: readonly QuickFilter[];
 }
 
-export function HeroSearch({ className }: HeroSearchProps) {
+export function HeroSearch({
+  className,
+  locale = "en",
+  placeholder = "Search by project, developer, or area",
+  searchLabel = "Search",
+  popularLabel = "Popular:",
+  quickFilters = DEFAULT_QUICK_FILTERS,
+}: HeroSearchProps) {
   const router = useRouter();
   const [query, setQuery] = useState("");
 
@@ -24,7 +43,8 @@ export function HeroSearch({ className }: HeroSearchProps) {
     e.preventDefault();
     const params = new URLSearchParams();
     if (query.trim()) params.set("q", query.trim());
-    router.push(`/projects${params.toString() ? `?${params}` : ""}`);
+    const qs = params.toString() ? `?${params}` : "";
+    router.push(localePath(locale, `/projects${qs}`));
   }
 
   return (
@@ -46,25 +66,25 @@ export function HeroSearch({ className }: HeroSearchProps) {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by project, developer, or area"
+            placeholder={placeholder}
             className="iop-input h-12 flex-1 border-0 bg-transparent ps-10 shadow-none focus:shadow-none"
-            aria-label="Search properties"
+            aria-label={placeholder}
           />
         </div>
         <button
           type="submit"
           className="iop-btn-press focus-ring h-12 shrink-0 rounded-xl bg-brand px-6 text-sm font-semibold text-white hover:bg-brand-dark"
         >
-          Search
+          {searchLabel}
         </button>
       </form>
       <div className="mt-3 flex flex-wrap gap-2">
-        <span className="self-center text-xs font-medium text-white/70">Popular:</span>
-        {QUICK_FILTERS.map((chip) => (
+        <span className="self-center text-xs font-medium text-white/70">{popularLabel}</span>
+        {quickFilters.map((chip) => (
           <button
             key={chip.label}
             type="button"
-            onClick={() => router.push(chip.href)}
+            onClick={() => router.push(localePath(locale, chip.href))}
             className="iop-btn-press focus-ring rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur-sm transition hover:border-white/50 hover:bg-white/20"
           >
             {chip.label}
