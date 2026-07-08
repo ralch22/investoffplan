@@ -148,16 +148,15 @@ export async function executeTool(
       case "search_knowledge": {
         if (!ctx.searchBinding) return "Knowledge base unavailable.";
         const folder = typeof args.folder === "string" ? args.folder : undefined;
+        // Folder becomes a query hint — the metadata filter shape proved
+        // brittle against the binding (verified retrieval is strong without it).
+        const query = folder
+          ? `${String(args.query ?? "")} (${folder})`
+          : String(args.query ?? "");
         const res = await ctx.searchBinding.search({
-          messages: [{ role: "user", content: String(args.query ?? "") }],
+          messages: [{ role: "user", content: query }],
           ai_search_options: {
-            retrieval: {
-              retrieval_type: "hybrid",
-              max_num_results: 6,
-              ...(folder
-                ? { filters: { type: "eq", key: "folder", value: `${folder}/` } }
-                : {}),
-            },
+            retrieval: { retrieval_type: "hybrid", max_num_results: 6 },
           },
         });
         const chunks = (res.data ?? [])

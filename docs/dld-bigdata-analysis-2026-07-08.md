@@ -37,3 +37,44 @@ Join feasibility to our 725-project catalog:
 - Yields here compare 2025 sale medians vs 2025 rent medians per area; production should match ready-unit sales to rents (off-plan sale ≠ current rent).
 - **Provenance/licensing: this folder is shared from a third party.** DLD open data is redistributable under Dubai Data Law, but confirm the specific dataset's redistribution terms before publishing derived figures — ideally re-pull from dubaipulse.gov.ae directly for a clean licensed chain.
 - Dec 2025 is a partial-month export (lower counts).
+
+---
+
+## GROUNDING UPDATE (2026-07-08): BelowOP already built this — reuse, don't rebuild
+
+Checked the Obsidian vault + BelowOP repo (`ralch22/belowop-demo`). BelowOP **already productionized the exact DLD anonymized-aggregate layer** this analysis was heading toward:
+- `lib/dld.ts` (pure math, unit-tested, portable to Cloudflare): PII tripwire (`detectPiiColumns`), `saleStats`, gross/service-charge/net yields, `ppsqft`, confidence scoring, and — critically — **`AREA_ALIASES` + `areaKey()`, the DLD-formal→marketing-name crosswalk I flagged as "needs building"**. It already maps `DUBAI SOUTH DUBAI WORLD CENTRAL → DUBAI SOUTH` (our #1 catalog area), `AL BARSHA SOUTH FOURTH → JVC`, etc.
+- `dld_area_stats` table + `lib/area-insights.ts` (cached serving) + `scripts/dld-aggregate.ts` (ETL) + coverage/verify QA scripts.
+
+**Two hard lessons from BelowOP (adopt):**
+1. The **developer prefix-join is unsafe** — `dld_developers` (403 rows) holds only sub-entities, not brands; it attaches the wrong legal entity. BelowOP leaves developer trust sections absent. (My own test independently confirmed: 16/213 dev match.)
+2. **PII governance**: some DLD exports are owner-identity-enriched. Never ingest/display counterparty PII in the public app — drop it at ingest.
+
+**Rami has full purchase-level DLD in BigQuery** (richer than this CSV folder, which had 5k-capped top-level samples). That is the PII-enriched source the guard exists for.
+
+### Revised recommendation (supersedes "build a pipeline from scratch")
+1. **Port `lib/dld.ts` from BelowOP to IOP** (pure functions; reuse PII guard + saleStats + yields + AREA_ALIASES + mappers).
+2. **Adopt the `dld_area_stats` schema** in IOP's D1.
+3. **Source from BigQuery, not the CSV folder** — write anonymized-AGGREGATE SQL (median price, AED/sqft, volume, gross/net yield, appreciation, per area/project/beds), PII columns never selected. BigQuery MCP needs auth (Rami runs it or grants access; I'll author the SQL).
+4. **Skip the developer join** (unsafe); keep sold-history + liquidity + yield on PDPs/area pages + the comparison engine.
+5. Provenance: confirm redistribution terms; DLD open data is republishable but re-pull from a clean licensed chain (BigQuery-of-record) before publishing derived figures.
+
+---
+
+## PROTOTYPE RUN on full local dataset + BigQuery source (2026-07-08)
+
+Full data confirmed: **267,687 transactions + 1,048,619 Ejari rent contracts (2025)**. Also loaded into **BigQuery `uae-data-478407.google_drive`** (the source-of-record for the ETL once the connector is authorized).
+
+Ran BelowOP's method (areaKey crosswalk + saleStats + grossYield + confidence) over the full set → produced the real `dld_area_stats` for our catalog. Sample (high-confidence areas):
+
+| area | sales | median price | AED/sqft | median rent | gross yield |
+|---|---|---|---|---|---|
+| Jumeirah Village Circle | 18,223 | 1,018,000 | 1,472 | 70,000 | **6.9%** |
+| Business Bay | 13,504 | 1,658,185 | 2,449 | 100,000 | **6.0%** |
+| Dubai Marina | 5,236 | 2,400,000 | 2,637 | 123,670 | **5.2%** |
+| Downtown Dubai | 3,941 | 3,100,000 | 2,987 | 185,000 | **6.0%** |
+| Bukadra | 3,632 | 2,119,482 | 2,470 | 92,950 | **4.4%** |
+
+**Coverage of our 94 catalog areas** (with a minimal 6-entry crosswalk): **28 areas get high-confidence sale stats, 8 get yields.** The matched 28 are the high-volume markets (JVC 18k, Business Bay 13k, Marina, Downtown) = the bulk of catalog value. Expanding the crosswalk to BelowOP's full `AREA_ALIASES` (~25 entries) + adding project-level joins lifts coverage materially. Rent-side coverage is thinner than sales (Ejari records some sub-communities under parents) — matches BelowOP's observation; net yields need `Oa_Service_Charges` (not in this export).
+
+**Bottom line: the enrichment lane is proven on real data and free.** Next = port `lib/dld.ts`, adopt `dld_area_stats` in D1, and run the ETL from BigQuery `uae-data-478407.google_drive` (anonymized aggregates only).
