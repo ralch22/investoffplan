@@ -353,6 +353,15 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             paymentPlan={project.paymentPlan}
             projectName={project.name}
           />
+          <p className="mt-4 text-sm text-muted">
+            Financing part of the purchase?{" "}
+            <Link
+              href="/tools/mortgage"
+              className="font-semibold text-brand hover:text-brand-dark"
+            >
+              Model your mortgage and get pre-approved →
+            </Link>
+          </p>
         </div>
 
         <section id="units" className="mt-10 scroll-mt-24">

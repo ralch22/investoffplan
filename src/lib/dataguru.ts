@@ -46,6 +46,15 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     pfFeature: "Residential Insights",
   },
   {
+    slug: "mortgage",
+    title: "Mortgage Calculator",
+    description:
+      "Model repayments, cash-to-close with DLD fees, and stress-tested affordability — then request pre-approval.",
+    href: "/tools/mortgage",
+    pfHref: "https://www.propertyfinder.ae/en/mortgages",
+    pfFeature: "Mortgage tools",
+  },
+  {
     slug: "new-projects",
     title: "New Projects",
     description:

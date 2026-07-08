@@ -13,6 +13,14 @@ const MAIN_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
+const COLLECTION_LINKS = [
+  { href: "/collections/waterfront", label: "Waterfront Projects" },
+  { href: "/collections/branded", label: "Branded Residences" },
+  { href: "/collections/under-2m", label: "Under AED 2M" },
+  { href: "/collections/dubai", label: "Dubai Off-Plan" },
+  { href: "/collections/ras-al-khaimah", label: "Ras Al Khaimah" },
+];
+
 const GUIDE_LINKS = [
   { href: "/guides/why-invest-off-plan-dubai", label: "Buying Off-Plan" },
   { href: "/developers", label: "Finding the Right Developer" },
@@ -50,23 +58,42 @@ export function SiteFooter() {
             </div>
           </div>
 
-          {/* Right: guides + contact */}
-          <div className="px-8 py-12">
-            <p className="text-xs font-semibold uppercase tracking-widest text-brand">
-              Guides
-            </p>
-            <ul className="mt-4 space-y-2">
-              {GUIDE_LINKS.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/70 transition hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Right: guides + collections */}
+          <div className="grid gap-10 px-8 py-12 sm:grid-cols-2">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-brand">
+                Guides
+              </p>
+              <ul className="mt-4 space-y-2">
+                {GUIDE_LINKS.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-white/70 transition hover:text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-widest text-brand">
+                Collections
+              </p>
+              <ul className="mt-4 space-y-2">
+                {COLLECTION_LINKS.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-white/70 transition hover:text-white"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 

@@ -3,6 +3,7 @@ import { getAreas, getDevelopers, getCatalogApi } from "@/lib/catalog";
 import { GUIDE_CARDS } from "@/lib/figma-copy";
 import { getNewsArticles } from "@/content/articles";
 import { FAQ_TOPICS } from "@/content/faq";
+import { COLLECTION_PAGES } from "@/lib/collections";
 
 let base: string = process.env.NEXT_PUBLIC_SITE_URL ?? "https://investoffplan-preview.emerge-digital.workers.dev";
 if (!base || base.includes("preview") || base.includes("emerge-digital")) {
@@ -31,6 +32,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/tools/price-map",
     "/tools/communities",
     "/tools/rent-vs-buy",
+    "/tools/mortgage",
     "/tools/residential",
     "/tools/payment",
     "/privacy-policy",
@@ -81,6 +83,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  const collectionRoutes = COLLECTION_PAGES.map((page) => ({
+    url: `${BASE}/collections/${page.slug}`,
+    lastModified: catalogUpdated,
+    changeFrequency: "weekly" as const,
+    priority: 0.6,
+  }));
+
   const faqRoutes = FAQ_TOPICS.map((topic) => ({
     url: `${BASE}/faq/${topic.slug}`,
     lastModified: new Date(),
@@ -95,6 +104,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...areaRoutes,
     ...guideRoutes,
     ...newsRoutes,
+    ...collectionRoutes,
     ...faqRoutes,
   ];
 }
