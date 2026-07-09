@@ -254,17 +254,60 @@ export function pickImages(
   return out;
 }
 
+// Hosts we WANT for the PDP media embed even though some (youtube) are blocked
+// as general scrape/image sources — an embeddable video/tour link is the goal.
+const EMBED_MEDIA_HOSTS = [
+  "youtube.com",
+  "youtu.be",
+  "vimeo.com",
+  "player.vimeo.com",
+  "matterport.com",
+  "my.matterport.com",
+  "kuula.co",
+];
+
+function isEmbedMediaUrl(u: string): boolean {
+  try {
+    const h = new URL(u).hostname.toLowerCase().replace(/^www\./, "");
+    return EMBED_MEDIA_HOSTS.some((b) => h === b || h.endsWith(`.${b}`));
+  } catch {
+    return false;
+  }
+}
+
 export function pickVideoUrl(
   sources: FirecrawlSource[],
   facts: Record<string, unknown> | null,
 ): string | undefined {
   const fromFacts =
     typeof facts?.videoUrl === "string" ? facts.videoUrl : undefined;
-  if (fromFacts && allowedUrl(fromFacts)) return fromFacts;
+  // Allow embeddable hosts (youtube/vimeo) here even though they're blocked as
+  // scrape sources — a video link is exactly what the media section renders.
+  if (fromFacts && (allowedUrl(fromFacts) || isEmbedMediaUrl(fromFacts)))
+    return fromFacts;
 
   for (const s of sources) {
     const u = s.url.toLowerCase();
     if (u.includes("vimeo.com") || u.includes("/video")) return s.url;
+  }
+  return undefined;
+}
+
+const TOUR_URL_RE =
+  /matterport\.com|kuula\.co|\/(?:360|virtual-tour|3d-tour|walkthrough)(?:[/?]|$)/i;
+
+/** Matterport / 360 / virtual-tour link from official pages (embeddable or link-out). */
+export function pickTourUrl(
+  sources: FirecrawlSource[],
+  facts: Record<string, unknown> | null,
+): string | undefined {
+  const fromFacts =
+    typeof facts?.virtualTourUrl === "string" ? facts.virtualTourUrl : undefined;
+  if (fromFacts && (allowedUrl(fromFacts) || isEmbedMediaUrl(fromFacts)))
+    return fromFacts;
+
+  for (const s of sources) {
+    if (TOUR_URL_RE.test(s.url)) return s.url;
   }
   return undefined;
 }

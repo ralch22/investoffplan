@@ -4,6 +4,7 @@ import {
   MAX_SCRAPES_PER_ENTITY,
   pickBrochureUrl,
   pickImages,
+  pickTourUrl,
   pickVideoUrl,
   searchSources,
 } from "./firecrawl";
@@ -22,6 +23,7 @@ const PROSE_FACT_FIELDS = new Set([
   "imageUrls",
   "brochureUrl",
   "videoUrl",
+  "virtualTourUrl",
 ]);
 
 const PER_ENTITY_BUDGET_MS = 40_000;
@@ -51,6 +53,7 @@ function projectFactSchema(): Record<string, unknown> {
       location: { type: "string" },
       brochureUrl: { type: "string" },
       videoUrl: { type: "string" },
+      virtualTourUrl: { type: "string" },
       imageUrls: { type: "array", items: { type: "string" } },
     },
     additionalProperties: false,
@@ -65,7 +68,8 @@ function extractPrompt(project: Project): string {
   return (
     `Extract only verifiable STRUCTURAL facts about the off-plan project "${project.name}" ` +
     `by ${project.developer} in ${project.area}. Include brochureUrl or videoUrl if found on official ` +
-    `developer pages. Include imageUrls: absolute URLs of official render/gallery/exterior photos ` +
+    `developer pages. Include virtualTourUrl if a Matterport, 360°, or virtual-tour/walkthrough link is found. ` +
+    `Include imageUrls: absolute URLs of official render/gallery/exterior photos ` +
     `of the project (not logos, icons, or agent portraits). Do NOT include prices, contact details, ` +
     `agent names, or marketing copy.`
   );
@@ -184,6 +188,7 @@ export async function enrichProject(
   const summary = synthesizeFromFacts(project, merged);
   const brochureUrl = pickBrochureUrl(foundSources ?? [], extracted);
   const videoUrl = pickVideoUrl(foundSources ?? [], extracted);
+  const virtualTourUrl = pickTourUrl(foundSources ?? [], extracted);
   const images = pickImages(extracted);
 
   const hasContent =
@@ -191,6 +196,7 @@ export async function enrichProject(
     Object.keys(facts).length > 0 ||
     brochureUrl ||
     videoUrl ||
+    virtualTourUrl ||
     images.length > 0;
   if (!hasContent) return null;
 
@@ -201,6 +207,7 @@ export async function enrichProject(
     sources,
     brochureUrl,
     videoUrl,
+    ...(virtualTourUrl ? { virtualTourUrl } : {}),
     ...(images.length > 0 ? { images } : {}),
     enrichedAt: new Date().toISOString(),
   };
