@@ -31,6 +31,7 @@ import { ProjectGallery } from "@/components/project-gallery";
 import { getEnrichment } from "@/lib/enrichments";
 import { DldAreaStatsBand } from "@/components/dld-area-stats";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
+import { getProjectComparisonLinks } from "@/lib/project-compare";
 import {
   cityLabel,
   formatPrice,
@@ -123,6 +124,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const minPrice = Math.min(...project.units.map((u) => u.launchPriceAed));
   // UAE grants a 10-year Golden Visa for property investment >= AED 2M.
   const goldenVisaEligible = project.units.some((u) => u.launchPriceAed >= 2_000_000);
+  const projectCompareLinks = await getProjectComparisonLinks(project);
   const catalogGallery =
     project.imageGallery?.length
       ? project.imageGallery
@@ -426,6 +428,21 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               areaName={project.area.split(",")[0]}
               source={dldSource.source}
             />
+          </div>
+        ) : null}
+
+        {projectCompareLinks.length > 0 ? (
+          <div className="mt-6 flex flex-wrap items-center gap-2">
+            <span className="text-sm font-semibold text-text-dark">Compare {project.name} with:</span>
+            {projectCompareLinks.map((c) => (
+              <Link
+                key={c.pairSlug}
+                href={`/compare-projects/${c.pairSlug}`}
+                className="iop-btn-press focus-ring rounded-full border border-border bg-white px-3 py-1.5 text-xs font-medium text-text-dark transition hover:border-brand hover:text-brand"
+              >
+                {c.otherName}
+              </Link>
+            ))}
           </div>
         ) : null}
 
