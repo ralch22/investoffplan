@@ -24,7 +24,21 @@ const CATALOG = join(process.cwd(), "data", "catalog.json");
 const DLD = join(process.cwd(), "data", "dld-area-stats.json");
 const DLD_SRC = join(process.cwd(), "src", "lib", "dld.ts");
 const OUT = join(process.cwd(), "data", "community-editorial-generated.json");
+const RESEARCH = join(process.cwd(), "data", "community-research.json");
 const MODEL = process.env.EDITORIAL_MODEL || "claude-haiku-4-5-20251001";
+
+/** Grounded lifestyle facts scraped by research-community-facts.ts, by slug. */
+function loadResearch(): Map<string, Record<string, string[]>> {
+  if (!existsSync(RESEARCH)) return new Map();
+  const arr = JSON.parse(readFileSync(RESEARCH, "utf8")) as Array<{ slug: string; facts: Record<string, string[]> }>;
+  return new Map(arr.map((r) => [r.slug, r.facts]));
+}
+
+function researchBlock(facts?: Record<string, string[]>): string {
+  if (!facts || Object.keys(facts).length === 0) return "";
+  const lines = Object.entries(facts).map(([k, v]) => `${k}: ${v.join("; ")}`);
+  return `\n\nRESEARCH FACTS (scraped from real area-guide pages — you MAY name these specific schools, roads, stations, malls, and clinics):\n${lines.join("\n")}`;
+}
 
 interface Unit { beds: number; sqftMin?: number; launchPriceAed?: number; propertyType?: string }
 interface Project {
@@ -92,23 +106,26 @@ function factsFor(c: Community, aliases: Record<string, string>, dld: any, nearb
   ].filter(Boolean).join("\n");
 }
 
-function buildPrompt(c: Community, facts: string): string {
+function buildPrompt(c: Community, facts: string, research: string): string {
+  const namingRule = research
+    ? `- You MAY name the specific schools, roads, metro/tram stations, malls, supermarkets, and clinics that appear in RESEARCH FACTS — they are scraped from real area-guide pages. Do NOT name any not listed there. Do NOT invent exact distances, commute minutes, or any price/number not in FACTS.`
+    : `- Do NOT invent: specific school names, hospital/clinic names, mall or retail names, metro/tram station names, developer names not in FACTS, exact distances, exact commute minutes, or any price/number not in FACTS. Where you lack a specific fact, speak generally or return an EMPTY ARRAY for that section.`;
   return `You are the content editor for invest off-plan, a UAE off-plan property intelligence platform. Voice: expert, factual, investor- and resident-focused, UK English, no hype ("luxurious lifestyle awaits" is banned).
 
 Write original editorial for the community "${firstSegment(c.name)}" in ${c.cityLabel}, as STRICT JSON with this exact shape:
 {"intro":["para","para"],"lifestyle":["para"],"transport":["para"],"schools":["para"],"whoItSuits":["para"],"faq":[{"q":"","a":""}]}
 
 HARD RULES:
-- Use ONLY the FACTS below plus broadly-known, STABLE geography of this community (its general location within ${c.cityLabel} and road orientation).
-- Do NOT invent: specific school names, hospital/clinic names, mall or retail names, metro/tram station names, developer names not in FACTS, exact distances, exact commute minutes, or any price/number not in FACTS.
-- Where you lack a specific fact, speak generally ("schooling is served by the wider district", "road links toward central ${c.cityLabel}") — or return an EMPTY ARRAY for that section. An empty section is far better than a guessed one.
+- Use ONLY the FACTS and RESEARCH FACTS below plus broadly-known, STABLE geography of this community.
+${namingRule}
+- An empty section array is far better than a guessed one.
 - intro: 2 paragraphs, always present, grounded in the FACTS (inventory, price range, property mix, developers, handover, DLD data if present).
-- lifestyle/transport/schools/whoItSuits: 1 paragraph each, or [] if you cannot ground it.
-- faq: 2-3 Q&A grounded in FACTS. [] if none.
+- lifestyle/transport/schools/whoItSuits: 1 paragraph each — weave in the RESEARCH FACTS where relevant — or [] if you cannot ground it.
+- faq: 2-3 Q&A grounded in FACTS/RESEARCH. [] if none.
 - Each paragraph 40-90 words. Output ONLY the JSON, no preamble, no code fences.
 
 FACTS:
-${facts}`;
+${facts}${research}`;
 }
 
 function extractJson(raw: string): any | null {
@@ -132,8 +149,8 @@ function strArr(v: unknown): string[] {
   return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string" && x.trim().length > 0) : [];
 }
 
-function generateOne(c: Community, facts: string, nearby: string[]): AreaEditorial | null {
-  const prompt = buildPrompt(c, facts);
+function generateOne(c: Community, facts: string, nearby: string[], research: string): AreaEditorial | null {
+  const prompt = buildPrompt(c, facts, research);
   for (let attempt = 0; attempt < 2; attempt++) {
     let raw: string;
     try {
@@ -198,19 +215,33 @@ function main() {
     if (pts.length) { c.lat = pts.reduce((a, b) => a + b.lat, 0) / pts.length; c.lng = pts.reduce((a, b) => a + b.lng, 0) / pts.length; }
   }
 
+  // --regen: re-generate communities that now have scraped RESEARCH FACTS,
+  // upgrading their conservative (intro-only) editorial with grounded specifics.
+  const regen = process.argv.includes("--regen");
+  const researchMap = loadResearch();
+
   const handcrafted = new Set(AREA_EDITORIALS.map((e) => e.slug));
   const existing: AreaEditorial[] = existsSync(OUT) ? JSON.parse(readFileSync(OUT, "utf8")) : [];
-  const doneSlugs = new Set([...handcrafted, ...existing.map((e) => e.slug)]);
+  const existingSlugs = new Set(existing.map((e) => e.slug));
+  const doneSlugs = new Set([...handcrafted, ...existingSlugs]);
 
-  let targets = communities.filter((c) => !doneSlugs.has(c.slug));
-  if (onlySlug) targets = communities.filter((c) => c.slug === onlySlug);
+  let targets: Community[];
+  if (onlySlug) {
+    targets = communities.filter((c) => c.slug === onlySlug);
+  } else if (regen) {
+    // Only communities with research facts that aren't hand-crafted.
+    targets = communities.filter((c) => researchMap.has(c.slug) && !handcrafted.has(c.slug));
+  } else {
+    targets = communities.filter((c) => !doneSlugs.has(c.slug));
+  }
   // Bigger communities first (more traffic, better-known → safer grounding).
   targets.sort((a, b) => b.projects.length - a.projects.length);
   if (limit) targets = targets.slice(0, limit);
 
-  console.log(`[editorial] ${targets.length} communities to generate (model ${MODEL}); ${doneSlugs.size} already covered`);
+  console.log(`[editorial] ${targets.length} communities to ${regen ? "REGEN" : "generate"} (model ${MODEL}); ${doneSlugs.size} covered, ${researchMap.size} researched`);
 
   const out = [...existing];
+  const idxBySlug = new Map(out.map((e, i) => [e.slug, i]));
   let ok = 0, skipped = 0;
   for (const [i, c] of targets.entries()) {
     const nearby = communities
@@ -219,9 +250,15 @@ function main() {
       .slice(0, 4)
       .map((o) => o.name);
     const facts = factsFor(c, aliases, dld, nearby);
-    process.stdout.write(`  • ${c.slug} (${c.projects.length} proj) … `);
-    const result = generateOne(c, facts, nearby);
-    if (result) { out.push(result); ok++; console.log("ok"); } else { skipped++; console.log("skipped"); }
+    const research = researchBlock(researchMap.get(c.slug));
+    process.stdout.write(`  • ${c.slug} (${c.projects.length} proj${research ? ", researched" : ""}) … `);
+    const result = generateOne(c, facts, nearby, research);
+    if (result) {
+      const at = idxBySlug.get(c.slug);
+      if (at != null) out[at] = result; // regen: replace in place
+      else { idxBySlug.set(c.slug, out.length); out.push(result); }
+      ok++; console.log("ok");
+    } else { skipped++; console.log("skipped"); }
     if ((i + 1) % 3 === 0 || i === targets.length - 1) {
       writeFileSync(OUT, `${JSON.stringify(out, null, 2)}\n`, "utf8");
       console.log(`[editorial] ${i + 1}/${targets.length} — ok=${ok} skipped=${skipped}`);
