@@ -67,7 +67,9 @@ const n = { img: 0, broch: 0, vid: 0, tour: 0, catImg: 0, catVid: 0, catBroch: 0
 
 for (const [slug, e] of Object.entries(enrichStore.projects)) {
   if (Array.isArray(e.images)) {
-    const clean = e.images.filter((u) => !isJunk(u));
+    // News-host photos (zawya press images etc.) are wrong-content risk in a
+    // project gallery — same class as the news-clip videoUrl bug.
+    const clean = e.images.filter((u) => !isJunk(u) && !NEWS_RE.test(u));
     n.img += e.images.length - clean.length;
     if (clean.length) e.images = clean;
     else delete e.images;
