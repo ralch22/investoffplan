@@ -70,20 +70,23 @@
 | Masterplan image | Yes | `masterPlanUrl` via PF scrape | **Met** (see catalog) |
 | Location map | Yes | Embed + Google Maps | P0 |
 | Living in [area] | Community scores | Link to `/areas/[slug]` | P1 |
-| Sold history | Yes | Requires PF resale API | P3 |
-| Resale count | Yes | Requires resale data | P3 |
+| Sold history | Yes | **DLD market band** on PDP + area page (median sold price/sqft, 2025 volume, monthly trend, per-bedroom) | **Met** (DLD open data, ~63% of catalog projects) |
+| Resale count | Yes | 2025 transaction volume per community (DLD) | **Met** |
+| Gross rental yield | No | Yes — median rent ÷ median sold price (DLD) | **Exceed** |
 | Sticky section nav | Implicit | `ProjectDetailNav` | **Done** |
 | Mobile CTA bar | Agent-led | Brochure + WhatsApp | **Exceed** |
 
 ### Exceed lanes (IOP-only)
 
+- **Decision platform on DLD open data** (the USP PF/opr.ae lack) — real 2025 sold prices, price/sqft, gross rental yield, per-bedroom breakdown, and monthly price trend on area pages + PDPs; `/market-data` hub + nav; **91 area-vs-area** and **66 project-vs-project** comparison pages with auto-verdicts; contextual pre-filled WhatsApp advisor CTAs on decision-stage pages. Anonymized aggregates only (no PII, no developer-name join).
 - **Off-Plan Advisor** — AI CX agent (Cloudflare AI Search + Workers AI) grounded on the live catalog; neither PF nor opr.ae has one
 - Compare up to 3 units with brochure status
-- Payment plan calculator on PDP
+- Payment plan calculator on PDP + mortgage calculator with animated figure
+- Golden-Visa eligibility flags on qualifying projects
 - Favorites without 8MB catalog download
 - D1 catalog API + weekly ingest
 - Turnstile on all lead forms
-- Guides / insights content hub
+- Guides content hub + unique AI-written PDP descriptions (zero PF phrasing)
 
 ### Developer LP (`/developers/[slug]`)
 
@@ -109,7 +112,7 @@
 | New Projects | `/en/new-projects` | `/projects` | **Exceed** (unit SERP + compare + brochures) |
 | Toolkit hub | Blog landing | `/tools` | **Done** |
 
-**Residual gaps (need licensed data):** PF rental heatmap values, tower resale/rent history, sold transactions on PDP.
+**Residual gaps (need licensed data):** ~~sold transactions on PDP~~ **CLOSED via DLD open data** (sold price/sqft/yield/volume on PDP + area pages, ~63% coverage). Still open: *tower-level* (vs community-level) resale/rent history, and PF's rental-heatmap map tiles — both would need building/tower-granular DLD ingestion (area×tower) or a paid feed.
 
 ---
 
