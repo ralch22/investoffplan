@@ -128,6 +128,9 @@ export function ProjectCard({
                 {project.name}
               </Link>
             </h3>
+            <p className="line-clamp-1 text-sm font-medium text-white/75">
+              {project.area.split(",").slice(0, 2).join(", ")}
+            </p>
             <p className="line-clamp-2 text-sm text-white/80">
               {formatBeds(unit.beds)} · {formatSqft(unit.sqftMin, unit.sqftMax)} ·{" "}
               {unit.propertyType}
@@ -234,6 +237,9 @@ function ListCard({
                   {project.name}
                 </Link>
               </h3>
+              <p className="mt-0.5 line-clamp-1 text-sm text-muted">
+                {project.area.split(",").slice(0, 2).join(", ")}
+              </p>
             </div>
             <div className="flex items-center gap-2">
               <FavoriteButton slug={project.slug} />

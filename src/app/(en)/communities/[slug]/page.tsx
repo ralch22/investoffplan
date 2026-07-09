@@ -200,8 +200,8 @@ export default async function CommunityDetailPage({ params }: PageProps) {
           </Link>
         </div>
         <p className="mt-2 text-sm text-muted">
-          {community.projectCount} projects · {community.unitCount.toLocaleString()} unit options
-          in {community.cityLabel}
+          {community.projectCount} {community.projectCount === 1 ? "project" : "projects"} ·{" "}
+          {community.unitCount.toLocaleString()} unit options in {community.cityLabel}
         </p>
 
         {projects.length === 0 ? (
@@ -294,7 +294,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
                 >
                   <p className="font-semibold">{item.name}</p>
                   <p className="mt-2 text-sm text-white/70">
-                    {item.projectCount} projects
+                    {item.projectCount} {item.projectCount === 1 ? "project" : "projects"}
                   </p>
                 </Link>
               ))}

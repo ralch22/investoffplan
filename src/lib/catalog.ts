@@ -212,6 +212,20 @@ export async function getFeaturedProjects(limit = 4) {
   return [...api.projects].filter((p) => p.isPremium).slice(0, limit);
 }
 
+/**
+ * Genuinely-latest launches: newest sales-start first (excluding the given
+ * slugs so the homepage doesn't show the same cards twice back-to-back —
+ * "Latest Launches" used to just repeat the Featured query).
+ */
+export async function getLatestLaunches(limit = 4, excludeSlugs: string[] = []) {
+  const api = await getCatalogApi();
+  const excluded = new Set(excludeSlugs);
+  return [...api.projects]
+    .filter((p) => p.salesStartDate && !excluded.has(p.slug))
+    .sort((a, b) => (b.salesStartDate ?? "").localeCompare(a.salesStartDate ?? ""))
+    .slice(0, limit);
+}
+
 export async function getSiteStats() {
   const api = await getCatalogApi();
   const prices = api.units.map((u) => u.launchPriceAed);

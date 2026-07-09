@@ -105,7 +105,8 @@ export const LOCATION_GUIDES: LocationGuide[] = [
       "Ranked by the share of a community's off-plan unit options that are villas, townhouses, penthouses or duplexes, among communities with at least 3 live projects.",
     rank: (all) =>
       all
-        .filter((c) => c.projectCount >= MIN_PROJECTS && c.familyShare > 0)
+        // Title promises Dubai — don't rank Abu Dhabi/Sharjah communities here.
+        .filter((c) => c.cityLabel === "Dubai" && c.projectCount >= MIN_PROJECTS && c.familyShare > 0)
         .sort((a, b) => b.familyShare - a.familyShare)
         .slice(0, 12)
         .map((c) => ({
@@ -147,7 +148,8 @@ export const LOCATION_GUIDES: LocationGuide[] = [
       "Ranked by the lowest off-plan launch price in each community, among communities with at least 3 live projects.",
     rank: (all) =>
       all
-        .filter((c) => c.projectCount >= MIN_PROJECTS && c.minPriceAed > 0)
+        // Title promises Dubai — don't rank Abu Dhabi/Sharjah communities here.
+        .filter((c) => c.cityLabel === "Dubai" && c.projectCount >= MIN_PROJECTS && c.minPriceAed > 0)
         .sort((a, b) => a.minPriceAed - b.minPriceAed)
         .slice(0, 12)
         .map((c) => ({

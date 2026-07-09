@@ -10,6 +10,7 @@ import { HomeYields } from "@/components/home-yields";
 import { DeveloperLogo } from "@/components/developer-logo";
 import {
   getFeaturedProjects,
+  getLatestLaunches,
   getSiteStats,
   getDevelopers,
 } from "@/lib/catalog";
@@ -76,7 +77,7 @@ export default async function HomePage() {
   const stats = await getSiteStats();
   const analytics = await getCatalogAnalytics();
   const featured = await getFeaturedProjects(6);
-  const latest = await getFeaturedProjects(4);
+  const latest = await getLatestLaunches(4, featured.map((p) => p.slug));
   const topAreas = (await getCommunities()).slice(0, 6);
   const areaImages = await Promise.all(topAreas.map((c) => getCommunityImage(c.slug)));
   const topDevelopers = (await getDevelopers()).slice(0, 8);

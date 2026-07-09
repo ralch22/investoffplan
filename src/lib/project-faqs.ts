@@ -1,5 +1,5 @@
 import type { Project } from "@/lib/types";
-import { formatBeds } from "@/lib/format";
+import { cityLabel, formatBeds } from "@/lib/format";
 
 /**
  * Generated, catalog-fact-grounded project FAQs — replaces rendering the
@@ -66,7 +66,7 @@ export function buildProjectFaqs(project: Project): Array<{ q: string; a: string
 
   faqs.push({
     q: `Who is the developer behind ${project.name}?`,
-    a: `${project.name} is developed by ${project.developer} in ${project.area}, ${project.city}. See the developer page for their full off-plan portfolio and track record on this platform.`,
+    a: `${project.name} is developed by ${project.developer} in ${project.area}, ${cityLabel(project.city)}. See the developer page for their full off-plan portfolio and track record on this platform.`,
   });
 
   return faqs;

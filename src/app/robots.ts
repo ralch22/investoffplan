@@ -11,9 +11,12 @@ export default function robots(): MetadataRoute.Robots {
       : {
           userAgent: "*",
           allow: "/",
-          // Keep API routes and the client-side compare tool out of the index.
-          // /compare is a draft utility page (share-link driven, no canonical content).
-          disallow: ["/api/", "/compare"],
+          // Keep API routes and the client-side unit-compare tool (share-link
+          // driven, no canonical content) out of the index. NOTE: this must NOT
+          // be a bare "/compare" — that prefix-blocks the /compare SEO hub,
+          // /compare/[pair], /compare-projects/* and /compare-developers/*
+          // (~825 sitemap URLs).
+          disallow: ["/api/", "/compare/units", "/compare?"],
         },
     sitemap: "https://investoffplan.com/sitemap.xml",
   };
