@@ -87,6 +87,16 @@ export function CommunityInsightsExplorer({ areas }: CommunityInsightsExplorerPr
               {area.unitCount} unit options · from{" "}
               {formatPrice(area.minPriceAed, "AED", { compact: true })}
             </p>
+            {area.grossYieldPct != null || area.medianSoldPpsqft != null ? (
+              <p className="mt-1 text-xs font-medium text-brand">
+                DLD 2025:
+                {area.grossYieldPct != null ? ` ${area.grossYieldPct}% gross yield` : ""}
+                {area.grossYieldPct != null && area.medianSoldPpsqft != null ? " ·" : ""}
+                {area.medianSoldPpsqft != null
+                  ? ` AED ${area.medianSoldPpsqft.toLocaleString()}/sqft sold`
+                  : ""}
+              </p>
+            ) : null}
             <div className="mt-3 flex flex-wrap gap-1.5">
               {area.lifestyles.slice(0, 3).map((tag) => {
                 const cat = LIFESTYLE_CATEGORIES.find((c) => c.slug === tag);

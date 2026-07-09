@@ -8,4 +8,8 @@ export interface CommunityInsightArea {
   unitCount: number;
   minPriceAed: number;
   lifestyles: LifestyleSlug[];
+  /** Real DLD 2025 gross rental yield %, when the community has sold+rent data. */
+  grossYieldPct?: number | null;
+  /** Real DLD 2025 median sold AED/sqft. */
+  medianSoldPpsqft?: number | null;
 }

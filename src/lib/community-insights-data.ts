@@ -3,20 +3,26 @@ import "server-only";
 import { getAreas } from "./catalog";
 import { inferLifestyles, type LifestyleSlug } from "./community-lifestyles";
 import type { CommunityInsightArea } from "./community-insights-shared";
+import { getAreaStats } from "./dld-area-stats";
 
 export type { CommunityInsightArea } from "./community-insights-shared";
 
 export async function getCommunityInsights(): Promise<CommunityInsightArea[]> {
   const areas = await getAreas();
-  return areas.map((area) => ({
-    slug: area.slug,
-    name: area.name,
-    cityLabel: area.cityLabel,
-    projectCount: area.projectCount,
-    unitCount: area.unitCount,
-    minPriceAed: area.minPriceAed,
-    lifestyles: inferLifestyles(area.slug, area.name),
-  }));
+  return areas.map((area) => {
+    const dld = getAreaStats(area.name);
+    return {
+      slug: area.slug,
+      name: area.name,
+      cityLabel: area.cityLabel,
+      projectCount: area.projectCount,
+      unitCount: area.unitCount,
+      minPriceAed: area.minPriceAed,
+      lifestyles: inferLifestyles(area.slug, area.name),
+      grossYieldPct: dld?.grossYieldPct ?? null,
+      medianSoldPpsqft: dld?.medianPpsqft ?? null,
+    };
+  });
 }
 
 export async function getAreasByLifestyle(
