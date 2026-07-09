@@ -32,11 +32,13 @@ function parseArgs(argv: string[]) {
   const maxIdx = argv.indexOf("--max");
   const max =
     maxIdx >= 0 && argv[maxIdx + 1] ? Number(argv[maxIdx + 1]) : undefined;
-  return { dryRun, limit, slug, premiumOnly, skipExisting, max };
+  // Target only projects with no catalog hero image (media backfill).
+  const imageLess = argv.includes("--image-less");
+  return { dryRun, limit, slug, premiumOnly, skipExisting, max, imageLess };
 }
 
 async function main() {
-  const { dryRun, limit, slug, premiumOnly, skipExisting, max } = parseArgs(
+  const { dryRun, limit, slug, premiumOnly, skipExisting, max, imageLess } = parseArgs(
     process.argv.slice(2),
   );
 
@@ -49,7 +51,8 @@ async function main() {
 
   const store = loadEnrichments();
 
-  const pool = premiumOnly ? PROJECTS.filter((p) => p.isPremium) : PROJECTS;
+  let pool = premiumOnly ? PROJECTS.filter((p) => p.isPremium) : PROJECTS;
+  if (imageLess) pool = pool.filter((p) => !p.imageUrl);
   // `limit` defines the universe (e.g. top-100 premium); `--skip-existing` then
   // removes already-enriched slugs so a killed run resumes without drifting past it.
   const universe = slug

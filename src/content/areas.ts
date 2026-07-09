@@ -1132,7 +1132,16 @@ export const AREA_EDITORIALS: AreaEditorial[] = [
   }
 ];
 
-const BY_SLUG = new Map(AREA_EDITORIALS.map((area) => [area.slug, area]));
+// Data-grounded editorial for the long-tail communities (generated from real
+// catalog + DLD facts by scripts/generate-community-editorial.ts). The
+// hand-crafted entries above always win on slug conflict.
+import generatedEditorial from "../../data/community-editorial-generated.json";
+
+const GENERATED = generatedEditorial as AreaEditorial[];
+
+const BY_SLUG = new Map<string, AreaEditorial>();
+for (const area of GENERATED) BY_SLUG.set(area.slug, area);
+for (const area of AREA_EDITORIALS) BY_SLUG.set(area.slug, area);
 
 export function getAreaEditorial(slug: string): AreaEditorial | undefined {
   return BY_SLUG.get(slug);
