@@ -4,6 +4,7 @@ import { getCommunities } from "@/lib/communities";
 import { getComparablePairSlugs } from "@/lib/area-compare";
 import { getComparableProjectSlugs } from "@/lib/project-compare";
 import { getComparableDeveloperSlugs } from "@/lib/developer-compare";
+import { LOCATION_GUIDES } from "@/lib/location-guides";
 import { GUIDE_CARDS } from "@/lib/figma-copy";
 import { getNewsArticles } from "@/content/articles";
 import { FAQ_TOPICS } from "@/content/faq";
@@ -26,6 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/communities",
     "/compare",
     "/compare/units",
+    "/locations",
     "/guides",
     "/faq",
     "/map",
@@ -98,6 +100,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  const locationGuideRoutes = LOCATION_GUIDES.map((g) => ({
+    url: `${BASE}/locations/${g.slug}`,
+    lastModified: catalogUpdated,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
   const guideRoutes = GUIDE_CARDS.filter((g) => g.href.startsWith("/guides/")).map((g) => ({
     url: `${BASE}${g.href}`,
     lastModified: new Date(),
@@ -129,7 +138,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Arabic mirror — full route tree now exists under /ar.
   const arStaticPaths = [
     "/ar", "/ar/about", "/ar/contact", "/ar/projects", "/ar/communities",
-    "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/compare",
+    "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/compare", "/ar/locations",
     "/ar/tools", "/ar/tools/mortgage", "/ar/tools/payment", "/ar/tools/rent-vs-buy",
     "/ar/tools/communities", "/ar/tools/price-map", "/ar/tools/residential",
   ];
@@ -149,7 +158,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const arDetailRoutes = [
     ...projectRoutes, ...areaRoutes, ...developerRoutes, ...guideRoutes,
     ...newsRoutes, ...collectionRoutes, ...faqRoutes, ...compareRoutes,
-    ...projectCompareRoutes,
+    ...projectCompareRoutes, ...locationGuideRoutes,
   ].map((r) => ({
     ...r,
     url: r.url.replace(`${BASE}/`, `${BASE}/ar/`),
@@ -166,6 +175,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...compareRoutes,
     ...projectCompareRoutes,
     ...developerCompareRoutes,
+    ...locationGuideRoutes,
     ...guideRoutes,
     ...newsRoutes,
     ...collectionRoutes,

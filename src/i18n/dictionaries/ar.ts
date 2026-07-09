@@ -8,6 +8,7 @@ export const ar: Dict = {
     "developers": "المطوّرون",
     "areas": "المجتمعات السكنية",
     "marketData": "قارن",
+    "locations": "المناطق",
     "map": "الخريطة",
     "guides": "الأدلة",
     "news": "الأخبار",

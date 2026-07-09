@@ -6,6 +6,7 @@ const dict = {
     "developers": "Developers",
     "areas": "Communities",
     "marketData": "Compare",
+    "locations": "Locations",
     "map": "Map",
     "guides": "Guides",
     "news": "News",

@@ -10,6 +10,7 @@ const MAIN_LINKS = [
   { href: "/projects", key: "projects" },
   { href: "/developers", key: "developers" },
   { href: "/communities", key: "areas" },
+  { href: "/locations", key: "locations" },
   { href: "/guides", key: "guides" },
   { href: "/news", key: "news" },
   { href: "/faq", key: "faq" },

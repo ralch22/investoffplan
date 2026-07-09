@@ -52,6 +52,21 @@ test.describe("Mortgage, areas, collections", () => {
     }
   });
 
+  test("location guide ranks communities and emits ItemList JSON-LD", async ({
+    page,
+  }) => {
+    await page.goto("/locations");
+    const firstGuide = page.locator('a[href^="/locations/"]').first();
+    await firstGuide.click();
+    await expect(page).toHaveURL(/\/locations\/[a-z-]+$/);
+    // Ranked list links into community pages.
+    await expect(page.locator('ol a[href^="/communities/"]').first()).toBeVisible();
+    const jsonLd = await page
+      .locator('script[type="application/ld+json"]')
+      .allTextContents();
+    expect(jsonLd.some((s) => s.includes('"ItemList"'))).toBe(true);
+  });
+
   test("collection page renders projects and JSON-LD", async ({ page }) => {
     await page.goto("/collections/waterfront");
     await expect(

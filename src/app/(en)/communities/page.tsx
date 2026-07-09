@@ -129,12 +129,16 @@ export default async function CommunitiesPage() {
             Community insights<span className="text-brand">.</span>
           </h2>
           <p className="mt-3 max-w-xl text-sm text-muted">
-            Browse communities by lifestyle — family-friendly, waterfront, urban, golf, and more —
-            powered by our off-plan catalog.
+            Not sure where to start? Our data-ranked location guides shortlist communities by
+            what matters — family homes, rental yield, affordability, value per sqft, and resale
+            liquidity.
           </p>
-          <PrimaryButton href="/tools/communities" className="mt-6">
-            Explore by lifestyle
-          </PrimaryButton>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <PrimaryButton href="/locations">Location guides</PrimaryButton>
+            <PrimaryButton href="/tools/communities" variant="ghost" showArrow={false}>
+              Explore by lifestyle
+            </PrimaryButton>
+          </div>
         </div>
       </section>
 
