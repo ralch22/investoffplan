@@ -4,6 +4,7 @@ export const PROJECT_DETAIL_SECTIONS = [
   { id: "masterplan", label: "Masterplan" },
   { id: "floor-plans", label: "Floor plans" },
   { id: "units", label: "Units" },
+  { id: "media", label: "Video & tour" },
   { id: "living-in-area", label: "Area" },
   { id: "location", label: "Location" },
   { id: "calculator", label: "Calculator" },
