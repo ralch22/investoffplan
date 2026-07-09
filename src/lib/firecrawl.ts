@@ -244,7 +244,7 @@ export function pickImages(
     if (typeof item !== "string") continue;
     const u = item.trim();
     if (!u || seen.has(u)) continue;
-    if (isJunkMediaUrl(u)) continue;
+    if (isJunkMediaUrl(u) || NEWS_HOST_RE.test(u)) continue;
     if (!allowedUrl(u)) continue;
     if (!IMAGE_EXT_RE.test(u)) continue;
     if (IMAGE_REJECT_RE.test(u)) continue;
