@@ -65,6 +65,47 @@ export function DldAreaStatsBand({ stats, areaName, source }: Props) {
         ))}
       </div>
 
+      {stats.beds && Object.keys(stats.beds).length > 0 ? (
+        <div className="mt-6">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+            Median sold price by bedroom
+          </p>
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full min-w-[420px] text-sm">
+              <thead>
+                <tr className="text-start text-xs text-muted-light">
+                  <th className="px-3 py-1.5 text-start font-medium">Type</th>
+                  <th className="px-3 py-1.5 text-end font-medium">Median price</th>
+                  <th className="px-3 py-1.5 text-end font-medium">AED/sqft</th>
+                  <th className="px-3 py-1.5 text-end font-medium">Sales</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(stats.beds)
+                  .sort(([x], [y]) => Number(x) - Number(y))
+                  .map(([k, v]) => {
+                    const label = k === "0" ? "Studio" : k === "4" ? "4+ bed" : `${k} bed`;
+                    return (
+                      <tr key={k} className="border-t border-border">
+                        <td className="px-3 py-2 font-semibold text-text-dark">{label}</td>
+                        <td className="px-3 py-2 text-end tabular-nums text-text-dark">
+                          {v.medianPrice != null ? formatPrice(Math.round(v.medianPrice), "AED") : "—"}
+                        </td>
+                        <td className="px-3 py-2 text-end tabular-nums text-muted">
+                          {v.medianPpsqft != null ? `AED ${v.medianPpsqft.toLocaleString()}` : "—"}
+                        </td>
+                        <td className="px-3 py-2 text-end tabular-nums text-muted-light">
+                          {v.n.toLocaleString()}
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : null}
+
       {trend.length >= 3 ? (
         <div className="mt-6">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted">
