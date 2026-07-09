@@ -3,6 +3,7 @@ import { getDevelopers, getCatalogApi } from "@/lib/catalog";
 import { getCommunities } from "@/lib/communities";
 import { getComparablePairSlugs } from "@/lib/area-compare";
 import { getComparableProjectSlugs } from "@/lib/project-compare";
+import { getComparableDeveloperSlugs } from "@/lib/developer-compare";
 import { GUIDE_CARDS } from "@/lib/figma-copy";
 import { getNewsArticles } from "@/content/articles";
 import { FAQ_TOPICS } from "@/content/faq";
@@ -89,6 +90,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  const developerComparePairs = await getComparableDeveloperSlugs();
+  const developerCompareRoutes = developerComparePairs.map((pair) => ({
+    url: `${BASE}/compare-developers/${pair}`,
+    lastModified: catalogUpdated,
+    changeFrequency: "weekly" as const,
+    priority: 0.5,
+  }));
+
   const guideRoutes = GUIDE_CARDS.filter((g) => g.href.startsWith("/guides/")).map((g) => ({
     url: `${BASE}${g.href}`,
     lastModified: new Date(),
@@ -156,6 +165,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...areaRoutes,
     ...compareRoutes,
     ...projectCompareRoutes,
+    ...developerCompareRoutes,
     ...guideRoutes,
     ...newsRoutes,
     ...collectionRoutes,

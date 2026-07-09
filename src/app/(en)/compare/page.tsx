@@ -7,7 +7,8 @@ import { HomeYields } from "@/components/home-yields";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { getTopCoveredAreas, getComparisonList } from "@/lib/area-compare";
 import { getComparableProjectSlugs } from "@/lib/project-compare";
-import { getCatalogApi } from "@/lib/catalog";
+import { getComparableDeveloperSlugs } from "@/lib/developer-compare";
+import { getCatalogApi, getDevelopers } from "@/lib/catalog";
 import { getSiteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
@@ -26,12 +27,26 @@ export default async function CompareHubPage({ searchParams }: PageProps) {
   const { units } = await searchParams;
   if (units) redirect(`/compare/units?units=${encodeURIComponent(units)}`);
 
-  const [topYields, comparisons, projectPairSlugs, api] = await Promise.all([
-    getTopCoveredAreas("yield", 6),
-    getComparisonList(),
-    getComparableProjectSlugs(),
-    getCatalogApi(),
-  ]);
+  const [topYields, comparisons, projectPairSlugs, developerPairSlugs, developers, api] =
+    await Promise.all([
+      getTopCoveredAreas("yield", 6),
+      getComparisonList(),
+      getComparableProjectSlugs(),
+      getComparableDeveloperSlugs(),
+      getDevelopers(),
+      getCatalogApi(),
+    ]);
+
+  const devNameBySlug = new Map(developers.map((d) => [d.slug, d.name]));
+  const developerPairs = developerPairSlugs
+    .slice(0, 6)
+    .map((pairSlug) => {
+      const idx = pairSlug.indexOf("-vs-");
+      const a = devNameBySlug.get(pairSlug.slice(0, idx));
+      const b = devNameBySlug.get(pairSlug.slice(idx + 4));
+      return a && b ? { pairSlug, a, b } : null;
+    })
+    .filter((x): x is { pairSlug: string; a: string; b: string } => x != null);
 
   const nameBySlug = new Map(api.projects.map((p) => [p.slug, p.name]));
   const projectPairs = projectPairSlugs
@@ -103,6 +118,32 @@ export default async function CompareHubPage({ searchParams }: PageProps) {
                 <Link
                   key={p.pairSlug}
                   href={`/compare-projects/${p.pairSlug}`}
+                  className="iop-btn-press focus-ring group rounded-2xl border border-border bg-white p-4 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
+                >
+                  <p className="text-sm font-semibold text-text-dark group-hover:text-brand">
+                    {p.a} <span className="text-muted-light">vs</span> {p.b}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {developerPairs.length > 0 ? (
+        <section className="py-14">
+          <div className="mx-auto max-w-[1200px] px-5 md:px-8">
+            <h2 className="font-display text-2xl font-semibold text-text-dark md:text-3xl">
+              Compare developers<span className="text-brand">.</span>
+            </h2>
+            <p className="mt-2 max-w-xl text-sm text-muted">
+              Portfolio size, entry prices, communities covered, and handover pipelines.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {developerPairs.map((p) => (
+                <Link
+                  key={p.pairSlug}
+                  href={`/compare-developers/${p.pairSlug}`}
                   className="iop-btn-press focus-ring group rounded-2xl border border-border bg-white p-4 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
                 >
                   <p className="text-sm font-semibold text-text-dark group-hover:text-brand">
