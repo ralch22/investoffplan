@@ -9,6 +9,7 @@ import {
   priceTier,
   type AreaPricePoint,
 } from "@/lib/price-map-shared";
+import { communitySlugFor } from "@/lib/community-slug";
 import { formatMapPrice } from "@/lib/map-data";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -223,7 +224,7 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
                     {point.avgPpsf ? (
                       <p>Avg AED/sqft: {point.avgPpsf.toLocaleString()}</p>
                     ) : null}
-                    <Link href={`/areas/${point.slug}`} className="text-brand underline">
+                    <Link href={`/communities/${communitySlugFor(point.name)}`} className="text-brand underline">
                       Explore community
                     </Link>
                   </div>
@@ -250,7 +251,7 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
             </div>
             <div className="flex flex-wrap gap-3">
               <Link
-                href={`/areas/${selected.slug}`}
+                href={`/communities/${communitySlugFor(selected.name)}`}
                 className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white"
               >
                 Explore community

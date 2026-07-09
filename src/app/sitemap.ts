@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { getAreas, getDevelopers, getCatalogApi } from "@/lib/catalog";
+import { getDevelopers, getCatalogApi } from "@/lib/catalog";
+import { getCommunities } from "@/lib/communities";
 import { getComparablePairSlugs } from "@/lib/area-compare";
 import { getComparableProjectSlugs } from "@/lib/project-compare";
 import { GUIDE_CARDS } from "@/lib/figma-copy";
@@ -21,8 +22,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "",
     "/projects",
     "/developers",
-    "/areas",
-    "/market-data",
+    "/communities",
+    "/compare",
+    "/compare/units",
     "/guides",
     "/faq",
     "/map",
@@ -63,9 +65,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  const areas = await getAreas();
-  const areaRoutes = areas.map((a) => ({
-    url: `${BASE}/areas/${a.slug}`,
+  const communities = await getCommunities();
+  const areaRoutes = communities.map((c) => ({
+    url: `${BASE}/communities/${c.slug}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
     priority: 0.6,
@@ -117,8 +119,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Arabic mirror — full route tree now exists under /ar.
   const arStaticPaths = [
-    "/ar", "/ar/about", "/ar/contact", "/ar/projects", "/ar/areas",
-    "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/market-data",
+    "/ar", "/ar/about", "/ar/contact", "/ar/projects", "/ar/communities",
+    "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/compare",
     "/ar/tools", "/ar/tools/mortgage", "/ar/tools/payment", "/ar/tools/rent-vs-buy",
     "/ar/tools/communities", "/ar/tools/price-map", "/ar/tools/residential",
   ];

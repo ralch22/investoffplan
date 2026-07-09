@@ -1,11 +1,11 @@
-import { getAreas } from "@/lib/catalog";
+import { getCommunities } from "@/lib/communities";
 
 export async function getFooterAreaLinks() {
-  const areas = await getAreas();
-  return areas
+  const communities = await getCommunities();
+  return communities
     .slice(0, 3)
-    .map((area) => ({
-      href: `/areas/${area.slug}`,
-      label: area.name,
+    .map((community) => ({
+      href: `/communities/${community.slug}`,
+      label: community.name,
     }));
 }

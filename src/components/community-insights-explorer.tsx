@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { communitySlugFor } from "@/lib/community-slug";
 import type { CommunityInsightArea } from "@/lib/community-insights-shared";
 import {
   LIFESTYLE_CATEGORIES,
@@ -69,7 +70,7 @@ export function CommunityInsightsExplorer({ areas }: CommunityInsightsExplorerPr
         {filtered.map((area) => (
           <Link
             key={area.slug}
-            href={`/areas/${area.slug}`}
+            href={`/communities/${communitySlugFor(area.name)}`}
             className="group rounded-2xl border border-border bg-white p-5 shadow-sm transition hover:border-brand hover:shadow-md"
           >
             <div className="flex items-start justify-between gap-2">

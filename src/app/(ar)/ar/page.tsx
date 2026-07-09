@@ -3,7 +3,8 @@ import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { HeroSearch } from "@/components/hero-search";
 import { PrimaryButton } from "@/components/ui/primary-button";
-import { getAreas, getSiteStats } from "@/lib/catalog";
+import { getSiteStats } from "@/lib/catalog";
+import { getCommunities } from "@/lib/communities";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
 import { getHeroImage } from "@/lib/area-images";
 import { getDictionary, interpolate } from "@/i18n";
@@ -21,13 +22,13 @@ export const metadata: Metadata = {
 
 export default async function ArabicHomePage() {
   const dict = getDictionary("ar");
-  const [stats, analytics, areas, heroImage] = await Promise.all([
+  const [stats, analytics, communities, heroImage] = await Promise.all([
     getSiteStats(),
     getCatalogAnalytics(),
-    getAreas(),
+    getCommunities(),
     getHeroImage(),
   ]);
-  const topAreas = areas.slice(0, 6);
+  const topAreas = communities.slice(0, 6);
 
   return (
     <PageShell headerVariant="transparent">
@@ -65,7 +66,7 @@ export default async function ArabicHomePage() {
                 { label: "شقق", href: "/projects?type=apartment" },
                 { label: "فلل", href: "/projects?type=villa" },
                 { label: "إعمار", href: "/developers/emaar-properties" },
-                { label: "قرية جميرا الدائرية", href: "/areas/jumeirah-village-circle" },
+                { label: "قرية جميرا الدائرية", href: "/communities/jumeirah-village-circle" },
                 { label: "أقل من مليون درهم", href: "/projects?maxP=1000000" },
               ]}
             />
@@ -123,7 +124,7 @@ export default async function ArabicHomePage() {
               {dict.home.keyLocationsHeading}
             </h2>
             <Link
-              href="/areas"
+              href="/ar/communities"
               className="text-sm font-semibold text-brand hover:text-brand-dark"
             >
               {dict.home.viewAllLocations}
@@ -133,7 +134,7 @@ export default async function ArabicHomePage() {
             {topAreas.map((area) => (
               <Link
                 key={area.slug}
-                href={`/areas/${area.slug}`}
+                href={`/ar/communities/${area.slug}`}
                 className="rounded-2xl border border-border bg-white p-6 shadow-sm transition hover:border-brand hover:shadow-md"
               >
                 <p className="text-lg font-semibold text-text-dark">{area.name}</p>

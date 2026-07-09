@@ -1,4 +1,4 @@
-import { getAreas } from "@/lib/catalog";
+import { getAreas, getCatalogApi } from "@/lib/catalog";
 import type { AreaSummary } from "@/lib/catalog";
 import { areaKey } from "@/lib/dld";
 import { slugify } from "@/lib/slugify";
@@ -24,15 +24,8 @@ export interface CommunitySummary {
   variantSlugs: string[];
 }
 
-/** First breadcrumb segment — IOP area names are "Community, District, Project". */
-export function firstSegment(areaName: string): string {
-  return (areaName.split(",")[0] ?? areaName).trim();
-}
-
-/** Canonical community slug for any raw catalog area name. */
-export function communitySlugFor(areaName: string): string {
-  return slugify(firstSegment(areaName));
-}
+export { communitySlugFor, firstSegment } from "@/lib/community-slug";
+import { communitySlugFor, firstSegment } from "@/lib/community-slug";
 
 let cache: CommunitySummary[] | null = null;
 
@@ -85,6 +78,22 @@ export async function communityForVariantSlug(
     communities.find((c) => c.slug === variantSlug) ??
     communities.find((c) => c.variantSlugs.includes(variantSlug)) ??
     null
+  );
+}
+
+/** All projects belonging to a community (any breadcrumb variant of it). */
+export async function getProjectsByCommunity(slug: string) {
+  const api = await getCatalogApi();
+  return api.projects.filter((p) => communitySlugFor(p.area) === slug);
+}
+
+/** First servable project image across a community's projects (hero/card art). */
+export async function getCommunityImage(slug: string): Promise<string | undefined> {
+  const { isServableImage } = await import("@/lib/area-images");
+  const projects = await getProjectsByCommunity(slug);
+  return (
+    projects.map((p) => p.imageUrl).find(isServableImage) ??
+    projects.flatMap((p) => p.imageGallery ?? []).find(isServableImage)
   );
 }
 

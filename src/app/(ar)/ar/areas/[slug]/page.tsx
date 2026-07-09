@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
-import { getSiteUrl } from "@/lib/site-url";
+import { notFound, permanentRedirect } from "next/navigation";
+import { communityForVariantSlug } from "@/lib/communities";
 
-// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
-export { default, generateStaticParams } from "@/app/(en)/areas/[slug]/page";
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+// IA restructure (SEO plan): breadcrumb-variant area URLs 308 to their community.
+export default async function ArAreaRedirect({ params }: PageProps) {
   const { slug } = await params;
-  const base = getSiteUrl();
-  const path = `/areas/${slug}`;
-  return { alternates: { canonical: `${base}/ar${path}`, languages: { en: `${base}${path}`, ar: `${base}/ar${path}` } } };
+  const community = await communityForVariantSlug(slug);
+  if (!community) notFound();
+  permanentRedirect(`/ar/communities/${community.slug}`);
 }

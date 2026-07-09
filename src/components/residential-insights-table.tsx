@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { communitySlugFor } from "@/lib/community-slug";
 import type { ResidentialBuilding } from "@/lib/residential-insights";
 import { formatPrice } from "@/lib/format";
 import { unoptimizedProp } from "@/lib/asset-image";
@@ -62,7 +63,7 @@ export function ResidentialInsightsTable({ buildings }: ResidentialInsightsTable
                   </Link>
                 </td>
                 <td className="px-4 py-3 text-muted">
-                  <Link href={`/areas/${b.areaSlug}`} className="hover:text-brand">
+                  <Link href={`/communities/${communitySlugFor(b.area)}`} className="hover:text-brand">
                     {b.area}
                   </Link>
                 </td>

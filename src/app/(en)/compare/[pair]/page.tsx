@@ -134,7 +134,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
                 {[a, b].map((side) => (
                   <th key={side.area.slug} className="px-4 py-4 text-center">
                     <Link
-                      href={`/areas/${side.area.slug}`}
+                      href={`/communities/${side.area.slug}`}
                       className="font-display text-lg font-semibold text-text-dark hover:text-brand"
                     >
                       {side.area.name}

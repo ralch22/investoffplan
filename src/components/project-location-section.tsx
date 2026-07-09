@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cityLabel } from "@/lib/format";
-import { slugify } from "@/lib/catalog";
+import { communitySlugFor } from "@/lib/community-slug";
 import type { Project } from "@/lib/types";
 
 interface ProjectLocationSectionProps {
@@ -8,7 +8,7 @@ interface ProjectLocationSectionProps {
 }
 
 export function ProjectLocationSection({ project }: ProjectLocationSectionProps) {
-  const areaSlug = slugify(project.area);
+  const areaSlug = communitySlugFor(project.area);
   const googleMapsUrl = project.coordinates
     ? `https://www.google.com/maps?q=${project.coordinates.lat},${project.coordinates.lng}`
     : `https://www.google.com/maps/search/${encodeURIComponent(project.area + " Dubai UAE")}`;
@@ -62,7 +62,7 @@ export function ProjectLocationSection({ project }: ProjectLocationSectionProps)
           </Link>
         ) : null}
         <Link
-          href={`/areas/${areaSlug}`}
+          href={`/communities/${areaSlug}`}
           className="iop-btn-press focus-ring rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-muted hover:border-brand hover:text-brand"
         >
           Explore {project.area.split(",")[0]}

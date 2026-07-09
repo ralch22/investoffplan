@@ -23,10 +23,10 @@ export function HomeYields({ areas }: { areas: CoveredArea[] }) {
             </p>
           </div>
           <Link
-            href="/areas"
+            href="/communities"
             className="iop-btn-press focus-ring rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark"
           >
-            All areas →
+            All communities →
           </Link>
         </div>
 
@@ -34,7 +34,7 @@ export function HomeYields({ areas }: { areas: CoveredArea[] }) {
           {areas.map((a) => (
             <Link
               key={a.area.slug}
-              href={`/areas/${a.area.slug}`}
+              href={`/communities/${a.area.slug}`}
               className="iop-btn-press focus-ring group flex items-center justify-between gap-4 rounded-2xl border border-border bg-white p-5 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
             >
               <div className="min-w-0">
