@@ -25,6 +25,8 @@ import { unitPricePerSqft } from "@/lib/investment-metrics";
 import { getProjectGalleryImages } from "@/lib/project-gallery-images";
 import { cardEntrance, cardHoverLift } from "@/lib/motion";
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/i18n/locale-provider";
+import { localePath } from "@/i18n/config";
 
 interface ProjectCardProps {
   item: FlatUnit;
@@ -46,6 +48,7 @@ export function ProjectCard({
   index = 0,
 }: ProjectCardProps) {
   const [brochureOpen, setBrochureOpen] = useState(false);
+  const { locale } = useI18n();
   const { project, unit, catalog } = item;
   const compareId = `${project.id}:${unit.id}` as CompareUnitId;
   const handover = catalog?.handover ?? project.handover;
@@ -121,7 +124,7 @@ export function ProjectCard({
               </p>
             ) : null}
             <h3 className="text-2xl font-semibold leading-tight text-white md:text-3xl">
-              <Link href={`/projects/${project.slug}`} className="hover:text-white/90">
+              <Link href={localePath(locale, `/projects/${project.slug}`)} className="hover:text-white/90">
                 {project.name}
               </Link>
             </h3>
@@ -136,7 +139,7 @@ export function ProjectCard({
 
             <div className="flex flex-wrap gap-2 pt-1">
               <Link
-                href={`/projects/${project.slug}`}
+                href={localePath(locale, `/projects/${project.slug}`)}
                 className="iop-btn-press focus-ring rounded-full border border-white/80 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white hover:text-text-dark"
               >
                 View Details
@@ -185,6 +188,7 @@ function ListCard({
   onCompareToggle,
   index = 0,
 }: Omit<ProjectCardProps, "layout" | "featured">) {
+  const { locale } = useI18n();
   const { project, unit, catalog } = item;
   const compareId = `${project.id}:${unit.id}` as CompareUnitId;
   const galleryImages = getProjectGalleryImages(project, catalog);
@@ -226,7 +230,7 @@ function ListCard({
                 suffix={handover ? ` · ${handover}` : undefined}
               />
               <h3 className="mt-1 text-xl font-semibold text-text-dark">
-                <Link href={`/projects/${project.slug}`} className="hover:text-brand">
+                <Link href={localePath(locale, `/projects/${project.slug}`)} className="hover:text-brand">
                   {project.name}
                 </Link>
               </h3>
@@ -251,7 +255,7 @@ function ListCard({
           </p>
           <div className="mt-auto flex flex-wrap gap-2">
             <Link
-              href={`/projects/${project.slug}`}
+              href={localePath(locale, `/projects/${project.slug}`)}
               className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark"
             >
               View Details

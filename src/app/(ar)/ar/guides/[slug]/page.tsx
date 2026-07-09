@@ -1,0 +1,12 @@
+import type { Metadata } from "next";
+import { getSiteUrl } from "@/lib/site-url";
+
+// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
+export { default, generateStaticParams } from "@/app/(en)/guides/[slug]/page";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const base = getSiteUrl();
+  const path = `/guides/${slug}`;
+  return { alternates: { canonical: `${base}/ar${path}`, languages: { en: `${base}${path}`, ar: `${base}/ar${path}` } } };
+}
