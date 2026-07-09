@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cityLabel } from "@/lib/format";
-import { slugify } from "@/lib/catalog";
+import { communitySlugFor } from "@/lib/community-slug";
+import { slugify } from "@/lib/slugify";
 import type { Project } from "@/lib/types";
 
 interface ProjectKeyFactsProps {
@@ -25,7 +26,7 @@ export function ProjectKeyFacts({ project }: ProjectKeyFactsProps) {
     {
       label: "Location",
       value: `${cityLabel(project.city)}, ${project.area}`,
-      href: `/areas/${slugify(project.area)}`,
+      href: `/communities/${communitySlugFor(project.area)}`,
     },
     {
       label: "Payment plan",

@@ -11,11 +11,11 @@ import { DeveloperLogo } from "@/components/developer-logo";
 import {
   getFeaturedProjects,
   getSiteStats,
-  getAreas,
   getDevelopers,
 } from "@/lib/catalog";
+import { getCommunities, getCommunityImage } from "@/lib/communities";
 import { unoptimizedProp } from "@/lib/asset-image";
-import { getAreaImage, isServableImage } from "@/lib/area-images";
+import { isServableImage } from "@/lib/area-images";
 import { getCatalogApi } from "@/lib/catalog";
 import { getTopCoveredAreas } from "@/lib/area-compare";
 import { AdvantageMatrix } from "@/components/advantage-matrix";
@@ -77,8 +77,8 @@ export default async function HomePage() {
   const analytics = await getCatalogAnalytics();
   const featured = await getFeaturedProjects(6);
   const latest = await getFeaturedProjects(4);
-  const topAreas = (await getAreas()).slice(0, 6);
-  const areaImages = await Promise.all(topAreas.map((a) => getAreaImage(a.name)));
+  const topAreas = (await getCommunities()).slice(0, 6);
+  const areaImages = await Promise.all(topAreas.map((c) => getCommunityImage(c.slug)));
   const topDevelopers = (await getDevelopers()).slice(0, 8);
   const topYieldAreas = await getTopCoveredAreas("yield", 6);
   const heroImage = featured[0]?.imageUrl;
@@ -220,10 +220,10 @@ export default async function HomePage() {
               Key <em className="italic">Locations.</em>
             </h2>
             <Link
-              href="/areas"
+              href="/communities"
               className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark"
             >
-              View All Locations →
+              View All Communities →
             </Link>
           </div>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -232,7 +232,7 @@ export default async function HomePage() {
               return (
                 <Link
                   key={area.slug}
-                  href={`/areas/${area.slug}`}
+                  href={`/communities/${area.slug}`}
                   className="iop-btn-press focus-ring group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-2xl border border-border shadow-elevation-sm transition hover:-translate-y-0.5 hover:shadow-elevation-md"
                 >
                   {areaImage ? (
@@ -257,7 +257,7 @@ export default async function HomePage() {
                       {area.cityLabel} · {area.projectCount} projects
                     </p>
                     <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-light">
-                      Explore area
+                      Explore community
                       <span className="transition group-hover:translate-x-0.5" aria-hidden>→</span>
                     </span>
                   </div>

@@ -9,7 +9,7 @@ import { interpolate, localePath } from "@/i18n/config";
 const MAIN_LINKS = [
   { href: "/projects", key: "projects" },
   { href: "/developers", key: "developers" },
-  { href: "/areas", key: "areas" },
+  { href: "/communities", key: "areas" },
   { href: "/guides", key: "guides" },
   { href: "/news", key: "news" },
   { href: "/faq", key: "faq" },

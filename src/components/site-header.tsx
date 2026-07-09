@@ -18,8 +18,8 @@ const NAV_KEYS = [
   { href: "/projects", key: "projects" },
   { href: "/tools", key: "dataToolkit" },
   { href: "/developers", key: "developers" },
-  { href: "/areas", key: "areas" },
-  { href: "/market-data", key: "marketData" },
+  { href: "/communities", key: "areas" },
+  { href: "/compare", key: "marketData" },
   { href: "/guides", key: "guides" },
   { href: "/news", key: "news" },
   { href: "/about", key: "about" },
@@ -145,7 +145,7 @@ export function SiteHeader({
             </Link>
             <span className="hidden sm:block">
               <PrimaryButton
-                href={localePath(locale, "/areas")}
+                href={localePath(locale, "/communities")}
                 className="px-4 py-2 text-xs"
               >
                 {dict.nav.areaProperties}

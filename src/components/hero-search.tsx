@@ -14,7 +14,7 @@ const DEFAULT_QUICK_FILTERS: readonly QuickFilter[] = [
   { label: "Apartments", href: "/projects?type=apartment" },
   { label: "Villas", href: "/projects?type=villa" },
   { label: "Emaar", href: "/developers/emaar-properties" },
-  { label: "JVC", href: "/areas/jumeirah-village-circle" },
+  { label: "JVC", href: "/communities/jumeirah-village-circle" },
   { label: "Under AED 1M", href: "/projects?maxP=1000000" },
 ];
 

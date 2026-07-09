@@ -1,10 +1,6 @@
-import type { Metadata } from "next";
-import { getSiteUrl } from "@/lib/site-url";
+import { permanentRedirect } from "next/navigation";
 
-// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
-export { default } from "@/app/(en)/areas/page";
-
-export const metadata: Metadata = (() => {
-  const base = getSiteUrl();
-  return { alternates: { canonical: `${base}/ar/areas`, languages: { en: `${base}/areas`, ar: `${base}/ar/areas` } } };
-})();
+// IA restructure (SEO plan): /ar/areas is now /ar/communities.
+export default function ArAreasRedirect() {
+  permanentRedirect("/ar/communities");
+}
