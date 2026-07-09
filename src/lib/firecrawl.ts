@@ -209,7 +209,7 @@ export function pickBrochureUrl(
 ): string | undefined {
   const fromFacts =
     typeof facts?.brochureUrl === "string" ? facts.brochureUrl : undefined;
-  if (fromFacts && allowedUrl(fromFacts)) return fromFacts;
+  if (fromFacts && !isJunkMediaUrl(fromFacts) && allowedUrl(fromFacts)) return fromFacts;
 
   for (const s of sources) {
     const u = s.url.toLowerCase();
@@ -244,6 +244,7 @@ export function pickImages(
     if (typeof item !== "string") continue;
     const u = item.trim();
     if (!u || seen.has(u)) continue;
+    if (isJunkMediaUrl(u)) continue;
     if (!allowedUrl(u)) continue;
     if (!IMAGE_EXT_RE.test(u)) continue;
     if (IMAGE_REJECT_RE.test(u)) continue;
@@ -278,7 +279,8 @@ function isEmbedMediaUrl(u: string): boolean {
 // Placeholder/hallucinated URLs the extractor sometimes returns when it can't
 // find a real link ("https://example.com/...", "your_virtual_tour_link_here").
 const JUNK_HOSTS = new Set(["example.com", "example.org", "example.net", "test.com", "domain.com", "yourdomain.com", "localhost"]);
-const JUNK_URL_RE = /placeholder|lorem|your[_-].*(?:link|tour|url|here)|_here\b|link[_-]?here|insert[_-]|xxx+/i;
+const JUNK_URL_RE =
+  /placeholder|lorem|your[_-]?(?:video|image|tour|link|url|file|id)|video[_-]?id\b|_here\b|link[_-]?here|insert[_-]|xxx+/i;
 
 /** True when the URL is an obvious placeholder / not a real, resolvable media link. */
 export function isJunkMediaUrl(u: string): boolean {
@@ -294,10 +296,34 @@ export function isJunkMediaUrl(u: string): boolean {
   }
 }
 
+const MEDIA_TOKEN_STOPWORDS = new Set([
+  "the", "and", "residence", "residences", "tower", "towers", "villas",
+  "apartments", "dubai", "abu", "dhabi", "sharjah", "uae", "by", "at", "phase",
+]);
+
+/** Meaningful name/slug tokens for checking a scraped URL belongs to THIS project. */
+export function projectUrlTokens(slugOrName: string): string[] {
+  return slugOrName
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((t) => t.length >= 4 && !MEDIA_TOKEN_STOPWORDS.has(t));
+}
+
+function urlMentionsProject(url: string, tokens: string[]): boolean {
+  if (tokens.length === 0) return false;
+  const u = url.toLowerCase();
+  return tokens.some((t) => u.includes(t));
+}
+
+// News/press hosts — a "/video" page here is never the project's own video.
+const NEWS_HOST_RE = /zawya|reuters|bloomberg|khaleejtimes|gulfnews|thenational|arabianbusiness|prnewswire/i;
+
 export function pickVideoUrl(
   sources: FirecrawlSource[],
   facts: Record<string, unknown> | null,
+  projectSlugOrName?: string,
 ): string | undefined {
+  const tokens = projectSlugOrName ? projectUrlTokens(projectSlugOrName) : [];
   const fromFacts =
     typeof facts?.videoUrl === "string" ? facts.videoUrl : undefined;
   // Allow embeddable hosts (youtube/vimeo) here even though they're blocked as
@@ -305,9 +331,14 @@ export function pickVideoUrl(
   if (fromFacts && !isJunkMediaUrl(fromFacts) && (allowedUrl(fromFacts) || isEmbedMediaUrl(fromFacts)))
     return fromFacts;
 
+  // Source-URL fallback: only take a page that plausibly belongs to THIS
+  // project (token overlap) and is not a news/press site — an unrelated
+  // "/video" page (e.g. a Zawya news clip) is worse than no video at all.
   for (const s of sources) {
     const u = s.url.toLowerCase();
-    if (u.includes("vimeo.com") || u.includes("/video")) return s.url;
+    if (isJunkMediaUrl(s.url) || NEWS_HOST_RE.test(u)) continue;
+    if (!(u.includes("vimeo.com") || u.includes("/video"))) continue;
+    if (urlMentionsProject(s.url, tokens)) return s.url;
   }
   return undefined;
 }

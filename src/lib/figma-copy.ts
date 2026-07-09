@@ -27,14 +27,14 @@ export const GUIDE_CARDS = [
     slug: "why-invest-off-plan-dubai",
     title: "Why Invest in Off-Plan Dubai",
     description:
-      "Step-by-step guide to purchasing property in Dubai. From finding the home to closing the deal.",
+      "Launch pricing, payment-plan leverage, and capital-growth dynamics — why buying before completion can outperform ready property.",
     href: "/guides/why-invest-off-plan-dubai",
   },
   {
     slug: "understanding-payment-plans",
     title: "Understanding Payment Plans",
     description:
-      "Step-by-step guide to purchasing off-plan property in Dubai. From choosing a project to moving in.",
+      "Decode 60/40, 80/20, and post-handover structures — what you pay at booking, during construction, and after keys.",
     href: "/guides/understanding-payment-plans",
   },
   {

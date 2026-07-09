@@ -24,6 +24,21 @@ interface Store {
 
 const store = stored as Store;
 
+/**
+ * Residential gross yields in Dubai run ~4-9%. Anything above this is a data
+ * artifact — e.g. Dubai Investment Park's DLD rent median is contaminated by
+ * industrial/staff-accommodation contracts, producing a "16-20% yield" that
+ * would headline every yield surface as fake #1. Null it rather than show it.
+ */
+const MAX_PLAUSIBLE_YIELD_PCT = 12;
+
+function sanitizeStats(s: DldAreaStats): DldAreaStats {
+  if (s.grossYieldPct != null && s.grossYieldPct > MAX_PLAUSIBLE_YIELD_PCT) {
+    return { ...s, grossYieldPct: null, medianAnnualRent: null };
+  }
+  return s;
+}
+
 /** First breadcrumb segment — IOP area names are "Community, City, UAE". */
 function firstSegment(areaName: string): string {
   return areaName.split(",")[0] ?? areaName;
@@ -36,7 +51,8 @@ function firstSegment(areaName: string): string {
  */
 export function getAreaStats(areaName: string | undefined | null): DldAreaStats | null {
   if (!areaName) return null;
-  return store.areas[areaKey(firstSegment(areaName))] ?? null;
+  const s = store.areas[areaKey(firstSegment(areaName))];
+  return s ? sanitizeStats(s) : null;
 }
 
 export function getDldSource(): { source: string; sourcePeriod: string } {

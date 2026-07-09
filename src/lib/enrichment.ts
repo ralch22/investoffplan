@@ -187,7 +187,11 @@ export async function enrichProject(
   const facts = sanitizeFactsForStorage(merged);
   const summary = synthesizeFromFacts(project, merged);
   const brochureUrl = pickBrochureUrl(foundSources ?? [], extracted);
-  const videoUrl = pickVideoUrl(foundSources ?? [], extracted);
+  const videoUrl = pickVideoUrl(
+    foundSources ?? [],
+    extracted,
+    `${project.slug} ${project.name}`,
+  );
   const virtualTourUrl = pickTourUrl(foundSources ?? [], extracted);
   const images = pickImages(extracted);
 
