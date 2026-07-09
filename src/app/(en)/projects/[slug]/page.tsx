@@ -121,6 +121,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const dldSource = getDldSource();
   const pfFaqs = project.pfFaqs ?? [];
   const minPrice = Math.min(...project.units.map((u) => u.launchPriceAed));
+  // UAE grants a 10-year Golden Visa for property investment >= AED 2M.
+  const goldenVisaEligible = project.units.some((u) => u.launchPriceAed >= 2_000_000);
   const catalogGallery =
     project.imageGallery?.length
       ? project.imageGallery
@@ -352,6 +354,18 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </span>
           ) : null}
         </p>
+
+        {goldenVisaEligible ? (
+          <Link
+            href="/faq/golden-visa"
+            className="iop-btn-press focus-ring mt-3 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand-muted px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden>
+              <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 15.4 7.2 17.9l.9-5.4L4.2 8.7l5.4-.8z" />
+            </svg>
+            Golden Visa eligible · 10-year residency
+          </Link>
+        ) : null}
 
         <ProjectDetailCtas
           projectName={project.name}
