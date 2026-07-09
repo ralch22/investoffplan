@@ -1,5 +1,6 @@
 import type { DldAreaStats } from "@/lib/dld-area-stats";
 import { formatPrice } from "@/lib/format";
+import { TrendChart } from "@/components/trend-chart";
 
 interface Props {
   stats: DldAreaStats;
@@ -37,7 +38,6 @@ export function DldAreaStatsBand({ stats, areaName, source }: Props) {
   const trend = stats.monthlyTrend.filter((t) => t.n >= 2);
   const trendMax = trend.length ? Math.max(...trend.map((t) => t.medianPpsqft)) : 0;
   const trendMin = trend.length ? Math.min(...trend.map((t) => t.medianPpsqft)) : 0;
-  const span = Math.max(1, trendMax - trendMin);
 
   return (
     <section className="mt-8 rounded-2xl border border-border bg-surface-alt p-6 md:p-8">
@@ -108,25 +108,24 @@ export function DldAreaStatsBand({ stats, areaName, source }: Props) {
 
       {trend.length >= 3 ? (
         <div className="mt-6">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-            Median AED/sqft by month
-          </p>
-          <div className="mt-3 flex h-24 items-end gap-1.5">
-            {trend.map((t) => {
-              const pct = 15 + ((t.medianPpsqft - trendMin) / span) * 85;
-              const month = Number(t.month.slice(5, 7));
-              return (
-                <div key={t.month} className="flex flex-1 flex-col items-center gap-1">
-                  <div
-                    className="w-full rounded-t bg-brand/70"
-                    style={{ height: `${pct}%` }}
-                    title={`${t.month}: AED ${t.medianPpsqft.toLocaleString()}/sqft`}
-                  />
-                  <span className="text-[10px] text-muted-light">{MONTH_ABBR[month] ?? ""}</span>
-                </div>
-              );
-            })}
+          <div className="flex items-baseline justify-between gap-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+              Median AED/sqft by month
+            </p>
+            <p className="text-[11px] tabular-nums text-muted-light">
+              AED {trendMin.toLocaleString()} – {trendMax.toLocaleString()}
+            </p>
           </div>
+          <TrendChart
+            className="mt-3"
+            height={128}
+            ariaLabel={`Median sold price per sqft by month in ${areaName}, 2025`}
+            points={trend.map((t) => ({
+              label: MONTH_ABBR[Number(t.month.slice(5, 7))] ?? "",
+              value: t.medianPpsqft,
+              title: `${t.month}: AED ${t.medianPpsqft.toLocaleString()}/sqft · ${t.n} sales`,
+            }))}
+          />
         </div>
       ) : null}
     </section>
