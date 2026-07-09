@@ -11,6 +11,8 @@ import { formatPrice } from "@/lib/format";
 import { cardEntrance, cardHoverLift } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 import { unoptimizedProp } from "@/lib/asset-image";
+import { useI18n } from "@/i18n/locale-provider";
+import { localePath } from "@/i18n/config";
 
 interface ShowcaseProjectCardProps {
   project: Project;
@@ -27,6 +29,7 @@ export function ShowcaseProjectCard({
   priorityImage = false,
   index = 0,
 }: ShowcaseProjectCardProps) {
+  const { locale } = useI18n();
   const minPrice = Math.min(...project.units.map((u) => u.launchPriceAed));
   const isSoldOut = project.status === "sold-out";
 
@@ -43,7 +46,7 @@ export function ShowcaseProjectCard({
       )}
     >
       <Link
-        href={`/projects/${project.slug}`}
+        href={localePath(locale, `/projects/${project.slug}`)}
         className={cn("relative block", featured ? "h-64 md:h-72" : "h-48")}
       >
         {project.imageUrl ? (
@@ -89,7 +92,7 @@ export function ShowcaseProjectCard({
           ) : null}
           <h3 className="mt-1 text-lg font-semibold">
             <Link
-              href={`/projects/${project.slug}`}
+              href={localePath(locale, `/projects/${project.slug}`)}
               className={dark ? "hover:text-brand-light" : "hover:text-brand"}
             >
               {project.name}
@@ -101,7 +104,7 @@ export function ShowcaseProjectCard({
         </p>
         <div className="flex flex-wrap items-center gap-2">
           <Link
-            href={`/projects/${project.slug}`}
+            href={localePath(locale, `/projects/${project.slug}`)}
             className="iop-btn-press focus-ring rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
           >
             View Details
@@ -109,7 +112,7 @@ export function ShowcaseProjectCard({
           <FavoriteButton slug={project.slug} />
           {project.coordinates ? (
             <Link
-              href={`/map?project=${project.slug}`}
+              href={localePath(locale, `/map?project=${project.slug}`)}
               className={cn(
                 "iop-btn-press focus-ring rounded-full border px-4 py-2 text-sm font-semibold transition",
                 dark

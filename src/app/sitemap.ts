@@ -115,12 +115,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  // Arabic mirror pages (partial tree — homepage, about, contact).
-  const arabicRoutes = ["/ar", "/ar/about", "/ar/contact"].map((path) => ({
+  // Arabic mirror — full route tree now exists under /ar.
+  const arStaticPaths = [
+    "/ar", "/ar/about", "/ar/contact", "/ar/projects", "/ar/areas",
+    "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/market-data",
+    "/ar/tools", "/ar/tools/mortgage", "/ar/tools/payment", "/ar/tools/rent-vs-buy",
+    "/ar/tools/communities", "/ar/tools/price-map", "/ar/tools/residential",
+  ];
+  const arStaticRoutes = arStaticPaths.map((path) => ({
     url: `${BASE}${path}`,
     lastModified: catalogUpdated,
     changeFrequency: "weekly" as const,
-    priority: 0.7,
+    priority: 0.6,
     alternates: {
       languages: {
         en: path === "/ar" ? `${BASE}/` : `${BASE}${path.slice(3)}`,
@@ -128,10 +134,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     },
   }));
+  // AR detail-page mirrors, derived from the EN route arrays.
+  const arDetailRoutes = [
+    ...projectRoutes, ...areaRoutes, ...developerRoutes, ...guideRoutes,
+    ...newsRoutes, ...collectionRoutes, ...faqRoutes, ...compareRoutes,
+    ...projectCompareRoutes,
+  ].map((r) => ({
+    ...r,
+    url: r.url.replace(`${BASE}/`, `${BASE}/ar/`),
+    priority: 0.5,
+  }));
 
   return [
     ...staticRoutes,
-    ...arabicRoutes,
+    ...arStaticRoutes,
+    ...arDetailRoutes,
     ...projectRoutes,
     ...developerRoutes,
     ...areaRoutes,

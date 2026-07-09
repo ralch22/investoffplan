@@ -141,6 +141,14 @@ export interface PfFaq {
 // (e.g. Lillia Townhouses) — drop any sentence that names the source.
 const PROPERTY_FINDER_RE = /property\s*finder/i;
 
+/**
+ * Leaked AI-generation prompts / chatbot errors that slipped into scraped PF
+ * FAQ answers (e.g. "remove fuzzy words", "[project name] =", "Could you
+ * clarify"). Any FAQ whose text matches is dropped whole — it is not content.
+ */
+const AI_LEAK_RE =
+  /remove fuzzy words|AI detectability|generate an answer to the question|\[project (?:name|description)\]|might be a code|could you clarify|it seems like the delivery|as an AI|I can generate|I(?:'|’)?m sorry/i;
+
 function dropSentencesMatching(text: string, re: RegExp): string {
   return text
     .split(/(?<=[.!?])\s+/)
@@ -160,6 +168,8 @@ function truncateText(text: string, max: number): string {
 
 /** Normalise a scraped FAQ entry to capped, source-free plain text. */
 export function sanitizeFaqEntry(entry: PfFaq): PfFaq | null {
+  // Drop leaked AI prompts / chatbot errors outright — not real Q&A.
+  if (AI_LEAK_RE.test(entry?.q ?? "") || AI_LEAK_RE.test(entry?.a ?? "")) return null;
   const q = truncateText(
     dropSentencesMatching(htmlToPlainText(entry?.q ?? ""), PROPERTY_FINDER_RE),
     200,
