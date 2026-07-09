@@ -6,6 +6,11 @@ const TOP_AREAS = 12;
 const PROJECTS_PER_AREA = 4;
 const SEP = "-vs-";
 
+/** Community key = first breadcrumb segment (project.area is "Community, District, Project"). */
+function communitySlug(area: string): string {
+  return slugify(area.split(",")[0]);
+}
+
 export interface ProjectSide {
   slug: string;
   name: string;
@@ -72,7 +77,7 @@ export async function getComparableProjectSlugs(): Promise<string[]> {
   const api = await getCatalogApi();
   const byArea = new Map<string, Project[]>();
   for (const p of api.projects) {
-    const k = slugify(p.area);
+    const k = communitySlug(p.area);
     const arr = byArea.get(k);
     if (arr) arr.push(p);
     else byArea.set(k, [p]);
@@ -96,9 +101,9 @@ export async function getProjectComparisonLinks(
   limit = 3,
 ): Promise<{ pairSlug: string; otherName: string }[]> {
   const api = await getCatalogApi();
-  const areaKey = slugify(project.area);
+  const areaKey = communitySlug(project.area);
   return api.projects
-    .filter((p) => p.slug !== project.slug && slugify(p.area) === areaKey)
+    .filter((p) => p.slug !== project.slug && communitySlug(p.area) === areaKey)
     .sort(rankProject)
     .slice(0, limit)
     .map((other) => ({
