@@ -275,6 +275,25 @@ function isEmbedMediaUrl(u: string): boolean {
   }
 }
 
+// Placeholder/hallucinated URLs the extractor sometimes returns when it can't
+// find a real link ("https://example.com/...", "your_virtual_tour_link_here").
+const JUNK_HOSTS = new Set(["example.com", "example.org", "example.net", "test.com", "domain.com", "yourdomain.com", "localhost"]);
+const JUNK_URL_RE = /placeholder|lorem|your[_-].*(?:link|tour|url|here)|_here\b|link[_-]?here|insert[_-]|xxx+/i;
+
+/** True when the URL is an obvious placeholder / not a real, resolvable media link. */
+export function isJunkMediaUrl(u: string): boolean {
+  if (JUNK_URL_RE.test(u)) return true;
+  try {
+    const url = new URL(u);
+    if (!/^https?:$/.test(url.protocol)) return true;
+    const h = url.hostname.toLowerCase().replace(/^www\./, "");
+    if (JUNK_HOSTS.has(h) || h.endsWith(".example.com") || !h.includes(".")) return true;
+    return false;
+  } catch {
+    return true; // unparseable → junk
+  }
+}
+
 export function pickVideoUrl(
   sources: FirecrawlSource[],
   facts: Record<string, unknown> | null,
@@ -283,7 +302,7 @@ export function pickVideoUrl(
     typeof facts?.videoUrl === "string" ? facts.videoUrl : undefined;
   // Allow embeddable hosts (youtube/vimeo) here even though they're blocked as
   // scrape sources — a video link is exactly what the media section renders.
-  if (fromFacts && (allowedUrl(fromFacts) || isEmbedMediaUrl(fromFacts)))
+  if (fromFacts && !isJunkMediaUrl(fromFacts) && (allowedUrl(fromFacts) || isEmbedMediaUrl(fromFacts)))
     return fromFacts;
 
   for (const s of sources) {
@@ -303,11 +322,11 @@ export function pickTourUrl(
 ): string | undefined {
   const fromFacts =
     typeof facts?.virtualTourUrl === "string" ? facts.virtualTourUrl : undefined;
-  if (fromFacts && (allowedUrl(fromFacts) || isEmbedMediaUrl(fromFacts)))
+  if (fromFacts && !isJunkMediaUrl(fromFacts) && (allowedUrl(fromFacts) || isEmbedMediaUrl(fromFacts)))
     return fromFacts;
 
   for (const s of sources) {
-    if (TOUR_URL_RE.test(s.url)) return s.url;
+    if (TOUR_URL_RE.test(s.url) && !isJunkMediaUrl(s.url)) return s.url;
   }
   return undefined;
 }
