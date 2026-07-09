@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { motion } from "framer-motion";
 import { DeveloperAttribution } from "@/components/developer-attribution";
 import { FavoriteButton } from "@/components/favorite-button";
@@ -45,7 +45,7 @@ export function ShowcaseProjectCard({
           : "border-border bg-white",
       )}
     >
-      <Link
+      <LocaleLink
         href={localePath(locale, `/projects/${project.slug}`)}
         className={cn("relative block", featured ? "h-64 md:h-72" : "h-48")}
       >
@@ -75,7 +75,7 @@ export function ShowcaseProjectCard({
             Coming Soon
           </span>
         )}
-      </Link>
+      </LocaleLink>
 
       <div className={cn("space-y-3 p-5", dark ? "text-white" : "text-text-dark")}>
         <div>
@@ -91,27 +91,27 @@ export function ShowcaseProjectCard({
             </p>
           ) : null}
           <h3 className="mt-1 text-lg font-semibold">
-            <Link
+            <LocaleLink
               href={localePath(locale, `/projects/${project.slug}`)}
               className={dark ? "hover:text-brand-light" : "hover:text-brand"}
             >
               {project.name}
-            </Link>
+            </LocaleLink>
           </h3>
         </div>
         <p className={cn("text-sm font-semibold", dark ? "text-white" : "text-brand")}>
           from {formatPrice(minPrice, "AED")}
         </p>
         <div className="flex flex-wrap items-center gap-2">
-          <Link
+          <LocaleLink
             href={localePath(locale, `/projects/${project.slug}`)}
             className="iop-btn-press focus-ring rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
           >
             View Details
-          </Link>
+          </LocaleLink>
           <FavoriteButton slug={project.slug} />
           {project.coordinates ? (
-            <Link
+            <LocaleLink
               href={localePath(locale, `/map?project=${project.slug}`)}
               className={cn(
                 "iop-btn-press focus-ring rounded-full border px-4 py-2 text-sm font-semibold transition",
@@ -121,7 +121,7 @@ export function ShowcaseProjectCard({
               )}
             >
               View on Map
-            </Link>
+            </LocaleLink>
           ) : null}
         </div>
       </div>

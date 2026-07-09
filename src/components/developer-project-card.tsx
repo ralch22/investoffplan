@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { ContactButton } from "@/components/contact-button";
 import { DeveloperAttribution } from "@/components/developer-attribution";
 import { projectBedsLabel, projectTypeLabel } from "@/lib/developer-utils";
@@ -35,7 +35,7 @@ export function DeveloperProjectCard({
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-elevation-md">
-      <Link
+      <LocaleLink
         href={`/projects/${project.slug}`}
         className="relative block aspect-[4/3] overflow-hidden bg-surface-alt"
       >
@@ -63,7 +63,7 @@ export function DeveloperProjectCard({
             {project.handover}
           </span>
         ) : null}
-      </Link>
+      </LocaleLink>
 
       <div className="flex flex-1 flex-col gap-3 p-4">
         <DeveloperAttribution
@@ -72,9 +72,9 @@ export function DeveloperProjectCard({
           variant="muted"
         />
         <h3 className="text-lg font-semibold leading-snug text-text-dark">
-          <Link href={`/projects/${project.slug}`} className="hover:text-brand">
+          <LocaleLink href={`/projects/${project.slug}`} className="hover:text-brand">
             {project.name}
-          </Link>
+          </LocaleLink>
         </h3>
         <p className="line-clamp-2 text-sm text-muted">{location}</p>
 
@@ -97,12 +97,12 @@ export function DeveloperProjectCard({
           ) : null}
 
           <div className="flex flex-wrap gap-2">
-            <Link
+            <LocaleLink
               href={`/projects/${project.slug}`}
               className="rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
             >
               View Details
-            </Link>
+            </LocaleLink>
             {!isSoldOut ? (
               <ContactButton
                 phone={project.whatsapp}

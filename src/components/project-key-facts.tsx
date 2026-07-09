@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { cityLabel } from "@/lib/format";
 import { communitySlugFor } from "@/lib/community-slug";
 import { slugify } from "@/lib/slugify";
@@ -16,7 +16,7 @@ export function ProjectKeyFacts({ project }: ProjectKeyFactsProps) {
   const paymentLabel =
     project.paymentPlanCount && project.paymentPlanCount > 1
       ? `See ${project.paymentPlanCount} payment plans`
-      : project.paymentPlan;
+      : project.paymentPlan?.trim() || "On request";
 
   const facts = [
     {
@@ -75,9 +75,9 @@ export function ProjectKeyFacts({ project }: ProjectKeyFactsProps) {
             </dt>
             <dd className="mt-2 text-sm font-semibold text-text-dark">
               {fact.href ? (
-                <Link href={fact.href} className="text-brand hover:text-brand-dark">
+                <LocaleLink href={fact.href} className="text-brand hover:text-brand-dark">
                   {fact.value}
-                </Link>
+                </LocaleLink>
               ) : (
                 fact.value
               )}

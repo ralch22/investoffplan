@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
@@ -41,7 +41,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description:
       editorial?.intro[0]?.slice(0, 158) ??
       `${community.projectCount} off-plan projects in ${community.name}, ${community.cityLabel}.`,
-    alternates: { canonical: `${getSiteUrl()}/communities/${slug}` },
+    alternates: {
+      canonical: `${getSiteUrl()}/communities/${slug}`,
+      languages: {
+        en: `${getSiteUrl()}/communities/${slug}`,
+        ar: `${getSiteUrl()}/ar/communities/${slug}`,
+      },
+    },
   };
 }
 
@@ -152,13 +158,13 @@ export default async function CommunityDetailPage({ params }: PageProps) {
               Compare {community.name} with:
             </span>
             {comparisons.map((c) => (
-              <Link
+              <LocaleLink
                 key={c.pairSlug}
                 href={`/compare/${c.pairSlug}`}
                 className="iop-btn-press focus-ring rounded-full border border-border bg-white px-3 py-1.5 text-xs font-medium text-text-dark transition hover:border-brand hover:text-brand"
               >
                 {c.otherName}
-              </Link>
+              </LocaleLink>
             ))}
           </div>
         ) : null}
@@ -192,12 +198,12 @@ export default async function CommunityDetailPage({ params }: PageProps) {
           <h2 className="font-display text-3xl font-semibold text-text-dark">
             Current Projects<span className="text-brand">.</span>
           </h2>
-          <Link
+          <LocaleLink
             href={`/projects?q=${encodeURIComponent(community.name)}`}
             className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white"
           >
             View all
-          </Link>
+          </LocaleLink>
         </div>
         <p className="mt-2 text-sm text-muted">
           {community.projectCount} {community.projectCount === 1 ? "project" : "projects"} ·{" "}
@@ -237,13 +243,13 @@ export default async function CommunityDetailPage({ params }: PageProps) {
                   {editorial.nearbyAreas.map((name) => {
                     const targetSlug = communitySlugFor(name);
                     return communitySlugs.has(targetSlug) ? (
-                      <Link
+                      <LocaleLink
                         key={name}
                         href={`/communities/${targetSlug}`}
                         className="rounded-full border border-border bg-white px-4 py-1.5 text-sm font-semibold text-muted transition hover:border-brand hover:text-brand"
                       >
                         {name}
-                      </Link>
+                      </LocaleLink>
                     ) : (
                       <span
                         key={name}
@@ -278,16 +284,16 @@ export default async function CommunityDetailPage({ params }: PageProps) {
               <h2 className="font-display text-3xl font-semibold">
                 Similar Communities<span className="text-brand">.</span>
               </h2>
-              <Link
+              <LocaleLink
                 href="/communities"
                 className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white"
               >
                 See all communities
-              </Link>
+              </LocaleLink>
             </div>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {similar.map((item) => (
-                <Link
+                <LocaleLink
                   key={item.slug}
                   href={`/communities/${item.slug}`}
                   className="rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:border-brand"
@@ -296,7 +302,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
                   <p className="mt-2 text-sm text-white/70">
                     {item.projectCount} {item.projectCount === 1 ? "project" : "projects"}
                   </p>
-                </Link>
+                </LocaleLink>
               ))}
             </div>
           </div>

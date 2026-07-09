@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { WHATSAPP_PRIMARY, waHref } from "@/lib/contact-info";
+import { LocaleLink } from "@/components/locale-link";
 
 /**
  * Contextual advisor CTA for high-intent decision-stage pages (area comparisons,
@@ -38,12 +38,12 @@ export function MarketAdviceCta({
             </svg>
             WhatsApp an advisor
           </a>
-          <Link
+          <LocaleLink
             href="/contact"
             className="iop-btn-press focus-ring inline-flex items-center rounded-full border border-white/50 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white hover:text-text-dark"
           >
             Book a consultation
-          </Link>
+          </LocaleLink>
         </div>
       </div>
     </section>

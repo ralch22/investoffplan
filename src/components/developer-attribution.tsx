@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { DeveloperLogo } from "@/components/developer-logo";
+import { LocaleLink } from "@/components/locale-link";
 import { slugify } from "@/lib/slugify";
 import { cn } from "@/lib/cn";
 
@@ -45,9 +45,9 @@ export function DeveloperAttribution({
         <DeveloperLogo name={name} logoUrl={logoUrl} slug={resolvedSlug} size="xs" link />
       ) : null}
       <span className="min-w-0 truncate">
-        <Link href={`/developers/${resolvedSlug}`} className={cn("transition", textClass)}>
+        <LocaleLink href={`/developers/${resolvedSlug}`} className={cn("transition", textClass)}>
           {name}
-        </Link>
+        </LocaleLink>
         {suffix ? <span className="normal-case tracking-normal">{suffix}</span> : null}
       </span>
     </p>

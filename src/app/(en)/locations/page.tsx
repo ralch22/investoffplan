@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { LOCATION_GUIDES } from "@/lib/location-guides";
@@ -23,7 +23,7 @@ export default function LocationGuidesPage() {
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <div className="grid gap-5 sm:grid-cols-2">
           {LOCATION_GUIDES.map((guide) => (
-            <Link
+            <LocaleLink
               key={guide.slug}
               href={`/locations/${guide.slug}`}
               className="iop-btn-press focus-ring group rounded-2xl border border-border bg-white p-6 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
@@ -38,7 +38,7 @@ export default function LocationGuidesPage() {
                 See the ranking
                 <span className="transition group-hover:translate-x-0.5" aria-hidden>→</span>
               </span>
-            </Link>
+            </LocaleLink>
           ))}
         </div>
       </main>

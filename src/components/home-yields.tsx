@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { CoveredArea } from "@/lib/area-compare";
+import { LocaleLink } from "@/components/locale-link";
 import { formatPrice } from "@/lib/format";
 
 /**
@@ -22,17 +22,17 @@ export function HomeYields({ areas }: { areas: CoveredArea[] }) {
               sold price from official 2025 transactions.
             </p>
           </div>
-          <Link
+          <LocaleLink
             href="/communities"
             className="iop-btn-press focus-ring rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark"
           >
             All communities →
-          </Link>
+          </LocaleLink>
         </div>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {areas.map((a) => (
-            <Link
+            <LocaleLink
               key={a.area.slug}
               href={`/communities/${a.area.slug}`}
               className="iop-btn-press focus-ring group flex items-center justify-between gap-4 rounded-2xl border border-border bg-white p-5 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
@@ -55,7 +55,7 @@ export function HomeYields({ areas }: { areas: CoveredArea[] }) {
                   gross yield
                 </p>
               </div>
-            </Link>
+            </LocaleLink>
           ))}
         </div>
       </div>

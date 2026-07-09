@@ -1,6 +1,6 @@
 import Image from "next/image";
+import { LocaleLink } from "@/components/locale-link";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { PrimaryButton } from "@/components/ui/primary-button";
@@ -42,13 +42,13 @@ export default async function CommunitiesPage() {
         <div className="rounded-2xl border-t-4 border-brand bg-white p-6 shadow-xl md:p-8">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-text-dark">The Key Communities</h2>
-            <Link href="/projects" className="text-sm font-semibold text-brand">
+            <LocaleLink href="/projects" className="text-sm font-semibold text-brand">
               View all →
-            </Link>
+            </LocaleLink>
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {featuredWithImages.map(({ community, imageUrl }) => (
-              <Link
+              <LocaleLink
                 key={community.slug}
                 href={`/communities/${community.slug}`}
                 className="group overflow-hidden rounded-2xl border border-border bg-white"
@@ -82,7 +82,7 @@ export default async function CommunitiesPage() {
                     View
                   </span>
                 </div>
-              </Link>
+              </LocaleLink>
             ))}
           </div>
         </div>
@@ -100,7 +100,7 @@ export default async function CommunitiesPage() {
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {comparisons.map((c) => (
-                <Link
+                <LocaleLink
                   key={c.pairSlug}
                   href={`/compare/${c.pairSlug}`}
                   className="iop-btn-press focus-ring group rounded-2xl border border-border bg-white p-4 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
@@ -113,7 +113,7 @@ export default async function CommunitiesPage() {
                       Gross yield {c.aYield}% vs {c.bYield}%
                     </p>
                   ) : null}
-                </Link>
+                </LocaleLink>
               ))}
             </div>
             <div className="mt-6">

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { cityLabel } from "@/lib/format";
 import { communitySlugFor } from "@/lib/community-slug";
 import type { Project } from "@/lib/types";
@@ -54,19 +54,19 @@ export function ProjectLocationSection({ project }: ProjectLocationSectionProps)
           Open in Google Maps
         </a>
         {project.coordinates ? (
-          <Link
+          <LocaleLink
             href={`/map?project=${project.slug}`}
             className="iop-btn-press focus-ring rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
           >
             View on project map
-          </Link>
+          </LocaleLink>
         ) : null}
-        <Link
+        <LocaleLink
           href={`/communities/${areaSlug}`}
           className="iop-btn-press focus-ring rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-muted hover:border-brand hover:text-brand"
         >
           Explore {project.area.split(",")[0]}
-        </Link>
+        </LocaleLink>
       </div>
     </section>
   );

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
@@ -62,7 +62,7 @@ export default async function LocationGuidePage({ params }: PageProps) {
         <ol className="space-y-3">
           {ranked.map((r, i) => (
             <li key={r.metrics.slug}>
-              <Link
+              <LocaleLink
                 href={`/communities/${r.metrics.slug}`}
                 className="iop-btn-press focus-ring group flex items-center gap-4 rounded-2xl border border-border bg-white p-5 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
               >
@@ -83,7 +83,7 @@ export default async function LocationGuidePage({ params }: PageProps) {
                     {guide.metricLabel}
                   </span>
                 </span>
-              </Link>
+              </LocaleLink>
             </li>
           ))}
         </ol>
@@ -100,20 +100,20 @@ export default async function LocationGuidePage({ params }: PageProps) {
           <h2 className="text-lg font-semibold text-text-dark">More location guides</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {others.map((g) => (
-              <Link
+              <LocaleLink
                 key={g.slug}
                 href={`/locations/${g.slug}`}
                 className="iop-btn-press focus-ring rounded-full border border-border bg-white px-4 py-1.5 text-sm font-medium text-muted transition hover:border-brand hover:text-brand"
               >
                 {g.label}
-              </Link>
+              </LocaleLink>
             ))}
-            <Link
+            <LocaleLink
               href="/communities"
               className="iop-btn-press focus-ring rounded-full border border-border bg-white px-4 py-1.5 text-sm font-medium text-muted transition hover:border-brand hover:text-brand"
             >
               All communities
-            </Link>
+            </LocaleLink>
           </div>
         </section>
       </main>

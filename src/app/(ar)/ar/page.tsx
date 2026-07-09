@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { PageShell } from "@/components/page-shell";
 import { HeroSearch } from "@/components/hero-search";
 import { PrimaryButton } from "@/components/ui/primary-button";
@@ -75,12 +75,12 @@ export default async function ArabicHomePage() {
             <PrimaryButton href="/projects">
               {dict.home.browseAllProperties}
             </PrimaryButton>
-            <Link
+            <LocaleLink
               href="/map"
               className="iop-btn-press focus-ring inline-flex items-center rounded-full border border-white/60 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-text-dark"
             >
               {dict.home.openMap}
-            </Link>
+            </LocaleLink>
           </div>
         </div>
       </section>
@@ -123,16 +123,16 @@ export default async function ArabicHomePage() {
             <h2 className="font-display text-3xl font-semibold text-text-dark">
               {dict.home.keyLocationsHeading}
             </h2>
-            <Link
+            <LocaleLink
               href="/ar/communities"
               className="text-sm font-semibold text-brand hover:text-brand-dark"
             >
               {dict.home.viewAllLocations}
-            </Link>
+            </LocaleLink>
           </div>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {topAreas.map((area) => (
-              <Link
+              <LocaleLink
                 key={area.slug}
                 href={`/ar/communities/${area.slug}`}
                 className="rounded-2xl border border-border bg-white p-6 shadow-sm transition hover:border-brand hover:shadow-md"
@@ -147,7 +147,7 @@ export default async function ArabicHomePage() {
                 <p className="mt-3 text-sm font-semibold text-brand">
                   {dict.home.exploreArea}
                 </p>
-              </Link>
+              </LocaleLink>
             ))}
           </div>
         </div>

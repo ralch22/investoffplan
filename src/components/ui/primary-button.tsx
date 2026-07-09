@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { cn } from "@/lib/cn";
 
 interface PrimaryButtonProps {
@@ -40,9 +40,9 @@ export function PrimaryButton({
 
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <LocaleLink href={href} className={classes}>
         {content}
-      </Link>
+      </LocaleLink>
     );
   }
 

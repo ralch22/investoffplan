@@ -138,7 +138,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Arabic mirror — full route tree now exists under /ar.
   const arStaticPaths = [
     "/ar", "/ar/about", "/ar/contact", "/ar/projects", "/ar/communities",
-    "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/compare", "/ar/locations",
+    "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/compare", "/ar/locations", "/ar/map",
     "/ar/tools", "/ar/tools/mortgage", "/ar/tools/payment", "/ar/tools/rent-vs-buy",
     "/ar/tools/communities", "/ar/tools/price-map", "/ar/tools/residential",
   ];
