@@ -7,6 +7,7 @@ export const ar: Dict = {
     "dataToolkit": "أدوات البيانات",
     "developers": "المطوّرون",
     "areas": "المناطق",
+    "marketData": "بيانات السوق",
     "map": "الخريطة",
     "guides": "الأدلة",
     "news": "الأخبار",

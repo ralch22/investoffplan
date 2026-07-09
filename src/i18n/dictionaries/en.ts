@@ -5,6 +5,7 @@ const dict = {
     "dataToolkit": "Data toolkit",
     "developers": "Developers",
     "areas": "Areas",
+    "marketData": "Market data",
     "map": "Map",
     "guides": "Guides",
     "news": "News",

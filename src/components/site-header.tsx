@@ -19,6 +19,7 @@ const NAV_KEYS = [
   { href: "/tools", key: "dataToolkit" },
   { href: "/developers", key: "developers" },
   { href: "/areas", key: "areas" },
+  { href: "/market-data", key: "marketData" },
   { href: "/guides", key: "guides" },
   { href: "/news", key: "news" },
   { href: "/about", key: "about" },
