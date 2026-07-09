@@ -12,6 +12,8 @@ export interface DldAreaStats {
   medianAnnualRent: number | null;
   grossYieldPct: number | null;
   confidence: "high" | "medium" | "low" | "none";
+  /** Per-bedroom breakdown, keyed "0"(studio)|"1"|"2"|"3"|"4"(4+). */
+  beds?: Record<string, { n: number; medianPrice: number | null; medianPpsqft: number | null }>;
 }
 
 interface Store {

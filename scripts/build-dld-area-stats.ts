@@ -98,6 +98,26 @@ async function main() {
     for (const s of sales) labelCounts.set(s.area, (labelCounts.get(s.area) ?? 0) + 1);
     const areaLabel = [...labelCounts.entries()].sort((a, b) => b[1] - a[1])[0][0];
 
+    // Per-bedroom breakdown (Studio=0, 1..3, 4+ bucketed) — the buyer-level detail.
+    const bedBuckets = new Map<number, DldSale[]>();
+    for (const s of sales) {
+      if (s.beds == null) continue;
+      const bk = s.beds >= 4 ? 4 : s.beds;
+      const arr = bedBuckets.get(bk);
+      if (arr) arr.push(s);
+      else bedBuckets.set(bk, [s]);
+    }
+    const beds: Record<string, { n: number; medianPrice: number | null; medianPpsqft: number | null }> = {};
+    for (const [bk, arr] of [...bedBuckets.entries()].sort((x, y) => x[0] - y[0])) {
+      if (arr.length < 5) continue;
+      const bs = saleStats(arr);
+      beds[String(bk)] = {
+        n: arr.length,
+        medianPrice: bs.medianPrice,
+        medianPpsqft: bs.medianPpsqft == null ? null : Math.round(bs.medianPpsqft),
+      };
+    }
+
     areas[key] = {
       areaLabel,
       saleSample: stats.sample,
@@ -113,6 +133,7 @@ async function main() {
       medianAnnualRent,
       grossYieldPct: gross == null ? null : Math.round(gross * 10) / 10,
       confidence: confidenceFor(stats.sample),
+      beds,
     };
     kept++;
   }
