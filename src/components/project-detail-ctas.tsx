@@ -14,6 +14,7 @@ interface ProjectDetailCtasProps {
   whatsapp: string;
   brochureUrl?: string;
   videoUrl?: string;
+  virtualTourUrl?: string;
 }
 
 export function ProjectDetailCtas({
@@ -22,6 +23,7 @@ export function ProjectDetailCtas({
   whatsapp,
   brochureUrl,
   videoUrl,
+  virtualTourUrl,
 }: ProjectDetailCtasProps) {
   const [brochureOpen, setBrochureOpen] = useState(false);
 
@@ -69,14 +71,14 @@ export function ProjectDetailCtas({
         >
           Download brochure
         </button>
-        {videoUrl ? (
+        {virtualTourUrl ?? videoUrl ? (
           <a
-            href={videoUrl}
+            href={virtualTourUrl ?? videoUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-full border border-brand py-3 text-center text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
           >
-            Virtual tour
+            {virtualTourUrl ? "Virtual tour" : "Watch video"}
           </a>
         ) : null}
         <a

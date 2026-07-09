@@ -18,6 +18,7 @@ import { ProjectDetailNav } from "@/components/project-detail-nav";
 import { ProjectSummaryRail } from "@/components/project-summary-rail";
 import { PROJECT_DETAIL_SECTIONS } from "@/lib/project-detail-sections";
 import { ProjectUnitsTable } from "@/components/project-units-table";
+import { ProjectMedia } from "@/components/project-media";
 import { ShareButton } from "@/components/share-button";
 import { getProjectBySlug, slugify } from "@/lib/catalog";
 import { getAreaInsightsForProject } from "@/lib/area-insights";
@@ -274,6 +275,8 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               if (section.id === "masterplan") return Boolean(project.masterPlanUrl);
               if (section.id === "floor-plans")
                 return (project.floorPlans?.length ?? 0) > 0;
+              if (section.id === "media")
+                return Boolean(project.videoUrl ?? enrichment?.videoUrl ?? enrichment?.virtualTourUrl);
               if (section.id === "living-in-area") return Boolean(areaInsights);
               if (section.id === "related") return related.length > 0;
               return true;
@@ -375,6 +378,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           whatsapp={project.whatsapp}
           brochureUrl={project.brochureUrl ?? enrichment?.brochureUrl}
           videoUrl={project.videoUrl ?? enrichment?.videoUrl}
+          virtualTourUrl={enrichment?.virtualTourUrl}
         />
 
 
@@ -420,6 +424,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <h2 className="text-xl font-semibold text-text-dark">Unit types</h2>
           <ProjectUnitsTable units={project.units} project={project} />
         </section>
+
+        <ProjectMedia
+          videoUrl={project.videoUrl ?? enrichment?.videoUrl}
+          virtualTourUrl={enrichment?.virtualTourUrl}
+          projectName={project.name}
+        />
 
         {dldStats ? (
           <div id="market-data" className="mt-4 scroll-mt-24">

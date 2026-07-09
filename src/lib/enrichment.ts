@@ -33,6 +33,8 @@ export interface ProjectEnrichment {
   sources: string[];
   brochureUrl?: string;
   videoUrl?: string;
+  /** Matterport / 360 / virtual-tour link discovered on official pages. */
+  virtualTourUrl?: string;
   /** Extra gallery images discovered on official developer pages. */
   images?: string[];
   enrichedAt: string;
