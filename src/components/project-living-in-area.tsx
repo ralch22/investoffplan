@@ -1,5 +1,5 @@
+import { LocaleLink } from "@/components/locale-link";
 import Image from "next/image";
-import Link from "next/link";
 import { communitySlugFor } from "@/lib/community-slug";
 import { formatPrice } from "@/lib/format";
 import type { AreaInsights } from "@/lib/area-insights";
@@ -66,12 +66,12 @@ export function ProjectLivingInArea({ insights }: ProjectLivingInAreaProps) {
               {insights.cityLabel} · {insights.projectCount} active off-plan launches with
               unit-level pricing and brochures on invest off-plan.
             </p>
-            <Link
+            <LocaleLink
               href={`/communities/${communitySlugFor(insights.name)}`}
               className="iop-btn-press focus-ring mt-5 inline-flex rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
             >
               Explore {insights.name.split(",")[0]} →
-            </Link>
+            </LocaleLink>
           </div>
         </div>
       </div>

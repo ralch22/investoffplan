@@ -1,8 +1,9 @@
 import Image from "next/image";
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
+import { communitySlugFor } from "@/lib/community-slug";
 import { ProjectAbout } from "@/components/project-about";
 import { ProjectKeyFacts } from "@/components/project-key-facts";
 import { ProjectLocationSection } from "@/components/project-location-section";
@@ -51,6 +52,10 @@ interface PageProps {
 
 import { getCatalogApi } from "@/lib/catalog";
 
+// The catalog is fully baked at build time, so an unknown slug is a real 404 —
+// without this, unknown /projects/<slug> soft-404s (HTTP 200 "Project not found").
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const api = await getCatalogApi();
   return api.projects.map((project) => ({ slug: project.slug }));
@@ -89,7 +94,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: project.name,
     description,
-    alternates: { canonical: `${getSiteUrl()}/projects/${slug}` },
+    alternates: {
+      canonical: `${getSiteUrl()}/projects/${slug}`,
+      languages: {
+        en: `${getSiteUrl()}/projects/${slug}`,
+        ar: `${getSiteUrl()}/ar/projects/${slug}`,
+      },
+    },
     openGraph: {
       title: project.name,
       description,
@@ -141,9 +152,26 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     ? `https://www.google.com/maps?q=${project.coordinates.lat},${project.coordinates.lng}`
     : null;
   const api = await getCatalogApi();
-  const related = api.projects.filter(
-    (p) => p.slug !== slug && p.city === project.city,
-  ).slice(0, 3);
+  // Genuinely-related projects: same community first, then same city by price
+  // proximity — not the alphabetical catalog head (which showed the identical
+  // three cards on every PDP).
+  const projectMinPrice = Math.min(
+    ...project.units.map((u) => u.launchPriceAed).filter((v) => v > 0),
+  );
+  const community = communitySlugFor(project.area);
+  const priceDistance = (p: (typeof api.projects)[number]) => {
+    const min = Math.min(...p.units.map((u) => u.launchPriceAed).filter((v) => v > 0));
+    if (!Number.isFinite(min) || !Number.isFinite(projectMinPrice)) return Infinity;
+    return Math.abs(min - projectMinPrice);
+  };
+  const candidates = api.projects.filter((p) => p.slug !== slug && p.city === project.city);
+  const sameCommunity = candidates
+    .filter((p) => communitySlugFor(p.area) === community)
+    .sort((a, b) => priceDistance(a) - priceDistance(b));
+  const sameCity = candidates
+    .filter((p) => communitySlugFor(p.area) !== community)
+    .sort((a, b) => priceDistance(a) - priceDistance(b));
+  const related = [...sameCommunity, ...sameCity].slice(0, 3);
   const areaInsights = await getAreaInsightsForProject(slugify(project.area));
   const projectFaqs = buildProjectFaqs(project);
 
@@ -214,9 +242,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         )}
         <div className="absolute inset-0 bg-hero-overlay" />
         <div className="relative mx-auto max-w-[1200px] px-5 py-16 md:px-8 md:py-24">
-          <Link href="/projects" className="text-sm text-white/80 hover:text-white">
+          <LocaleLink href="/projects" className="text-sm text-white/80 hover:text-white">
             ← Back to projects
-          </Link>
+          </LocaleLink>
           <h1 className="font-display mt-6 text-4xl font-semibold md:text-5xl">
             {(() => {
               const words = project.name.split(" ");
@@ -240,7 +268,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               { label: "Payment", value: project.paymentPlan },
               { label: "Units", value: String(project.unitCount) },
               { label: "Type", value: project.units[0]?.propertyType ?? "Apartment" },
-            ].map((stat) => (
+            ]
+              .filter((stat) => stat.value?.trim())
+              .map((stat) => (
               <div
                 key={stat.label}
                 className="rounded-xl bg-white/15 px-4 py-3 backdrop-blur-sm"
@@ -320,12 +350,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             />
             <div className="mt-1 flex flex-wrap gap-4">
               {project.coordinates ? (
-                <Link
+                <LocaleLink
                   href={`/map?project=${slug}`}
                   className="text-sm font-semibold text-brand hover:text-brand-dark"
                 >
                   View on project map →
-                </Link>
+                </LocaleLink>
               ) : null}
               {mapUrl ? (
                 <a
@@ -361,7 +391,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         </p>
 
         {goldenVisaEligible ? (
-          <Link
+          <LocaleLink
             href="/faq/golden-visa"
             className="iop-btn-press focus-ring mt-3 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand-muted px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
           >
@@ -369,7 +399,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 15.4 7.2 17.9l.9-5.4L4.2 8.7l5.4-.8z" />
             </svg>
             Golden Visa eligible · 10-year residency
-          </Link>
+          </LocaleLink>
         ) : null}
 
         <ProjectDetailCtas
@@ -411,12 +441,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <ProjectPaymentCalculator project={project} />
           <p className="mt-4 text-sm text-muted">
             Financing part of the purchase?{" "}
-            <Link
+            <LocaleLink
               href="/tools/mortgage"
               className="font-semibold text-brand hover:text-brand-dark"
             >
               Model your mortgage and get pre-approved →
-            </Link>
+            </LocaleLink>
           </p>
         </div>
 
@@ -445,13 +475,13 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           <div className="mt-6 flex flex-wrap items-center gap-2">
             <span className="text-sm font-semibold text-text-dark">Compare {project.name} with:</span>
             {projectCompareLinks.map((c) => (
-              <Link
+              <LocaleLink
                 key={c.pairSlug}
                 href={`/compare-projects/${c.pairSlug}`}
                 className="iop-btn-press focus-ring rounded-full border border-border bg-white px-3 py-1.5 text-xs font-medium text-text-dark transition hover:border-brand hover:text-brand"
               >
                 {c.otherName}
-              </Link>
+              </LocaleLink>
             ))}
           </div>
         ) : null}

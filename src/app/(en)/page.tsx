@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { LocaleLink } from "@/components/locale-link";
 import Image from "next/image";
-import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { HeroSearch } from "@/components/hero-search";
 import { PrimaryButton } from "@/components/ui/primary-button";
@@ -166,7 +166,7 @@ export default async function HomePage() {
         <div className="relative flex items-center gap-14">
           <div className="flex animate-[marquee_40s_linear_infinite] items-center gap-14 whitespace-nowrap hover:[animation-play-state:paused]">
             {[...topDevelopers, ...topDevelopers].map((dev, i) => (
-              <Link
+              <LocaleLink
                 key={`${dev.slug}-${i}`}
                 href={`/developers/${dev.slug}`}
                 className="flex shrink-0 items-center gap-3 opacity-70 transition hover:opacity-100"
@@ -181,7 +181,7 @@ export default async function HomePage() {
                 <span className="text-lg font-bold tracking-tight text-surface-dark">
                   {dev.name}
                 </span>
-              </Link>
+              </LocaleLink>
             ))}
           </div>
         </div>
@@ -220,18 +220,18 @@ export default async function HomePage() {
             <h2 className="font-display text-3xl font-semibold text-text-dark md:text-4xl">
               Key <em className="italic">Locations.</em>
             </h2>
-            <Link
+            <LocaleLink
               href="/communities"
               className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark"
             >
               View All Communities →
-            </Link>
+            </LocaleLink>
           </div>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {topAreas.map((area, index) => {
               const areaImage = areaImages[index];
               return (
-                <Link
+                <LocaleLink
                   key={area.slug}
                   href={`/communities/${area.slug}`}
                   className="iop-btn-press focus-ring group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-2xl border border-border shadow-elevation-sm transition hover:-translate-y-0.5 hover:shadow-elevation-md"
@@ -262,7 +262,7 @@ export default async function HomePage() {
                       <span className="transition group-hover:translate-x-0.5" aria-hidden>→</span>
                     </span>
                   </div>
-                </Link>
+                </LocaleLink>
               );
             })}
           </div>
@@ -275,16 +275,16 @@ export default async function HomePage() {
             <h2 className="font-display text-3xl font-semibold text-text-dark md:text-4xl">
               Property <em className="italic">Types.</em>
             </h2>
-            <Link
+            <LocaleLink
               href="/projects"
               className="text-sm font-semibold text-brand hover:text-brand-dark"
             >
               View All →
-            </Link>
+            </LocaleLink>
           </div>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {propertyTypeTiles.map((type) => (
-              <Link
+              <LocaleLink
                 key={type.label}
                 href={type.href}
                 className="iop-btn-press focus-ring group relative flex min-h-[200px] flex-col justify-end overflow-hidden rounded-2xl border border-border shadow-elevation-sm transition hover:-translate-y-0.5 hover:shadow-elevation-md"
@@ -318,7 +318,7 @@ export default async function HomePage() {
                     →
                   </span>
                 </div>
-              </Link>
+              </LocaleLink>
             ))}
           </div>
         </div>
@@ -386,9 +386,9 @@ export default async function HomePage() {
           </div>
           <p className="mt-6 text-sm text-muted">
             More questions?{" "}
-            <Link href="/faq" className="font-semibold text-brand hover:text-brand-dark">
+            <LocaleLink href="/faq" className="font-semibold text-brand hover:text-brand-dark">
               Browse the full FAQ →
-            </Link>
+            </LocaleLink>
           </p>
         </div>
       </section>

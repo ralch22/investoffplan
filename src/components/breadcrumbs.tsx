@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 
 export interface BreadcrumbItem {
   label: string;
@@ -19,12 +19,12 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
             <li key={`${item.label}-${index}`} className="inline-flex items-center gap-1.5">
               {index > 0 ? <span aria-hidden className="text-muted-light">/</span> : null}
               {item.href && !isLast ? (
-                <Link
+                <LocaleLink
                   href={item.href}
                   className="font-medium transition hover:text-brand"
                 >
                   {item.label}
-                </Link>
+                </LocaleLink>
               ) : (
                 <span
                   className={isLast ? "font-medium text-text-dark" : undefined}

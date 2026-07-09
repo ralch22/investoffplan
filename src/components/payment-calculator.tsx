@@ -88,14 +88,22 @@ export function PaymentCalculator({
         </p>
       </div>
 
-      <p className="mt-4 text-sm text-muted">
-        Plan: <span className="font-semibold text-text-dark">{paymentPlan}</span>
-      </p>
+      {paymentPlan?.trim() ? (
+        <p className="mt-4 text-sm text-muted">
+          Plan: <span className="font-semibold text-text-dark">{paymentPlan}</span>
+        </p>
+      ) : null}
 
       {down != null ? (
-        <p className="mt-2 text-lg font-semibold text-brand">
-          Down payment: {formatPrice(down, "AED")}
-        </p>
+        down > 0 ? (
+          <p className="mt-2 text-lg font-semibold text-brand">
+            Down payment: {formatPrice(down, "AED")}
+          </p>
+        ) : (
+          <p className="mt-2 text-lg font-semibold text-brand">
+            No down payment — fully staged plan
+          </p>
+        )
       ) : null}
 
       {schedule ? (
@@ -144,7 +152,8 @@ export function PaymentCalculator({
         </>
       ) : (
         <p className="mt-4 rounded-xl border border-dashed border-border bg-surface-alt p-4 text-sm text-muted">
-          Payment plan format not recognized. Contact us for a custom breakdown.
+          The developer hasn&apos;t published a staged payment schedule for this
+          project yet — WhatsApp us for the current plan and a personalised breakdown.
         </p>
       )}
     </section>

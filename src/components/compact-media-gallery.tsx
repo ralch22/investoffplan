@@ -1,7 +1,7 @@
 "use client";
 
+import { LocaleLink } from "@/components/locale-link";
 import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { unoptimizedProp } from "@/lib/asset-image";
@@ -127,7 +127,7 @@ export function CompactMediaGallery({
         aria-roledescription={count > 1 ? "carousel" : undefined}
       >
         {projectHref ? (
-          <Link
+          <LocaleLink
             href={projectHref}
             className="absolute inset-0 z-0"
             aria-label={`View ${alt}`}
@@ -139,7 +139,7 @@ export function CompactMediaGallery({
             }}
           >
             {imageNode}
-          </Link>
+          </LocaleLink>
         ) : (
           <div className="absolute inset-0 z-0">{imageNode}</div>
         )}

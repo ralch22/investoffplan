@@ -1,5 +1,5 @@
+import { LocaleLink } from "@/components/locale-link";
 import Image from "next/image";
-import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { slugify } from "@/lib/slugify";
 import { unoptimizedProp } from "@/lib/asset-image";
@@ -72,13 +72,13 @@ export function DeveloperLogo({
 
   if (link) {
     return (
-      <Link
+      <LocaleLink
         href={`/developers/${resolvedSlug}`}
         className="inline-flex shrink-0 transition hover:opacity-80"
         title={name}
       >
         {content}
-      </Link>
+      </LocaleLink>
     );
   }
 
