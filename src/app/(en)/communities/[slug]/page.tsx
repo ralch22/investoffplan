@@ -38,10 +38,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!community) return { title: "Community not found" };
   const editorial = getAreaEditorial(slug);
   return {
-    title: `${community.name} off-plan projects`,
+    title: `Off-Plan Projects in ${community.name}, ${community.cityLabel}`,
     description:
       editorial?.intro[0]?.slice(0, 158) ??
-      `${community.projectCount} off-plan projects in ${community.name}, ${community.cityLabel}.`,
+      `${community.projectCount} off-plan projects for sale in ${community.name}, ${community.cityLabel} — prices, floor plans, payment plans, and Land Department market data.`.slice(
+        0,
+        158,
+      ),
     alternates: {
       canonical: `${getSiteUrl()}/communities/${slug}`,
       languages: {

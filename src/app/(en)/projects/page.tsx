@@ -6,9 +6,9 @@ import { ProjectsPage } from "./projects-page";
 import { getSiteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
-  title: "New Off-Plan Projects",
+  title: "Off-Plan Projects for Sale in Dubai & the UAE",
   description:
-    "Browse UAE off-plan projects with unit-level pricing, payment plans, and direct WhatsApp contact.",
+    "Browse every UAE off-plan project — unit-level pricing, payment plans, floor plans, and brochures. Filter by developer, community, handover, and price.",
   alternates: {
     canonical: `${getSiteUrl()}/projects`,
     languages: {
