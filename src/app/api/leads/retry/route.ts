@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, eq, inArray, lt, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, lt, or, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
 import { leads } from "@/lib/db/schema";
 import { forwardLeadToGhl, isGhlConfigured } from "@/lib/ghl";
@@ -31,12 +31,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "DB unavailable" }, { status: 503 });
   }
 
+  // Retry pending/failed/skipped deliveries — and backfill pipeline
+  // opportunities for leads that reached GHL as contacts before opportunity
+  // staging existed (or whose opportunity call failed).
   const rows = await db
     .select()
     .from(leads)
     .where(
       and(
-        inArray(leads.ghlStatus, ["pending", "failed", "skipped"]),
+        or(
+          inArray(leads.ghlStatus, ["pending", "failed", "skipped"]),
+          and(eq(leads.ghlStatus, "sent"), isNull(leads.ghlOpportunityId)),
+        ),
         lt(leads.ghlAttempts, MAX_ATTEMPTS),
       ),
     )
@@ -61,7 +67,16 @@ export async function POST(request: Request) {
         ghlStatus: result.status,
         ghlAttempts: sql`${leads.ghlAttempts} + 1`,
         ghlContactId: result.status === "sent" ? (result.contactId ?? null) : row.ghlContactId,
-        ghlLastError: result.status === "failed" ? result.error : null,
+        ghlOpportunityId:
+          result.status === "sent"
+            ? (result.opportunityId ?? row.ghlOpportunityId)
+            : row.ghlOpportunityId,
+        ghlLastError:
+          result.status === "failed"
+            ? result.error
+            : result.status === "sent"
+              ? (result.opportunityError ?? null)
+              : null,
       })
       .where(eq(leads.id, row.id));
   }

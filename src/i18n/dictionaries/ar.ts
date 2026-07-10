@@ -265,7 +265,7 @@ export const ar: Dict = {
       "subjectPlaceholder": "الموضوع",
       "messagePlaceholder": "الرسالة",
       "successTitle": "شكراً لك — تم إرسال رسالتك.",
-      "successBody": "سيتواصل معك فريقنا قريباً. يمكنك أيضاً مراسلتنا على iop@investoffplan.com",
+      "successBody": "سيتواصل معك فريقنا قريباً. يمكنك أيضاً مراسلتنا على info@investoffplan.com",
       "sendAnother": "إرسال رسالة أخرى",
       "submit": "إرسال",
       "submitting": "جارٍ الإرسال…"
