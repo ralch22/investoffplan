@@ -99,7 +99,7 @@ export function SiteNav({ solid, onOpenChange }: SiteNavProps) {
       aria-controls={`meganav-${id}`}
       onClick={() => toggle(id)}
       onPointerEnter={hoverOpen(id)}
-      className={cn(linkCls, "inline-flex items-center gap-1", open === id && activeCls)}
+      className={cn(linkCls, "inline-flex items-center gap-1 whitespace-nowrap", open === id && activeCls)}
     >
       {label}
       <svg viewBox="0 0 12 12" className={cn("h-2.5 w-2.5 transition", open === id && "rotate-180")} aria-hidden>
