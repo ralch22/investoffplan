@@ -68,6 +68,9 @@
     "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADxyqgdGGZ6sArrC",
     "NEXT_PUBLIC_CATALOG_API": "1",
     "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-7GDZWYG4N2",
-    "NEXT_PUBLIC_GTM_ID": "GTM-PJPK4GP6"
+    "NEXT_PUBLIC_GTM_ID": "GTM-PJPK4GP6",
+    // Website-leads pipeline (created by Rami 2026-07-10); entry stage is
+    // discovered at runtime by name (new/incoming/lead → first stage).
+    "GHL_PIPELINE_ID": "cGvlBKG1EBoj47Cg5v5K"
   }
 }

@@ -19,7 +19,7 @@ jobs:
         run: |
           status=$(curl -s -o /tmp/body -w "%{http_code}" -X POST \
             -H "x-retry-token: ${{ secrets.LEADS_RETRY_TOKEN }}" \
-            https://investoffplan-preview.emerge-digital.workers.dev/api/leads/retry)
+            https://investoffplan.com/api/leads/retry)
           cat /tmp/body
           if [ "$status" != "200" ]; then
             echo "Retry endpoint returned $status" >&2
