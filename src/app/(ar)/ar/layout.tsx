@@ -8,6 +8,9 @@ import { LocaleProvider } from "@/i18n/locale-provider";
 import { getDictionary } from "@/i18n";
 import "../../globals.css";
 
+// Match the EN layout: hourly ISR so deploys reach the CDN edge within an hour.
+export const revalidate = 3600;
+
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
 

@@ -6,6 +6,10 @@ import { CatalogPrefetch } from "@/components/catalog-prefetch";
 import { MotionProvider } from "@/components/motion-provider";
 import "../globals.css";
 
+// Re-render at most hourly so a deploy's fresh content reaches the CDN edge
+// within an hour instead of being pinned by the SSG default (s-maxage=1yr).
+export const revalidate = 3600;
+
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
 
