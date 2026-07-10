@@ -37,7 +37,20 @@ export const ar: Dict = {
       "marketData": "بيانات السوق",
       "buyerGuides": "أدلة المشترين",
       "company": "الشركة"
-    }
+    },
+    "tabs": {
+      "aria": "التنقل الأساسي",
+      "explore": "استكشف",
+      "communities": "المناطق",
+      "search": "بحث",
+      "compare": "قارن",
+      "saved": "المحفوظات"
+    },
+    "drawer": {
+      "language": "اللغة",
+      "currency": "العملة"
+    },
+    "searchPlaceholder": "ابحث عن مشروع أو مطوّر أو منطقة"
   },
   "footer": {
     "columns": {

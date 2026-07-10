@@ -35,7 +35,20 @@ const dict = {
       "marketData": "Market data",
       "buyerGuides": "Buyer guides",
       "company": "Company"
-    }
+    },
+    "tabs": {
+      "aria": "Primary",
+      "explore": "Explore",
+      "communities": "Areas",
+      "search": "Search",
+      "compare": "Compare",
+      "saved": "Saved"
+    },
+    "drawer": {
+      "language": "Language",
+      "currency": "Currency"
+    },
+    "searchPlaceholder": "Search projects, developers, areas"
   },
   "footer": {
     "columns": {

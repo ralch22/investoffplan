@@ -1,4 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+
+// viewport-fit=cover: without it env(safe-area-inset-bottom) is 0 on iPhone,
+// so the bottom tab bar would sit under the home indicator.
+export const viewport: Viewport = { viewportFit: "cover" };
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { Inter, PT_Serif } from "next/font/google";
 import { SiteJsonLd } from "@/components/site-json-ld";

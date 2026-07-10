@@ -142,7 +142,12 @@ export function SiteHeader({
           </div>
         </div>
       </header>
-      <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileNav
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        currency={currency}
+        onCurrencyChange={onCurrencyChange}
+      />
     </>
   );
 }
