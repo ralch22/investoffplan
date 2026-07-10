@@ -281,10 +281,14 @@ function isEmbedMediaUrl(u: string): boolean {
 const JUNK_HOSTS = new Set(["example.com", "example.org", "example.net", "test.com", "domain.com", "yourdomain.com", "localhost"]);
 const JUNK_URL_RE =
   /placeholder|lorem|your[_-]?(?:video|image|tour|link|url|file|id)|video[_-]?id\b|_here\b|link[_-]?here|insert[_-]|xxx+/i;
+// Famous YouTube IDs the LLM reaches for as a stand-in when it has no real
+// video — most notoriously the Rickroll (dQw4w9WgXcQ). A token check can't
+// catch these because an ID isn't a word, so blocklist them explicitly.
+const FAMOUS_PLACEHOLDER_VIDEO_RE = /\b(?:dQw4w9WgXcQ|oHg5SJYRHA0|9bZkp7q19f0|kJQP7kiw5Fk|YbJOTdZBX1g|jNQXAC9IVRw)\b/;
 
 /** True when the URL is an obvious placeholder / not a real, resolvable media link. */
 export function isJunkMediaUrl(u: string): boolean {
-  if (JUNK_URL_RE.test(u)) return true;
+  if (JUNK_URL_RE.test(u) || FAMOUS_PLACEHOLDER_VIDEO_RE.test(u)) return true;
   try {
     const url = new URL(u);
     if (!/^https?:$/.test(url.protocol)) return true;
@@ -293,6 +297,28 @@ export function isJunkMediaUrl(u: string): boolean {
     return false;
   } catch {
     return true; // unparseable → junk
+  }
+}
+
+/**
+ * A video URL must actually reference a playable video. On youtube/vimeo the
+ * extractor sometimes hands back a channel / playlist / search page
+ * (youtube.com/channel/…/videos) that can never embed — reject those. Non
+ * youtube/vimeo hosts (matterport/kuula/developer pages) pass through.
+ */
+export function isPlayableVideoUrl(u: string): boolean {
+  try {
+    const url = new URL(u);
+    const h = url.hostname.toLowerCase().replace(/^www\./, "");
+    if (h === "youtu.be") return url.pathname.replace(/\/+$/, "").length > 1;
+    if (h === "youtube.com" || h.endsWith(".youtube.com") || h === "youtube-nocookie.com") {
+      if (url.pathname === "/watch") return Boolean(url.searchParams.get("v"));
+      return /^\/(?:embed|shorts|v|live)\/[\w-]{6,}/.test(url.pathname);
+    }
+    if (h === "vimeo.com" || h.endsWith(".vimeo.com")) return /\/(?:video\/)?\d{5,}/.test(url.pathname);
+    return true;
+  } catch {
+    return false;
   }
 }
 
@@ -328,7 +354,13 @@ export function pickVideoUrl(
     typeof facts?.videoUrl === "string" ? facts.videoUrl : undefined;
   // Allow embeddable hosts (youtube/vimeo) here even though they're blocked as
   // scrape sources — a video link is exactly what the media section renders.
-  if (fromFacts && !isJunkMediaUrl(fromFacts) && (allowedUrl(fromFacts) || isEmbedMediaUrl(fromFacts)))
+  // isPlayableVideoUrl rejects channel/playlist pages masquerading as videos.
+  if (
+    fromFacts &&
+    !isJunkMediaUrl(fromFacts) &&
+    (allowedUrl(fromFacts) || isEmbedMediaUrl(fromFacts)) &&
+    isPlayableVideoUrl(fromFacts)
+  )
     return fromFacts;
 
   // Source-URL fallback: only take a page that plausibly belongs to THIS
@@ -336,7 +368,7 @@ export function pickVideoUrl(
   // "/video" page (e.g. a Zawya news clip) is worse than no video at all.
   for (const s of sources) {
     const u = s.url.toLowerCase();
-    if (isJunkMediaUrl(s.url) || NEWS_HOST_RE.test(u)) continue;
+    if (isJunkMediaUrl(s.url) || NEWS_HOST_RE.test(u) || !isPlayableVideoUrl(s.url)) continue;
     if (!(u.includes("vimeo.com") || u.includes("/video"))) continue;
     if (urlMentionsProject(s.url, tokens)) return s.url;
   }
