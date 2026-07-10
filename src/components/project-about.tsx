@@ -104,9 +104,7 @@ export function ProjectAbout({
           ) : null}
           {video ? (
             <a
-              href={video}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#media"
               className="inline-flex items-center rounded-full border-2 border-brand px-6 py-3 text-sm font-bold text-brand shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand hover:text-white"
             >
               Watch video

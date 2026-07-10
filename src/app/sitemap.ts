@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getDevelopers, getCatalogApi } from "@/lib/catalog";
+import { videoSitemapEntry } from "@/lib/media";
 import { getCommunities } from "@/lib/communities";
 import { getComparablePairSlugs } from "@/lib/area-compare";
 import { getComparableProjectSlugs } from "@/lib/project-compare";
@@ -53,12 +54,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   );
 
-  const projectRoutes = api.projects.map((p) => ({
-    url: `${BASE}/projects/${p.slug}`,
-    lastModified: catalogUpdated,
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
+  const projectRoutes = api.projects.map((p) => {
+    const thumb = p.imageUrl
+      ? p.imageUrl.startsWith("http")
+        ? p.imageUrl
+        : `${BASE}${p.imageUrl.startsWith("/") ? "" : "/"}${p.imageUrl}`
+      : "";
+    const video = videoSitemapEntry(p.videoUrl, {
+      title: `${p.name} — video walkthrough`,
+      description: `Video walkthrough of ${p.name} by ${p.developer} in ${p.area}.`,
+      thumbnail: thumb,
+    });
+    return {
+      url: `${BASE}/projects/${p.slug}`,
+      lastModified: catalogUpdated,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+      ...(video ? { videos: [video] } : {}),
+    };
+  });
 
   const developers = await getDevelopers();
   const developerRoutes = developers.map((d) => ({
