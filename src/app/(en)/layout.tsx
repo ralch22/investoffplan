@@ -1,9 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+
+// viewport-fit=cover: without it env(safe-area-inset-bottom) is 0 on iPhone,
+// so the bottom tab bar would sit under the home indicator.
+export const viewport: Viewport = { viewportFit: "cover" };
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { Inter, PT_Serif } from "next/font/google";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { CatalogPrefetch } from "@/components/catalog-prefetch";
 import { MotionProvider } from "@/components/motion-provider";
+import { NavDataProvider } from "@/components/nav/nav-data-provider";
+import { getNavCommunities } from "@/lib/nav-data";
 import "../globals.css";
 
 // Re-render at most hourly so a deploy's fresh content reaches the CDN edge
@@ -63,11 +69,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const topCommunities = await getNavCommunities();
   return (
     <html
       lang="en"
@@ -79,7 +86,9 @@ export default function RootLayout({
         {gtmId ? <GoogleTagManager gtmId={gtmId} /> : null}
         <SiteJsonLd />
         <CatalogPrefetch />
-        <MotionProvider>{children}</MotionProvider>
+        <NavDataProvider topCommunities={topCommunities}>
+          <MotionProvider>{children}</MotionProvider>
+        </NavDataProvider>
       </body>
     </html>
   );

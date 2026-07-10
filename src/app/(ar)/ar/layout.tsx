@@ -1,9 +1,15 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+
+// viewport-fit=cover: without it env(safe-area-inset-bottom) is 0 on iPhone,
+// so the bottom tab bar would sit under the home indicator.
+export const viewport: Viewport = { viewportFit: "cover" };
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { CatalogPrefetch } from "@/components/catalog-prefetch";
 import { MotionProvider } from "@/components/motion-provider";
+import { NavDataProvider } from "@/components/nav/nav-data-provider";
+import { getNavCommunities } from "@/lib/nav-data";
 import { LocaleProvider } from "@/i18n/locale-provider";
 import { getDictionary } from "@/i18n";
 import "../../globals.css";
@@ -60,12 +66,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ArabicRootLayout({
+export default async function ArabicRootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const dict = getDictionary("ar");
+  const topCommunities = await getNavCommunities();
 
   return (
     <html
@@ -80,7 +87,9 @@ export default function ArabicRootLayout({
         <SiteJsonLd />
         <CatalogPrefetch />
         <LocaleProvider locale="ar" dict={dict}>
-          <MotionProvider>{children}</MotionProvider>
+          <NavDataProvider topCommunities={topCommunities}>
+            <MotionProvider>{children}</MotionProvider>
+          </NavDataProvider>
         </LocaleProvider>
       </body>
     </html>

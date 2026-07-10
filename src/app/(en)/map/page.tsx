@@ -38,7 +38,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
   const heroImage = await getHeroImage();
 
   return (
-    <PageShell headerVariant="transparent">
+    <PageShell headerVariant="transparent" mobileDock="none">
       <PageHero
         title="Project map"
         subtitle={`${stats.withCoords.toLocaleString()} map-ready projects across the UAE`}

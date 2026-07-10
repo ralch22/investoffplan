@@ -33,8 +33,8 @@ export function CompareBar({
       className={cn(
         "flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3 text-sm shadow-elevation-sm",
         active &&
-          "max-md:fixed max-md:inset-x-4 max-md:bottom-4 max-md:z-[var(--z-sticky)] max-md:shadow-elevation-lg",
-        active && "md:sticky md:bottom-4 md:z-[var(--z-sticky)]",
+          "max-lg:fixed max-lg:inset-x-4 max-lg:bottom-[calc(var(--bottom-dock)+0.5rem)] max-lg:z-[var(--z-sticky)] max-lg:shadow-elevation-lg",
+        active && "lg:sticky lg:bottom-4 lg:z-[var(--z-sticky)]",
         className,
       )}
     >

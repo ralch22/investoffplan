@@ -242,7 +242,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     : null;
 
   return (
-    <PageShell headerVariant="transparent">
+    <PageShell headerVariant="transparent" mobileDock="cta">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

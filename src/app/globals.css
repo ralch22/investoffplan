@@ -243,6 +243,21 @@ h3 {
   animation: reveal-up var(--duration-normal) var(--ease-out) both;
 }
 
+/* Mega-menu panel entry — opacity only (a translate would offset the panel from
+   the header and open a hover-intent gap). */
+.mega-in {
+  animation: mega-fade var(--duration-fast) var(--ease-out) both;
+}
+
+@keyframes mega-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes reveal-up {
   from {
     opacity: 0;
@@ -292,6 +307,48 @@ h3 {
   top: 1rem;
   outline: 2px solid white;
   outline-offset: 2px;
+}
+
+/* Mobile drawer slide-in (end edge; flipped under RTL). The global
+   prefers-reduced-motion rule flattens these to ~0ms. */
+.drawer-in {
+  animation: drawer-in var(--duration-normal) var(--ease-out) both;
+}
+
+@keyframes drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+[dir="rtl"] .drawer-in {
+  animation-name: drawer-in-rtl;
+}
+
+@keyframes drawer-in-rtl {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Bottom-sheet rise (mobile search) */
+.drawer-up {
+  animation: drawer-up var(--duration-normal) var(--ease-out) both;
+}
+
+@keyframes drawer-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 @keyframes marquee {
