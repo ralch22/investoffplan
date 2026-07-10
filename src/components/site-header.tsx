@@ -1,31 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CurrencySelector } from "@/components/currency-selector";
 import { MobileNav } from "@/components/mobile-nav";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import type { CurrencyCode } from "@/lib/types";
 import { BrandLogo } from "@/components/brand-logo";
+import { SiteNav } from "@/components/nav/site-nav";
 import { useFavoritesCount } from "@/hooks/use-favorites-count";
 import { cn } from "@/lib/cn";
 import { useI18n } from "@/i18n/locale-provider";
 import { interpolate, localePath } from "@/i18n/config";
 import { LanguageSwitcher } from "@/components/language-switcher";
-
-const NAV_KEYS = [
-  { href: "/projects", key: "projects" },
-  { href: "/tools", key: "dataToolkit" },
-  { href: "/developers", key: "developers" },
-  { href: "/communities", key: "areas" },
-  { href: "/compare", key: "marketData" },
-  { href: "/locations", key: "locations" },
-  { href: "/guides", key: "guides" },
-  { href: "/news", key: "news" },
-  { href: "/about", key: "about" },
-  { href: "/contact", key: "contact" },
-] as const;
 
 interface SiteHeaderProps {
   currency: CurrencyCode;
@@ -33,23 +20,19 @@ interface SiteHeaderProps {
   variant?: "light" | "transparent";
 }
 
-function isActive(pathname: string, href: string) {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
-
 export function SiteHeader({
   currency,
   onCurrencyChange,
   variant = "light",
 }: SiteHeaderProps) {
-  const pathname = usePathname();
   const { locale, dict } = useI18n();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [megaOpen, setMegaOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const favoritesCount = useFavoritesCount();
   const isTransparent = variant === "transparent";
-  const showSolidHeader = !isTransparent || scrolled;
+  // An open mega panel forces the header solid so panel + header read as one.
+  const showSolidHeader = !isTransparent || scrolled || megaOpen;
 
   useEffect(() => {
     if (!isTransparent) return;
@@ -86,34 +69,7 @@ export function SiteHeader({
             />
           </Link>
 
-          <nav
-            className="hidden flex-1 items-center justify-center gap-0.5 lg:flex"
-            aria-label={dict.nav.mainNavAria}
-          >
-            {NAV_KEYS.map((item) => {
-              const href = localePath(locale, item.href);
-              const active = isActive(pathname, href);
-              return (
-                <Link
-                  key={item.href}
-                  href={href}
-                  className={cn(
-                    "focus-ring rounded-lg px-3 py-2 text-sm font-medium transition",
-                    !showSolidHeader
-                      ? active
-                        ? "bg-white/15 text-white"
-                        : "text-white/85 hover:bg-white/10 hover:text-white"
-                      : active
-                        ? "bg-brand-muted text-brand-dark"
-                        : "text-muted hover:bg-surface-alt hover:text-text-dark",
-                  )}
-                  aria-current={active ? "page" : undefined}
-                >
-                  {dict.nav[item.key]}
-                </Link>
-              );
-            })}
-          </nav>
+          <SiteNav solid={showSolidHeader} onOpenChange={setMegaOpen} />
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <Link

@@ -20,7 +20,22 @@ const dict = {
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "closeNavigation": "Close navigation",
-    "mainNavAria": "Main"
+    "mainNavAria": "Main",
+    "groups": {
+      "browse": "Browse",
+      "tools": "Data & Tools",
+      "insights": "Insights",
+      "more": "More"
+    },
+    "mega": {
+      "topCommunities": "Top communities",
+      "allCommunities": "All communities →",
+      "locationGuides": "Location guides",
+      "compareHub": "Compare projects",
+      "marketData": "Market data",
+      "buyerGuides": "Buyer guides",
+      "company": "Company"
+    }
   },
   "footer": {
     "columns": {

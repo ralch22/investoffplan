@@ -243,6 +243,21 @@ h3 {
   animation: reveal-up var(--duration-normal) var(--ease-out) both;
 }
 
+/* Mega-menu panel entry — opacity only (a translate would offset the panel from
+   the header and open a hover-intent gap). */
+.mega-in {
+  animation: mega-fade var(--duration-fast) var(--ease-out) both;
+}
+
+@keyframes mega-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes reveal-up {
   from {
     opacity: 0;

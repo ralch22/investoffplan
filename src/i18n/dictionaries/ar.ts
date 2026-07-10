@@ -22,7 +22,22 @@ export const ar: Dict = {
     "openMenu": "فتح القائمة",
     "closeMenu": "إغلاق القائمة",
     "closeNavigation": "إغلاق قائمة التنقل",
-    "mainNavAria": "القائمة الرئيسية"
+    "mainNavAria": "القائمة الرئيسية",
+    "groups": {
+      "browse": "تصفّح",
+      "tools": "البيانات والأدوات",
+      "insights": "رؤى",
+      "more": "المزيد"
+    },
+    "mega": {
+      "topCommunities": "أبرز المجتمعات",
+      "allCommunities": "كل المجتمعات ←",
+      "locationGuides": "أدلة المناطق",
+      "compareHub": "قارن المشاريع",
+      "marketData": "بيانات السوق",
+      "buyerGuides": "أدلة المشترين",
+      "company": "الشركة"
+    }
   },
   "footer": {
     "columns": {
