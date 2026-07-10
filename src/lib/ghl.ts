@@ -124,6 +124,7 @@ async function createOpportunity(
   locationId: string,
   contactId: string,
   lead: GhlLeadInput,
+  leadOwnerId?: string,
 ): Promise<{ opportunityId?: string; error?: string }> {
   const resolved = await resolvePipeline(apiKey, locationId);
   if (!resolved) {
@@ -146,6 +147,9 @@ async function createOpportunity(
         name: opportunityName(lead),
         status: "open",
         source: "investoffplan.com",
+        // Opportunity owner = lead owner (Jad), so it shows assigned in the
+        // pipeline and GHL notifies the assignee.
+        ...(leadOwnerId ? { assignedTo: leadOwnerId } : {}),
       }),
     });
     if (!res.ok) {
@@ -173,6 +177,7 @@ export async function forwardLeadToGhl(lead: GhlLeadInput): Promise<GhlForwardRe
   if (!apiKey || !locationId) {
     return { status: "skipped" };
   }
+  const leadOwnerId = process.env.GHL_LEAD_OWNER_ID;
 
   const { firstName, lastName } = splitName(lead.name);
   const notes: string[] = [];
@@ -197,6 +202,9 @@ export async function forwardLeadToGhl(lead: GhlLeadInput): Promise<GhlForwardRe
         ...(lead.phone ? { phone: lead.phone } : {}),
         source: "investoffplan.com",
         tags: ["investoffplan", `iop-${lead.formType}`],
+        // Lead owner (e.g. Jad) so the contact is owned + GHL notifies the
+        // assignee. No-op until GHL_LEAD_OWNER_ID (a GHL user id) is set.
+        ...(leadOwnerId ? { assignedTo: leadOwnerId } : {}),
         ...(notes.length
           ? { customFields: [{ key: "iop_last_inquiry", field_value: notes.join(" | ") }] }
           : {}),
@@ -231,7 +239,7 @@ export async function forwardLeadToGhl(lead: GhlLeadInput): Promise<GhlForwardRe
     let opportunityId: string | undefined;
     let opportunityError: string | undefined;
     if (contactId) {
-      const opp = await createOpportunity(apiKey, locationId, contactId, lead);
+      const opp = await createOpportunity(apiKey, locationId, contactId, lead, leadOwnerId);
       opportunityId = opp.opportunityId;
       opportunityError = opp.error;
     }
