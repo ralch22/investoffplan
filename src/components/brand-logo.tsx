@@ -58,7 +58,12 @@ export function BrandLogo({
       width={logo.width}
       height={logo.height}
       sizes={logo.sizes}
-      className={cn("h-auto w-auto max-w-full", className)}
+      // No `h-auto w-auto` in the base: the brand SVGs carry a viewBox but no
+      // intrinsic px size, so pairing auto height with auto width collapsed the
+      // logo to 0×0 on mobile (cn is plain concat, so a consumer's `h-7`/`h-8`
+      // height couldn't reliably win). Let the consumer's explicit height + the
+      // width/height aspect ratio do the sizing.
+      className={cn("max-w-full", className)}
       priority={priority}
       {...unoptimizedProp(logo.src)}
     />

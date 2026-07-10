@@ -12,7 +12,9 @@ export default function cdnImageLoader({
 }: ImageLoaderProps): string {
   // R2 catalog assets + static brand SVGs: serve directly. Workers image optimizer
   // cannot fetch /cdn from ASSETS, and rejects SVGs unless allowSvg is enabled.
-  if (src.startsWith("/cdn/") || src.startsWith("/brand/")) {
+  // /images (static public JPGs) 404 through the optimizer the same way, so
+  // serve them straight from the static bucket too.
+  if (src.startsWith("/cdn/") || src.startsWith("/brand/") || src.startsWith("/images/")) {
     return src;
   }
 

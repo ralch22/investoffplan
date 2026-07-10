@@ -7,7 +7,10 @@
 export function shouldUnoptimize(src?: string | null): boolean {
   if (!src) return false;
   const s = src.toLowerCase();
-  if (s.startsWith("/cdn/") || s.startsWith("/brand/")) return true;
+  // /cdn (R2), /brand (SVG), and /images (static public JPGs) are served
+  // directly: the OpenNext /_next/image optimizer resolves via env.ASSETS and
+  // 404s for these on Cloudflare Workers, so optimizing them renders broken.
+  if (s.startsWith("/cdn/") || s.startsWith("/brand/") || s.startsWith("/images/")) return true;
   if (s.endsWith(".svg")) return true;
   // Absolute external images (PF media + enrichment developer galleries, issue
   // #37) are hotlinked directly rather than proxied through the Worker image
