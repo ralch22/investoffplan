@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
@@ -124,6 +125,7 @@ export default async function DeveloperDetailPage({
       </section>
 
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Developers", href: "/developers" }, { label: developer.name }]} />
         <section aria-labelledby="developer-projects-heading">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>

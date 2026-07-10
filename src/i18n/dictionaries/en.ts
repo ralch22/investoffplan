@@ -263,7 +263,7 @@ const dict = {
       "subjectPlaceholder": "Subject",
       "messagePlaceholder": "Message",
       "successTitle": "Thanks — your message has been sent.",
-      "successBody": "Our team will get back to you shortly. You can also email admin@investoffplan.com",
+      "successBody": "Our team will get back to you shortly. You can also email iop@investoffplan.com",
       "sendAnother": "Send another message",
       "submit": "Submit",
       "submitting": "Submitting…"
@@ -362,6 +362,9 @@ const dict = {
     "leadPhone": "Phone (with country code)",
     "leadSubmit": "Request callback",
     "leadThanks": "Thanks — our team will be in touch shortly.",
+    "leadInvalid": "Add your name and a phone number with country code.",
+    "leadError": "Couldn't send that — try again or WhatsApp us.",
+    "leadSending": "Sending…",
     "error": "Something went wrong — try again or WhatsApp us.",
     "close": "Close advisor",
     "starterProjects": "Show me 2-beds under AED 2M in Dubai",

@@ -6,10 +6,31 @@ import { useI18n } from "@/i18n/locale-provider";
 import { cn } from "@/lib/cn";
 
 /**
- * EN ↔ AR switch. Only chrome + marketing pages exist in the AR tree, so
- * switching to Arabic from an EN-only route lands on the AR homepage.
+ * EN ↔ AR switch that PRESERVES the user's location — the AR tree mirrors the
+ * full route table (hubs + slug routes + tools), so switching language keeps
+ * you on the same page instead of dumping you on the Arabic homepage.
+ * Anything without an AR mirror falls back to /ar.
  */
-const AR_ROUTES = new Set(["/", "/about", "/contact", "/guides", "/faq"]);
+const AR_MIRRORED = [
+  /^\/$/,
+  /^\/about$/,
+  /^\/contact$/,
+  /^\/projects(\/|$)/,
+  /^\/communities(\/|$)/,
+  /^\/areas(\/|$)/,
+  /^\/developers(\/|$)/,
+  /^\/locations(\/|$)/,
+  /^\/guides(\/|$)/,
+  /^\/news(\/|$)/,
+  /^\/faq(\/|$)/,
+  /^\/compare(\/|$)/,
+  /^\/compare-projects\/./,
+  /^\/compare-developers\/./,
+  /^\/map$/,
+  /^\/market-data$/,
+  /^\/collections\/./,
+  /^\/tools(\/(payment|mortgage|price-map|rent-vs-buy|residential|communities))?$/,
+];
 
 export function LanguageSwitcher({ solid = true }: { solid?: boolean }) {
   const { locale } = useI18n();
@@ -19,7 +40,7 @@ export function LanguageSwitcher({ solid = true }: { solid?: boolean }) {
   const target =
     locale === "ar"
       ? basePath
-      : AR_ROUTES.has(basePath)
+      : AR_MIRRORED.some((re) => re.test(basePath))
         ? basePath === "/"
           ? "/ar"
           : `/ar${basePath}`

@@ -31,7 +31,7 @@ export default function PrivacyPolicyPage() {
             compare usage) are aggregated and used to improve the platform experience.
           </p>
           <p>
-            For data access or deletion requests, contact admin@investoffplan.com.
+            For data access or deletion requests, contact iop@investoffplan.com.
           </p>
         </div>
       </main>

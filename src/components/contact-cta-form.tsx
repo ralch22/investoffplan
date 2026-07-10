@@ -121,7 +121,12 @@ export function ContactCtaForm() {
         </p>
         <button
           type="button"
-          onClick={() => setSubmitted(false)}
+          onClick={() => {
+            // Turnstile tokens are single-use — a retained token 403s the
+            // next submit with timeout-or-duplicate.
+            setTurnstileToken("");
+            setSubmitted(false);
+          }}
           className="mt-4 text-sm font-semibold text-brand-light hover:text-white"
         >
           Send another enquiry

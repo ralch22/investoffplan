@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
@@ -160,6 +161,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
         subtitle="Off-plan investment comparison — real Dubai Land Department sold data."
       />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Compare", href: "/compare" }, { label: `${a.area.name} vs ${b.area.name}` }]} />
         {/* KPI scorecards */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {scorecards.map((card) => (
@@ -180,7 +182,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
         </div>
 
         <div className="mt-8">
-        <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-elevation-sm">
+        <div className="overflow-x-auto rounded-2xl border border-border bg-white shadow-elevation-sm">
           <table className="w-full">
             <thead>
               <tr className="bg-surface-alt">

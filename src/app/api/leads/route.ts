@@ -71,7 +71,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Invalid email" }, { status: 400 });
   }
 
-  if (isTurnstileEnabled()) {
+  // Enforce only when the server can actually verify (TURNSTILE_SECRET_KEY
+  // present, i.e. deployed workers). Without the secret, verifyTurnstileToken
+  // passes any non-empty string — rejecting empty tokens there is security
+  // theater that only breaks local/e2e, where the domain-locked widget can't
+  // issue tokens at all.
+  if (isTurnstileEnabled() && process.env.TURNSTILE_SECRET_KEY) {
     const token = clean(body.turnstileToken, 4000) ?? "";
     const remoteIp = request.headers.get("cf-connecting-ip") ?? undefined;
     const verify = token

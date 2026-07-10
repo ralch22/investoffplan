@@ -55,6 +55,15 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     pfFeature: "Mortgage tools",
   },
   {
+    slug: "payment",
+    title: "Payment Plan Calculator",
+    description:
+      "Break any payment plan (60/40, 80/20, post-handover) into dirham amounts per phase at your purchase price.",
+    href: "/tools/payment",
+    pfHref: "https://www.propertyfinder.ae/en/new-projects",
+    pfFeature: "Payment plans",
+  },
+  {
     slug: "new-projects",
     title: "New Projects",
     description:

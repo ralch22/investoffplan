@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
@@ -130,7 +131,8 @@ export default async function CompareDevelopersPage({ params }: PageProps) {
         subtitle="Off-plan developer comparison — portfolio, pricing, and delivery pipeline from our live catalog."
       />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
-        <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-elevation-sm">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Compare", href: "/compare" }, { label: `${a.name} vs ${b.name}` }]} />
+        <div className="overflow-x-auto rounded-2xl border border-border bg-white shadow-elevation-sm">
           <table className="w-full">
             <thead>
               <tr className="bg-surface-alt">
