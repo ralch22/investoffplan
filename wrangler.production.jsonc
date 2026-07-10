@@ -71,6 +71,9 @@
     "NEXT_PUBLIC_GTM_ID": "GTM-PJPK4GP6",
     // Website-leads pipeline (created by Rami 2026-07-10); entry stage is
     // discovered at runtime by name (new/incoming/lead → first stage).
-    "GHL_PIPELINE_ID": "cGvlBKG1EBoj47Cg5v5K"
+    "GHL_PIPELINE_ID": "cGvlBKG1EBoj47Cg5v5K",
+    // Lead owner = Jad Elcheikh (jad@arlo.properties) — every website lead's
+    // contact + opportunity is assigned to him. Not a secret (user id).
+    "GHL_LEAD_OWNER_ID": "Mu8BNwI3XA8vxM59C3iE"
   }
 }
