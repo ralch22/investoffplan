@@ -49,6 +49,7 @@ const dict = {
       "currency": "Currency"
     },
     "searchPlaceholder": "Search projects, developers, areas",
+    "searchAria": "Search the catalog",
     "searchOpen": "Open search",
     "searchSubmit": "Search"
   },

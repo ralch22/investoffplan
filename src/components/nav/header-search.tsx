@@ -74,7 +74,7 @@ export function HeaderSearch({ solid }: { solid: boolean }) {
         type="search"
         enterKeyHint="search"
         placeholder={dict.nav.searchPlaceholder}
-        aria-label={dict.nav.searchPlaceholder}
+        aria-label={dict.nav.searchAria}
         tabIndex={expanded ? 0 : -1}
         onKeyDown={(e) => {
           if (e.key === "Escape") {

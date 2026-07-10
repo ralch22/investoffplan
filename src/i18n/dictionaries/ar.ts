@@ -51,6 +51,7 @@ export const ar: Dict = {
       "currency": "العملة"
     },
     "searchPlaceholder": "ابحث عن مشروع أو مطوّر أو منطقة",
+    "searchAria": "ابحث في الكتالوج",
     "searchOpen": "فتح البحث",
     "searchSubmit": "بحث"
   },
