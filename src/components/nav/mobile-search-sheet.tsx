@@ -54,7 +54,7 @@ export function MobileSearchSheet({ open, onClose }: { open: boolean; onClose: (
               type="search"
               enterKeyHint="search"
               placeholder={dict.nav.searchPlaceholder}
-              aria-label={dict.nav.searchPlaceholder}
+              aria-label={dict.nav.searchAria}
               className="iop-input"
             />
           </form>

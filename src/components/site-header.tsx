@@ -8,6 +8,7 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import type { CurrencyCode } from "@/lib/types";
 import { BrandLogo } from "@/components/brand-logo";
 import { SiteNav } from "@/components/nav/site-nav";
+import { HeaderSearch } from "@/components/nav/header-search";
 import { useFavoritesCount } from "@/hooks/use-favorites-count";
 import { cn } from "@/lib/cn";
 import { useI18n } from "@/i18n/locale-provider";
@@ -72,6 +73,7 @@ export function SiteHeader({
           <SiteNav solid={showSolidHeader} onOpenChange={setMegaOpen} />
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
+            <HeaderSearch solid={showSolidHeader} />
             <Link
               href={localePath(locale, "/favorites")}
               aria-label={

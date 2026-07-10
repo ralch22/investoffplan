@@ -121,7 +121,7 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
               type="search"
               enterKeyHint="search"
               placeholder={dict.nav.searchPlaceholder}
-              aria-label={dict.nav.searchPlaceholder}
+              aria-label={dict.nav.searchAria}
               className="iop-input h-11"
             />
           </form>
