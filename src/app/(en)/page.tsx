@@ -19,7 +19,6 @@ import { unoptimizedProp } from "@/lib/asset-image";
 import { isServableImage } from "@/lib/area-images";
 import { getCatalogApi } from "@/lib/catalog";
 import { getTopCoveredAreas } from "@/lib/area-compare";
-import { AdvantageMatrix } from "@/components/advantage-matrix";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
@@ -42,10 +41,28 @@ const PROPERTY_TYPE_DEFS = [
   { key: "penthouse", label: "Penthouses" },
 ] as const;
 
-const HIGHLIGHTS = [
-  { value: "10%", label: "Average ROI potential on prime launches", image: "/images/creek-orchard.jpg" },
-  { value: "10 Years", label: "Golden Visa eligibility on qualifying investments", image: "/images/joud-residence.jpg" },
-  { value: "80/20", label: "Flexible payment plans across the catalog", image: "/images/skyline-terraces.jpg" },
+const HIGHLIGHTS: {
+  value: string;
+  sub: string;
+  image: string;
+  body?: string;
+}[] = [
+  {
+    value: "10%",
+    sub: "Average ROI potential",
+    body: "Buying before completion lets you capture price growth through the construction cycle and into handover across prime UAE corridors.",
+    image: "/images/creek-orchard.jpg",
+  },
+  {
+    value: "10 Years",
+    sub: "Golden Visa eligibility",
+    image: "/images/joud-residence.jpg",
+  },
+  {
+    value: "80/20",
+    sub: "Flexible payment plans",
+    image: "/images/skyline-terraces.jpg",
+  },
 ];
 
 const FAQS = [
@@ -324,51 +341,78 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="py-14">
-        <div className="mx-auto max-w-[1200px] px-5 md:px-8">
-          <div className="grid gap-10 md:grid-cols-2 md:items-center">
-            <div>
-              <h2 className="font-display text-3xl font-semibold text-text-dark md:text-4xl">
-                Find the Perfect<br />
-                <em className="italic">Property Investment.</em>
-              </h2>
-              <p className="mt-4 max-w-md text-sm leading-relaxed text-muted">
-                Browse UAE&apos;s most comprehensive off-plan catalog with unit-level pricing,
-                brochures, and live map intelligence.
-              </p>
-              <PrimaryButton href="/projects" className="mt-6">
-                Browse Properties
-              </PrimaryButton>
-            </div>
-            <div className="grid gap-5 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-3">
-              {HIGHLIGHTS.map((item) => (
-                <div
-                  key={item.label}
-                  className="relative flex min-h-[150px] flex-col justify-end overflow-hidden rounded-2xl border border-border shadow-sm"
-                >
-                  <Image
-                    src={item.image}
-                    alt=""
-                    fill
-                    sizes="(max-width: 768px) 100vw, 260px"
-                    className="object-cover"
-                    {...unoptimizedProp(item.image)}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-surface-darker/90 via-surface-dark/50 to-transparent" />
-                  <div className="relative p-5 text-white">
-                    <p className="font-display text-4xl font-semibold text-brand-light">
-                      {item.value}
-                    </p>
-                    <p className="mt-1 text-xs text-white/85">{item.label}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+      {/* Find the Perfect Property Investment — dark CTA band (Figma) */}
+      <section className="relative overflow-hidden bg-surface-dark text-white">
+        <div className="absolute inset-y-0 end-0 hidden w-[56%] md:block" aria-hidden>
+          <Image
+            src="/images/marina-heights.jpg"
+            alt=""
+            fill
+            sizes="56vw"
+            className="object-cover"
+            {...unoptimizedProp("/images/marina-heights.jpg")}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-surface-dark via-surface-dark/85 to-surface-dark/10" />
+        </div>
+        <div className="relative mx-auto max-w-[1200px] px-5 py-16 md:px-8 md:py-24">
+          <div className="max-w-xl">
+            <h2 className="font-display text-3xl font-semibold leading-[1.08] md:text-5xl">
+              <em className="italic text-brand-light">Find</em> the Perfect
+              <br />
+              Property <em className="italic text-brand-light">Investment</em>
+              <span className="text-brand">.</span>
+            </h2>
+            <p className="mt-5 max-w-md text-sm leading-relaxed text-white/70">
+              Browse the UAE&apos;s most comprehensive off-plan catalog — unit-level
+              pricing, developer brochures, and live map intelligence in one place.
+            </p>
+            <PrimaryButton href="/projects" className="mt-7">
+              Browse Properties
+            </PrimaryButton>
           </div>
         </div>
       </section>
 
-      <AdvantageMatrix />
+      {/* Investment Highlights — image-backed stat cards (Figma) */}
+      <section className="py-16 md:py-20">
+        <div className="mx-auto max-w-[1200px] px-5 md:px-8">
+          <h2 className="text-center font-display text-3xl font-semibold text-text-dark md:text-4xl">
+            Investment <em className="italic">Highlights</em>
+            <span className="text-brand">.</span>
+          </h2>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {HIGHLIGHTS.map((item) => (
+              <div
+                key={`${item.value}-${item.sub}`}
+                className="flex min-h-[300px] flex-col overflow-hidden rounded-2xl border border-border shadow-elevation-sm"
+              >
+                <div className="relative flex flex-1 flex-col justify-end overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+                    className="object-cover"
+                    {...unoptimizedProp(item.image)}
+                  />
+                  <div className="card-photo-overlay absolute inset-0" />
+                  <div className="relative p-6 text-white">
+                    <p className="font-display text-4xl font-semibold leading-none md:text-5xl">
+                      {item.value}
+                    </p>
+                    <p className="mt-2 text-sm font-semibold text-white/90">{item.sub}</p>
+                  </div>
+                </div>
+                {item.body ? (
+                  <p className="bg-brand p-6 text-sm leading-relaxed text-white">
+                    {item.body}
+                  </p>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="bg-surface-alt py-14">
         <div className="mx-auto max-w-[1200px] px-5 md:px-8">

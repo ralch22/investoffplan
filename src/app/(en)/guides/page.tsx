@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { AdvantageMatrix } from "@/components/advantage-matrix";
 import { GUIDE_CARDS } from "@/lib/figma-copy";
 import { getHeroImage } from "@/lib/area-images";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
@@ -111,8 +110,6 @@ export default async function InsightsPage() {
           </div>
         </section>
       </main>
-
-      <AdvantageMatrix />
     </PageShell>
   );
 }
