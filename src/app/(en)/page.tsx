@@ -26,9 +26,9 @@ import { getCatalogAnalytics } from "@/lib/catalog-analytics";
 import { getSiteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
-  title: "UAE Off-Plan Properties",
+  title: { absolute: "Off-Plan Properties for Sale in Dubai & the UAE | invest off-plan" },
   description:
-    "Browse 2,000+ off-plan units with brochures, compare tools, payment plans, and live map intelligence across Dubai and the UAE.",
+    "Off-plan properties for sale in Dubai & the UAE — unit-level prices, floor plans, payment plans, developer brochures, compare tools, and live DLD market data.",
   alternates: {
     canonical: getSiteUrl(),
     languages: { en: getSiteUrl() || "/", ar: `${getSiteUrl()}/ar` },
