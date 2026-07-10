@@ -1,6 +1,35 @@
 import { cityLabel } from "@/lib/format";
 import { resolveBrochureUrl } from "@/lib/brochure";
+import { parseMedia } from "@/lib/media";
 import type { Project } from "@/lib/types";
+
+/**
+ * VideoObject for a project's embeddable walkthrough (YouTube/Vimeo embed or
+ * self-hosted mp4). Returns null for non-embeddable / missing video.
+ */
+export function buildVideoObjectJsonLd(opts: {
+  videoUrl?: string | null;
+  name: string;
+  description: string;
+  thumbnailUrl?: string;
+  uploadDate: string;
+}) {
+  const { videoUrl, name, description, thumbnailUrl, uploadDate } = opts;
+  if (!videoUrl) return null;
+  const m = parseMedia(videoUrl);
+  const thumb = m.poster || (thumbnailUrl && thumbnailUrl.startsWith("http") ? thumbnailUrl : undefined);
+  const base: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "VideoObject",
+    name: name.slice(0, 110),
+    description: (description || name).slice(0, 500),
+    uploadDate,
+    ...(thumb ? { thumbnailUrl: thumb } : {}),
+  };
+  if (m.kind === "file" && m.fileSrc) return { ...base, contentUrl: m.fileSrc };
+  if ((m.kind === "youtube" || m.kind === "vimeo") && m.embedSrc) return { ...base, embedUrl: m.embedSrc };
+  return null;
+}
 
 function absoluteAsset(siteUrl: string, url?: string): string | undefined {
   if (!url) return undefined;

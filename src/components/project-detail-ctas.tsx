@@ -51,10 +51,7 @@ export function ProjectDetailCtas({
         <ContactButton phone={whatsapp} projectName={projectName} />
         {videoUrl ? (
           <a
-            href={videoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            id="video"
+            href="#media"
             className="inline-flex items-center gap-2 rounded-full border border-brand px-6 py-3.5 text-base font-semibold text-brand transition hover:bg-brand hover:text-white"
           >
             Watch video
@@ -71,11 +68,9 @@ export function ProjectDetailCtas({
         >
           Download brochure
         </button>
-        {virtualTourUrl ?? videoUrl ? (
+        {(virtualTourUrl ?? videoUrl) ? (
           <a
-            href={virtualTourUrl ?? videoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#media"
             className="rounded-full border border-brand py-3 text-center text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
           >
             {virtualTourUrl ? "Virtual tour" : "Watch video"}

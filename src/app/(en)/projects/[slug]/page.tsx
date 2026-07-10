@@ -20,6 +20,7 @@ import { ProjectSummaryRail } from "@/components/project-summary-rail";
 import { PROJECT_DETAIL_SECTIONS } from "@/lib/project-detail-sections";
 import { ProjectUnitsTable } from "@/components/project-units-table";
 import { ProjectMedia } from "@/components/project-media";
+import { isEmbeddableVideo } from "@/lib/media";
 import { ShareButton } from "@/components/share-button";
 import { getProjectBySlug, slugify } from "@/lib/catalog";
 import { getAreaInsightsForProject } from "@/lib/area-insights";
@@ -43,6 +44,7 @@ import { getSiteUrl } from "@/lib/site-url";
 import {
   buildProjectBreadcrumbJsonLd,
   buildProjectJsonLd,
+  buildVideoObjectJsonLd,
 } from "@/lib/project-json-ld";
 import { unoptimizedProp } from "@/lib/asset-image";
 
@@ -91,8 +93,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       : `${getSiteUrl()}${imageUrl.startsWith("/") ? "" : "/"}${imageUrl}`
     : `${getSiteUrl()}/brand/icon-red.png`;
 
+  // Keyword-rich title: project name (strong navigational demand) + "off-plan"
+  // (category) + community/city (location). Front-loaded so it survives SERP
+  // truncation; brand suffix dropped here since Google appends the site name.
+  const areaName = project.area.split(",")[0].trim();
+  const cityName = cityLabel(project.city);
+  const locBit =
+    areaName && areaName.toLowerCase() !== cityName.toLowerCase()
+      ? `${areaName}, ${cityName}`
+      : cityName;
+  const seoTitle = `${project.name} — Off-Plan in ${locBit}`;
+
   return {
-    title: project.name,
+    title: { absolute: seoTitle },
     description,
     alternates: {
       canonical: `${getSiteUrl()}/projects/${slug}`,
@@ -102,7 +115,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       },
     },
     openGraph: {
-      title: project.name,
+      title: seoTitle,
       description,
       type: "website",
       url: `${getSiteUrl()}/projects/${slug}`,
@@ -117,7 +130,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: "summary_large_image",
-      title: project.name,
+      title: seoTitle,
       description,
       images: [absoluteImage],
     },
@@ -204,6 +217,19 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const amenities = project.amenities ?? enrichmentAmenities;
 
   const heroImage = gallery[0];
+  const resolvedVideoUrl = project.videoUrl ?? enrichment?.videoUrl ?? null;
+  const absoluteHero = heroImage
+    ? heroImage.startsWith("http")
+      ? heroImage
+      : `${siteUrl}${heroImage.startsWith("/") ? "" : "/"}${heroImage}`
+    : undefined;
+  const videoLd = buildVideoObjectJsonLd({
+    videoUrl: resolvedVideoUrl,
+    name: `${project.name} — video walkthrough`,
+    description: description ?? `${project.name} by ${project.developer} in ${project.area}.`,
+    thumbnailUrl: absoluteHero,
+    uploadDate: enrichment?.enrichedAt ?? project.salesStartDate ?? "2025-01-01",
+  });
   const additionalPhotoCount = heroImage
     ? [...new Set(gallery.filter(Boolean))].filter((src) => src !== heroImage).length
     : gallery.length;
@@ -225,6 +251,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
+      {videoLd ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(videoLd) }}
+        />
+      ) : null}
       <section className="relative overflow-hidden bg-surface-dark text-white">
         {heroImage ? (
           <Image
@@ -306,7 +338,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               if (section.id === "floor-plans")
                 return (project.floorPlans?.length ?? 0) > 0;
               if (section.id === "media")
-                return Boolean(project.videoUrl ?? enrichment?.videoUrl ?? enrichment?.virtualTourUrl);
+                return isEmbeddableVideo(resolvedVideoUrl) || Boolean(enrichment?.virtualTourUrl);
               if (section.id === "living-in-area") return Boolean(areaInsights);
               if (section.id === "related") return related.length > 0;
               return true;
