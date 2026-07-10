@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/i18n/locale-provider";
 import { localePath } from "@/i18n/config";
@@ -16,83 +16,90 @@ function SearchIcon() {
 }
 
 /**
- * Desktop header search (lg+): icon collapses to a pill, expands to an input on
- * click/focus, routes to /projects?q=. Mobile uses the bottom tab bar's search
- * sheet. aria-label is "Open search" (not "Search") to avoid a strict-mode
- * accessible-name collision with the homepage HeroSearch submit button.
+ * Desktop header search (lg+): an icon button that opens a dropdown search
+ * field (absolute — doesn't fight the crowded header flex row), routing to
+ * /projects?q=. Mobile uses the bottom tab bar's search sheet. The input's
+ * aria-label is "Search the catalog" (not "…developers…") to avoid a
+ * getByLabel('Developer') substring collision with the SERP filter.
  */
 export function HeaderSearch({ solid }: { solid: boolean }) {
-  const [expanded, setExpanded] = useState(false);
+  const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
+  const wrapRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { locale, dict } = useI18n();
 
-  const open = () => {
-    setExpanded(true);
-    requestAnimationFrame(() => inputRef.current?.focus());
-  };
+  useEffect(() => {
+    if (open) requestAnimationFrame(() => inputRef.current?.focus());
+  }, [open]);
+
+  // Close on outside click.
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    return () => document.removeEventListener("pointerdown", onDown);
+  }, [open]);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const query = q.trim();
-    setExpanded(false);
+    setOpen(false);
     router.push(
       localePath(locale, query ? `/projects?q=${encodeURIComponent(query)}` : "/projects"),
     );
   };
 
   return (
-    <form
-      onSubmit={submit}
-      className={cn(
-        "hidden items-center overflow-hidden rounded-full border transition-[width,background-color,border-color] duration-300 lg:flex",
-        expanded ? "w-64" : "w-10",
-        solid
-          ? "border-border bg-surface"
-          : expanded
-            ? "border-white/40 bg-white/15"
-            : "border-white/30 bg-transparent",
-      )}
-    >
+    <div ref={wrapRef} className="relative hidden lg:block">
       <button
-        type={expanded ? "submit" : "button"}
-        onClick={expanded ? undefined : open}
-        aria-label={expanded ? dict.nav.searchSubmit : dict.nav.searchOpen}
-        aria-expanded={expanded}
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label={dict.nav.searchOpen}
+        aria-expanded={open}
         className={cn(
-          "focus-ring iop-btn-press flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
-          solid ? "text-muted hover:text-brand" : "text-white/90 hover:text-white",
+          "focus-ring iop-btn-press flex h-10 w-10 items-center justify-center rounded-full border transition",
+          solid
+            ? "border-border text-muted hover:border-brand hover:text-brand"
+            : "border-white/30 text-white/90 hover:border-white hover:bg-white/10",
         )}
       >
         <SearchIcon />
       </button>
-      <input
-        ref={inputRef}
-        value={q}
-        onChange={(e) => setQ(e.target.value)}
-        type="search"
-        enterKeyHint="search"
-        placeholder={dict.nav.searchPlaceholder}
-        aria-label={dict.nav.searchAria}
-        tabIndex={expanded ? 0 : -1}
-        onKeyDown={(e) => {
-          if (e.key === "Escape") {
-            e.preventDefault();
-            setExpanded(false);
-          }
-        }}
-        onBlur={() => {
-          if (!q.trim()) setExpanded(false);
-        }}
-        className={cn(
-          "w-full min-w-0 bg-transparent pe-3 text-sm outline-none transition-opacity duration-200",
-          expanded ? "opacity-100" : "pointer-events-none opacity-0",
-          solid
-            ? "text-text-dark placeholder:text-muted-light"
-            : "text-white placeholder:text-white/60",
-        )}
-      />
-    </form>
+
+      {open ? (
+        <form
+          onSubmit={submit}
+          className="reveal absolute end-0 top-full z-[var(--z-header)] mt-2 flex w-[min(20rem,calc(100vw-2rem))] items-center gap-2 rounded-2xl border border-border bg-surface p-2 shadow-elevation-lg"
+        >
+          <span className="ps-1 text-muted-light">
+            <SearchIcon />
+          </span>
+          <input
+            ref={inputRef}
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            type="search"
+            enterKeyHint="search"
+            placeholder={dict.nav.searchPlaceholder}
+            aria-label={dict.nav.searchAria}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") setOpen(false);
+            }}
+            className="w-full min-w-0 bg-transparent text-sm text-text-dark outline-none placeholder:text-muted-light"
+          />
+          <button
+            type="submit"
+            aria-label={dict.nav.searchSubmit}
+            className="iop-btn-press focus-ring shrink-0 rounded-xl bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark"
+          >
+            {dict.nav.searchSubmit}
+          </button>
+        </form>
+      ) : null}
+    </div>
   );
 }
