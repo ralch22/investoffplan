@@ -18,12 +18,141 @@ export interface GhlLeadInput {
 }
 
 export type GhlForwardResult =
-  | { status: "sent"; contactId?: string }
+  | { status: "sent"; contactId?: string; opportunityId?: string; opportunityError?: string }
   | { status: "skipped" }
   | { status: "failed"; error: string };
 
 export function isGhlConfigured(): boolean {
   return Boolean(process.env.GHL_API_KEY && process.env.GHL_LOCATION_ID);
+}
+
+interface GhlPipelineStage {
+  id: string;
+  name: string;
+  position?: number;
+}
+
+interface GhlPipeline {
+  id: string;
+  name: string;
+  stages: GhlPipelineStage[];
+}
+
+interface ResolvedPipeline {
+  pipelineId: string;
+  stageId: string;
+}
+
+// Resolved once per isolate — pipelines change rarely; a worker restart picks
+// up changes. GHL_PIPELINE_ID / GHL_STAGE_ID env vars short-circuit discovery.
+let cachedPipeline: ResolvedPipeline | null | undefined;
+
+/**
+ * Pick the pipeline + entry stage new website leads land in. Preference order:
+ * explicit env IDs → pipeline whose name matches GHL_PIPELINE_NAME (default
+ * "website") → first pipeline. Stage: name matching new/incoming/lead →
+ * lowest-position stage. GHL's public API cannot CREATE pipelines (UI-only),
+ * so discovery against whatever exists is the robust play.
+ */
+async function resolvePipeline(apiKey: string, locationId: string): Promise<ResolvedPipeline | null> {
+  if (cachedPipeline !== undefined) return cachedPipeline;
+
+  const envPipeline = process.env.GHL_PIPELINE_ID;
+  const envStage = process.env.GHL_STAGE_ID;
+  if (envPipeline && envStage) {
+    cachedPipeline = { pipelineId: envPipeline, stageId: envStage };
+    return cachedPipeline;
+  }
+
+  try {
+    const res = await fetch(
+      `${GHL_API_BASE}/opportunities/pipelines?locationId=${encodeURIComponent(locationId)}`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          Version: GHL_API_VERSION,
+          Accept: "application/json",
+        },
+      },
+    );
+    if (!res.ok) {
+      cachedPipeline = null;
+      return null;
+    }
+    const data = (await res.json()) as { pipelines?: GhlPipeline[] };
+    const pipelines = data.pipelines ?? [];
+    if (pipelines.length === 0) {
+      cachedPipeline = null;
+      return null;
+    }
+
+    const wanted = (process.env.GHL_PIPELINE_NAME ?? "website").toLowerCase();
+    const pipeline =
+      pipelines.find((p) => p.name.toLowerCase().includes(wanted)) ?? pipelines[0];
+
+    const stages = [...(pipeline.stages ?? [])].sort(
+      (a, b) => (a.position ?? 0) - (b.position ?? 0),
+    );
+    if (stages.length === 0) {
+      cachedPipeline = null;
+      return null;
+    }
+    const stage =
+      stages.find((s) => /new|incoming|lead|enquir|inquir/i.test(s.name)) ?? stages[0];
+
+    cachedPipeline = { pipelineId: pipeline.id, stageId: stage.id };
+    return cachedPipeline;
+  } catch {
+    cachedPipeline = null;
+    return null;
+  }
+}
+
+function opportunityName(lead: GhlLeadInput): string {
+  const who = lead.name?.trim() || lead.email || lead.phone || "Website lead";
+  const what = lead.projectSlug ? ` — ${lead.projectSlug}` : "";
+  return `${who}${what} (${lead.formType})`.slice(0, 120);
+}
+
+/** Stage the lead into the pipeline as an open opportunity. Best-effort. */
+async function createOpportunity(
+  apiKey: string,
+  locationId: string,
+  contactId: string,
+  lead: GhlLeadInput,
+): Promise<{ opportunityId?: string; error?: string }> {
+  const resolved = await resolvePipeline(apiKey, locationId);
+  if (!resolved) {
+    return { error: "no-pipeline: create one in GHL (UI) or set GHL_PIPELINE_ID/GHL_STAGE_ID" };
+  }
+  try {
+    const res = await fetch(`${GHL_API_BASE}/opportunities/`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        Version: GHL_API_VERSION,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        locationId,
+        pipelineId: resolved.pipelineId,
+        pipelineStageId: resolved.stageId,
+        contactId,
+        name: opportunityName(lead),
+        status: "open",
+        source: "investoffplan.com",
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      return { error: `GHL opp ${res.status}: ${body.slice(0, 200)}` };
+    }
+    const data = (await res.json()) as { opportunity?: { id?: string }; id?: string };
+    return { opportunityId: data.opportunity?.id ?? data.id };
+  } catch (error) {
+    return { error: (error as Error).message.slice(0, 200) };
+  }
 }
 
 function splitName(name?: string): { firstName?: string; lastName?: string } {
@@ -92,7 +221,18 @@ export async function forwardLeadToGhl(lead: GhlLeadInput): Promise<GhlForwardRe
       }).catch(() => {});
     }
 
-    return { status: "sent", contactId };
+    // Stage the lead into the sales pipeline. Best-effort: an opportunity
+    // failure must not fail the lead (contact + D1 row already exist) — but
+    // it IS recorded so the retry cron can backfill it.
+    let opportunityId: string | undefined;
+    let opportunityError: string | undefined;
+    if (contactId) {
+      const opp = await createOpportunity(apiKey, locationId, contactId, lead);
+      opportunityId = opp.opportunityId;
+      opportunityError = opp.error;
+    }
+
+    return { status: "sent", contactId, opportunityId, opportunityError };
   } catch (error) {
     return { status: "failed", error: (error as Error).message.slice(0, 300) };
   }

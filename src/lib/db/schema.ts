@@ -167,6 +167,7 @@ export const leads = sqliteTable(
       .default(false),
     ghlStatus: text("ghl_status").notNull().default("pending"),
     ghlContactId: text("ghl_contact_id"),
+    ghlOpportunityId: text("ghl_opportunity_id"),
     ghlAttempts: integer("ghl_attempts").notNull().default(0),
     ghlLastError: text("ghl_last_error"),
   },

@@ -122,7 +122,7 @@ export function SiteFooter() {
                 only with real brand profile URLs. */}
             <div className="flex flex-wrap gap-5">
               <span dir="ltr">{interpolate(dict.footer.contact.telephone, { phone: "+971 44 321 620" })}</span>
-              <span>{interpolate(dict.footer.contact.email, { email: "iop@investoffplan.com" })}</span>
+              <span>{interpolate(dict.footer.contact.email, { email: "info@investoffplan.com" })}</span>
               <span>{dict.footer.contact.address}</span>
             </div>
             <div className="flex gap-5">

@@ -133,7 +133,14 @@ export async function POST(request: Request) {
         ghlStatus: result.status,
         ghlAttempts: 1,
         ghlContactId: result.status === "sent" ? (result.contactId ?? null) : null,
-        ghlLastError: result.status === "failed" ? result.error : null,
+        ghlOpportunityId:
+          result.status === "sent" ? (result.opportunityId ?? null) : null,
+        ghlLastError:
+          result.status === "failed"
+            ? result.error
+            : result.status === "sent"
+              ? (result.opportunityError ?? null)
+              : null,
       })
       .where(eq(leads.id, lead.id));
   };

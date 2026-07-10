@@ -263,7 +263,7 @@ const dict = {
       "subjectPlaceholder": "Subject",
       "messagePlaceholder": "Message",
       "successTitle": "Thanks — your message has been sent.",
-      "successBody": "Our team will get back to you shortly. You can also email iop@investoffplan.com",
+      "successBody": "Our team will get back to you shortly. You can also email info@investoffplan.com",
       "sendAnother": "Send another message",
       "submit": "Submit",
       "submitting": "Submitting…"

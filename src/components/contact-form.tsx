@@ -99,7 +99,7 @@ export function ContactForm() {
       <div className="mt-6 rounded-xl border border-border bg-surface-alt p-6 text-center">
         <p className="font-semibold text-text-dark">Thanks — your message has been sent.</p>
         <p className="mt-2 text-sm text-muted">
-          Our team will get back to you shortly. You can also email iop@investoffplan.com
+          Our team will get back to you shortly. You can also email info@investoffplan.com
         </p>
         <button
           type="button"

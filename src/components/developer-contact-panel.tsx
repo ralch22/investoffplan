@@ -4,7 +4,7 @@ import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { WHATSAPP_PRIMARY } from "@/lib/contact-info";
 import { withUtm } from "@/lib/utm";
 
-const SITE_EMAIL = "iop@investoffplan.com";
+const SITE_EMAIL = "info@investoffplan.com";
 const SITE_WHATSAPP = WHATSAPP_PRIMARY;
 
 interface DeveloperContactPanelProps {

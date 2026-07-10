@@ -37,8 +37,8 @@ const CHANNELS = [
   },
   {
     label: "البريد الإلكتروني",
-    value: "iop@investoffplan.com",
-    href: "mailto:iop@investoffplan.com",
+    value: "info@investoffplan.com",
+    href: "mailto:info@investoffplan.com",
     note: "للاستفسارات التفصيلية وطلبات المقارنة بين المشاريع.",
   },
 ];
