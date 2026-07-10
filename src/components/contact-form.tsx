@@ -99,11 +99,16 @@ export function ContactForm() {
       <div className="mt-6 rounded-xl border border-border bg-surface-alt p-6 text-center">
         <p className="font-semibold text-text-dark">Thanks — your message has been sent.</p>
         <p className="mt-2 text-sm text-muted">
-          Our team will get back to you shortly. You can also email admin@investoffplan.com
+          Our team will get back to you shortly. You can also email iop@investoffplan.com
         </p>
         <button
           type="button"
-          onClick={() => setSubmitted(false)}
+          onClick={() => {
+            // Turnstile tokens are single-use — a retained token 403s the
+            // next submit with timeout-or-duplicate.
+            setTurnstileToken("");
+            setSubmitted(false);
+          }}
           className="mt-4 text-sm font-semibold text-brand hover:text-brand-dark"
         >
           Send another message

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { LocaleLink } from "@/components/locale-link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
@@ -124,6 +125,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
       />
 
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Communities", href: "/communities" }, { label: community.name }]} />
         {/* Stats band */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard label="Off-plan projects" value={String(community.projectCount)} />

@@ -5,6 +5,7 @@ import { PageHero } from "@/components/page-hero";
 import { ContactCta } from "@/components/contact-cta";
 import { ContactForm } from "@/components/contact-form";
 import { getHeroImage } from "@/lib/area-images";
+import { CONTACT_EMAIL, OFFICE_PHONE_DISPLAY } from "@/lib/contact-info";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -39,7 +40,13 @@ export default async function ContactPage() {
             Contact us or message us via WhatsApp, phone, or email.
           </p>
           <p className="mt-3 text-sm font-semibold text-brand">
-            +971 44 397 620 · admin@investoffplan.com
+            <a href={`tel:${OFFICE_PHONE_DISPLAY.replace(/\s/g, "")}`} className="hover:underline">
+              {OFFICE_PHONE_DISPLAY}
+            </a>{" "}
+            ·{" "}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="hover:underline">
+              {CONTACT_EMAIL}
+            </a>
           </p>
 
           <ContactForm />

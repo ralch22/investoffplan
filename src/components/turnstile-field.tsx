@@ -40,6 +40,25 @@ export function TurnstileField({
     };
   }, [callbackName, enabled, onToken]);
 
+  // Poll for the script when it was already loaded by an earlier instance —
+  // next/script onLoad only fires for the FIRST mount of a given src, so a
+  // widget mounted later (e.g. the brochure modal, after the footer newsletter
+  // form loaded the script) would otherwise never render and its form 403s.
+  useEffect(() => {
+    if (!enabled || scriptReady) return;
+    if (window.turnstile) {
+      setScriptReady(true);
+      return;
+    }
+    const poll = setInterval(() => {
+      if (window.turnstile) {
+        setScriptReady(true);
+        clearInterval(poll);
+      }
+    }, 250);
+    return () => clearInterval(poll);
+  }, [enabled, scriptReady]);
+
   useEffect(() => {
     if (!enabled || !scriptReady || !window.turnstile) return;
     const el = document.getElementById(containerId);
@@ -61,7 +80,7 @@ export function TurnstileField({
       <Script
         src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
         strategy="afterInteractive"
-        onLoad={() => setScriptReady(true)}
+        onReady={() => setScriptReady(true)}
       />
       <div id={containerId} data-action="turnstile-spin-v1" className={className} />
     </>

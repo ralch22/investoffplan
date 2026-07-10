@@ -265,7 +265,7 @@ export const ar: Dict = {
       "subjectPlaceholder": "الموضوع",
       "messagePlaceholder": "الرسالة",
       "successTitle": "شكراً لك — تم إرسال رسالتك.",
-      "successBody": "سيتواصل معك فريقنا قريباً. يمكنك أيضاً مراسلتنا على admin@investoffplan.com",
+      "successBody": "سيتواصل معك فريقنا قريباً. يمكنك أيضاً مراسلتنا على iop@investoffplan.com",
       "sendAnother": "إرسال رسالة أخرى",
       "submit": "إرسال",
       "submitting": "جارٍ الإرسال…"
@@ -364,6 +364,9 @@ export const ar: Dict = {
     "leadPhone": "الهاتف (مع رمز الدولة)",
     "leadSubmit": "اطلب اتصالاً",
     "leadThanks": "شكراً — سيتواصل معك فريقنا قريباً.",
+    "leadInvalid": "أدخل اسمك ورقم هاتف مع رمز الدولة.",
+    "leadError": "تعذّر الإرسال — حاول مرة أخرى أو راسلنا على واتساب.",
+    "leadSending": "جارٍ الإرسال…",
     "error": "حدث خطأ — حاول مجدداً أو راسلنا واتساب.",
     "close": "إغلاق المستشار",
     "starterProjects": "أرني شقق غرفتين تحت 2 مليون درهم في دبي",

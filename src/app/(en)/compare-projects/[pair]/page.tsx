@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -126,6 +127,7 @@ export default async function CompareProjectsPage({ params }: PageProps) {
         subtitle={`Two off-plan projects in ${a.area}, side by side.`}
       />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Compare", href: "/compare" }, { label: `${a.name} vs ${b.name}` }]} />
         <div className="overflow-x-auto rounded-2xl border border-border bg-white shadow-elevation-sm">
           <table className="w-full min-w-[560px]">
             <thead>

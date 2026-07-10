@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/i18n/locale-provider";
 import { localePath } from "@/i18n/config";
 import { submitLead } from "@/lib/leads-client";
+import { TurnstileField } from "@/components/turnstile-field";
 import { WHATSAPP_PRIMARY } from "@/lib/contact-info";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
@@ -31,6 +32,9 @@ export function AdvisorWidget() {
   const [leadDone, setLeadDone] = useState(false);
   const [leadName, setLeadName] = useState("");
   const [leadPhone, setLeadPhone] = useState("");
+  const [leadBusy, setLeadBusy] = useState(false);
+  const [leadError, setLeadError] = useState<string | null>(null);
+  const [leadToken, setLeadToken] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -75,20 +79,33 @@ export function AdvisorWidget() {
   }
 
   async function sendLead() {
-    if (!leadName.trim() || leadPhone.replace(/\D/g, "").length < 8) return;
-    const result = await submitLead({
-      formType: "advisor",
-      name: leadName.trim(),
-      phone: leadPhone.trim(),
-      message: `Advisor callback request. Last question: ${
-        entries.filter((e) => e.role === "user").slice(-1)[0]?.content ?? ""
-      }`.slice(0, 500),
-      honeypot: "",
-      turnstileToken: "",
-    });
-    if (result.ok) {
-      setLeadDone(true);
-      setEntries((prev) => [...prev, { role: "assistant", content: t.leadThanks }]);
+    if (!leadName.trim() || leadPhone.replace(/\D/g, "").length < 8) {
+      setLeadError(t.leadInvalid);
+      return;
+    }
+    setLeadError(null);
+    setLeadBusy(true);
+    try {
+      const result = await submitLead({
+        formType: "advisor",
+        name: leadName.trim(),
+        phone: leadPhone.trim(),
+        message: `Advisor callback request. Last question: ${
+          entries.filter((e) => e.role === "user").slice(-1)[0]?.content ?? ""
+        }`.slice(0, 500),
+        honeypot: "",
+        turnstileToken: leadToken,
+      });
+      if (result.ok) {
+        setLeadDone(true);
+        setEntries((prev) => [...prev, { role: "assistant", content: t.leadThanks }]);
+      } else {
+        setLeadError(t.leadError);
+      }
+    } catch {
+      setLeadError(t.leadError);
+    } finally {
+      setLeadBusy(false);
     }
   }
 
@@ -100,7 +117,7 @@ export function AdvisorWidget() {
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? t.close : t.launcher}
         aria-expanded={open}
-        className="iop-btn-press focus-ring fixed bottom-5 end-5 z-[var(--z-sticky)] flex h-14 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-elevation-lg transition hover:bg-brand-dark max-md:bottom-20"
+        className="iop-btn-press focus-ring fixed bottom-5 end-5 z-[var(--z-sticky)] flex h-14 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-elevation-lg transition hover:bg-brand-dark max-md:bottom-28"
       >
         <ChatIcon />
         <span className="hidden sm:inline">{t.launcher}</span>
@@ -193,12 +210,19 @@ export function AdvisorWidget() {
                       type="tel"
                       className="iop-input h-10 text-sm"
                     />
+                    <TurnstileField onToken={setLeadToken} action="advisor-callback" />
+                    {leadError ? (
+                      <p className="text-xs font-medium text-brand" role="alert">
+                        {leadError}
+                      </p>
+                    ) : null}
                     <button
                       type="button"
                       onClick={sendLead}
-                      className="iop-btn-press focus-ring w-full rounded-full bg-brand py-2 text-sm font-semibold text-white hover:bg-brand-dark"
+                      disabled={leadBusy}
+                      className="iop-btn-press focus-ring w-full rounded-full bg-brand py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
                     >
-                      {t.leadSubmit}
+                      {leadBusy ? t.leadSending : t.leadSubmit}
                     </button>
                   </div>
                 ) : null}

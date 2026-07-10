@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { LocaleLink } from "@/components/locale-link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
@@ -59,6 +60,7 @@ export default async function LocationGuidePage({ params }: PageProps) {
       />
       <PageHero title={guide.h1} italicTitle subtitle={guide.intro} />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
+        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Location guides", href: "/locations" }, { label: guide.label }]} />
         <ol className="space-y-3">
           {ranked.map((r, i) => (
             <li key={r.metrics.slug}>
