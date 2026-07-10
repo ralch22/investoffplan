@@ -48,7 +48,9 @@ const dict = {
       "language": "Language",
       "currency": "Currency"
     },
-    "searchPlaceholder": "Search projects, developers, areas"
+    "searchPlaceholder": "Search projects, developers, areas",
+    "searchOpen": "Open search",
+    "searchSubmit": "Search"
   },
   "footer": {
     "columns": {
