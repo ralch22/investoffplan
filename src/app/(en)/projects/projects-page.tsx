@@ -338,7 +338,7 @@ export function ProjectsPage({
           </div>
         </div>
 
-        <div className="sticky top-[57px] z-30 -mx-5 border-b border-border bg-white/95 px-5 py-4 backdrop-blur md:static md:mx-0 md:mt-8 md:border-0 md:bg-transparent md:p-0">
+        <div className="sticky top-[var(--header-h)] z-[var(--z-subheader)] -mx-5 border-b border-border bg-white/95 px-5 py-4 backdrop-blur md:static md:mx-0 md:mt-8 md:border-0 md:bg-transparent md:p-0">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 md:hidden">
               <button

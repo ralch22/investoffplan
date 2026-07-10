@@ -65,7 +65,9 @@ export function SiteHeader({
       <header
         className={cn(
           "inset-x-0 top-0 z-[var(--z-header)] transition-[background-color,box-shadow,border-color] duration-300",
-          isTransparent ? "absolute" : "sticky",
+          // fixed (not absolute) keeps the header reachable on scroll —
+          // out-of-flow like absolute, so heroes need no padding changes.
+          isTransparent ? "fixed" : "sticky",
           showSolidHeader
             ? "border-b border-border/80 bg-surface/95 shadow-elevation-sm backdrop-blur-xl"
             : isTransparent
@@ -73,7 +75,7 @@ export function SiteHeader({
               : "",
         )}
       >
-        <div className="mx-auto flex max-w-[1200px] items-center gap-3 px-5 py-3 md:px-8">
+        <div className="mx-auto flex h-[var(--header-h)] max-w-[1200px] items-center gap-3 px-5 md:px-8">
           <Link
             href={localePath(locale, "/")}
             className="focus-ring flex shrink-0 items-center rounded-sm"

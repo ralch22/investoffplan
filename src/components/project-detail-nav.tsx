@@ -14,7 +14,7 @@ export function ProjectDetailNav({
   return (
     <nav
       aria-label="Project sections"
-      className="sticky top-[57px] z-30 -mx-5 border-b border-border bg-surface/95 px-5 py-2 backdrop-blur-xl md:static md:mx-0 md:mt-6 md:border-0 md:bg-transparent md:p-0"
+      className="sticky top-[var(--header-h)] z-[var(--z-subheader)] -mx-5 border-b border-border bg-surface/95 px-5 py-2 backdrop-blur-xl md:static md:mx-0 md:mt-6 md:border-0 md:bg-transparent md:p-0"
     >
       <ul className="flex gap-1 overflow-x-auto pb-0.5">
         {sections.map((section) => (

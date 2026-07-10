@@ -34,7 +34,15 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 150ms;
   --duration-normal: 220ms;
+  /* Chrome geometry — single source of truth (kills the top-[57px] magic). */
+  --header-h: 4rem;
+  --bottom-bar-h: calc(3.75rem + env(safe-area-inset-bottom, 0px));
+  --dock-cta-h: 5.25rem;
+  /* Set per-page by PageShell: which fixture owns the mobile bottom edge. */
+  --bottom-dock: 0px;
+  --z-subheader: 30;
   --z-sticky: 40;
+  --z-bottom-bar: 45;
   --z-header: 50;
   --z-overlay: 60;
   --z-modal: 70;
@@ -78,7 +86,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
 }
 
 @media (prefers-reduced-motion: reduce) {
