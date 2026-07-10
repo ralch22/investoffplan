@@ -168,7 +168,12 @@ export function createCatalogApi(raw: CatalogFile): CatalogApi {
           case "brochure":
             return hasBrochure(item);
           case "video":
-            return item.catalog?.videoAvailable ?? item.project.videoAvailable;
+            // Real, embeddable video — videoUrl is only set for videos, not tours.
+            return Boolean(item.project.videoUrl);
+          case "tour":
+            // Has media but no video = virtual tour only. Use fresh D1 fields
+            // (item.project) — item.catalog can carry a stale videoAvailable.
+            return Boolean(item.project.videoAvailable && !item.project.videoUrl);
           case "under-2m":
             return item.unit.launchPriceAed <= 2_000_000;
           case "studio":
