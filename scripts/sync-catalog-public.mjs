@@ -78,6 +78,7 @@ function slimProject(p) {
     imageUrl: p.imageUrl,
     imageGallery: p.imageGallery,
     videoAvailable: p.videoAvailable,
+    videoUrl: p.videoUrl ?? null,
     coordinates: p.coordinates,
     brochureUrl: p.brochureUrl,
     masterPlanUrl: p.masterPlanUrl,

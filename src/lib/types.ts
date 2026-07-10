@@ -30,6 +30,7 @@ export type CollectionFilter =
   | "premium"
   | "brochure"
   | "video"
+  | "tour"
   | "under-2m"
   | "studio"
   | "waterfront";
