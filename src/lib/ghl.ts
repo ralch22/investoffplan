@@ -86,9 +86,13 @@ async function resolvePipeline(apiKey: string, locationId: string): Promise<Reso
       return null;
     }
 
+    // A pinned GHL_PIPELINE_ID (without a pinned stage) still wins — only the
+    // stage is discovered. Falls through to name matching if the id is stale.
     const wanted = (process.env.GHL_PIPELINE_NAME ?? "website").toLowerCase();
     const pipeline =
-      pipelines.find((p) => p.name.toLowerCase().includes(wanted)) ?? pipelines[0];
+      (envPipeline ? pipelines.find((p) => p.id === envPipeline) : undefined) ??
+      pipelines.find((p) => p.name.toLowerCase().includes(wanted)) ??
+      pipelines[0];
 
     const stages = [...(pipeline.stages ?? [])].sort(
       (a, b) => (a.position ?? 0) - (b.position ?? 0),
