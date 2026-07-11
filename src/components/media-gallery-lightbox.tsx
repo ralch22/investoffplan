@@ -72,6 +72,7 @@ export function MediaGalleryLightbox({
   return (
     <dialog
       ref={dialogRef}
+      aria-label={alt ? `${alt} photo gallery` : "Photo gallery"}
       className="fixed inset-0 z-[var(--z-modal)] m-0 h-full max-h-none w-full max-w-none border-0 bg-black/95 p-0 backdrop:bg-black/80"
       onClose={onClose}
       onClick={(e) => {

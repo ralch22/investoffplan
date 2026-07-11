@@ -27,6 +27,10 @@ export function SiteNav({ solid, onOpenChange }: SiteNavProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState<PanelId | null>(null);
   const navRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  // Set when a panel is opened via keyboard/click (trigger focused) so we can
+  // send focus back to that trigger once it closes.
+  const restoreFocusTo = useRef<PanelId | null>(null);
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
   const triggerRefs = useRef<Record<PanelId, HTMLButtonElement | null>>({
@@ -42,6 +46,30 @@ export function SiteNav({ solid, onOpenChange }: SiteNavProps) {
   useEffect(() => onOpenChange?.(open !== null), [open, onOpenChange]);
   // Close on navigation.
   useEffect(() => setOpen(null), [pathname]);
+
+  // The panel is portaled to <body>, so it lands last in the DOM and Tab from
+  // the trigger would skip it (WCAG 2.4.3). Move focus INTO the panel when it
+  // opens — but only when the open was keyboard/click-driven, detected by the
+  // trigger currently holding focus. Hover-open (mouse) leaves focus untouched
+  // so the caret isn't yanked around. On close we restore focus to the trigger.
+  useEffect(() => {
+    if (open) {
+      const triggerEl = triggerRefs.current[open];
+      if (triggerEl && document.activeElement === triggerEl) {
+        restoreFocusTo.current = open;
+        panelRef.current?.focus();
+      }
+    } else if (restoreFocusTo.current) {
+      const id = restoreFocusTo.current;
+      restoreFocusTo.current = null;
+      // Only reclaim focus if it was left stranded on <body> when the portaled
+      // panel unmounted — Escape's closeAndFocus already handles its own case.
+      const activeEl = document.activeElement;
+      if (!activeEl || activeEl === document.body) {
+        triggerRefs.current[id]?.focus();
+      }
+    }
+  }, [open]);
 
   const clearTimers = () => {
     clearTimeout(openTimer.current);
@@ -95,7 +123,7 @@ export function SiteNav({ solid, onOpenChange }: SiteNavProps) {
       }}
       type="button"
       aria-expanded={open === id}
-      aria-haspopup="true"
+      aria-haspopup="dialog"
       aria-controls={`meganav-${id}`}
       onClick={() => toggle(id)}
       onPointerEnter={hoverOpen(id)}
@@ -135,6 +163,8 @@ export function SiteNav({ solid, onOpenChange }: SiteNavProps) {
       {open && mounted
         ? createPortal(
             <div
+              ref={panelRef}
+              tabIndex={-1}
               id={`meganav-${open}`}
               role="region"
               aria-label={
@@ -142,7 +172,7 @@ export function SiteNav({ solid, onOpenChange }: SiteNavProps) {
                   : open === "tools" ? dict.nav.groups.tools
                     : dict.nav.groups.insights
               }
-              className="mega-in fixed inset-x-0 top-[var(--header-h)] z-[var(--z-header)] hidden border-b border-border bg-surface/98 shadow-elevation-lg backdrop-blur-xl lg:block"
+              className="mega-in focus:outline-none fixed inset-x-0 top-[var(--header-h)] z-[var(--z-header)] hidden border-b border-border bg-surface/98 shadow-elevation-lg backdrop-blur-xl lg:block"
               onPointerEnter={cancelClose}
               onPointerLeave={scheduleClose}
               onKeyDown={onKeyDown}

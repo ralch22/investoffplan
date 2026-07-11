@@ -387,7 +387,7 @@ export function ProjectsPage({
               <h2 className="text-2xl font-semibold text-text-dark md:text-3xl">
                 {heading}
               </h2>
-              <p className="mt-1 text-sm text-muted">
+              <p className="mt-1 text-sm text-muted" role="status" aria-live="polite" aria-atomic="true">
                 {interpolate(s.resultsCount, { count: resultCount.toLocaleString() })}
                 {filters.city !== "all" ? ` ${interpolate(s.resultsIn, { location: locationLabel ?? "" })}` : ""}
                 {" · "}
@@ -406,6 +406,7 @@ export function ProjectsPage({
                 <button
                   type="button"
                   onClick={() => setCardLayout("grid")}
+                  aria-pressed={cardLayout === "grid"}
                   className={`iop-btn-press focus-ring rounded-full px-3 py-1.5 text-xs font-semibold ${
                     cardLayout === "grid"
                       ? "bg-brand text-white"
@@ -417,6 +418,7 @@ export function ProjectsPage({
                 <button
                   type="button"
                   onClick={() => setCardLayout("list")}
+                  aria-pressed={cardLayout === "list"}
                   className={`iop-btn-press focus-ring rounded-full px-3 py-1.5 text-xs font-semibold ${
                     cardLayout === "list"
                       ? "bg-brand text-white"
@@ -428,6 +430,7 @@ export function ProjectsPage({
                 <button
                   type="button"
                   onClick={() => setCardLayout("map")}
+                  aria-pressed={cardLayout === "map"}
                   className={`iop-btn-press focus-ring rounded-full px-3 py-1.5 text-xs font-semibold ${
                     cardLayout === "map"
                       ? "bg-brand text-white"

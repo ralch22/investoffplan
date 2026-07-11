@@ -91,6 +91,7 @@ export function SignInModal({ open, onClose, context }: SignInModalProps) {
   return (
     <dialog
       ref={dialogRef}
+      aria-labelledby="sign-in-modal-title"
       onClose={onClose}
       onClick={(e) => {
         if (e.target === dialogRef.current) onClose();
@@ -101,7 +102,7 @@ export function SignInModal({ open, onClose, context }: SignInModalProps) {
         <div className="rounded-2xl bg-surface p-6 shadow-elevation-lg">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h2 className="text-lg font-bold text-text-dark">{dict.auth.modalTitle}</h2>
+              <h2 id="sign-in-modal-title" className="text-lg font-bold text-text-dark">{dict.auth.modalTitle}</h2>
               <p className="mt-1 text-sm text-muted">{subtitle}</p>
             </div>
             <button
