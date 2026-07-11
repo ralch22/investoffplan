@@ -29,7 +29,19 @@ export async function withCatalogDb<T>(
     );
   }
 
-  const payload = await handler(db);
+  let payload: T;
+  try {
+    payload = await handler(db);
+  } catch (error) {
+    // A throw inside a catalog handler otherwise bubbles to Next's default 500
+    // HTML shell. Return a clean JSON error instead, and never echo the raw
+    // message (avoid leaking internal/D1 details to the client).
+    console.error("[catalog-api] handler error:", error);
+    return NextResponse.json(
+      { error: "catalog_request_failed" },
+      { status: 500 },
+    );
+  }
   if (payload instanceof Response) return payload;
 
   return NextResponse.json(payload, {
