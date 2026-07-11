@@ -15,6 +15,7 @@ export function ProjectsSearchSync({ filters, collection, onSync }: ProjectsSear
   const router = useRouter();
   const pathname = usePathname();
   const mounted = useRef(false);
+  const skipFirstWrite = useRef(true);
 
   // Initial read from URL
   useEffect(() => {
@@ -35,16 +36,29 @@ export function ProjectsSearchSync({ filters, collection, onSync }: ProjectsSear
     if (city) { newFilters.city = city as CitySlug; hasUpdates = true; }
 
     const beds = searchParams.get("beds");
-    if (beds) { newFilters.beds = beds === "all" || beds === "studio" ? beds : Number(beds); hasUpdates = true; }
+    if (beds === "all" || beds === "studio") {
+      newFilters.beds = beds;
+      hasUpdates = true;
+    } else if (beds) {
+      // Guard against ?beds=abc → NaN silently poisoning the filter.
+      const n = Number(beds);
+      if (Number.isFinite(n) && n >= 0) { newFilters.beds = n; hasUpdates = true; }
+    }
 
     const propType = searchParams.get("type");
     if (propType) { newFilters.propertyType = propType as any; hasUpdates = true; }
-    
+
     const minP = searchParams.get("minP");
-    if (minP) { newFilters.minPrice = Number(minP); hasUpdates = true; }
+    if (minP) {
+      const n = Number(minP);
+      if (Number.isFinite(n) && n > 0) { newFilters.minPrice = n; hasUpdates = true; }
+    }
 
     const maxP = searchParams.get("maxP");
-    if (maxP) { newFilters.maxPrice = Number(maxP); hasUpdates = true; }
+    if (maxP) {
+      const n = Number(maxP);
+      if (Number.isFinite(n) && n > 0) { newFilters.maxPrice = n; hasUpdates = true; }
+    }
 
     const dev = searchParams.get("dev");
     if (dev) { newFilters.developer = dev; hasUpdates = true; }
@@ -75,6 +89,15 @@ export function ProjectsSearchSync({ filters, collection, onSync }: ProjectsSear
   // Write to URL on changes
   useEffect(() => {
     if (!mounted.current) return;
+    // On the first commit the read effect has already set mounted=true but the
+    // onSync state update hasn't applied yet, so `filters` still holds defaults.
+    // Writing here would strip deep-link params (e.g. ?city=dubai) before the
+    // synced state lands. Skip exactly one write; the post-sync re-render writes
+    // the correct (already-matching) params as a no-op.
+    if (skipFirstWrite.current) {
+      skipFirstWrite.current = false;
+      return;
+    }
     const params = new URLSearchParams();
     if (filters.query) params.set("q", filters.query);
     if (collection !== "all") params.set("collection", collection);
