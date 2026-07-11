@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import Link from "next/link";
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { DeveloperAboutSection } from "@/components/developer-about-section";
 import { DeveloperContactPanel } from "@/components/developer-contact-panel";
 import { DeveloperLogo } from "@/components/developer-logo";
-import { DeveloperPaginationLinks } from "@/components/developer-pagination-links";
-import { DeveloperProjectCard } from "@/components/developer-project-card";
 import { DeveloperProfilePanel } from "@/components/developer-profile-panel";
-import { DeveloperSortControl } from "@/components/developer-sort-control";
+import { DeveloperProjectsBrowser } from "@/components/developer-projects-browser";
 import {
   getDeveloper,
   getDeveloperProfile,
@@ -25,13 +22,17 @@ import {
 } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
-import { DEVELOPER_PAGE_SIZE, type SortOption } from "@/lib/types";
 import { getDictionary } from "@/i18n";
 import { interpolate, localePath, type Locale } from "@/i18n/config";
 
+// Statically generate + ISR-cache like the other detail pages. Sort and
+// pagination are handled client-side (DeveloperProjectsBrowser) so this route
+// never reads `searchParams`, which would opt it into dynamic (`no-store`)
+// rendering and cost 3-5s cold TTFB on every Worker isolate.
+export const revalidate = 3600;
+
 interface PageProps {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ page?: string; sort?: string }>;
   /** Set to "ar" by the /ar mirror so links and page chrome localize. */
   locale?: Locale;
 }
@@ -54,26 +55,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function DeveloperDetailPage({
   params,
-  searchParams,
   locale = "en",
 }: PageProps) {
   const dict = getDictionary(locale);
   const { slug } = await params;
-  const query = await searchParams;
   const developer = await getDeveloper(slug);
   if (!developer) notFound();
 
-  const sort = (query.sort as SortOption | undefined) ?? "featured";
-  const page = Math.max(1, Number(query.page ?? "1") || 1);
   const projects = await getProjectsByDeveloper(slug);
   const profile = await getDeveloperProfile(slug);
-  const sorted = sortDeveloperProjects(projects, sort);
-  const totalPages = Math.max(1, Math.ceil(sorted.length / DEVELOPER_PAGE_SIZE));
-  const currentPage = Math.min(page, totalPages);
-  const pageItems = sorted.slice(
-    (currentPage - 1) * DEVELOPER_PAGE_SIZE,
-    currentPage * DEVELOPER_PAGE_SIZE,
-  );
+  // Full list, default ("featured") sort — used for the server-rendered JSON-LD
+  // ItemList and as the initial state the client browser re-sorts/paginates.
+  const sorted = sortDeveloperProjects(projects, "featured");
   const countLabel =
     developer.numProjectsOnline && developer.numProjectsOnline > developer.projectCount
       ? `${developer.projectCount.toLocaleString()} projects on invest off-plan · ${developer.numProjectsOnline.toLocaleString()} in developer portfolio`
@@ -155,50 +148,11 @@ export default async function DeveloperDetailPage({
 
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Developers", href: "/developers" }, { label: developer.name }]} />
-        <section aria-labelledby="developer-projects-heading">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h1
-                id="developer-projects-heading"
-                className="font-display text-3xl font-semibold text-text-dark md:text-4xl"
-              >
-                {interpolate(dict.developers.projectsByHeading, { name: developer.name })}
-              </h1>
-              <p className="mt-2 text-sm font-medium text-muted">{countLabel}</p>
-            </div>
-            <Suspense
-              fallback={
-                <span className="text-sm text-muted">
-                  {dict.serp.sort.sortBy} {dict.serp.sort.featured}
-                </span>
-              }
-            >
-              <DeveloperSortControl value={sort} />
-            </Suspense>
-          </div>
-
-          {pageItems.length === 0 ? (
-            <p className="mt-10 text-muted">
-              No listings for this developer right now. Check back soon or contact our team.
-            </p>
-          ) : (
-            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {pageItems.map((project, index) => (
-                <DeveloperProjectCard
-                  key={project.id}
-                  project={project}
-                  priorityImage={currentPage === 1 && index < 4}
-                />
-              ))}
-            </div>
-          )}
-
-          <DeveloperPaginationLinks
-            page={currentPage}
-            totalPages={totalPages}
-            sort={sort}
-          />
-        </section>
+        <DeveloperProjectsBrowser
+          projects={sorted}
+          heading={interpolate(dict.developers.projectsByHeading, { name: developer.name })}
+          countLabel={countLabel}
+        />
 
         {profile ? (
           <div className="mt-12">
