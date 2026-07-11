@@ -2,7 +2,7 @@ import "server-only";
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { createCatalogApi, type CatalogApi, type CatalogFile } from "./catalog-core";
+import { createCatalogApi, handoverYear, type CatalogApi, type CatalogFile } from "./catalog-core";
 import { getDb } from "./db/client";
 import { fetchCatalogFile, fetchProjectBySlug as dbFetchProject } from "./db/catalog-queries";
 import { getSiteUrl } from "./site-url";
@@ -321,8 +321,17 @@ export async function getFeaturedProjects(limit = 4) {
 export async function getLatestLaunches(limit = 4, excludeSlugs: string[] = []) {
   const api = await getCatalogApi();
   const excluded = new Set(excludeSlugs);
+  // Guard against already-handed-over projects surfacing as "Latest Launches":
+  // a listing whose handover year is strictly before the current period (2026)
+  // is not a launch. Unknown/unparseable handover (handoverYear === null) stays
+  // eligible so we don't over-filter projects with no stated handover.
+  const currentYear = 2026;
   return [...api.projects]
     .filter((p) => p.salesStartDate && !excluded.has(p.slug))
+    .filter((p) => {
+      const hy = handoverYear(p.handover);
+      return hy === null || hy >= currentYear;
+    })
     .sort((a, b) => (b.salesStartDate ?? "").localeCompare(a.salesStartDate ?? ""))
     .slice(0, limit);
 }
