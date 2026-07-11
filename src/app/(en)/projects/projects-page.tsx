@@ -181,6 +181,16 @@ export function ProjectsPage({
     return viewMode === "project" ? api.aggregateProjectView(sorted) : sorted;
   }, [api, allUnits, filters, sort, viewMode, collection]);
 
+  // Project ids that survive the active filters, derived from the SAME `filtered`
+  // set that drives the grid/list. Threaded into <ProjectMap> so the Map view
+  // shows exactly the filtered projects (grid/list/map stay consistent). `null`
+  // until the client catalog hydrates → the map shows all pins in the meantime,
+  // matching its own fallback to `initialProjects`.
+  const mapVisibleProjectIds = useMemo(() => {
+    if (!api) return null;
+    return new Set(filtered.map((item) => item.project.id));
+  }, [api, filtered]);
+
   const catalogReady = Boolean(api);
   // Before the first API response lands (and in the SSR HTML), fall back to
   // the server-provided defaults so the page never paints "0 results".
@@ -473,7 +483,10 @@ export function ProjectsPage({
           <ProjectsSkeleton />
         ) : cardLayout === "map" ? (
           <div className="mt-8">
-            <ProjectMap initialProjects={initialMapProjects} />
+            <ProjectMap
+              initialProjects={initialMapProjects}
+              visibleProjectIds={mapVisibleProjectIds}
+            />
           </div>
         ) : (
           <div

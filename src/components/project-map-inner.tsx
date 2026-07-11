@@ -40,11 +40,21 @@ function MapController({ center, zoom }: { center: [number, number] | null; zoom
 export interface ProjectMapInnerProps {
   initialProjects?: MapProject[];
   initialSelected?: MapProject | null;
+  /**
+   * Ids of the projects that match the SERP's active filters (city, beds, type,
+   * price, developer, payment plan, handover, amenities, collection, search).
+   * Derived on the /projects page from the SAME filtered unit set that feeds the
+   * grid/list, so the map is guaranteed to show exactly the filtered projects.
+   * `null`/`undefined` = no SERP filtering in effect (e.g. the standalone /map
+   * page, or before the client catalog has hydrated) → show every pin.
+   */
+  visibleProjectIds?: Set<string> | null;
 }
 
 export function ProjectMapInner({
   initialProjects = [],
   initialSelected = null,
+  visibleProjectIds = null,
 }: ProjectMapInnerProps) {
   const { api } = useCatalog();
   const searchParams = useSearchParams();
@@ -63,9 +73,19 @@ export function ProjectMapInner({
   }, []);
 
   const projects = useMemo(() => {
-    if (isApiMode && apiProjects) return apiProjects;
-    return api ? getMapProjectsFromList(api.projects) : initialProjects;
-  }, [isApiMode, apiProjects, api, initialProjects]);
+    const base =
+      isApiMode && apiProjects
+        ? apiProjects
+        : api
+          ? getMapProjectsFromList(api.projects)
+          : initialProjects;
+    // Restrict pins to the SERP's active filter result set. Filtering by id
+    // (rather than re-implementing the predicate against the leaner MapProject
+    // shape) keeps map ⇄ list consistent for ALL filters, including beds and
+    // property type, which map pins don't carry.
+    if (!visibleProjectIds) return base;
+    return base.filter((p) => visibleProjectIds.has(p.id));
+  }, [isApiMode, apiProjects, api, initialProjects, visibleProjectIds]);
 
   const [selected, setSelected] = useState<MapProject | null>(initialSelected);
   const [query, setQuery] = useState("");
@@ -104,6 +124,11 @@ export function ProjectMapInner({
           {filtered.length.toLocaleString()} projects with coordinates
         </p>
         <div className="max-h-[min(420px,50vh)] space-y-2 overflow-y-auto pe-1 lg:max-h-[520px]">
+          {filtered.length === 0 ? (
+            <p className="rounded-xl border border-dashed border-border bg-surface-alt px-4 py-6 text-center text-sm text-muted">
+              No projects match the current filters.
+            </p>
+          ) : null}
           {filtered.slice(0, 80).map((p) => (
             <button
               key={p.id}
