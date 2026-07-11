@@ -92,7 +92,7 @@ export const ar: Dict = {
     },
     "privacy": "الخصوصية",
     "cookies": "ملفات تعريف الارتباط",
-    "legal": "© {year} invest off-plan · مشغَّل من Aria Properties LLC · رقم التسجيل DRN 20678، وساطة عقارية مرخّصة في دبي"
+    "legal": "© {year} invest off-plan · مشغَّل من أرلو للعقارات ش.ذ.م.م · رخصة اقتصادية دبي 1493767 · رقم التسجيل العقاري ORN 50276 — وساطة عقارية مرخّصة في دبي"
   },
   "common": {
     "viewDetails": "عرض التفاصيل",
