@@ -40,8 +40,32 @@ const nextConfig: NextConfig = {
     ];
     return [...devAliases, ...indexRedirects];
   },
+  // Removes the `x-powered-by: Next.js` fingerprint from every response.
+  poweredByHeader: false,
   async headers() {
     return [
+      {
+        // Baseline security headers on every route. (A strict CSP is
+        // intentionally omitted for now — GTM/GA/Clarity/Turnstile/Leaflet/
+        // YouTube embeds need careful allow-listing; tracked as follow-up.)
+        source: "/:path*",
+        headers: [
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+          },
+        ],
+      },
       {
         source: "/data/catalog.json",
         headers: [

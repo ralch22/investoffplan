@@ -7,6 +7,7 @@ import {
   toggleFavoriteSlug,
 } from "@/lib/favorites";
 import { cn } from "@/lib/cn";
+import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 
 interface FavoriteButtonProps {
   slug: string;
@@ -38,7 +39,12 @@ export function FavoriteButton({
     <button
       type="button"
       aria-label={active ? "Remove from favorites" : "Add to favorites"}
-      onClick={() => setActive(toggleFavoriteSlug(slug).includes(slug))}
+      onClick={() => {
+        const nowActive = toggleFavoriteSlug(slug).includes(slug);
+        setActive(nowActive);
+        // Favoriting is a high-intent signal — was previously untracked.
+        if (nowActive) trackEvent(ANALYTICS_EVENTS.FAVORITE_ADD, { slug });
+      }}
       className={cn(
         "iop-btn-press inline-flex h-10 w-10 items-center justify-center rounded-full border transition",
         active

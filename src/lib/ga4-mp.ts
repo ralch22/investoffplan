@@ -6,7 +6,11 @@
  * Docs: https://developers.google.com/analytics/devguides/collection/protocol/ga4
  */
 
-const MEASUREMENT_ID = "G-7GDZWYG4N2";
+// Prefer the env-configured ID so server-side conversions can't silently
+// diverge from the client property if the ID ever changes; fall back to the
+// known prod ID.
+const MEASUREMENT_ID =
+  process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "G-7GDZWYG4N2";
 const ENDPOINT = "https://www.google-analytics.com/mp/collect";
 
 export interface Ga4GenerateLeadInput {
