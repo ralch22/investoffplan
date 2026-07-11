@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { drizzle } from "drizzle-orm/d1";
 import { getPlatformProxy } from "wrangler";
-import type { CatalogFile } from "../src/lib/catalog-core";
+import { isPlaceholderProject, type CatalogFile } from "../src/lib/catalog-core";
 import { stringifyJsonArray } from "../src/lib/db/mappers";
 import {
   catalogMeta,
@@ -122,6 +122,12 @@ async function main() {
 
   const seenSlugs = new Set<string>();
   const projectRows = raw.projects.filter((project) => {
+    // Mirror createCatalogApi: drop placeholder listings + dedupe by slug
+    // (first wins) so D1 and the static build carry the identical project set.
+    if (isPlaceholderProject(project.name)) {
+      console.warn(`[db:seed] Skipping placeholder project: ${project.slug} (${project.id})`);
+      return false;
+    }
     if (seenSlugs.has(project.slug)) {
       console.warn(`[db:seed] Skipping duplicate slug: ${project.slug} (${project.id})`);
       return false;
