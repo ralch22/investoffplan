@@ -27,7 +27,7 @@ test.describe("InvestOffPlan projects page", () => {
     await expect(page.getByTestId("mobile-filter-sheet")).toHaveCount(0);
   });
 
-  test("compare selection limits to three and opens compare page", async ({
+  test("compare selection: anonymous caps at two, third prompts sign-in, compare opens", async ({
     page,
   }) => {
     await page.goto("/projects");
@@ -35,9 +35,13 @@ test.describe("InvestOffPlan projects page", () => {
     const boxes = page.getByRole("checkbox", { name: /^Compare / });
     await boxes.nth(0).check();
     await boxes.nth(1).check();
-    await boxes.nth(2).check();
-    await expect(page.getByTestId("compare-count")).toHaveText("3");
-    await expect(boxes.nth(3)).toBeDisabled();
+    await expect(page.getByTestId("compare-count")).toHaveText("2");
+    // Freemium gate: the 3rd slot is account-only for anonymous visitors —
+    // attempting it opens the sign-in modal instead of adding the unit.
+    await boxes.nth(2).click();
+    await expect(page.getByRole("dialog").filter({ hasText: /sign in/i })).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(page.getByTestId("compare-count")).toHaveText("2");
     const compareLink = page.getByTestId("compare-link");
     await expect(compareLink).toBeVisible();
     await expect(compareLink).toHaveAttribute("href", /\/compare\?units=/);

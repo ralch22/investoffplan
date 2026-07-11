@@ -453,7 +453,11 @@ const dict = {
     "viewFavorites": "View favorites",
     "comingSoon": "Coming soon",
     "notSignedIn": "You're not signed in.",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "gateCompare": "Free accounts compare up to 2 units — sign in to unlock the third slot.",
+    "gatePdf": "Sign in to export this market report as a PDF.",
+    "gateSaveSearch": "Sign in to save this search and get updates.",
+    "gateDeepAnalytics": "Sign in to unlock the full price-trend history and per-bedroom analytics."
   },
   "account": {
     "savedSearches": {
@@ -466,7 +470,45 @@ const dict = {
       "view": "View results",
       "loading": "Loading…",
       "error": "Couldn't load your saved searches — please refresh."
-    }
+    },
+  },
+  "reports": {
+    "downloadReport": "Download market report",
+    "exportPdf": "Export PDF",
+    "unlockTrend": "Unlock full trend history",
+    "unlockHint": "Full monthly price series and per-bedroom analytics — free with an account.",
+    "unlockLoading": "Loading full market data…",
+    "unlockError": "Couldn't load the full data — please try again.",
+    "fullTrendTitle": "Full monthly trend",
+    "monthCol": "Month",
+    "ppsqftCol": "AED/sqft",
+    "salesCol": "Sales",
+    "typeCol": "Type",
+    "priceCol": "Median price",
+    "bedTitle": "Median sold price by bedroom",
+    "marketReports": "Market reports",
+    "marketReportsHint": "Printable community market reports built from official Dubai Land Department records.",
+    "reportTitle": "{name} market report",
+    "dataPeriod": "Data period",
+    "summaryTitle": "Market summary",
+    "medianPrice": "Median sold price",
+    "medianPpsqft": "Median sold AED/sqft",
+    "salesRecorded": "Sales recorded",
+    "grossYield": "Gross rental yield",
+    "priceTrendLabel": "Price trend",
+    "trendTitle": "Median AED/sqft by month",
+    "topProjects": "Off-plan projects in {name}",
+    "projectCol": "Project",
+    "developerCol": "Developer",
+    "handoverCol": "Handover",
+    "fromPriceCol": "Launch from",
+    "methodologyTitle": "Methodology & source",
+    "methodologyBody": "All market figures are anonymized aggregates computed from official {source} records ({period}). Medians are used throughout to resist outliers; months with very small sample sizes may be volatile. Launch prices and project details come from the invest off-plan catalog and reflect developer-published information.",
+    "disclaimer": "This report is for general information only and is not financial, investment, or legal advice. Past performance does not guarantee future results. Verify all figures independently before making any investment decision.",
+    "backToCommunity": "Back to {name}",
+    "confidenceLabel": "confidence",
+    "onRequest": "On request",
+    "preparedBy": "Prepared by invest off-plan"
   }
 } as const;
 

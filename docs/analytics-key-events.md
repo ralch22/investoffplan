@@ -4,7 +4,7 @@ All custom events go through `trackEvent()` in `src/lib/analytics.ts`, which no-
 unless `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set at build time. Event names live in the
 `ANALYTICS_EVENTS` constant — never call `gtag`/`dataLayer` directly.
 
-## Event catalog (14 events)
+## Event catalog (15 events)
 
 | Event name | Params | Where fired | GA4 key event |
 |---|---|---|---|
@@ -22,6 +22,7 @@ unless `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set at build time. Event names live in
 | `alert_subscribe` | `channel`, `topic` (planned) | Reserved — price/launch alert opt-in | ✅ **Mark as key event** (once wired) |
 | `pdp_section_view` | `section_id` | `src/components/section-view-tracker.tsx`, mounted on the PDP (`src/app/(en)/projects/[slug]/page.tsx`) — once per section per page view at 40% visibility | — |
 | `sign_in` | `method` (planned) | Reserved — account sign-in | — |
+| `gate_prompt` | `context` (`compare-slot`\|`pdf-export`\|`save-search`\|`deep-analytics`) | `src/components/auth/gate.tsx` — fired when a signed-out user hits a freemium-gated interaction and the sign-in modal opens | — |
 
 ## GA4 key events to mark
 

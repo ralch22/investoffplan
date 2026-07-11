@@ -12,10 +12,15 @@ import { useFavoritesCount } from "@/hooks/use-favorites-count";
 import { useI18n } from "@/i18n/locale-provider";
 import { interpolate, localePath } from "@/i18n/config";
 
+interface AccountPageProps {
+  /** Top covered communities with printable market reports (build-time data). */
+  reportLinks?: { slug: string; name: string }[];
+}
+
 // Client shell: the page HTML is static (ISR discipline) — the session is
 // resolved exclusively in the browser via useSession. Never read cookies or
 // headers server-side for this page.
-export function AccountPage() {
+export function AccountPage({ reportLinks = [] }: AccountPageProps) {
   const { locale, dict } = useI18n();
   const { data: session, isPending } = useSession();
   const [modalOpen, setModalOpen] = useState(false);
@@ -93,6 +98,26 @@ export function AccountPage() {
               </div>
               <p className="mt-2 text-sm text-muted">{dict.auth.favoritesSynced}</p>
             </section>
+
+            {reportLinks.length > 0 ? (
+              <section className="rounded-2xl border border-border bg-surface p-6">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.08em] text-muted-light">
+                  {dict.reports.marketReports}
+                </h2>
+                <p className="mt-3 text-sm text-muted">{dict.reports.marketReportsHint}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {reportLinks.map((r) => (
+                    <Link
+                      key={r.slug}
+                      href={`/reports/market/${r.slug}`}
+                      className="iop-btn-press focus-ring rounded-full border border-border px-4 py-1.5 text-sm font-medium text-text-dark transition hover:border-brand hover:text-brand"
+                    >
+                      {r.name}
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            ) : null}
           </div>
         )}
       </main>

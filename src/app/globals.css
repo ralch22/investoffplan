@@ -444,3 +444,37 @@ html[lang="ar"] {
   --font-sans: var(--font-arabic), "Helvetica Neue", Arial, sans-serif;
   --font-display: var(--font-arabic), Georgia, serif;
 }
+
+/* ---- Printable market reports (/reports) -------------------------------- */
+/* The /reports layout renders without site chrome (.report-only wrapper);
+   these rules make window.print() produce a clean, paginated PDF. */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  /* Keep each report block (header, summary, tables, chart) on one page. */
+  .report-only .report-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .report-only table {
+    break-inside: auto;
+  }
+
+  .report-only tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Belt-and-braces: hide any floating chrome a client component may portal in. */
+  .skip-link,
+  dialog {
+    display: none !important;
+  }
+}

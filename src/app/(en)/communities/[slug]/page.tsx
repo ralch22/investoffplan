@@ -15,6 +15,7 @@ import {
   getProjectsByCommunity,
 } from "@/lib/communities";
 import { DldAreaStatsBand } from "@/components/dld-area-stats";
+import { DeepAnalyticsUnlock } from "@/components/deep-analytics-unlock";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
 import { getSuggestedComparisons } from "@/lib/area-compare";
 import { MarketAdviceCta } from "@/components/market-advice-cta";
@@ -154,7 +155,17 @@ export default async function CommunityDetailPage({ params }: PageProps) {
 
         {/* DLD market data (anonymized aggregates; renders only where we have it) */}
         {dldStats ? (
-          <DldAreaStatsBand stats={dldStats} areaName={community.name} source={dldSource.source} />
+          <>
+            <DldAreaStatsBand stats={dldStats} areaName={community.name} source={dldSource.source} />
+            {/* Interaction-gated deep analytics + printable report entry point.
+                Static HTML identical for all users — the deep data only ever
+                arrives via the session-guarded API after a click. */}
+            <DeepAnalyticsUnlock
+              slug={slug}
+              areaName={community.name}
+              reportHref={`/reports/market/${slug}`}
+            />
+          </>
         ) : null}
 
         {comparisons.length > 0 ? (
