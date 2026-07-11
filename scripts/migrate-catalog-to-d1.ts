@@ -4,7 +4,11 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { drizzle } from "drizzle-orm/d1";
 import { getPlatformProxy } from "wrangler";
-import { isPlaceholderProject, type CatalogFile } from "../src/lib/catalog-core";
+import {
+  resolveProjectSlugs,
+  stripTrailingProjectNameFromArea,
+  type CatalogFile,
+} from "../src/lib/catalog-core";
 import { stringifyJsonArray } from "../src/lib/db/mappers";
 import {
   catalogMeta,
@@ -120,25 +124,25 @@ async function main() {
     }
   }
 
-  const seenSlugs = new Set<string>();
-  const projectRows = raw.projects.filter((project) => {
-    // Mirror createCatalogApi: drop placeholder listings + dedupe by slug
-    // (first wins) so D1 and the static build carry the identical project set.
-    if (isPlaceholderProject(project.name)) {
-      console.warn(`[db:seed] Skipping placeholder project: ${project.slug} (${project.id})`);
-      return false;
+  // Mirror createCatalogApi EXACTLY: drop placeholders, drop true-duplicate rows
+  // (same id), and DISAMBIGUATE genuinely-different projects that collide on a
+  // slug (so both twins are seeded with distinct, reachable slugs) — using the
+  // shared resolver so D1, the static build, and the client agree slug-for-slug.
+  const { kept: projectRows, slugByProjectId } = resolveProjectSlugs(raw.projects);
+  for (const [id, slug] of slugByProjectId) {
+    const original = raw.projects.find((p) => p.id === id);
+    if (original && original.slug !== slug) {
+      console.warn(`[db:seed] Disambiguated slug: ${original.slug} → ${slug} (${id})`);
     }
-    if (seenSlugs.has(project.slug)) {
-      console.warn(`[db:seed] Skipping duplicate slug: ${project.slug} (${project.id})`);
-      return false;
-    }
-    seenSlugs.add(project.slug);
-    return true;
-  });
+  }
+  /** Final slug for a project id (disambiguated if it lost a collision). */
+  const finalSlug = (projectId: string, fallback: string) =>
+    slugByProjectId.get(projectId) ?? fallback;
 
   for (const [index, project] of projectRows.entries()) {
     await db.insert(projects).values({
       id: project.id,
+      // Already disambiguated by resolveProjectSlugs (winner unchanged).
       slug: project.slug,
       pfSlug: project.pfSlug ?? null,
       name: project.name,
@@ -147,7 +151,7 @@ async function main() {
       developerLogo: project.developerLogo ?? null,
       city: project.city,
       citySlug: project.citySlug ?? project.city,
-      area: project.area,
+      area: stripTrailingProjectNameFromArea(project.area, project.name),
       status: project.status,
       handover: project.handover ?? null,
       paymentPlan: project.paymentPlan,
@@ -261,14 +265,16 @@ async function main() {
       .bind(
         unit.id,
         unit.projectId,
-        unit.projectSlug,
+        // Follow the project's disambiguated slug so SERP unit rows link to the
+        // correct (now-reachable) PDP instead of the collision winner's.
+        finalSlug(unit.projectId, unit.projectSlug),
         unit.projectName,
         unit.pfSlug ?? null,
         unit.developer,
         unit.developerLogo ?? null,
         unit.city,
         unit.citySlug,
-        unit.area,
+        stripTrailingProjectNameFromArea(unit.area, unit.projectName),
         unit.locationFull,
         unit.propertyType,
         unit.beds,
