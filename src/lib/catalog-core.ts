@@ -69,11 +69,27 @@ export interface CatalogApi {
 
 export const PAGE_SIZE = 24;
 
+/**
+ * PF project names often already end with "By {developer}" ("Nesba 1 By
+ * Arada") — every downstream composition ("{name} by {developer}", the PDP h1,
+ * meta/OG, JSON-LD `name`) then doubles it ("Nesba 1 By Arada by ARADA").
+ * Strip the trailing developer mention once here, at the single data chokepoint
+ * every server/client catalog read flows through, so the name is clean
+ * everywhere. Inlined (not imported from developer-utils) to keep catalog-core a
+ * dependency-light leaf. Mirrors developer-utils.stripTrailingDeveloper.
+ */
+function stripTrailingDeveloperName(name: string, developer?: string): string {
+  if (!developer) return name;
+  const esc = developer.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return name.replace(new RegExp(`\\s+by\\s+${esc}\\s*$`, "i"), "").trim() || name;
+}
+
 function normalizeProject(p: Project & { citySlug?: string }): Project {
   const slug = (p.citySlug || p.city) as Project["city"];
   const pfFaqs = p.pfFaqs ? sanitizePfFaqs(p.pfFaqs) : undefined;
   return {
     ...p,
+    name: stripTrailingDeveloperName(p.name, p.developer),
     city: slug,
     imageGradient: p.imageGradient ?? "from-slate-800 via-slate-600 to-sky-700",
     featuredRank: p.featuredRank ?? 999,
