@@ -16,7 +16,6 @@ import {
 } from "@/lib/catalog";
 import { getCommunities, getCommunityImage } from "@/lib/communities";
 import { unoptimizedProp } from "@/lib/asset-image";
-import { isServableImage } from "@/lib/area-images";
 import { getCatalogApi } from "@/lib/catalog";
 import { getTopCoveredAreas } from "@/lib/area-compare";
 import { FaqAccordion } from "@/components/faq-accordion";
@@ -41,18 +40,14 @@ const PROPERTY_TYPE_DEFS = [
   { key: "penthouse", label: "Penthouses" },
 ] as const;
 
-const HIGHLIGHTS: {
+interface Highlight {
   value: string;
   sub: string;
   image: string;
   body?: string;
-}[] = [
-  {
-    value: "10%",
-    sub: "Average ROI potential",
-    body: "Buying before completion lets you capture price growth through the construction cycle and into handover across prime UAE corridors.",
-    image: "/images/creek-orchard.jpg",
-  },
+}
+
+const STATIC_HIGHLIGHTS: Highlight[] = [
   {
     value: "10 Years",
     sub: "Golden Visa eligibility",
@@ -64,6 +59,15 @@ const HIGHLIGHTS: {
     image: "/images/skyline-terraces.jpg",
   },
 ];
+
+/** Compact AED for chip labels — 512000 → "AED 512K", 1250000 → "AED 1.25M". */
+function formatCompactAed(value: number): string {
+  if (value >= 1_000_000) {
+    const m = value / 1_000_000;
+    return `AED ${m >= 10 ? Math.round(m) : Number(m.toFixed(2))}M`;
+  }
+  return `AED ${Math.round(value / 1_000)}K`;
+}
 
 const FAQS = [
   {
@@ -101,13 +105,12 @@ export default async function HomePage() {
   const topYieldAreas = await getTopCoveredAreas("yield", 6);
   const heroImage = featured[0]?.imageUrl;
 
-  // Priced property-type tiles — a real project photo + cheapest launch price
-  // per type, so the section is a set of navigable entry points, not decoration.
+  // Priced property-type entry points — cheapest launch price per type, so the
+  // chips are navigable shortcuts into /projects?type=…, not decoration.
   const catalogApi = await getCatalogApi();
   const propertyTypeTiles = PROPERTY_TYPE_DEFS.map((t) => {
     let minPriceAed = Infinity;
     let count = 0;
-    let image: string | undefined;
     for (const project of catalogApi.projects) {
       const typeUnits = project.units.filter((u) =>
         u.propertyType.toLowerCase().includes(t.key),
@@ -115,21 +118,39 @@ export default async function HomePage() {
       if (typeUnits.length === 0) continue;
       count += 1;
       for (const u of typeUnits) {
-        // skip price-on-request units (launchPriceAed 0) so "From" is a real floor
+        // skip price-on-request units (launchPriceAed 0) so "from" is a real floor
         if (u.launchPriceAed > 0 && u.launchPriceAed < minPriceAed) {
           minPriceAed = u.launchPriceAed;
         }
       }
-      if (!image && isServableImage(project.imageUrl)) image = project.imageUrl;
     }
     return {
       label: t.label,
       href: `/projects?type=${t.key}`,
       minPriceAed: Number.isFinite(minPriceAed) ? minPriceAed : null,
       count,
-      image,
     };
   }).filter((t) => t.count > 0);
+
+  // Verified top-community gross yield for the highlights card — same sanitized
+  // DLD source HomeYields renders (getTopCoveredAreas → getAreaStats), never a
+  // hardcoded marketing number.
+  const topYield = topYieldAreas[0];
+  const topYieldPct = topYield?.stats.grossYieldPct ?? null;
+  const topYieldName = topYield?.area.name.split(",")[0]?.trim() ?? null;
+  const highlights: Highlight[] = [
+    ...(topYieldPct != null && topYieldName
+      ? [
+          {
+            value: `${topYieldPct.toFixed(1)}%`,
+            sub: "Top community gross yield",
+            body: `${topYieldName} posted the highest gross rental yield on 2025 Dubai Land Department transactions among covered communities.`,
+            image: "/images/creek-orchard.jpg",
+          },
+        ]
+      : []),
+    ...STATIC_HIGHLIGHTS,
+  ];
 
   return (
     <PageShell headerVariant="transparent">
@@ -176,6 +197,23 @@ export default async function HomePage() {
               Open map
             </PrimaryButton>
           </div>
+          <div
+            data-testid="hero-stat-strip"
+            className="reveal mt-10 flex min-h-[56px] flex-wrap items-center gap-x-10 gap-y-4 border-t border-white/15 pt-5"
+          >
+            {[
+              { label: "Unit options", value: stats.unitCount },
+              { label: "Projects", value: stats.projectCount },
+              { label: "Brochure PDFs", value: analytics.brochureCount },
+            ].map((item) => (
+              <div key={item.label} className="min-h-[52px]">
+                <p className="font-display text-2xl font-semibold tabular-nums leading-none text-white md:text-3xl">
+                  <CountUp value={item.value} />
+                </p>
+                <p className="mt-1 text-xs font-medium text-white/85">{item.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -201,29 +239,6 @@ export default async function HomePage() {
               </LocaleLink>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
-        <p className="section-eyebrow text-center">Live catalog intelligence</p>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            { label: "Unit options", value: stats.unitCount, hint: "Across all emirates" },
-            { label: "Brochure PDFs", value: analytics.brochureCount, hint: "Download or WhatsApp" },
-            { label: "Map-ready projects", value: analytics.withCoords, hint: "With coordinates" },
-            { label: "Avg AED/sqft", value: analytics.avgPpsf, hint: "Catalog benchmark" },
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="group rounded-2xl border border-border bg-surface p-5 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/30 hover:shadow-elevation-md"
-            >
-              <p className="font-display text-3xl font-semibold tabular-nums text-brand md:text-4xl">
-                <CountUp value={item.value} />
-              </p>
-              <p className="mt-1 text-sm font-semibold text-text-dark">{item.label}</p>
-              <p className="mt-0.5 text-xs text-muted-light">{item.hint}</p>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -283,93 +298,27 @@ export default async function HomePage() {
               );
             })}
           </div>
-        </div>
-      </section>
-
-      <section className="bg-surface-alt py-14">
-        <div className="mx-auto max-w-[1200px] px-5 md:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <h2 className="font-display text-3xl font-semibold text-text-dark md:text-4xl">
-              Property <em className="italic">Types.</em>
-            </h2>
-            <LocaleLink
-              href="/projects"
-              className="text-sm font-semibold text-brand hover:text-brand-dark"
-            >
-              View All →
-            </LocaleLink>
-          </div>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {propertyTypeTiles.map((type) => (
-              <LocaleLink
-                key={type.label}
-                href={type.href}
-                className="iop-btn-press focus-ring group relative flex min-h-[200px] flex-col justify-end overflow-hidden rounded-2xl border border-border shadow-elevation-sm transition hover:-translate-y-0.5 hover:shadow-elevation-md"
-              >
-                {type.image ? (
-                  <Image
-                    src={type.image}
-                    alt=""
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
-                    className="object-cover transition duration-500 group-hover:scale-[1.05]"
-                    {...unoptimizedProp(type.image)}
-                  />
-                ) : (
-                  <div className="area-card-accent absolute inset-0" />
-                )}
-                <div className="card-photo-overlay absolute inset-0" />
-                <div className="relative p-5 text-white">
-                  <p className="text-lg font-semibold">{type.label}</p>
+          {propertyTypeTiles.length > 0 ? (
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <span className="text-sm font-semibold text-muted">Browse by type:</span>
+              {propertyTypeTiles.map((type) => (
+                <LocaleLink
+                  key={type.label}
+                  href={type.href}
+                  className="focus-ring inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 text-sm font-semibold text-text-dark shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/30 hover:text-brand"
+                >
+                  {type.label}
                   {type.minPriceAed ? (
-                    <p className="mt-1 text-sm text-white/85">
-                      From AED {type.minPriceAed.toLocaleString()}
-                    </p>
+                    <span className="font-normal text-muted">
+                      from {formatCompactAed(type.minPriceAed)}
+                    </span>
                   ) : (
-                    <p className="mt-1 text-sm text-white/75">{type.count} projects</p>
+                    <span className="font-normal text-muted">{type.count} projects</span>
                   )}
-                  <span
-                    className="mt-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand text-white transition group-hover:translate-x-0.5"
-                    aria-hidden
-                  >
-                    →
-                  </span>
-                </div>
-              </LocaleLink>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Find the Perfect Property Investment — dark CTA band (Figma) */}
-      <section className="relative overflow-hidden bg-surface-dark text-white">
-        <div className="absolute inset-y-0 end-0 hidden w-[56%] md:block" aria-hidden>
-          <Image
-            src="/images/marina-heights.jpg"
-            alt=""
-            fill
-            sizes="56vw"
-            className="object-cover"
-            {...unoptimizedProp("/images/marina-heights.jpg")}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-surface-dark via-surface-dark/85 to-surface-dark/10" />
-        </div>
-        <div className="relative mx-auto max-w-[1200px] px-5 py-16 md:px-8 md:py-24">
-          <div className="max-w-xl">
-            <h2 className="font-display text-3xl font-semibold leading-[1.08] md:text-5xl">
-              <em className="italic text-brand-light">Find</em> the Perfect
-              <br />
-              Property <em className="italic text-brand-light">Investment</em>
-              <span className="text-brand">.</span>
-            </h2>
-            <p className="mt-5 max-w-md text-sm leading-relaxed text-white/70">
-              Browse the UAE&apos;s most comprehensive off-plan catalog — unit-level
-              pricing, developer brochures, and live map intelligence in one place.
-            </p>
-            <PrimaryButton href="/projects" className="mt-7">
-              Browse Properties
-            </PrimaryButton>
-          </div>
+                </LocaleLink>
+              ))}
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -381,7 +330,7 @@ export default async function HomePage() {
             <span className="text-brand">.</span>
           </h2>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {HIGHLIGHTS.map((item) => (
+            {highlights.map((item) => (
               <div
                 key={`${item.value}-${item.sub}`}
                 className="flex min-h-[300px] flex-col overflow-hidden rounded-2xl border border-border shadow-elevation-sm"
