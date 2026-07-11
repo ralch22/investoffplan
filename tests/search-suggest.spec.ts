@@ -23,10 +23,16 @@ test.describe("SearchSuggest typeahead", () => {
     await expect(listbox.getByText("Communities", { exact: true })).toBeVisible({
       timeout: 15_000,
     });
-    await expect(
-      listbox.getByRole("option", { name: /Jumeirah Village Circle/i }).first(),
-    ).toBeVisible();
+    const jvcOption = listbox
+      .getByRole("option", { name: /Jumeirah Village Circle/i })
+      .first();
+    await expect(jvcOption).toBeVisible();
+    // Keyboard-select the first option (the JVC community). Confirm the
+    // highlight has actually LANDED on it (aria-selected) before pressing
+    // Enter — this removes the flake where Enter fired before the ArrowDown
+    // state settled and the no-highlight fallback routed to /projects?q= instead.
     await input.press("ArrowDown");
+    await expect(jvcOption).toHaveAttribute("aria-selected", "true");
     await input.press("Enter");
     await page.waitForURL(/\/communities\/jumeirah-village-circle/, { timeout: 15_000 });
   });
