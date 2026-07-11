@@ -174,6 +174,9 @@ async function main() {
           : null,
       whatsapp: project.whatsapp,
       updatedAt,
+      // Keep in sync with prepare-catalog-rows/catalog-upsert: on a full
+      // seed every project is "first seen" at the catalog's scrapedAt.
+      firstSeenAt: updatedAt,
     });
 
     if ((index + 1) % 100 === 0) {

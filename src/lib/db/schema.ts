@@ -80,6 +80,12 @@ export const projects = sqliteTable(
     pfFaqs: text("pf_faqs"),
     whatsapp: text("whatsapp").notNull(),
     updatedAt: text("updated_at").notNull(),
+    /**
+     * Set ONLY when the ingest first inserts the row (the ingest run date) —
+     * the weekly upsert must NEVER clobber it (see catalog-upsert.ts). This is
+     * what the alerts dispatch uses to find "new launches this week".
+     */
+    firstSeenAt: text("first_seen_at"),
   },
   (table) => [
     index("projects_city_idx").on(table.city),
@@ -282,6 +288,36 @@ export const accounts = sqliteTable(
   (table) => [
     index("accounts_user_id_idx").on(table.userId),
     uniqueIndex("accounts_provider_account_idx").on(table.providerId, table.accountId),
+  ],
+);
+
+/**
+ * Saved SERP searches + weekly alert subscriptions (migration
+ * 0010_saved_searches.sql). `filters` is a JSON-serialized subset of the SERP
+ * URL param vocabulary (q, city, beds, type, minP, maxP, dev, pay, handover,
+ * amen). `unsubscribeToken` guards the no-login unsubscribe link embedded in
+ * every digest email.
+ */
+export const savedSearches = sqliteTable(
+  "saved_searches",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    label: text("label").notNull(),
+    filters: text("filters").notNull(),
+    locale: text("locale").notNull().default("en"),
+    alertEnabled: integer("alert_enabled").notNull().default(1),
+    alertFrequency: text("alert_frequency").notNull().default("weekly"),
+    unsubscribeToken: text("unsubscribe_token").notNull().unique(),
+    lastAlertAt: text("last_alert_at"),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (table) => [
+    index("saved_searches_user_idx").on(table.userId),
+    index("saved_searches_alert_idx").on(table.alertEnabled),
   ],
 );
 

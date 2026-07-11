@@ -176,6 +176,13 @@ export const ar: Dict = {
     "resultsIn": "في {location}",
     "updated": "آخر تحديث {date}",
     "filtersAndSearch": "الفلاتر والبحث",
+    "saveSearch": "حفظ البحث",
+    "saveSearchTitle": "سمِّ هذا البحث",
+    "saveSearchPlaceholder": "مثال: شقق بغرفتين في دبي",
+    "saveSearchConfirm": "حفظ",
+    "saveSearchCancel": "إلغاء",
+    "saveSearchSaved": "تم حفظ البحث — التنبيهات الأسبوعية مفعّلة.",
+    "saveSearchError": "تعذّر حفظ البحث — حاول مرة أخرى.",
     "view": {
       "grid": "شبكة",
       "list": "قائمة",
@@ -449,5 +456,18 @@ export const ar: Dict = {
     "comingSoon": "قريباً",
     "notSignedIn": "لم تسجّل الدخول بعد.",
     "loading": "جارٍ التحميل…"
+  },
+  "account": {
+    "savedSearches": {
+      "title": "عمليات البحث المحفوظة",
+      "empty": "لا توجد عمليات بحث محفوظة بعد — احفظ بحثاً من صفحة المشاريع وسنراسلك عند إطلاق مشاريع مطابقة.",
+      "alerts": "تنبيهات البريد الإلكتروني",
+      "on": "مفعّلة",
+      "off": "متوقفة",
+      "delete": "حذف",
+      "view": "عرض النتائج",
+      "loading": "جارٍ التحميل…",
+      "error": "تعذّر تحميل عمليات البحث المحفوظة — حدّث الصفحة."
+    }
   }
 };

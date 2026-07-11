@@ -95,6 +95,96 @@ export function magicLinkEmail({ url, locale = "en" }: MagicLinkEmailInput): Ema
   return { subject, html: layout({ locale, title: subject, bodyHtml, footer }) };
 }
 
+export interface AlertDigestMatch {
+  name: string;
+  community: string;
+  /** Formatted from-price, e.g. "AED 1.2M" — pre-formatted by the caller. */
+  fromPrice?: string;
+  /** Absolute URL (with UTM params) to the project page. */
+  url: string;
+}
+
+export interface AlertDigestSearch {
+  label: string;
+  /** Absolute URL to the SERP with the saved filters applied. */
+  searchUrl: string;
+  /** Absolute no-login unsubscribe URL for this saved search. */
+  unsubscribeUrl: string;
+  matches: AlertDigestMatch[];
+}
+
+export interface AlertDigestEmailInput {
+  searches: AlertDigestSearch[];
+  locale?: "en" | "ar";
+}
+
+/**
+ * ONE digest per user per dispatch run: a section per saved search that had
+ * new launches this week, each row linking to the project page. Every section
+ * carries its own unsubscribe link (token-guarded, no login).
+ */
+export function alertDigestEmail({
+  searches,
+  locale = "en",
+}: AlertDigestEmailInput): EmailTemplate {
+  const ar = locale === "ar";
+  const totalMatches = searches.reduce((sum, s) => sum + s.matches.length, 0);
+
+  const t = ar
+    ? {
+        subject: `${totalMatches} مشاريع جديدة تطابق عمليات البحث المحفوظة — إنفست أوف بلان`,
+        heading: "إطلاقات جديدة هذا الأسبوع",
+        intro: "مشاريع على المخطط أُطلقت حديثاً وتطابق عمليات البحث المحفوظة لديك:",
+        from: "ابتداءً من",
+        viewAll: "عرض كل النتائج",
+        unsubscribe: "إلغاء الاشتراك في تنبيهات هذا البحث",
+        footer:
+          "تصلك هذه الرسالة لأنك فعّلت تنبيهات البحث المحفوظ. — إنفست أوف بلان، دبي",
+      }
+    : {
+        subject: `${totalMatches} new launch${totalMatches === 1 ? "" : "es"} matching your saved searches — invest off-plan`,
+        heading: "New launches this week",
+        intro: "Newly launched off-plan projects matching your saved searches:",
+        from: "From",
+        viewAll: "View all results",
+        unsubscribe: "Unsubscribe from alerts for this search",
+        footer:
+          "You're receiving this because you enabled saved-search alerts. — invest off-plan, Dubai",
+      };
+
+  const sections = searches
+    .map((search) => {
+      const rows = search.matches
+        .map(
+          (m) => `
+<tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">
+<a href="${escapeHtml(m.url)}" style="font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:bold;color:${TEXT_DARK};text-decoration:none;">${escapeHtml(m.name)}</a>
+<p style="margin:2px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:19px;color:${TEXT_MUTED};">${escapeHtml(m.community)}${m.fromPrice ? ` · ${t.from} ${escapeHtml(m.fromPrice)}` : ""}</p>
+</td></tr>`,
+        )
+        .join("");
+      return `
+<h2 style="margin:24px 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:24px;color:${BRAND_RED};">${escapeHtml(search.label)}</h2>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${rows}</table>
+<p style="margin:10px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;">
+<a href="${escapeHtml(search.searchUrl)}" style="color:${BRAND_RED};font-weight:bold;text-decoration:none;">${t.viewAll} →</a>
+&nbsp;·&nbsp;
+<a href="${escapeHtml(search.unsubscribeUrl)}" style="color:${TEXT_MUTED};">${t.unsubscribe}</a>
+</p>`;
+    })
+    .join("");
+
+  const bodyHtml = `
+<h1 style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:22px;line-height:30px;color:${TEXT_DARK};">${t.heading}</h1>
+<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:24px;color:${TEXT_DARK};">${t.intro}</p>
+${sections}`;
+
+  return {
+    subject: t.subject,
+    html: layout({ locale, title: t.subject, bodyHtml, footer: t.footer }),
+  };
+}
+
 export function testEmail(): EmailTemplate {
   const subject = "Test email — invest off-plan";
   const bodyHtml = `

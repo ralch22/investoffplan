@@ -20,6 +20,11 @@ export interface SendEmailInput {
   kind: "magic-link" | "alert" | "welcome" | "test";
   userId?: string;
   savedSearchId?: string;
+  /**
+   * When set, adds RFC 8058 one-click List-Unsubscribe headers to the send —
+   * required for bulk-ish alert digests to stay out of spam folders.
+   */
+  unsubscribeUrl?: string;
 }
 
 export interface SendEmailResult {
@@ -87,6 +92,14 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
         to: input.to,
         subject: input.subject,
         html: input.html,
+        ...(input.unsubscribeUrl
+          ? {
+              headers: {
+                "List-Unsubscribe": `<${input.unsubscribeUrl}>`,
+                "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+              },
+            }
+          : {}),
       }),
       signal: controller.signal,
     });

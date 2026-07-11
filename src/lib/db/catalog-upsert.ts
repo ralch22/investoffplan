@@ -139,9 +139,13 @@ export async function upsertCatalogFile(
       imageGallery: values.imageGallery ?? existing?.imageGallery ?? null,
     };
 
+    // first_seen_at is INSERT-ONLY (this ingest run's date): it must be
+    // present in values so brand-new projects get stamped, but EXCLUDED from
+    // the onConflictDoUpdate set so existing rows keep their original date —
+    // it is what "new launch this week" alerts key off.
     await db
       .insert(projects)
-      .values(merged)
+      .values({ ...merged, firstSeenAt: prepared.updatedAt })
       .onConflictDoUpdate({
         target: projects.id,
         set: merged,

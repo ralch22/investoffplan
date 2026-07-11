@@ -6,6 +6,7 @@ import {
   MoreFiltersPanel,
   type DeveloperOption,
 } from "@/components/more-filters-panel";
+import { SaveSearchButton } from "@/components/save-search-button";
 import { useI18n } from "@/i18n/locale-provider";
 
 interface MobileFilterSheetProps {
@@ -150,6 +151,8 @@ export function MobileFilterSheet({
             amenityOptions={amenityOptions}
             variant="sheet"
           />
+
+          <SaveSearchButton filters={filters} />
         </div>
 
           <button
