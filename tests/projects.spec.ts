@@ -112,7 +112,11 @@ test.describe("InvestOffPlan site routes", () => {
   test("clear all filters restores results", async ({ page }) => {
     await page.goto("/projects?q=zzzznonexistent999");
     await waitForCatalogHydration(page);
-    await expect(page.getByText("No units match your filters")).toBeVisible();
+    // 15s: the empty state renders only after the client catalog finishes
+    // loading; under full-suite load the default 5s flakes as the catalog grows.
+    await expect(page.getByText("No units match your filters")).toBeVisible({
+      timeout: 15_000,
+    });
     await page.getByRole("button", { name: "Clear all filters" }).click();
     await waitForCatalog(page);
     await expect(
