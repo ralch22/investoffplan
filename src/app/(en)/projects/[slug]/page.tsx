@@ -40,6 +40,7 @@ import {
   cityLabel,
   formatPrice,
 } from "@/lib/format";
+import { stripTrailingDeveloper } from "@/lib/developer-utils";
 import { unitPricePerSqft } from "@/lib/investment-metrics";
 import { getSiteUrl } from "@/lib/site-url";
 import {
@@ -76,8 +77,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const enrichment = getEnrichment(slug);
   const minPriceMeta = Math.min(...project.units.map((u) => u.launchPriceAed).filter((v) => v > 0));
+  // Clean composition: PF names often end "By {developer}" (doubling), the
+  // raw area string contains the project name, and project.city is the
+  // lowercase slug — Google snippets showed "…By Object 1 by Object 1 in …,
+  // 1WOOD Residence, dubai".
+  const metaName = stripTrailingDeveloper(project.name, project.developer);
+  const metaArea = project.area.split(",")[0].trim();
   const description = [
-    `${project.name} by ${project.developer} in ${project.area}, ${project.city}`,
+    `${metaName} by ${project.developer} in ${metaArea}, ${cityLabel(project.city)}`,
     Number.isFinite(minPriceMeta) ? `from AED ${minPriceMeta.toLocaleString("en-US")}` : "",
     project.handover ? `handover ${project.handover}` : "",
     project.paymentPlan ? `${project.paymentPlan} payment plan` : "",
@@ -147,7 +154,14 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const dldStats = getAreaStats(project.area);
   const dldSource = getDldSource();
   const pfFaqs = project.pfFaqs ?? [];
-  const minPrice = Math.min(...project.units.map((u) => u.launchPriceAed));
+  // Stated prices only — 8 live projects carry 0-price units and rendered
+  // "FROM AED 0" in the hero, key facts, sticky bar, and JSON-LD offers.
+  const pricedUnits = project.units.filter((u) => u.launchPriceAed > 0);
+  const minPrice = pricedUnits.length
+    ? Math.min(...pricedUnits.map((u) => u.launchPriceAed))
+    : 0;
+  const fromPriceLabel =
+    minPrice > 0 ? formatPrice(minPrice, "AED") : "Price on request";
   // UAE grants a 10-year Golden Visa for property investment >= AED 2M.
   const goldenVisaEligible = project.units.some((u) => u.launchPriceAed >= 2_000_000);
   const projectCompareLinks = await getProjectComparisonLinks(project);
@@ -227,7 +241,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
   const videoLd = buildVideoObjectJsonLd({
     videoUrl: resolvedVideoUrl,
     name: `${project.name} — video walkthrough`,
-    description: description ?? `${project.name} by ${project.developer} in ${project.area}.`,
+    description:
+      description ??
+      `${stripTrailingDeveloper(project.name, project.developer)} by ${project.developer} in ${project.area.split(",")[0].trim()}.`,
     thumbnailUrl: absoluteHero,
     uploadDate: enrichment?.enrichedAt ?? project.salesStartDate ?? "2025-01-01",
   });
@@ -307,7 +323,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {[
-              { label: "From", value: formatPrice(minPrice, "AED") },
+              { label: "From", value: fromPriceLabel },
               { label: "Payment", value: project.paymentPlan },
               { label: "Units", value: String(project.unitCount) },
               { label: "Type", value: project.units[0]?.propertyType ?? "Apartment" },
@@ -409,7 +425,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         </div>
 
         <p className="mt-4 text-2xl font-semibold text-brand">
-          FROM {formatPrice(minPrice, "AED")}
+          {minPrice > 0 ? <>FROM {formatPrice(minPrice, "AED")}</> : "PRICE ON REQUEST"}
           {project.units[0] ? (
             <span className="ms-3 text-base font-medium text-muted">
               {(() => {
@@ -554,7 +570,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             <ProjectSummaryRail
               projectName={project.name}
               projectSlug={project.slug}
-              priceLabel={formatPrice(minPrice, "AED")}
+              priceLabel={fromPriceLabel}
               pricePerSqft={pricePerSqftLabel}
               paymentPlan={project.paymentPlan}
               unitCount={project.unitCount}

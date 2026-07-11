@@ -53,20 +53,25 @@ export function buildProjectJsonLd(opts: {
 
   const brochure = resolveBrochureUrl(project);
 
-  const offers: Record<string, unknown> = {
-    "@type": "AggregateOffer",
-    lowPrice: minPrice,
-    priceCurrency: "AED",
-    offerCount: project.units.length,
-    availability:
-      project.status === "sold-out"
-        ? "https://schema.org/SoldOut"
-        : "https://schema.org/InStock",
-    seller: {
-      "@type": "Organization",
-      name: project.developer,
-    },
-  };
+  // No stated price → no offers block: `lowPrice: 0` is schema spam and
+  // renders "From AED 0" in rich results (8 live Emaar projects hit this).
+  const offers: Record<string, unknown> | undefined =
+    minPrice > 0
+      ? {
+          "@type": "AggregateOffer",
+          lowPrice: minPrice,
+          priceCurrency: "AED",
+          offerCount: project.units.length,
+          availability:
+            project.status === "sold-out"
+              ? "https://schema.org/SoldOut"
+              : "https://schema.org/InStock",
+          seller: {
+            "@type": "Organization",
+            name: project.developer,
+          },
+        }
+      : undefined;
 
   const additionalProperty = [
     project.handover

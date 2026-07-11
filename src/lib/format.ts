@@ -62,6 +62,9 @@ export function formatFromPrice(
 }
 
 export function formatSqft(min: number, max?: number): string {
+  // 0 = size unknown (e.g. dev-fallback ingest units carry only PF-stated
+  // facts) — render the app-wide "—" placeholder, never "0 sqft".
+  if (!(min > 0)) return "—";
   if (max && max > min) return `${min.toLocaleString()} - ${max.toLocaleString()} sqft`;
   return `${min.toLocaleString()} sqft`;
 }

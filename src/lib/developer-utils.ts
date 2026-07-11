@@ -1,6 +1,17 @@
 import { developerBlurb } from "./figma-copy";
 import type { Project, SortOption } from "./types";
 
+/**
+ * PF project names often already end with "By {developer}" ("Nesba 1 By
+ * Arada") — composing "{name} by {developer}" then doubles it ("Nesba 1 By
+ * Arada by ARADA", live in 54 projects' meta/OG/JSON-LD). Strip the trailing
+ * developer mention (case-insensitive) before appending our own.
+ */
+export function stripTrailingDeveloper(name: string, developer: string): string {
+  const esc = developer.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return name.replace(new RegExp(`\\s+by\\s+${esc}\\s*$`, "i"), "").trim() || name;
+}
+
 export function stripDeveloperHtml(html?: string): string | undefined {
   if (!html) return undefined;
   return html
