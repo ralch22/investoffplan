@@ -54,6 +54,35 @@ test.describe("InvestOffPlan projects page", () => {
     ).toBeVisible();
   });
 
+  test("map view respects active filters", async ({ page }) => {
+    await page.goto("/projects");
+    await waitForCatalog(page);
+
+    // Switch the SERP layout to the Map view.
+    await page.getByRole("button", { name: "Map", exact: true }).click();
+
+    const coordCount = page.getByText(/projects with coordinates/i);
+    await expect(coordCount).toBeVisible();
+    await expect(coordCount).toHaveText(/[1-9][\d,]*\s+projects with coordinates/i);
+
+    const readCount = async () => {
+      const text = (await coordCount.textContent()) ?? "";
+      const m = text.match(/([\d,]+)\s+projects with coordinates/i);
+      return m ? Number(m[1].replace(/,/g, "")) : NaN;
+    };
+
+    const before = await readCount();
+
+    // Narrow to a single (non-dominant) city; Dubai holds the bulk of stock, so
+    // Abu Dhabi must yield a strictly smaller map set than "All UAE".
+    await page.getByRole("button", { name: /Abu Dhabi/i }).click();
+
+    await expect
+      .poll(readCount, { timeout: 15_000 })
+      .toBeLessThan(before);
+    expect(await readCount()).toBeGreaterThan(0);
+  });
+
   test("toggles project view", async ({ page }) => {
     await page.goto("/projects");
     await waitForCatalog(page);
