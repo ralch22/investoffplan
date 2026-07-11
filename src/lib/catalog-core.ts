@@ -198,8 +198,19 @@ export function resolveProjectSlugs<
   return { kept, slugByProjectId, keptProjectIds };
 }
 
+/**
+ * Fix wrongly all-caps scraped developer names to their real brand casing.
+ * Scoped to VERIFIED cases only — DIFC/IMKAN/ORA are legitimately all-caps
+ * brands, so no blanket title-casing. slugify() is case-insensitive, so the
+ * developer URL (/developers/arada) is unchanged; only the display label fixes.
+ */
+const DEVELOPER_DISPLAY_CASING: Record<string, string> = {
+  ARADA: "Arada",
+};
+
 function normalizeProject(p: Project & { citySlug?: string }): Project {
   const slug = (p.citySlug || p.city) as Project["city"];
+  const developer = DEVELOPER_DISPLAY_CASING[p.developer] ?? p.developer;
   const pfFaqs = p.pfFaqs ? sanitizePfFaqs(p.pfFaqs) : undefined;
   // A project whose handover quarter is already in the past can't honestly be
   // labelled "off-plan" (upcoming). 26 such rows carry a pre-2026 handover but
@@ -213,6 +224,7 @@ function normalizeProject(p: Project & { citySlug?: string }): Project {
   return {
     ...p,
     name,
+    developer,
     area: stripTrailingProjectNameFromArea(p.area, name),
     status,
     city: slug,
