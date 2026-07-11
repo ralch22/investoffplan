@@ -90,7 +90,7 @@ const dict = {
     },
     "privacy": "Privacy",
     "cookies": "Cookies",
-    "legal": "© {year} invest off-plan · Powered by Aria Properties LLC · DRN 20678, a licensed real estate brokerage in Dubai"
+    "legal": "© {year} invest off-plan · Operated by ARLO PROPERTIES L.L.C · DED licence 1493767 · RERA ORN 50276 — a licensed real estate brokerage in Dubai"
   },
   "common": {
     "viewDetails": "View Details",
