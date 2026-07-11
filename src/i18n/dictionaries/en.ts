@@ -106,6 +106,9 @@ const dict = {
     "premium": "Premium",
     "available": "Available",
     "soldOut": "Sold out",
+    "comingSoon": "Coming Soon",
+    "viewOnMap": "View on Map",
+    "fromPrice": "from {price}",
     "paymentPlan": "Payment Plan",
     "handover": "Handover {date}",
     "unitCountSingular": "{count} {type} unit",
@@ -132,6 +135,7 @@ const dict = {
     "stats": {
       "unitOptions": "Unit options",
       "unitOptionsHint": "Across all emirates",
+      "projects": "Projects",
       "brochurePdfs": "Brochure PDFs",
       "brochurePdfsHint": "Download or WhatsApp",
       "mapReadyProjects": "Map-ready projects",
@@ -139,10 +143,26 @@ const dict = {
       "avgPpsf": "Avg AED/sqft",
       "avgPpsfHint": "Catalog benchmark"
     },
+    "latestLaunchesHeading": "Latest Launches.",
+    "latestLaunchesBody": "New off-plan inventory with brochures and unit-level pricing.",
+    "seeAll": "See all →",
+    "featuredProjectsHeading": "Featured Projects.",
+    "yieldsEyebrow": "Real market data · Dubai Land Department 2025",
+    "yieldsHeading": "Where the yields are.",
+    "yieldsBody": "Highest gross rental yields by community — median annual rent ÷ median sold price from official 2025 transactions.",
+    "allCommunities": "All communities →",
+    "yieldsMedianSold": "Median sold {price}",
+    "yieldsSalesCount": "{count} sales in 2025",
+    "yieldsGrossYield": "gross yield",
     "keyLocationsHeading": "Key Locations.",
     "viewAllLocations": "View All Locations →",
+    "viewAllCommunities": "View All Communities →",
     "areaMeta": "{city} · {count} projects",
     "exploreArea": "Explore area",
+    "exploreCommunity": "Explore community",
+    "browseByType": "Browse by type:",
+    "projectsCount": "{count} projects",
+    "investmentHighlightsHeading": "Investment Highlights.",
     "propertyTypesHeading": "Property Types.",
     "propertyTypes": {
       "apartments": "Apartments",
@@ -157,9 +177,23 @@ const dict = {
     "highlights": {
       "avgRoi": "Average ROI potential on prime launches",
       "goldenVisa": "Golden Visa eligibility on qualifying investments",
-      "flexiblePlans": "Flexible payment plans across the catalog"
+      "flexiblePlans": "Flexible payment plans across the catalog",
+      "topYieldSub": "Top community gross yield",
+      "topYieldBody": "{name} posted the highest gross rental yield on 2025 Dubai Land Department transactions among covered communities.",
+      "goldenVisaValue": "10 Years",
+      "goldenVisaSub": "Golden Visa eligibility",
+      "paymentValue": "80/20",
+      "paymentSub": "Flexible payment plans"
     },
     "faqHeading": "Frequently Asked Questions.",
+    "faqs": {
+      "q1": "What is an off-plan property?",
+      "a1": "An off-plan property is purchased before construction is complete, often with staged payment plans tied to construction milestones.",
+      "q2": "How do payment plans work?",
+      "a2": "Most UAE off-plan projects offer plans such as 20/80, 40/60, or 60/40 — a deposit on booking with the balance during construction and on handover.",
+      "q3": "Can I compare multiple units?",
+      "a3": "Yes. Select up to three units on any search results page and open the compare view for side-by-side pricing, handover, and brochure status."
+    },
     "moreQuestions": "More questions?",
     "browseFullFaq": "Browse the full FAQ →",
     "consultationHeading": "Book a Consultation with an Off-Plan Expert.",
@@ -512,6 +546,11 @@ const dict = {
     "preparedBy": "Prepared by invest off-plan"
   },
   "tools": {
+    "openTool": "Open tool",
+    "hubLinks": {
+      "roi": "ROI & Yield Estimator",
+      "investorMatch": "Investor Match"
+    },
     "roi": {
       "inputsHeading": "Your investment",
       "inputsSubtitle": "Enter your numbers, or pick a community to prefill yield and appreciation from 2025 DLD data.",

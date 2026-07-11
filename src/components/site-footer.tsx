@@ -130,8 +130,8 @@ export function SiteFooter() {
               <LicenseBadge />
             </div>
             <div className="flex gap-5">
-              <Link href="/privacy-policy" className="hover:text-white">{dict.footer.privacy}</Link>
-              <Link href="/cookie-policy" className="hover:text-white">{dict.footer.cookies}</Link>
+              <Link href={localePath(locale, "/privacy-policy")} className="hover:text-white">{dict.footer.privacy}</Link>
+              <Link href={localePath(locale, "/cookie-policy")} className="hover:text-white">{dict.footer.cookies}</Link>
             </div>
           </div>
           <div className="border-t border-white/5 px-8 py-4 text-center text-xs text-white/40">

@@ -108,6 +108,9 @@ export const ar: Dict = {
     "premium": "مميز",
     "available": "متاح",
     "soldOut": "بيع بالكامل",
+    "comingSoon": "قريباً",
+    "viewOnMap": "عرض على الخريطة",
+    "fromPrice": "يبدأ من {price}",
     "paymentPlan": "خطة سداد",
     "handover": "التسليم {date}",
     "unitCountSingular": "{count} وحدة {type}",
@@ -134,6 +137,7 @@ export const ar: Dict = {
     "stats": {
       "unitOptions": "خيارات الوحدات",
       "unitOptionsHint": "في جميع الإمارات",
+      "projects": "المشاريع",
       "brochurePdfs": "بروشورات PDF",
       "brochurePdfsHint": "تحميل مباشر أو عبر واتساب",
       "mapReadyProjects": "مشاريع على الخريطة",
@@ -141,10 +145,26 @@ export const ar: Dict = {
       "avgPpsf": "متوسط السعر درهم/قدم مربعة",
       "avgPpsfHint": "مؤشر الكتالوج"
     },
+    "latestLaunchesHeading": "أحدث الإطلاقات.",
+    "latestLaunchesBody": "أحدث المشاريع على الخارطة مع البروشورات والأسعار على مستوى الوحدة.",
+    "seeAll": "عرض الكل ←",
+    "featuredProjectsHeading": "مشاريع مختارة.",
+    "yieldsEyebrow": "بيانات سوق حقيقية · دائرة الأراضي والأملاك في دبي 2025",
+    "yieldsHeading": "أين تكمن العوائد.",
+    "yieldsBody": "أعلى العوائد الإيجارية الإجمالية حسب المجتمع — متوسط الإيجار السنوي ÷ متوسط سعر البيع من معاملات 2025 الرسمية.",
+    "allCommunities": "جميع المجتمعات ←",
+    "yieldsMedianSold": "متوسط البيع {price}",
+    "yieldsSalesCount": "{count} عملية بيع في 2025",
+    "yieldsGrossYield": "العائد الإجمالي",
     "keyLocationsHeading": "أبرز المواقع.",
     "viewAllLocations": "عرض جميع المواقع ←",
+    "viewAllCommunities": "عرض جميع المجتمعات ←",
     "areaMeta": "{city} · {count} مشروعاً",
     "exploreArea": "استكشف المنطقة",
+    "exploreCommunity": "استكشف المجتمع",
+    "browseByType": "تصفّح حسب النوع:",
+    "projectsCount": "{count} مشروعاً",
+    "investmentHighlightsHeading": "أبرز مزايا الاستثمار.",
     "propertyTypesHeading": "أنواع العقارات.",
     "propertyTypes": {
       "apartments": "شقق",
@@ -159,9 +179,23 @@ export const ar: Dict = {
     "highlights": {
       "avgRoi": "متوسط العائد المحتمل على الإطلاقات المميزة",
       "goldenVisa": "أهلية التأشيرة الذهبية على الاستثمارات المؤهلة",
-      "flexiblePlans": "خطط سداد مرنة في مختلف المشاريع"
+      "flexiblePlans": "خطط سداد مرنة في مختلف المشاريع",
+      "topYieldSub": "أعلى عائد إجمالي بين المجتمعات",
+      "topYieldBody": "سجّل {name} أعلى عائد إيجاري إجمالي على معاملات دائرة الأراضي والأملاك في دبي لعام 2025 بين المجتمعات المشمولة.",
+      "goldenVisaValue": "10 سنوات",
+      "goldenVisaSub": "أهلية التأشيرة الذهبية",
+      "paymentValue": "80/20",
+      "paymentSub": "خطط سداد مرنة"
     },
     "faqHeading": "الأسئلة الشائعة.",
+    "faqs": {
+      "q1": "ما هو العقار على الخارطة؟",
+      "a1": "العقار على الخارطة هو عقار يُشترى قبل اكتمال البناء، غالباً بخطط سداد مقسّمة مرتبطة بمراحل الإنشاء.",
+      "q2": "كيف تعمل خطط السداد؟",
+      "a2": "توفّر معظم مشاريع الإمارات على الخارطة خططاً مثل 20/80 أو 40/60 أو 60/40 — دفعة مقدّمة عند الحجز والباقي أثناء الإنشاء وعند التسليم.",
+      "q3": "هل يمكنني مقارنة عدة وحدات؟",
+      "a3": "نعم. اختر حتى ثلاث وحدات في أي صفحة نتائج بحث وافتح عرض المقارنة لمقارنة الأسعار ومواعيد التسليم وحالة البروشور جنباً إلى جنب."
+    },
     "moreQuestions": "لديك المزيد من الأسئلة؟",
     "browseFullFaq": "تصفّح جميع الأسئلة الشائعة ←",
     "consultationHeading": "احجز استشارة مع خبير في العقارات على الخارطة.",
@@ -514,6 +548,11 @@ export const ar: Dict = {
     "preparedBy": "إعداد invest off-plan"
   },
   "tools": {
+    "openTool": "افتح الأداة",
+    "hubLinks": {
+      "roi": "حاسبة العائد والإيجار",
+      "investorMatch": "مطابقة المستثمر"
+    },
     "roi": {
       "inputsHeading": "استثمارك",
       "inputsSubtitle": "أدخل أرقامك، أو اختر مجتمعًا لتعبئة العائد والارتفاع من بيانات دائرة الأراضي 2025.",
