@@ -124,8 +124,17 @@ writeFileSync(
 const dldStats = JSON.parse(
   readFileSync(join(root, "data", "dld-area-stats.json"), "utf8"),
 );
+// Cap mirrors MAX_PLAUSIBLE_YIELD_PCT in src/lib/dld-area-stats.ts — yields
+// above it are rent-median contamination (e.g. industrial contracts in DIP),
+// not real residential yields; the site never shows them.
+const MAX_PLAUSIBLE_YIELD_PCT = 12;
 const yieldCommunities = Object.entries(dldStats.areas || {})
-  .filter(([, a]) => a.grossYieldPct != null && a.saleSample >= 40)
+  .filter(
+    ([, a]) =>
+      a.grossYieldPct != null &&
+      a.grossYieldPct <= MAX_PLAUSIBLE_YIELD_PCT &&
+      a.saleSample >= 40,
+  )
   .sort(([, a], [, b]) => b.grossYieldPct - a.grossYieldPct)
   .slice(0, 40)
   .map(([key, a]) => ({ key, name: a.areaLabel, grossYieldPct: a.grossYieldPct }));
