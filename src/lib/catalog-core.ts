@@ -109,14 +109,37 @@ export function matchesPaymentPlan(
   return segments.length >= 4 && segments.every(Number.isFinite) && segments[3] > 0;
 }
 
+/** PF publishes unnamed placeholder listings ("New Project by X") — never a
+ * real, linkable project. */
+export function isPlaceholderProject(name: string): boolean {
+  return /^\s*new project by\b/i.test(name);
+}
+
 export function createCatalogApi(raw: CatalogFile): CatalogApi {
-  const projects = raw.projects.map((p) =>
+  // Drop placeholder listings and de-duplicate by slug (first occurrence wins —
+  // identical to the D1 seed's rule, so static build, D1, and the client all
+  // agree). Two different projects previously shared one URL (arthouse-residences
+  // = Cledor + Aviaan; emerge-residences = NAAS + Elysian): the losing card
+  // still rendered at a bait-and-switch price and linked to the other project's
+  // PDP. Its units are dropped too so SERP unit rows can't resurface it.
+  const seenSlugs = new Set<string>();
+  const keptProjectIds = new Set<string>();
+  const rawProjects = raw.projects.filter((p) => {
+    if (isPlaceholderProject(p.name)) return false;
+    if (seenSlugs.has(p.slug)) return false;
+    seenSlugs.add(p.slug);
+    keptProjectIds.add(p.id);
+    return true;
+  });
+  const projects = rawProjects.map((p) =>
     normalizeProject(p as Project & { citySlug?: string }),
   );
-  const units = raw.units;
+  const units = raw.units.filter((u) => keptProjectIds.has(u.projectId));
   const meta: CatalogMeta = {
-    unitCount: raw.unitCount,
-    projectCount: raw.projectCount,
+    // Recompute from the filtered set so headline counts match what's browsable
+    // (dropping placeholders/dup-slugs would otherwise leave stats overstated).
+    unitCount: units.length,
+    projectCount: projects.length,
     scrapedAt: raw.scrapedAt,
     developerSerpLinks: raw.developerSerpLinks,
     devList: raw.devList ?? [],
