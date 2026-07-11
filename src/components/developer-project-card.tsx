@@ -22,7 +22,12 @@ export function DeveloperProjectCard({
   priorityImage = false,
 }: DeveloperProjectCardProps) {
   const { dict } = useI18n();
-  const minPrice = Math.min(...project.units.map((unit) => unit.launchPriceAed));
+  // Only consider PF-stated (positive) prices so a no-price unit can't make the
+  // card read "from AED 0" — mirrors the >0 guard on the SERP card / PDP.
+  const positivePrices = project.units
+    .map((unit) => unit.launchPriceAed)
+    .filter((price) => price > 0);
+  const minPrice = positivePrices.length ? Math.min(...positivePrices) : 0;
   const maxPrice = Math.max(
     ...project.units.map((unit) => unit.launchPriceMaxAed ?? unit.launchPriceAed),
   );
@@ -116,7 +121,11 @@ export function DeveloperProjectCard({
               />
             ) : (
               <span className="rounded-full bg-surface-alt px-4 py-2 text-sm font-semibold text-muted">
-                {interpolate(dict.common.fromPrice, { price: formatPrice(minPrice, "AED") })}
+                {minPrice > 0
+                  ? interpolate(dict.common.fromPrice, {
+                      price: formatPrice(minPrice, "AED"),
+                    })
+                  : dict.common.priceOnRequest}
               </span>
             )}
           </div>
