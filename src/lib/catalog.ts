@@ -113,22 +113,13 @@ export async function getDevelopers(): Promise<DeveloperSummary[]> {
     }
   }
 
-  for (const dev of api.getDevList()) {
-    if (map.has(dev.slug)) continue;
-    map.set(dev.slug, {
-      slug: dev.slug,
-      name: dev.name,
-      initials: dev.name.slice(0, 2).toUpperCase(),
-      projectCount: dev.numProjectsOnline ?? 0,
-      unitCount: 0,
-      cities: [],
-      minPriceAed: Number.POSITIVE_INFINITY,
-      logoUrl: dev.logoUrl,
-      description: dev.description,
-      foundedYear: parseFoundedYear(dev.establishedSince),
-      numProjectsOnline: dev.numProjectsOnline,
-    });
-  }
+  // devList entries with NO catalog projects are intentionally NOT added:
+  // using PF's numProjectsOnline as projectCount shipped directory cards
+  // promising "47 projects" and a developer page whose listings join (our
+  // catalog) rendered empty — e.g. /developers/arada. devList is metadata
+  // enrichment for developers we actually carry, not a page source. (Arada
+  // itself is an ingest gap; once its projects land in the catalog, its page
+  // reappears automatically with real listings.)
 
   return [...map.values()]
     .filter((dev) => dev.projectCount > 0)
