@@ -1,11 +1,15 @@
 import { formatBeds, formatSqft } from "@/lib/format";
 import type { UnitType } from "@/lib/types";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 interface ProjectUnitRangesProps {
   units: UnitType[];
+  locale?: Locale;
 }
 
-export function ProjectUnitRanges({ units }: ProjectUnitRangesProps) {
+export function ProjectUnitRanges({ units, locale = "en" }: ProjectUnitRangesProps) {
+  const u = getDictionary(locale).pdp.units;
   const groups = new Map<
     string,
     { beds: number; propertyType: string; sqftMin: number; sqftMax: number }
@@ -39,20 +43,20 @@ export function ProjectUnitRanges({ units }: ProjectUnitRangesProps) {
   return (
     <div className="mt-6">
       <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-light">
-        Unit type sizes
+        {u.rangeHeading}
       </h3>
       <ul className="mt-3 space-y-2">
         {rows.map((row) => (
           <li key={`${row.beds}-${row.propertyType}`} className="text-sm text-text-dark">
             <span className="font-semibold capitalize">
-              {formatBeds(row.beds)} {row.propertyType}s
+              {formatBeds(row.beds)} {row.propertyType}{u.typePlural}
             </span>
             {row.sqftMin > 0 ? (
               <>
-                {" — sizes "}
+                {` — ${u.sizesLabel} `}
                 {row.sqftMin === row.sqftMax
                   ? formatSqft(row.sqftMin)
-                  : `${formatSqft(row.sqftMin)} to ${formatSqft(row.sqftMax)}`}
+                  : `${formatSqft(row.sqftMin)} ${u.sizeTo} ${formatSqft(row.sqftMax)}`}
               </>
             ) : null}
           </li>

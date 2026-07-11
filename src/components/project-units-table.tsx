@@ -4,23 +4,27 @@ import {
   formatSqft,
 } from "@/lib/format";
 import type { Project, UnitType } from "@/lib/types";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 interface ProjectUnitsTableProps {
   units: UnitType[];
   project: Project;
+  locale?: Locale;
 }
 
-export function ProjectUnitsTable({ units, project }: ProjectUnitsTableProps) {
+export function ProjectUnitsTable({ units, project, locale = "en" }: ProjectUnitsTableProps) {
+  const u = getDictionary(locale).pdp.units;
   return (
     <>
       <div className="mt-4 hidden overflow-hidden rounded-xl border border-border bg-white md:block">
         <table className="w-full text-start text-sm">
           <thead className="border-b border-border bg-surface-alt text-muted">
             <tr>
-              <th className="px-4 py-3 font-medium">Beds</th>
-              <th className="px-4 py-3 font-medium">Size</th>
-              <th className="px-4 py-3 font-medium">Type</th>
-              <th className="px-4 py-3 font-medium">From</th>
+              <th className="px-4 py-3 font-medium">{u.colBeds}</th>
+              <th className="px-4 py-3 font-medium">{u.colSize}</th>
+              <th className="px-4 py-3 font-medium">{u.colType}</th>
+              <th className="px-4 py-3 font-medium">{u.colFrom}</th>
             </tr>
           </thead>
           <tbody>

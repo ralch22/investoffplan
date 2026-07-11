@@ -2,7 +2,7 @@
 
 import type { Project } from "@/lib/types";
 import { useI18n } from "@/i18n/locale-provider";
-import type { Locale } from "@/i18n/config";
+import { interpolate, type Locale } from "@/i18n/config";
 
 interface ProjectTimelineProps {
   project: Project;
@@ -32,7 +32,8 @@ function formatMonth(iso: string, locale: Locale): string | null {
  * status-derived states, never invented dates.
  */
 export function ProjectTimeline({ project }: ProjectTimelineProps) {
-  const { locale } = useI18n();
+  const { locale, dict } = useI18n();
+  const tl = dict.pdp.timeline;
   const salesStart = project.salesStartDate
     ? formatMonth(project.salesStartDate, locale)
     : null;
@@ -48,24 +49,24 @@ export function ProjectTimeline({ project }: ProjectTimelineProps) {
 
   const milestones: Milestone[] = [
     {
-      label: "Sales launch",
-      value: salesStart ?? (project.status === "sold-out" ? "Closed" : "Open now"),
+      label: tl.salesLaunch,
+      value: salesStart ?? (project.status === "sold-out" ? tl.closed : tl.openNow),
       state: "done",
     },
     {
-      label: "Construction",
+      label: tl.construction,
       value: isReady
-        ? "Complete"
+        ? tl.complete
         : progress != null
-          ? `${progress}% complete`
+          ? interpolate(tl.percentComplete, { progress })
           : inConstruction
-            ? "In progress"
-            : "Off-plan",
+            ? tl.inProgress
+            : tl.offPlan,
       state: isReady ? "done" : inConstruction ? "active" : "upcoming",
     },
     {
-      label: "Handover",
-      value: project.handover ?? "To be announced",
+      label: tl.handover,
+      value: project.handover ?? dict.pdp.keyFacts.toBeAnnounced,
       state: isReady ? "done" : "upcoming",
     },
   ];
@@ -84,7 +85,7 @@ export function ProjectTimeline({ project }: ProjectTimelineProps) {
         id="timeline-heading"
         className="font-display text-2xl font-semibold text-text-dark md:text-3xl"
       >
-        Project <em className="italic">timeline</em>
+        {tl.headingLead} <em className="italic">{tl.headingEm}</em>
       </h2>
       <div className="mt-6 rounded-2xl border border-border bg-white p-5 shadow-elevation-sm md:p-6">
         <div className="relative">

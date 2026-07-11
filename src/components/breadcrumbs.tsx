@@ -14,10 +14,18 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ items }: BreadcrumbsProps) {
   const { dict } = useI18n();
-  // Pages hardcode the "Home" crumb; translate it centrally so every AR page
-  // (mostly EN server pages re-exported under /ar) localizes without plumbing.
+  // Pages hardcode static crumb labels ("Home", "Projects", …); translate them
+  // centrally so every AR page (mostly EN server pages re-exported under /ar)
+  // localizes without plumbing. Dynamic crumbs (project/developer names) pass
+  // through unchanged.
+  const STATIC_LABELS: Record<string, string> = {
+    Home: dict.common.home,
+    Projects: dict.nav.projects,
+    Developers: dict.nav.developers,
+    Communities: dict.nav.areas,
+  };
   const label = (item: BreadcrumbItem) =>
-    item.label === "Home" ? dict.common.home : item.label;
+    STATIC_LABELS[item.label] ?? item.label;
 
   return (
     <nav aria-label={dict.common.breadcrumbAria} className="text-sm text-muted">

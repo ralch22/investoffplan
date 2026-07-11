@@ -7,6 +7,7 @@ import { ContactButton } from "@/components/contact-button";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { resolveBrochureUrl } from "@/lib/brochure";
 import { withUtm } from "@/lib/utm";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface ProjectDetailCtasProps {
   projectName: string;
@@ -26,6 +27,8 @@ export function ProjectDetailCtas({
   virtualTourUrl,
 }: ProjectDetailCtasProps) {
   const [brochureOpen, setBrochureOpen] = useState(false);
+  const { dict } = useI18n();
+  const cta = dict.pdp.cta;
 
   const whatsappHref = withUtm(`https://wa.me/${whatsapp.replace(/\D/g, "")}`, {
     medium: "whatsapp",
@@ -54,26 +57,26 @@ export function ProjectDetailCtas({
             href="#media"
             className="inline-flex items-center gap-2 rounded-full border border-brand px-6 py-3.5 text-base font-semibold text-brand transition hover:bg-brand hover:text-white"
           >
-            Watch video
+            {cta.watchVideo}
           </a>
         ) : null}
       </div>
 
       <div className="mt-4 hidden gap-3 sm:grid-cols-2 md:grid lg:grid-cols-4">
-        <ActionPill label="Discover more" href="#units" filled />
+        <ActionPill label={cta.discoverMore} href="#units" filled />
         <button
           type="button"
           onClick={() => setBrochureOpen(true)}
           className="rounded-full border border-brand py-3 text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
         >
-          Download brochure
+          {cta.downloadBrochure}
         </button>
         {(virtualTourUrl ?? videoUrl) ? (
           <a
             href="#media"
             className="rounded-full border border-brand py-3 text-center text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
           >
-            {virtualTourUrl ? "Virtual tour" : "Watch video"}
+            {virtualTourUrl ? cta.virtualTour : cta.watchVideo}
           </a>
         ) : null}
         <a
@@ -86,7 +89,7 @@ export function ProjectDetailCtas({
           onClick={() => trackWhatsappClick("pdp_pill")}
           className="rounded-full border border-brand py-3 text-center text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
         >
-          Check availability
+          {cta.checkAvailability}
         </a>
       </div>
 
@@ -101,7 +104,7 @@ export function ProjectDetailCtas({
             onClick={() => setBrochureOpen(true)}
             className="iop-btn-press flex-1 rounded-full bg-brand py-3.5 text-sm font-semibold text-white transition hover:bg-brand-dark"
           >
-            Download brochure
+            {cta.downloadBrochure}
           </button>
           <a
             href={whatsappHref}
@@ -110,7 +113,7 @@ export function ProjectDetailCtas({
             onClick={() => trackWhatsappClick("pdp_mobile_bar")}
             className="iop-btn-press flex-1 rounded-full border border-brand py-3.5 text-center text-sm font-semibold text-brand transition hover:bg-brand-muted"
           >
-            WhatsApp
+            {dict.common.whatsapp}
           </a>
         </div>
       </div>

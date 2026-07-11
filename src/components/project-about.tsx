@@ -1,6 +1,8 @@
 import type { ProjectEnrichment } from "@/lib/enrichment";
 import { htmlToPlainText, sanitizeProjectHtml } from "@/lib/sanitize-html";
 import { ExpandableRichText } from "@/components/expandable-rich-text";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 // Descriptions past this render clamped behind a "Read more" toggle.
 const DESCRIPTION_TRUNCATE_CHARS = 4000;
@@ -11,6 +13,7 @@ interface ProjectAboutProps {
   videoUrl?: string;
   description?: string;
   amenities?: string[];
+  locale?: Locale;
 }
 
 function stripHtml(html: string): string {
@@ -23,7 +26,9 @@ export function ProjectAbout({
   videoUrl,
   description,
   amenities: amenitiesProp,
+  locale = "en",
 }: ProjectAboutProps) {
+  const about = getDictionary(locale).pdp.about;
   const clean = (u?: string) => (u && u !== "#" ? u : undefined);
   const brochure = clean(brochureUrl) || clean(enrichment?.brochureUrl);
   const video = clean(videoUrl) || clean(enrichment?.videoUrl);
@@ -50,7 +55,7 @@ export function ProjectAbout({
             id="about-heading"
             className="font-display text-2xl font-semibold text-text-dark md:text-3xl"
           >
-            About the <em className="italic">project</em>
+            {about.headingLead} <em className="italic">{about.headingEm}</em>
           </h2>
           <ExpandableRichText
             html={sanitizedHtml}
@@ -64,7 +69,7 @@ export function ProjectAbout({
             id="about-heading"
             className="font-display text-2xl font-semibold text-text-dark md:text-3xl"
           >
-            About the <em className="italic">project</em>
+            {about.headingLead} <em className="italic">{about.headingEm}</em>
           </h2>
           <p className="prose-balance mt-4 text-lg leading-relaxed text-text-dark/80">
             {aboutText}
@@ -75,7 +80,7 @@ export function ProjectAbout({
       {amenities.length > 0 ? (
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-light">
-            Amenities
+            {about.amenities}
           </h3>
           <ul className="mt-3 flex flex-wrap gap-2">
             {amenities.map((a) => (
@@ -99,7 +104,7 @@ export function ProjectAbout({
               rel="noopener noreferrer"
               className="inline-flex items-center rounded-full bg-brand px-6 py-3 text-sm font-bold text-white shadow-elevation-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-elevation-lg"
             >
-              Download brochure →
+              {about.downloadBrochure}
             </a>
           ) : null}
           {video ? (
@@ -107,7 +112,7 @@ export function ProjectAbout({
               href="#media"
               className="inline-flex items-center rounded-full border-2 border-brand px-6 py-3 text-sm font-bold text-brand shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand hover:text-white"
             >
-              Watch video
+              {about.watchVideo}
             </a>
           ) : null}
         </div>

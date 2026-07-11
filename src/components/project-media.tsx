@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { parseMedia, type Media } from "@/lib/media";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface ProjectMediaProps {
   videoUrl?: string | null;
@@ -78,21 +79,31 @@ function EmbedFacade({
   );
 }
 
-function TourLink({ url, title }: { url: string; title: string }) {
+function TourLink({
+  url,
+  title,
+  virtualTourLabel,
+  exploreLabel,
+}: {
+  url: string;
+  title: string;
+  virtualTourLabel: string;
+  exploreLabel: string;
+}) {
   return (
     <a
       href={url}
       target="_blank"
       rel="noopener noreferrer"
       className="iop-btn-press focus-ring group flex aspect-video w-full flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-surface-alt text-center transition hover:border-brand/30"
-      aria-label={`Explore virtual tour — ${title}`}
+      aria-label={`${exploreLabel} — ${title}`}
     >
       <span className="flex h-16 w-16 items-center justify-center rounded-full bg-brand text-white shadow-elevation-md transition group-hover:scale-105">
         <PlayIcon />
       </span>
-      <span className="text-xs font-semibold uppercase tracking-wide text-muted-light">Virtual tour</span>
+      <span className="text-xs font-semibold uppercase tracking-wide text-muted-light">{virtualTourLabel}</span>
       <span className="inline-flex items-center gap-1 text-sm font-semibold text-brand">
-        Explore virtual tour
+        {exploreLabel}
         <svg viewBox="0 0 20 20" className="h-4 w-4 fill-current" aria-hidden>
           <path d="M12.5 3h4.5v4.5h-1.5V5.56l-6.22 6.22-1.06-1.06L14.44 4.5H12.5V3zM5 5h3v1.5H6.5v8h8V13H16v3H5V5z" />
         </svg>
@@ -102,6 +113,8 @@ function TourLink({ url, title }: { url: string; title: string }) {
 }
 
 export function ProjectMedia({ videoUrl, virtualTourUrl, projectName }: ProjectMediaProps) {
+  const { dict } = useI18n();
+  const m = dict.pdp.media;
   const video = videoUrl?.trim() || null;
   const tour = virtualTourUrl?.trim() || null;
 
@@ -116,21 +129,26 @@ export function ProjectMedia({ videoUrl, virtualTourUrl, projectName }: ProjectM
 
   return (
     <section id="media" className="mt-12 scroll-mt-24">
-      <h2 className="text-xl font-semibold text-text-dark">Video &amp; virtual tour</h2>
-      <p className="mt-1 text-sm text-muted">Walkthroughs and 3D tours from the developer.</p>
+      <h2 className="text-xl font-semibold text-text-dark">{m.heading}</h2>
+      <p className="mt-1 text-sm text-muted">{m.subtitle}</p>
       <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
         {showVideo && videoMedia ? (
           videoMedia.kind === "file" && videoMedia.fileSrc ? (
             <VideoFile src={videoMedia.fileSrc} title={`${projectName} video`} />
           ) : (
-            <EmbedFacade media={videoMedia} eyebrow="Video" cta="Play video" title={`${projectName} video`} />
+            <EmbedFacade media={videoMedia} eyebrow={m.video} cta={m.playVideo} title={`${projectName} video`} />
           )
         ) : null}
         {showTour && tourMedia ? (
           tourMedia.kind === "matterport" ? (
-            <EmbedFacade media={tourMedia} eyebrow="Virtual tour" cta="Launch 3D tour" title={`${projectName} tour`} />
+            <EmbedFacade media={tourMedia} eyebrow={m.virtualTour} cta={m.launch3dTour} title={`${projectName} tour`} />
           ) : (
-            <TourLink url={tour!} title={projectName} />
+            <TourLink
+              url={tour!}
+              title={projectName}
+              virtualTourLabel={m.virtualTour}
+              exploreLabel={m.exploreVirtualTour}
+            />
           )
         ) : null}
       </div>

@@ -49,9 +49,13 @@ import {
   buildVideoObjectJsonLd,
 } from "@/lib/project-json-ld";
 import { unoptimizedProp } from "@/lib/asset-image";
+import { getDictionary } from "@/i18n";
+import { interpolate, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  /** Set to "ar" by the /ar mirror so page chrome + child labels localize. */
+  locale?: Locale;
 }
 
 import { getCatalogApi } from "@/lib/catalog";
@@ -145,7 +149,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function ProjectDetailPage({ params }: PageProps) {
+export default async function ProjectDetailPage({
+  params,
+  locale = "en",
+}: PageProps) {
+  const dict = getDictionary(locale);
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
   if (!project) notFound();
@@ -161,7 +169,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     ? Math.min(...pricedUnits.map((u) => u.launchPriceAed))
     : 0;
   const fromPriceLabel =
-    minPrice > 0 ? formatPrice(minPrice, "AED") : "Price on request";
+    minPrice > 0 ? formatPrice(minPrice, "AED") : dict.pdp.priceOnRequest;
   // UAE grants a 10-year Golden Visa for property investment >= AED 2M.
   const goldenVisaEligible = project.units.some((u) => u.launchPriceAed >= 2_000_000);
   const projectCompareLinks = await getProjectComparisonLinks(project);
@@ -302,7 +310,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <div className="absolute inset-0 bg-hero-overlay" />
         <div className="relative mx-auto max-w-[1200px] px-5 py-16 md:px-8 md:py-24">
           <LocaleLink href="/projects" className="text-sm text-white/80 hover:text-white">
-            ← Back to projects
+            {dict.pdp.hero.backToProjects}
           </LocaleLink>
           <h1 className="font-display mt-6 text-4xl font-semibold md:text-5xl">
             {(() => {
@@ -319,14 +327,14 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             })()}
           </h1>
           <p className="mt-2 text-white/85">
-            {cityLabel(project.city)}, United Arab Emirates
+            {cityLabel(project.city)}, {dict.pdp.hero.country}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {[
-              { label: "From", value: fromPriceLabel },
-              { label: "Payment", value: project.paymentPlan },
-              { label: "Units", value: String(project.unitCount) },
-              { label: "Type", value: project.units[0]?.propertyType ?? "Apartment" },
+              { label: dict.pdp.hero.statFrom, value: fromPriceLabel },
+              { label: dict.pdp.hero.statPayment, value: project.paymentPlan },
+              { label: dict.pdp.hero.statUnits, value: String(project.unitCount) },
+              { label: dict.pdp.hero.statType, value: project.units[0]?.propertyType ?? dict.pdp.hero.apartment },
             ]
               .filter((stat) => stat.value?.trim())
               .map((stat) => (
@@ -343,7 +351,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 href="#project-gallery"
                 className="rounded-full border border-white/35 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
               >
-                {additionalPhotoCount + 1} photos
+                {interpolate(dict.pdp.hero.photos, { count: additionalPhotoCount + 1 })}
               </a>
             ) : null}
           </div>
@@ -381,12 +389,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               </h2>
               {project.isPremium ? (
                 <span className="rounded-[5px] bg-accent-red px-2.5 py-1 text-xs font-semibold uppercase text-white">
-                  Premium
+                  {dict.common.premium}
                 </span>
               ) : null}
               {project.status === "sold-out" ? (
                 <span className="rounded-[5px] bg-surface-dark px-2.5 py-1 text-xs font-semibold uppercase text-white">
-                  Sold out
+                  {dict.common.soldOut}
                 </span>
               ) : null}
             </div>
@@ -403,7 +411,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                   href={`/map?project=${slug}`}
                   className="text-sm font-semibold text-brand hover:text-brand-dark"
                 >
-                  View on project map →
+                  {dict.pdp.viewOnProjectMap}
                 </LocaleLink>
               ) : null}
               {mapUrl ? (
@@ -413,7 +421,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                   rel="noopener noreferrer"
                   className="text-sm font-semibold text-brand hover:text-brand-dark"
                 >
-                  Google Maps →
+                  {dict.pdp.googleMaps}
                 </a>
               ) : null}
             </div>
@@ -425,7 +433,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         </div>
 
         <p className="mt-4 text-2xl font-semibold text-brand">
-          {minPrice > 0 ? <>FROM {formatPrice(minPrice, "AED")}</> : "PRICE ON REQUEST"}
+          {minPrice > 0 ? <>{dict.pdp.fromUpper} {formatPrice(minPrice, "AED")}</> : dict.pdp.priceOnRequestUpper}
           {project.units[0] ? (
             <span className="ms-3 text-base font-medium text-muted">
               {(() => {
@@ -447,7 +455,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden>
               <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4L12 15.4 7.2 17.9l.9-5.4L4.2 8.7l5.4-.8z" />
             </svg>
-            Golden Visa eligible · 10-year residency
+            {dict.pdp.goldenVisa}
           </LocaleLink>
         ) : null}
 
@@ -463,7 +471,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
 
         <div id="key-facts" className="scroll-mt-24">
-          <ProjectKeyFacts project={project} />
+          <ProjectKeyFacts project={project} locale={locale} />
           <ProjectTimeline project={project} />
         </div>
 
@@ -473,9 +481,10 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           videoUrl={project.videoUrl ?? enrichment?.videoUrl}
           description={project.descriptionUnique ?? project.description}
           amenities={amenities}
+          locale={locale}
         />
 
-        <ProjectUnitRanges units={project.units} />
+        <ProjectUnitRanges units={project.units} locale={locale} />
 
         <ProjectMasterplan project={project} />
 
@@ -489,19 +498,19 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <div id="calculator" className="mt-10 scroll-mt-24">
           <ProjectPaymentCalculator project={project} />
           <p className="mt-4 text-sm text-muted">
-            Financing part of the purchase?{" "}
+            {dict.pdp.financingQuestion}{" "}
             <LocaleLink
               href="/tools/mortgage"
               className="font-semibold text-brand hover:text-brand-dark"
             >
-              Model your mortgage and get pre-approved →
+              {dict.pdp.modelMortgage}
             </LocaleLink>
           </p>
         </div>
 
         <section id="units" className="mt-10 scroll-mt-24">
-          <h2 className="text-xl font-semibold text-text-dark">Unit types</h2>
-          <ProjectUnitsTable units={project.units} project={project} />
+          <h2 className="text-xl font-semibold text-text-dark">{dict.pdp.unitTypes}</h2>
+          <ProjectUnitsTable units={project.units} project={project} locale={locale} />
         </section>
 
         <ProjectMedia
@@ -522,7 +531,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
 
         {projectCompareLinks.length > 0 ? (
           <div className="mt-6 flex flex-wrap items-center gap-2">
-            <span className="text-sm font-semibold text-text-dark">Compare {project.name} with:</span>
+            <span className="text-sm font-semibold text-text-dark">{interpolate(dict.pdp.compareWith, { name: project.name })}</span>
             {projectCompareLinks.map((c) => (
               <LocaleLink
                 key={c.pairSlug}
@@ -544,7 +553,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               }}
             />
             <h2 className="text-xl font-semibold text-text-dark">
-              {project.name} FAQ
+              {interpolate(dict.pdp.faqHeading, { name: project.name })}
             </h2>
             <div className="mt-5">
               <FaqAccordion faqs={projectFaqs} />
@@ -555,7 +564,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         {related.length > 0 ? (
           <section id="related" className="mt-12 scroll-mt-24">
             <h2 className="text-xl font-semibold text-text-dark">
-              More in {cityLabel(project.city)}
+              {interpolate(dict.pdp.moreInCity, { city: cityLabel(project.city) })}
             </h2>
             <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (
@@ -574,7 +583,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
               pricePerSqft={pricePerSqftLabel}
               paymentPlan={project.paymentPlan}
               unitCount={project.unitCount}
-              handover={project.handover ?? "To be announced"}
+              handover={project.handover ?? dict.pdp.keyFacts.toBeAnnounced}
               whatsapp={project.whatsapp}
               brochureUrl={project.brochureUrl ?? enrichment?.brochureUrl}
             />
