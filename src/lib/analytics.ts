@@ -9,6 +9,7 @@ export const ANALYTICS_EVENTS = {
   WHATSAPP_CLICK: "whatsapp_click",
   SEARCH_SUBMIT: "search_submit",
   SUGGEST_CLICK: "search_suggest_click",
+  QUIZ_START: "quiz_start",
   QUIZ_COMPLETE: "quiz_complete",
   ROI_CALC: "roi_calc",
   ALERT_SUBSCRIBE: "alert_subscribe",

@@ -509,6 +509,93 @@ const dict = {
     "confidenceLabel": "confidence",
     "onRequest": "On request",
     "preparedBy": "Prepared by invest off-plan"
+  },
+  "tools": {
+    "investorMatch": {
+      "metaTitle": "Investor Match — Find Your Off-Plan Fit",
+      "metaDescription": "Answer 6 quick questions and get a ranked shortlist of UAE off-plan projects matched to your budget, goal, and lifestyle.",
+      "heroTitle": "Investor Match",
+      "heroSubtitle": "Six quick questions. A ranked shortlist of off-plan projects matched to your brief.",
+      "breadcrumb": "Investor Match",
+      "intro": "Tell us what matters — budget, goal, setting, timing, payment, and size — and we'll rank the best-fit launches from our live catalog. No sign-up.",
+      "start": "Start matching",
+      "stepLabel": "Step {current} of {total}",
+      "progressAria": "Quiz progress",
+      "back": "Back",
+      "next": "Next",
+      "seeMatches": "See my matches",
+      "restart": "Start over",
+      "refine": "Refine answers",
+      "loading": "Finding your matches…",
+      "steps": {
+        "budget": { "title": "What's your budget?", "help": "Your all-in purchase budget in AED." },
+        "goal": { "title": "What's your primary goal?", "help": "We tune the ranking to what matters most." },
+        "vibe": { "title": "Which setting fits you?", "help": "Where you'd like to be." },
+        "timing": { "title": "When do you want handover?", "help": "How soon you need the keys." },
+        "payment": { "title": "Payment-plan preference?", "help": "How you'd like to pay." },
+        "beds": { "title": "How many bedrooms?", "help": "Preferred unit size." }
+      },
+      "options": {
+        "budget": { "under-1m": "Under AED 1M", "1-2m": "AED 1M – 2M", "2-5m": "AED 2M – 5M", "5m-plus": "AED 5M+" },
+        "goal": { "income": "Rental income", "appreciation": "Capital appreciation", "golden-visa": "Golden Visa eligibility", "live-in": "A home to live in" },
+        "vibe": { "beachfront": "Beachfront", "urban": "Urban", "family": "Family suburb", "any": "No preference" },
+        "timing": { "ready": "Ready within 12 months", "mid": "12–36 months", "long": "Long-term is fine" },
+        "payment": { "low-down": "Low down-payment", "post-handover": "Post-handover plan", "any": "No preference" },
+        "beds": { "studio": "Studio", "1": "1 bedroom", "2": "2 bedrooms", "3-plus": "3+ bedrooms", "any": "Any" }
+      },
+      "optionHint": {
+        "goal": {
+          "income": "Weighted by community rental yield.",
+          "appreciation": "Weighted by value pricing and premium markers.",
+          "golden-visa": "Weighted toward AED 2M+ launches.",
+          "live-in": "Weighted by amenities and move-in readiness."
+        }
+      },
+      "results": {
+        "title": "Your matches",
+        "count": "{count} projects matched your brief",
+        "matchScore": "{score}% match",
+        "whyTitle": "Why it matched",
+        "fromPrice": "From {price}",
+        "viewProject": "View project",
+        "browseAll": "Browse the full catalog",
+        "share": "Copy share link",
+        "shareCopied": "Link copied",
+        "empty": {
+          "title": "No exact matches in that budget band",
+          "body": "Try widening your budget, or set goal, setting, or size to “no preference”.",
+          "cta": "Adjust answers"
+        },
+        "disclaimer": "Matches are ranked from developer-published launch data for guidance only — not financial advice. Verify all figures before investing."
+      },
+      "reasons": {
+        "highYield": "Community gross yield ~{yield}% in {community}",
+        "belowAvgPpsf": "AED {ppsf}/sqft — below the AED {median} catalog average",
+        "goldenVisa": "Golden Visa eligible — launch price AED {price} clears the AED 2M threshold",
+        "amenityRich": "Amenity-rich — {count} amenities including {list}",
+        "waterfront": "Waterfront setting",
+        "urbanHub": "Central urban location in {area}",
+        "familyCommunity": "Established family community in {area}",
+        "readySoon": "Handover in about {months} months",
+        "handoverWindow": "Handover in about {months} months — inside your window",
+        "longHorizon": "Long-term handover ({date})",
+        "lowDown": "Low {down}% down payment",
+        "postHandover": "Post-handover payment plan ({after}% after handover)",
+        "bedsMatch": "Offers your preferred {beds} layout",
+        "branded": "Branded residence",
+        "budgetFit": "Within your AED budget band",
+        "handoverKnown": "Handover {date}",
+        "paymentPlanKnown": "{plan} payment plan",
+        "location": "In {area}, {city}"
+      },
+      "card": {
+        "eyebrow": "New tool",
+        "title": "Investor Match quiz",
+        "description": "Answer 6 questions and get a ranked shortlist of off-plan projects matched to your budget, goal, and lifestyle.",
+        "cta": "Find my match →"
+      },
+      "serpCta": "Not sure where to start? Try the Investor Match quiz →"
+    }
   }
 } as const;
 

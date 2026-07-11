@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { DataGuruToolCard } from "@/components/dataguru-tool-card";
+import { InvestorMatchToolCard } from "@/components/investor-match-tool-card";
 import { DATAGURU_TOOLS } from "@/lib/dataguru";
 import { getHeroImage } from "@/lib/area-images";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
@@ -37,6 +38,7 @@ export default async function ToolsHubPage() {
           {DATAGURU_TOOLS.map((tool) => (
             <DataGuruToolCard key={tool.slug} tool={tool} />
           ))}
+          <InvestorMatchToolCard />
         </div>
 
         <section className="mt-14 rounded-2xl border border-border bg-surface-alt p-8">
