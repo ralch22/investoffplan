@@ -12,7 +12,7 @@ export function TestimonialsSection() {
       <h2 className="font-display text-3xl font-semibold text-text-dark">
         Client Experiences<span className="text-brand">.</span>
       </h2>
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {TESTIMONIALS.map((t) => (
           <figure
             key={`${t.name}-${t.quote.slice(0, 24)}`}

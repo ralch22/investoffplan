@@ -84,7 +84,7 @@ export default async function FaqTopicPage({ params }: PageProps) {
           <h2 className="font-display text-2xl font-semibold text-text-dark">
             More FAQ topics
           </h2>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {related.map((other) => (
               <Link
                 key={other.slug}

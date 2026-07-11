@@ -78,7 +78,7 @@ export function SiteFooter() {
           </div>
 
           {/* Right: guides + collections */}
-          <div className="grid gap-10 px-8 py-12 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-10 px-8 py-12 sm:grid-cols-2">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-brand">
                 {dict.footer.columns.guides}

@@ -78,7 +78,7 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[340px_1fr]">
       <aside className="flex flex-col gap-4">
         <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
           <h2 className="text-sm font-semibold text-text-dark">Filters</h2>

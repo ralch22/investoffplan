@@ -73,7 +73,7 @@ export function TopDevelopersChart({ developers }: TopDevelopersChartProps) {
           const width = `${Math.max(8, (value / maxValue) * 100)}%`;
 
           return (
-            <div key={dev.slug} className="grid gap-3 md:grid-cols-[minmax(0,220px)_1fr_auto] md:items-center">
+            <div key={dev.slug} className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,220px)_1fr_auto] md:items-center">
               <Link
                 href={`/developers/${dev.slug}`}
                 className="flex min-w-0 items-center gap-3 transition hover:opacity-80"

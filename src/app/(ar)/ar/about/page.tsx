@@ -54,7 +54,7 @@ export default async function ArabicAboutPage() {
           المشاريع على خريطة تفاعلية — مع ذكاء سعر القدم المربعة الذي يتجاوز ما تقدّمه
           البوابات العقارية التقليدية.
         </p>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {pillars.map((pillar) => (
             <div
               key={pillar.name}

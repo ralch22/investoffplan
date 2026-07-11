@@ -131,7 +131,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Communities", href: "/communities" }, { label: community.name }]} />
         {/* Stats band */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard label="Off-plan projects" value={String(community.projectCount)} />
           <StatCard label="Unit options" value={community.unitCount.toLocaleString()} />
           <StatCard
@@ -229,7 +229,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
         {projects.length === 0 ? (
           <p className="mt-8 text-muted">No projects listed in this community yet.</p>
         ) : (
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {projects.slice(0, 6).map((project, index) => (
               <ShowcaseProjectCard key={project.id} project={project} featured={index === 0} />
             ))}
@@ -239,7 +239,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
         {/* Editorial depth */}
         {editorial ? (
           <>
-            <section className="mt-14 grid gap-6 md:grid-cols-2">
+            <section className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
               <EditorialCard title="Lifestyle" paragraphs={editorial.lifestyle} />
               <EditorialCard
                 title="Transport & commute"
@@ -307,7 +307,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
                 See all communities
               </LocaleLink>
             </div>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {similar.map((item) => (
                 <LocaleLink
                   key={item.slug}

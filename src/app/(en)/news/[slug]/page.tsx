@@ -138,7 +138,7 @@ export default async function NewsArticlePage({ params }: PageProps) {
             <h2 className="font-display text-2xl font-semibold text-text-dark">
               More from the newsroom
             </h2>
-            <div className="mt-5 grid gap-4 sm:grid-cols-3">
+            <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
               {related.map((other) => (
                 <Link
                   key={other.slug}

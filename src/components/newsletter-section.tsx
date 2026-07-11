@@ -3,7 +3,7 @@ import { NewsletterForm } from "@/components/newsletter-form";
 export function NewsletterSection() {
   return (
     <section className="relative overflow-hidden bg-surface-darker text-white">
-      <div className="mx-auto grid max-w-[1200px] md:grid-cols-2">
+      <div className="mx-auto grid grid-cols-1 max-w-[1200px] md:grid-cols-2">
         {/* Left: image + headline */}
         <div className="relative flex min-h-[280px] flex-col justify-end overflow-hidden bg-surface-dark md:min-h-[420px]">
           {/* eslint-disable-next-line @next/next/no-img-element -- static public asset, Workers optimizer bypassed */}

@@ -25,7 +25,7 @@ export function ProjectLivingInArea({ insights }: ProjectLivingInAreaProps) {
       <p className="prose-balance mt-3 max-w-2xl text-muted">{insights.tagline}</p>
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-white shadow-elevation-sm">
-        <div className="grid md:grid-cols-[1.1fr_1fr]">
+        <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1fr]">
           {insights.heroImage ? (
             <div className="relative min-h-[200px] md:min-h-[260px]">
               <Image
@@ -50,7 +50,7 @@ export function ProjectLivingInArea({ insights }: ProjectLivingInAreaProps) {
           )}
 
           <div className="p-6">
-            <dl className="grid gap-4 sm:grid-cols-2">
+            <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <InsightStat label="Projects" value={String(insights.projectCount)} />
               <InsightStat label="Unit options" value={insights.unitCount.toLocaleString()} />
               <InsightStat

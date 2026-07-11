@@ -35,7 +35,7 @@ export default async function InsightsPage() {
             { label: "Guides" },
           ]}
         />
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {GUIDE_CARDS.map((guide) => (
             <Link
               key={guide.title}
@@ -86,7 +86,7 @@ export default async function InsightsPage() {
         </section>
 
         <section className="mt-14 overflow-hidden rounded-2xl bg-brand p-8 text-white md:p-12">
-          <div className="grid gap-8 md:grid-cols-2 md:items-center">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:items-center">
             <div>
               <p className="text-4xl font-semibold">10 Years</p>
               <p className="mt-2 text-xl font-semibold">Golden Visa</p>

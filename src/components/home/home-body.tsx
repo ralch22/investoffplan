@@ -274,7 +274,7 @@ export async function HomeBody({ locale }: { locale: Locale }) {
               {dict.home.viewAllCommunities}
             </LocaleLink>
           </div>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {topAreas.map((area, index) => {
               const areaImage = areaImages[index];
               return (
@@ -357,7 +357,7 @@ export async function HomeBody({ locale }: { locale: Locale }) {
               dict.home.investmentHighlightsHeading
             )}
           </h2>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {highlights.map((item) => (
               <div
                 key={`${item.value}-${item.sub}`}

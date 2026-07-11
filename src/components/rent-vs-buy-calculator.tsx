@@ -19,7 +19,7 @@ export function RentVsBuyCalculator() {
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1fr]">
       <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-text-dark">Your circumstances</h2>
         <p className="mt-1 text-sm text-muted">
@@ -100,7 +100,7 @@ export function RentVsBuyCalculator() {
       <section className="space-y-6">
         <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-text-dark">Monthly payments</h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Metric
               label="Buying (mortgage)"
               value={formatPrice(result.monthlyMortgageAed, "AED")}

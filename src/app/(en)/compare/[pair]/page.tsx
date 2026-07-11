@@ -163,7 +163,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
         <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Compare", href: "/compare" }, { label: `${a.area.name} vs ${b.area.name}` }]} />
         {/* KPI scorecards */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {scorecards.map((card) => (
             <div key={card.label} className="rounded-2xl border border-border bg-white p-4 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted">{card.label}</p>
@@ -246,7 +246,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
             <h2 className="font-display text-2xl font-semibold text-text-dark">
               The case for each<span className="text-brand">.</span>
             </h2>
-            <div className="mt-5 grid gap-5 md:grid-cols-2">
+            <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
               {[
                 { side: a, pros: prosA },
                 { side: b, pros: prosB },
@@ -280,7 +280,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
             <h2 className="font-display text-2xl font-semibold text-text-dark">
               Who each suits<span className="text-brand">.</span>
             </h2>
-            <div className="mt-5 grid gap-5 md:grid-cols-2">
+            <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
               {[
                 { side: a, suits: suitA },
                 { side: b, suits: suitB },

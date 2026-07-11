@@ -39,7 +39,7 @@ export default async function MortgagePage() {
 
         <section
           id="pre-approval"
-          className="mt-14 grid gap-8 rounded-2xl border border-border bg-surface-alt p-8 md:grid-cols-2 md:items-center md:p-10"
+          className="mt-14 grid grid-cols-1 gap-8 rounded-2xl border border-border bg-surface-alt p-8 md:grid-cols-2 md:items-center md:p-10"
         >
           <div>
             <h2 className="font-display text-3xl font-semibold text-text-dark">

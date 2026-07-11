@@ -78,7 +78,7 @@ export default async function CompareHubPage({ searchParams }: PageProps) {
           <p className="mt-2 max-w-xl text-sm text-muted">
             Side-by-side on real 2025 sold prices, price per sqft, and gross rental yields.
           </p>
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {comparisons.map((c) => (
               <Link
                 key={c.pairSlug}
@@ -113,7 +113,7 @@ export default async function CompareHubPage({ searchParams }: PageProps) {
             <p className="mt-2 max-w-xl text-sm text-muted">
               Head-to-head on price, handover, payment plans, and unit mix.
             </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {projectPairs.map((p) => (
                 <Link
                   key={p.pairSlug}
@@ -139,7 +139,7 @@ export default async function CompareHubPage({ searchParams }: PageProps) {
             <p className="mt-2 max-w-xl text-sm text-muted">
               Portfolio size, entry prices, communities covered, and handover pipelines.
             </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {developerPairs.map((p) => (
                 <Link
                   key={p.pairSlug}

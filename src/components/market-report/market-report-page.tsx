@@ -110,7 +110,7 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
               area: numberFmt(data.overview.dldAreaCount),
             })}
           </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <Stat
               testId="market-overview"
               value={numberFmt(data.overview.projectCount)}
@@ -198,7 +198,7 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
             <p className="max-w-3xl text-muted">
               {interpolate(t.trendBody, { period: data.dldPeriod })}
             </p>
-            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+            <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
               {data.gainers.length > 0 ? (
                 <TrendTable title={t.gainersTitle} rows={data.gainers} dict={t} lp={lp} positive />
               ) : null}
@@ -212,7 +212,7 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
         {/* 4 — Entry points by emirate & type */}
         <Section title={t.pricingTitle}>
           <p className="max-w-3xl text-muted">{t.pricingBody}</p>
-          <div className="mt-6 grid gap-6 lg:grid-cols-2">
+          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div>
               <h3 className="section-eyebrow mb-3">{t.byEmirateTitle}</h3>
               <TableScroll>
@@ -362,7 +362,7 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
 
         {/* Explore / internal links */}
         <Section title={t.exploreTitle}>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <ExploreLink href={lp("/communities")} label={t.exploreCommunities} />
             <ExploreLink href={lp("/developers")} label={t.exploreDevelopers} />
             <ExploreLink href={lp("/tools")} label={t.exploreTools} />

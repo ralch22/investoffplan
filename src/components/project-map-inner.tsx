@@ -91,7 +91,7 @@ export function ProjectMapInner({
   const mapCenter = selected ? ([selected.lat, selected.lng] as [number, number]) : DUBAI_CENTER;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[340px_1fr]">
       <div className="order-2 flex flex-col gap-4 lg:order-1">
         <input
           type="search"
