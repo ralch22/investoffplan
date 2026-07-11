@@ -441,6 +441,9 @@ const dict = {
     "nameLabel": "Name",
     "savedSearches": "Saved searches",
     "favoritesSection": "Favorites",
+    "favoritesCount": "{count} saved",
+    "favoritesSynced": "Synced to your account across devices.",
+    "viewFavorites": "View favorites",
     "comingSoon": "Coming soon",
     "notSignedIn": "You're not signed in.",
     "loading": "Loading…"

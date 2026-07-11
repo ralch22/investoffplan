@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { AdvisorWidget } from "@/components/advisor/advisor-widget";
 import { BottomTabBar } from "@/components/nav/bottom-tab-bar";
+import { useFavoritesSync } from "@/hooks/use-favorites-sync";
 import type { CurrencyCode } from "@/lib/types";
 
 /** Which fixture owns the mobile bottom edge (exactly one). */
@@ -33,6 +34,10 @@ export function PageShell({
   headerVariant = "light",
   mobileDock = "tabs",
 }: PageShellProps) {
+  // Server-favorites sync: merges localStorage with the account on sign-in.
+  // PageShell mounts per page, but the hook dedupes module-wide per session.
+  useFavoritesSync();
+
   const [internalCurrency, setInternalCurrency] = useState<CurrencyCode>("AED");
   const currency = currencyProp ?? internalCurrency;
   const handleCurrency =

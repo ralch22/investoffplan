@@ -443,6 +443,9 @@ export const ar: Dict = {
     "nameLabel": "الاسم",
     "savedSearches": "عمليات البحث المحفوظة",
     "favoritesSection": "المفضلة",
+    "favoritesCount": "{count} محفوظة",
+    "favoritesSynced": "متزامنة مع حسابك على جميع أجهزتك.",
+    "viewFavorites": "عرض المفضلة",
     "comingSoon": "قريباً",
     "notSignedIn": "لم تسجّل الدخول بعد.",
     "loading": "جارٍ التحميل…"
