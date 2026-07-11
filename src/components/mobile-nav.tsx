@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { BrandLogo } from "@/components/brand-logo";
 import { CurrencySelector } from "@/components/currency-selector";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { SearchSuggest } from "@/components/search/search-suggest";
 import { useFavoritesCount } from "@/hooks/use-favorites-count";
-import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import type { CurrencyCode } from "@/lib/types";
 import { useI18n } from "@/i18n/locale-provider";
@@ -68,11 +68,9 @@ interface MobileNavProps {
 
 export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileNavProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const favoritesCount = useFavoritesCount();
   const { locale, dict } = useI18n();
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const [q, setQ] = useState("");
 
   // Native <dialog>.showModal() gives focus trap, Escape, and focus restore
   // for free (a11y audit O1).
@@ -82,19 +80,6 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
     if (open && !dialog.open) dialog.showModal();
     else if (!open && dialog.open) dialog.close();
   }, [open]);
-
-  const submitSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const query = q.trim();
-    onClose();
-    trackEvent(ANALYTICS_EVENTS.SEARCH_SUBMIT, {
-      query_length: query.length,
-      source: "drawer",
-    });
-    router.push(
-      localePath(locale, query ? `/projects?q=${encodeURIComponent(query)}` : "/projects"),
-    );
-  };
 
   return (
     <dialog
@@ -119,17 +104,9 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
             </button>
           </div>
 
-          <form onSubmit={submitSearch} className="border-b border-border px-5 py-3">
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              type="search"
-              enterKeyHint="search"
-              placeholder={dict.nav.searchPlaceholder}
-              aria-label={dict.nav.searchAria}
-              className="iop-input h-11"
-            />
-          </form>
+          <div className="border-b border-border px-5 py-3">
+            <SearchSuggest variant="drawer" onNavigate={onClose} />
+          </div>
 
           <div className="flex-1 overflow-y-auto px-3 py-3">
             {NAV_GROUPS.map((group) => (

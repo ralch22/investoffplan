@@ -53,7 +53,20 @@ export const ar: Dict = {
     "searchPlaceholder": "ابحث عن مشروع أو مطوّر أو منطقة",
     "searchAria": "ابحث في الكتالوج",
     "searchOpen": "فتح البحث",
-    "searchSubmit": "بحث"
+    "searchSubmit": "بحث",
+    "suggest": {
+      "groups": {
+        "projects": "المشاريع",
+        "communities": "المجتمعات السكنية",
+        "developers": "المطوّرون"
+      },
+      "results": "{count} نتيجة",
+      "projectsCount": "{count} مشروعاً",
+      "topYield": "أعلى المجتمعات من حيث العائد",
+      "compareCommunities": "قارن المجتمعات ←",
+      "searchAllFor": "ابحث في كل شيء عن “{query}”",
+      "loading": "جارٍ تحميل الاقتراحات…"
+    }
   },
   "footer": {
     "columns": {

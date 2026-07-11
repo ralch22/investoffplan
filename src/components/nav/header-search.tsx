@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { SearchSuggest } from "@/components/search/search-suggest";
 import { useI18n } from "@/i18n/locale-provider";
-import { localePath } from "@/i18n/config";
-import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
 function SearchIcon() {
@@ -17,23 +15,17 @@ function SearchIcon() {
 }
 
 /**
- * Desktop header search (lg+): an icon button that opens a dropdown search
- * field (absolute — doesn't fight the crowded header flex row), routing to
- * /projects?q=. Mobile uses the bottom tab bar's search sheet. The input's
- * aria-label is "Search the catalog" (not "…developers…") to avoid a
+ * Desktop header search (lg+): an icon button that opens a dropdown panel
+ * hosting the SearchSuggest typeahead (absolute — doesn't fight the crowded
+ * header flex row). Mobile uses the bottom tab bar's search sheet. The
+ * input's aria-label is "Search the catalog" (not "…developers…") to avoid a
  * getByLabel('Developer') substring collision with the SERP filter.
+ * Escape propagates from the typeahead input so it closes this dropdown too.
  */
 export function HeaderSearch({ solid }: { solid: boolean }) {
   const [open, setOpen] = useState(false);
-  const [q, setQ] = useState("");
   const wrapRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
-  const { locale, dict } = useI18n();
-
-  useEffect(() => {
-    if (open) requestAnimationFrame(() => inputRef.current?.focus());
-  }, [open]);
+  const { dict } = useI18n();
 
   // Close on outside click.
   useEffect(() => {
@@ -44,19 +36,6 @@ export function HeaderSearch({ solid }: { solid: boolean }) {
     document.addEventListener("pointerdown", onDown);
     return () => document.removeEventListener("pointerdown", onDown);
   }, [open]);
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const query = q.trim();
-    setOpen(false);
-    trackEvent(ANALYTICS_EVENTS.SEARCH_SUBMIT, {
-      query_length: query.length,
-      source: "header",
-    });
-    router.push(
-      localePath(locale, query ? `/projects?q=${encodeURIComponent(query)}` : "/projects"),
-    );
-  };
 
   return (
     <div ref={wrapRef} className="relative hidden lg:block">
@@ -76,34 +55,14 @@ export function HeaderSearch({ solid }: { solid: boolean }) {
       </button>
 
       {open ? (
-        <form
-          onSubmit={submit}
-          className="reveal absolute end-0 top-full z-[var(--z-header)] mt-2 flex w-[min(20rem,calc(100vw-2rem))] items-center gap-2 rounded-2xl border border-border bg-surface p-2 shadow-elevation-lg"
+        <div
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setOpen(false);
+          }}
+          className="reveal absolute end-0 top-full z-[var(--z-header)] mt-2 w-[min(26rem,calc(100vw-2rem))] rounded-2xl border border-border bg-surface p-2 shadow-elevation-lg"
         >
-          <span className="ps-1 text-muted-light">
-            <SearchIcon />
-          </span>
-          <input
-            ref={inputRef}
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            type="search"
-            enterKeyHint="search"
-            placeholder={dict.nav.searchPlaceholder}
-            aria-label={dict.nav.searchAria}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") setOpen(false);
-            }}
-            className="w-full min-w-0 bg-transparent text-sm text-text-dark outline-none placeholder:text-muted-light"
-          />
-          <button
-            type="submit"
-            aria-label={dict.nav.searchSubmit}
-            className="iop-btn-press focus-ring shrink-0 rounded-xl bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark"
-          >
-            {dict.nav.searchSubmit}
-          </button>
-        </form>
+          <SearchSuggest variant="header" autoFocus onNavigate={() => setOpen(false)} />
+        </div>
       ) : null}
     </div>
   );

@@ -51,7 +51,20 @@ const dict = {
     "searchPlaceholder": "Search projects, developers, areas",
     "searchAria": "Search the catalog",
     "searchOpen": "Open search",
-    "searchSubmit": "Search"
+    "searchSubmit": "Search",
+    "suggest": {
+      "groups": {
+        "projects": "Projects",
+        "communities": "Communities",
+        "developers": "Developers"
+      },
+      "results": "{count} results",
+      "projectsCount": "{count} projects",
+      "topYield": "Top yield communities",
+      "compareCommunities": "Compare communities →",
+      "searchAllFor": "Search everything for “{query}”",
+      "loading": "Loading suggestions…"
+    }
   },
   "footer": {
     "columns": {
