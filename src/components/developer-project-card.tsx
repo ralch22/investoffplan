@@ -125,7 +125,7 @@ export function DeveloperProjectCard({
                   ? interpolate(dict.common.fromPrice, {
                       price: formatPrice(minPrice, "AED"),
                     })
-                  : dict.common.priceOnRequest}
+                  : formatLaunchPrice(minPrice, undefined, "AED")}
               </span>
             )}
           </div>
