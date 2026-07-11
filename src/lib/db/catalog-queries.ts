@@ -218,11 +218,22 @@ async function fetchAllProjects(db: CatalogDatabase): Promise<Project[]> {
 }
 
 function slimProjectForLite(project: Project): Project {
+  // The client "lite" catalog powers the SERP grid, search-suggest, map, and
+  // counts — none of which read PDP-only detail fields. Stripping them cuts the
+  // payload ~85% (floorPlans/pfFaqs/descriptionUnique alone are ~4 MB across the
+  // catalog). The PDP renders server-side from the full D1 record, so it's
+  // unaffected. Keep imageUrl (card thumb); drop imageGallery (PDP-only).
   return {
     ...project,
     units: [],
     description: undefined,
     amenities: undefined,
+    floorPlans: undefined,
+    pfFaqs: undefined,
+    descriptionUnique: undefined,
+    masterPlanUrl: undefined,
+    brochureUrl: undefined,
+    imageGallery: undefined,
   };
 }
 

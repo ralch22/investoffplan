@@ -34,7 +34,12 @@ export async function withCatalogDb<T>(
 
   return NextResponse.json(payload, {
     headers: {
-      "Cache-Control": "public, max-age=300, stale-while-revalidate=3600",
+      // s-maxage lets the Cloudflare edge serve these public catalog payloads
+      // (the 1.3 MB /lite + /map) from cache instead of rebuilding from D1 on
+      // every cold isolate hit. Only /api/catalog/* (public) use this helper —
+      // no user-scoped route does — so edge caching is safe here.
+      "Cache-Control":
+        "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400",
     },
   });
 }
