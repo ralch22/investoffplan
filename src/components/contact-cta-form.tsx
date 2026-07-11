@@ -55,6 +55,7 @@ export function ContactCtaForm() {
   const [submitted, setSubmitted] = useState(false);
   const [honeypot, setHoneypot] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
   const [guardError, setGuardError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -90,6 +91,10 @@ export function ContactCtaForm() {
     }
     if (!result.ok) {
       setGuardError(result.error ?? "Unable to submit. Please try again.");
+      // The token was consumed (or stale) — reset the widget so the retry
+      // submits a fresh one instead of 403ing forever.
+      setTurnstileToken("");
+      setTurnstileReset((n) => n + 1);
       return;
     }
 
@@ -208,7 +213,7 @@ export function ContactCtaForm() {
         ) : null}
       </div>
       <div className="space-y-3 sm:col-span-2">
-        <TurnstileField onToken={setTurnstileToken} action="contact-cta" />
+        <TurnstileField onToken={setTurnstileToken} action="contact-cta" resetSignal={turnstileReset} />
         {guardError ? <p className="px-2 text-xs text-brand-light">{guardError}</p> : null}
         <div className="flex justify-end">
           <PrimaryButton type="submit" showArrow={false} disabled={submitting}>

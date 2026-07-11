@@ -37,6 +37,7 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [honeypot, setHoneypot] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
   const [guardError, setGuardError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -69,6 +70,10 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
     }
     if (!result.ok) {
       setGuardError(result.error ?? "Unable to subscribe. Please try again.");
+      // The token was consumed (or stale) — reset the widget so the retry
+      // submits a fresh one instead of 403ing forever.
+      setTurnstileToken("");
+      setTurnstileReset((n) => n + 1);
       return;
     }
 
@@ -145,7 +150,7 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
         />
         Opt-in to receive WhatsApp exclusives
       </label>
-      <TurnstileField onToken={setTurnstileToken} action="newsletter" />
+      <TurnstileField onToken={setTurnstileToken} action="newsletter" resetSignal={turnstileReset} />
       {guardError ? (
         <p className={cn("px-2 text-xs font-medium", dark ? "text-red-300" : "text-red-600")}>
           {guardError}

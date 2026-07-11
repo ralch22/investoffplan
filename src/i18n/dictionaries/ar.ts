@@ -119,6 +119,7 @@ export const ar: Dict = {
     "submitting": "جارٍ الإرسال…",
     "close": "إغلاق",
     "retry": "إعادة المحاولة",
+    "turnstileError": "تعذّر إكمال التحقق الأمني — يرجى إعادة المحاولة.",
     "prev": "السابق",
     "next": "التالي",
     "browseProjects": "تصفّح جميع العقارات",
