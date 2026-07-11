@@ -85,10 +85,9 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     // Placements table missing (migration not applied yet) or query failure.
-    return NextResponse.json(
-      { ok: false, error: (error as Error).message.slice(0, 200) },
-      { status: 500 },
-    );
+    // Details go to the server log only — never echo raw driver messages.
+    console.error("[placements] list failed", error);
+    return NextResponse.json({ ok: false, error: "Internal error" }, { status: 500 });
   }
 }
 
@@ -202,10 +201,8 @@ export async function PUT(request: Request) {
         },
       });
   } catch (error) {
-    return NextResponse.json(
-      { ok: false, error: (error as Error).message.slice(0, 200) },
-      { status: 500 },
-    );
+    console.error("[placements] upsert failed", error);
+    return NextResponse.json({ ok: false, error: "Internal error" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true, placement: record, ...(warning ? { warning } : {}) });
@@ -234,10 +231,8 @@ export async function DELETE(request: Request) {
   try {
     await db.delete(placements).where(eq(placements.id, id));
   } catch (error) {
-    return NextResponse.json(
-      { ok: false, error: (error as Error).message.slice(0, 200) },
-      { status: 500 },
-    );
+    console.error("[placements] delete failed", error);
+    return NextResponse.json({ ok: false, error: "Internal error" }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true, deleted: id });

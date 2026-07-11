@@ -26,6 +26,7 @@ export function SignInModal({ open, onClose, context }: SignInModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [email, setEmail] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -65,8 +66,10 @@ export function SignInModal({ open, onClose, context }: SignInModalProps) {
     if (!guard.ok) {
       setStatus("error");
       setErrorMessage(guard.error ?? dict.auth.error);
-      // Turnstile tokens are single-use — force a fresh one on retry.
+      // Turnstile tokens are single-use — clearing state is not enough, the
+      // widget itself must reset before it will issue a fresh token.
       setTurnstileToken("");
+      setTurnstileReset((n) => n + 1);
       return;
     }
 
@@ -75,6 +78,7 @@ export function SignInModal({ open, onClose, context }: SignInModalProps) {
       setStatus("error");
       setErrorMessage(dict.auth.error);
       setTurnstileToken("");
+      setTurnstileReset((n) => n + 1);
       return;
     }
     setStatus("sent");
@@ -185,7 +189,11 @@ export function SignInModal({ open, onClose, context }: SignInModalProps) {
                     className="focus-ring w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-text-dark placeholder:text-muted-light"
                   />
                 </div>
-                <TurnstileField onToken={setTurnstileToken} action="auth-magic-link" />
+                <TurnstileField
+                  onToken={setTurnstileToken}
+                  action="auth-magic-link"
+                  resetSignal={turnstileReset}
+                />
                 {status === "error" && errorMessage ? (
                   <p className="text-sm text-red-600" role="alert">
                     {errorMessage}

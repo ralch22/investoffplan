@@ -117,6 +117,7 @@ const dict = {
     "submitting": "Submitting…",
     "close": "Close",
     "retry": "Retry",
+    "turnstileError": "Security check failed to load — please retry.",
     "prev": "Prev",
     "next": "Next",
     "browseProjects": "Browse all properties",

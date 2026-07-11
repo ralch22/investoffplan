@@ -55,6 +55,7 @@ export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const [honeypot, setHoneypot] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
   const [guardError, setGuardError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -87,6 +88,10 @@ export function ContactForm() {
     }
     if (!result.ok) {
       setGuardError(result.error ?? "Unable to submit. Please try again.");
+      // The token was consumed (or stale) — reset the widget so the retry
+      // submits a fresh one instead of 403ing forever.
+      setTurnstileToken("");
+      setTurnstileReset((n) => n + 1);
       return;
     }
 
@@ -178,7 +183,7 @@ export function ContactForm() {
         ) : null}
       </div>
 
-      <TurnstileField onToken={setTurnstileToken} action="contact" />
+      <TurnstileField onToken={setTurnstileToken} action="contact" resetSignal={turnstileReset} />
       {guardError ? <p className="iop-field-error">{guardError}</p> : null}
       <PrimaryButton type="submit" disabled={submitting}>
         {submitting ? "Submitting…" : "Submit"}

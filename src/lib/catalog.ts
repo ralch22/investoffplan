@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { createCatalogApi, type CatalogApi, type CatalogFile } from "./catalog-core";
 import { getDb } from "./db/client";
 import { fetchCatalogFile, fetchProjectBySlug as dbFetchProject } from "./db/catalog-queries";
+import { getSiteUrl } from "./site-url";
 import { parseFoundedYear } from "./developer-utils";
 import { getActivePlacements } from "./placements";
 import { cityLabel } from "./format";
@@ -57,7 +58,9 @@ export async function getCatalogApi(): Promise<CatalogApi> {
     const raw = JSON.parse(readFileSync(join(process.cwd(), "data/catalog.json"), "utf8")) as CatalogFile;
     cachedApi = createCatalogApi(raw);
   } catch {
-    const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://investoffplan-preview.emerge-digital.workers.dev";
+    // Apex fallback — a missing env var must not point data fetches at the
+    // preview Worker (src/lib/site-url.ts defaults to the production domain).
+    const base = getSiteUrl();
     const res = await fetch(`${base}/data/catalog.json`, { next: { revalidate: 3600 } });
     const raw = (await res.json()) as CatalogFile;
     cachedApi = createCatalogApi(raw);

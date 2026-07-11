@@ -57,6 +57,7 @@ export function BrochureModal({
   const [errors, setErrors] = useState<FormErrors>({});
   const [honeypot, setHoneypot] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileReset, setTurnstileReset] = useState(0);
   const [guardError, setGuardError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -100,6 +101,10 @@ export function BrochureModal({
     }
     if (!result.ok) {
       setGuardError(result.error ?? "Unable to submit. Please try again.");
+      // The token was consumed (or stale) — reset the widget so the retry
+      // submits a fresh one instead of 403ing forever.
+      setTurnstileToken("");
+      setTurnstileReset((n) => n + 1);
       return;
     }
 
@@ -215,7 +220,7 @@ export function BrochureModal({
             ) : null}
           </div>
 
-          <TurnstileField onToken={setTurnstileToken} action="brochure" />
+          <TurnstileField onToken={setTurnstileToken} action="brochure" resetSignal={turnstileReset} />
           {guardError ? <p className="iop-field-error">{guardError}</p> : null}
           <button
             type="submit"

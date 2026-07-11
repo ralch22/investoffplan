@@ -10,8 +10,11 @@ import { GUIDE_CARDS } from "@/lib/figma-copy";
 import { getNewsArticles } from "@/content/articles";
 import { FAQ_TOPICS } from "@/content/faq";
 import { COLLECTION_PAGES } from "@/lib/collections";
+import { getSiteUrl } from "@/lib/site-url";
 
-let base: string = process.env.NEXT_PUBLIC_SITE_URL ?? "https://investoffplan-preview.emerge-digital.workers.dev";
+// Apex default via getSiteUrl(); the preview scrub stays so an env var that is
+// EXPLICITLY set to the preview Worker never leaks into sitemap URLs either.
+let base: string = getSiteUrl();
 if (!base || base.includes("preview") || base.includes("emerge-digital")) {
   base = "https://investoffplan.com";
 }

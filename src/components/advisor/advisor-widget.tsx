@@ -35,6 +35,7 @@ export function AdvisorWidget() {
   const [leadBusy, setLeadBusy] = useState(false);
   const [leadError, setLeadError] = useState<string | null>(null);
   const [leadToken, setLeadToken] = useState("");
+  const [leadTokenReset, setLeadTokenReset] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -101,9 +102,15 @@ export function AdvisorWidget() {
         setEntries((prev) => [...prev, { role: "assistant", content: t.leadThanks }]);
       } else {
         setLeadError(t.leadError);
+        // The token was consumed (or stale) — reset the widget so the retry
+        // submits a fresh one instead of 403ing forever.
+        setLeadToken("");
+        setLeadTokenReset((n) => n + 1);
       }
     } catch {
       setLeadError(t.leadError);
+      setLeadToken("");
+      setLeadTokenReset((n) => n + 1);
     } finally {
       setLeadBusy(false);
     }
@@ -210,7 +217,11 @@ export function AdvisorWidget() {
                       type="tel"
                       className="iop-input h-10 text-sm"
                     />
-                    <TurnstileField onToken={setLeadToken} action="advisor-callback" />
+                    <TurnstileField
+                      onToken={setLeadToken}
+                      action="advisor-callback"
+                      resetSignal={leadTokenReset}
+                    />
                     {leadError ? (
                       <p className="text-xs font-medium text-brand" role="alert">
                         {leadError}

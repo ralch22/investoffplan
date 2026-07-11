@@ -43,7 +43,7 @@ function serializeRow(row: typeof savedSearches.$inferSelect) {
 
 export async function GET(request: Request) {
   const auth = await requireUser(request);
-  if (!auth) return NextResponse.json({ ok: false }, { status: 401 });
+  if (!auth) return NextResponse.json({ ok: false, error: "Not signed in" }, { status: 401 });
   const db = await getDb();
   if (!db) return NextResponse.json({ ok: false, error: "DB unavailable" }, { status: 503 });
 
@@ -58,7 +58,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const auth = await requireUser(request);
-  if (!auth) return NextResponse.json({ ok: false }, { status: 401 });
+  if (!auth) return NextResponse.json({ ok: false, error: "Not signed in" }, { status: 401 });
   const db = await getDb();
   if (!db) return NextResponse.json({ ok: false, error: "DB unavailable" }, { status: 503 });
 
@@ -113,7 +113,7 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   const auth = await requireUser(request);
-  if (!auth) return NextResponse.json({ ok: false }, { status: 401 });
+  if (!auth) return NextResponse.json({ ok: false, error: "Not signed in" }, { status: 401 });
   const db = await getDb();
   if (!db) return NextResponse.json({ ok: false, error: "DB unavailable" }, { status: 503 });
 
@@ -151,7 +151,7 @@ export async function PATCH(request: Request) {
 
 export async function DELETE(request: Request) {
   const auth = await requireUser(request);
-  if (!auth) return NextResponse.json({ ok: false }, { status: 401 });
+  if (!auth) return NextResponse.json({ ok: false, error: "Not signed in" }, { status: 401 });
   const db = await getDb();
   if (!db) return NextResponse.json({ ok: false, error: "DB unavailable" }, { status: 503 });
 

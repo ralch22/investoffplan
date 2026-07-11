@@ -11,6 +11,7 @@ import { CatalogPrefetch } from "@/components/catalog-prefetch";
 import { MotionProvider } from "@/components/motion-provider";
 import { NavDataProvider } from "@/components/nav/nav-data-provider";
 import { getNavCommunities } from "@/lib/nav-data";
+import { getSiteUrl } from "@/lib/site-url";
 import { LocaleProvider } from "@/i18n/locale-provider";
 import { getDictionary } from "@/i18n";
 import "../../globals.css";
@@ -43,10 +44,9 @@ export const metadata: Metadata = {
   },
   description:
     "منصة العقارات على الخارطة الرائدة في الإمارات — أسعار على مستوى الوحدة، خطط سداد، كتيّبات، واستشارات متخصصة.",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ??
-      "https://investoffplan-preview.emerge-digital.workers.dev",
-  ),
+  // getSiteUrl() defaults to the apex — a missing env var must not leak the
+  // preview domain into canonical/og URLs site-wide.
+  metadataBase: new URL(getSiteUrl()),
   openGraph: {
     siteName: "invest off-plan",
     locale: "ar_AE",

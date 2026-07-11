@@ -10,9 +10,14 @@ import { getSiteUrl } from "@/lib/site-url";
 // the better-auth instance must be constructed per request too — never cache
 // it across requests in module scope.
 
-const TRUSTED_ORIGINS = [
+const PROD_TRUSTED_ORIGINS = [
   "https://investoffplan.com",
   "https://www.investoffplan.com",
+];
+
+// Only trusted OUTSIDE production builds — the preview Worker and localhost
+// must never be accepted origins for production auth flows.
+const DEV_TRUSTED_ORIGINS = [
   "https://investoffplan-preview.emerge-digital.workers.dev",
   "http://localhost:3000",
   "http://localhost:8787",
@@ -59,6 +64,11 @@ async function sendMagicLinkEmail(email: string, url: string): Promise<void> {
  */
 export async function getAuth() {
   const db = await getDb();
+
+  const trustedOrigins =
+    process.env.NODE_ENV !== "production"
+      ? [...PROD_TRUSTED_ORIGINS, ...DEV_TRUSTED_ORIGINS]
+      : PROD_TRUSTED_ORIGINS;
 
   const secret = process.env.BETTER_AUTH_SECRET;
   if (!secret) {
@@ -116,7 +126,7 @@ export async function getAuth() {
         },
       }),
     ],
-    trustedOrigins: TRUSTED_ORIGINS,
+    trustedOrigins,
   });
 }
 
