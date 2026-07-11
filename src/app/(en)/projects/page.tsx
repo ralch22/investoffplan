@@ -4,6 +4,7 @@ import { PAGE_SIZE } from "@/lib/catalog-core";
 import { getMapProjectsFromList } from "@/lib/map-data";
 import { ProjectsPage } from "./projects-page";
 import { getSiteUrl } from "@/lib/site-url";
+import { buildProjectsItemListJsonLd } from "@/lib/project-json-ld";
 
 export const metadata: Metadata = {
   title: "Off-Plan Projects for Sale in Dubai & the UAE",
@@ -31,8 +32,30 @@ export default async function Page() {
     .slice(0, 60)
     .map((dev) => ({ slug: dev.slug, name: dev.name }));
 
+  // ItemList JSON-LD of the first SERP page (dedup units → projects), matching
+  // the structured-data pattern used on PDP/developer/community pages.
+  const siteUrl = getSiteUrl();
+  const serpProjects: typeof api.projects = [];
+  const seenSerpSlugs = new Set<string>();
+  for (const item of initialPageItems) {
+    if (seenSerpSlugs.has(item.project.slug)) continue;
+    seenSerpSlugs.add(item.project.slug);
+    serpProjects.push(item.project);
+  }
+  const itemListJsonLd = buildProjectsItemListJsonLd({
+    projects: serpProjects,
+    pageUrl: `${siteUrl}/projects`,
+    siteUrl,
+  });
+
   return (
     <>
+      {itemListJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+        />
+      )}
       <ProjectsPage
         initialMeta={{
           unitCount: api.meta.unitCount,

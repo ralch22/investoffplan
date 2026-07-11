@@ -179,6 +179,38 @@ export function buildDeveloperJsonLd(opts: {
   };
 }
 
+/**
+ * ItemList (wrapped in a CollectionPage) of the projects visible on the main
+ * search SERP — mirrors buildDeveloperItemListJsonLd's shape. Returns null when
+ * there are no projects so the caller can skip rendering the <script>.
+ */
+export function buildProjectsItemListJsonLd(opts: {
+  projects: Project[];
+  pageUrl: string;
+  siteUrl: string;
+  limit?: number;
+}) {
+  const { projects, pageUrl, siteUrl, limit = 24 } = opts;
+  const items = projects.slice(0, limit);
+  if (items.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Off-Plan Projects for Sale in Dubai & the UAE",
+    url: pageUrl,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: items.length,
+      itemListElement: items.map((project, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: project.name,
+        url: `${siteUrl}/projects/${project.slug}`,
+      })),
+    },
+  };
+}
+
 export function buildDeveloperItemListJsonLd(opts: {
   developer: { name: string };
   projects: Project[];
