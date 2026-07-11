@@ -80,7 +80,7 @@ export function SiteFooter() {
           {/* Right: guides + collections */}
           <div className="grid grid-cols-1 gap-10 px-8 py-12 sm:grid-cols-2">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-brand">
+              <p className="text-xs font-semibold uppercase tracking-widest text-white/80">
                 {dict.footer.columns.guides}
               </p>
               <ul className="mt-4 space-y-2">
@@ -97,7 +97,7 @@ export function SiteFooter() {
               </ul>
             </div>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-brand">
+              <p className="text-xs font-semibold uppercase tracking-widest text-white/80">
                 {dict.footer.columns.collections}
               </p>
               <ul className="mt-4 space-y-2">

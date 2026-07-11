@@ -113,17 +113,25 @@ export function SiteHeader({
                 </span>
               ) : null}
             </Link>
-            <LanguageSwitcher solid={showSolidHeader} />
+            {/* Language + currency + account live in the MobileNav drawer on
+                phones — hide them here so the hamburger stays on-screen (the
+                cluster otherwise overflows ~91px past a 375px viewport, pushing
+                the only route to the full nav off the edge). */}
+            <span className="hidden sm:inline-flex">
+              <LanguageSwitcher solid={showSolidHeader} />
+            </span>
             <span className="hidden sm:block">
               <UserMenu solid={showSolidHeader} />
             </span>
-            {onCurrencyChange ? (
-              <CurrencySelector value={currency} onChange={onCurrencyChange} />
-            ) : (
-              <span className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted">
-                {currency}
-              </span>
-            )}
+            <span className="hidden sm:block">
+              {onCurrencyChange ? (
+                <CurrencySelector value={currency} onChange={onCurrencyChange} />
+              ) : (
+                <span className="rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted">
+                  {currency}
+                </span>
+              )}
+            </span>
             <button
               type="button"
               className={cn(

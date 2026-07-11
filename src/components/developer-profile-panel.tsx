@@ -85,7 +85,7 @@ export function DeveloperProfilePanel({
           </h2>
           <p className="mt-1 max-w-xl text-sm text-muted">{t.subtitle}</p>
         </div>
-        <div className="shrink-0 text-end">
+        <div className="w-full text-end sm:w-auto sm:shrink-0">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-light">
             {t.tierLabel}
           </p>
@@ -98,7 +98,7 @@ export function DeveloperProfilePanel({
               <span className="text-base font-medium text-muted-light">/100</span>
             </span>
           </p>
-          <p className="mt-1 text-[11px] text-muted-light">{t.notRanking}</p>
+          <p className="mt-1 ms-auto max-w-[240px] text-[11px] text-muted-light">{t.notRanking}</p>
         </div>
       </div>
 
