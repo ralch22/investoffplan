@@ -72,6 +72,15 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     pfHref: "https://www.propertyfinder.ae/en/new-projects",
     pfFeature: "New Projects",
   },
+  {
+    slug: "roi",
+    title: "ROI & Yield Estimator",
+    description:
+      "Estimate off-plan rental yield, capital appreciation, and total return — prefilled with 2025 DLD market data and shareable via link.",
+    href: "/tools/roi",
+    pfHref: "https://www.propertyfinder.ae/en/mortgages",
+    pfFeature: "Investment ROI",
+  },
 ];
 
 export function getDataGuruTool(slug: string): DataGuruTool | undefined {
