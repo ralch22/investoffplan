@@ -7,7 +7,7 @@ import { getCommunityInsights } from "@/lib/community-insights-data";
 import { getHeroImage } from "@/lib/area-images";
 
 export const metadata: Metadata = {
-  title: "Community insights — lifestyle clusters",
+  title: "Dubai Community Insights — Compare Lifestyles & Yields",
   description:
     "Explore UAE communities by lifestyle — family-friendly, waterfront, urban, golf, investment, and luxury.",
 };

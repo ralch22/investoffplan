@@ -9,7 +9,7 @@ import { getHeroImage } from "@/lib/area-images";
 import { getMapProjectsFromList } from "@/lib/map-data";
 
 export const metadata: Metadata = {
-  title: "Project map",
+  title: "Dubai Off-Plan Projects Map — Browse by Location",
   description:
     "Explore UAE off-plan projects on an interactive map with pricing, handover, and direct links to brochures.",
 };

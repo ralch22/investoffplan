@@ -8,7 +8,7 @@ import { getHeroImage } from "@/lib/area-images";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
 
 export const metadata: Metadata = {
-  title: "Data toolkit — Price map, communities, rent vs buy",
+  title: "Dubai Property Data Toolkit — Free Investor Tools",
   description:
     "Property intelligence toolkit for UAE off-plan buyers — price map, community insights, rent vs buy calculator, and residential launch data.",
 };

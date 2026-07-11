@@ -8,7 +8,7 @@ import { getHeroImage } from "@/lib/area-images";
 import { CONTACT_EMAIL, OFFICE_PHONE_DISPLAY } from "@/lib/contact-info";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact Us — UAE Off-Plan Property Advice",
   description:
     "Contact invest off-plan for off-plan enquiries, brochures, and consultation across Dubai and the UAE.",
   alternates: {

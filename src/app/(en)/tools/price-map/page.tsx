@@ -9,7 +9,7 @@ import type { PropertyType } from "@/lib/types";
 import { PriceMapClient } from "./price-map-client";
 
 export const metadata: Metadata = {
-  title: "Price map — community launch prices",
+  title: "Dubai Property Price Map — Launch Prices by Community",
   description:
     "Find UAE communities in your budget with an interactive launch-price map. Filter by bedrooms and property type.",
 };

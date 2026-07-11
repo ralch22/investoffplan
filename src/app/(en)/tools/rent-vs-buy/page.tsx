@@ -6,7 +6,7 @@ import { RentVsBuyCalculator } from "@/components/rent-vs-buy-calculator";
 import { getHeroImage } from "@/lib/area-images";
 
 export const metadata: Metadata = {
-  title: "Rent vs buy calculator",
+  title: "Rent vs Buy Calculator — Dubai Property",
   description:
     "Compare monthly payments and long-term costs of renting versus buying property in the UAE.",
 };
