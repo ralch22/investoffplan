@@ -9,6 +9,7 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import { getCatalogApi } from "@/lib/catalog";
 import { COLLECTION_PAGES, getCollectionPage } from "@/lib/collections";
 import { getHeroImage } from "@/lib/area-images";
+import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import type { Project } from "@/lib/types";
 import type { FlatUnit } from "@/lib/catalog-core";
@@ -93,6 +94,18 @@ export default async function CollectionPageRoute({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbListJsonLd([
+              { name: "Home", url: siteUrl },
+              { name: "Projects", url: `${siteUrl}/projects` },
+              { name: page.h1 },
+            ]),
+          ),
+        }}
       />
       <PageHero
         title={page.h1}

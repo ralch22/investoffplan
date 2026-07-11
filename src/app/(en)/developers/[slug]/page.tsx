@@ -19,6 +19,7 @@ import {
 } from "@/lib/catalog";
 import { developerDescription, sortDeveloperProjects } from "@/lib/developer-utils";
 import {
+  buildBreadcrumbListJsonLd,
   buildDeveloperItemListJsonLd,
   buildDeveloperJsonLd,
 } from "@/lib/project-json-ld";
@@ -106,6 +107,18 @@ export default async function DeveloperDetailPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
         />
       ) : null}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbListJsonLd([
+              { name: "Home", url: siteUrl },
+              { name: "Developers", url: `${siteUrl}/developers` },
+              { name: developer.name },
+            ]),
+          ),
+        }}
+      />
 
       <section className="border-b border-border bg-surface-alt">
         <div className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">

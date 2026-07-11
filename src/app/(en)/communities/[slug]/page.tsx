@@ -7,6 +7,7 @@ import { PageHero } from "@/components/page-hero";
 import { ShowcaseProjectCard } from "@/components/showcase-project-card";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
+import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import {
   communitySlugFor,
   getCommunities,
@@ -121,6 +122,18 @@ export default async function CommunityDetailPage({ params }: PageProps) {
           }}
         />
       ) : null}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbListJsonLd([
+              { name: "Home", url: getSiteUrl() },
+              { name: "Communities", url: `${getSiteUrl()}/communities` },
+              { name: community.name },
+            ]),
+          ),
+        }}
+      />
       <PageHero
         title={community.name}
         italicTitle

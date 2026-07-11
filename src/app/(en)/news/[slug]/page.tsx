@@ -8,6 +8,7 @@ import { FaqAccordion } from "@/components/faq-accordion";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { getNewsArticle, getNewsArticles } from "@/content/articles";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
+import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
 import { localePath, type Locale } from "@/i18n/config";
@@ -88,6 +89,18 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
           }}
         />
       ) : null}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbListJsonLd([
+              { name: "Home", url: siteUrl },
+              { name: "News", url: `${siteUrl}/news` },
+              { name: article.title },
+            ]),
+          ),
+        }}
+      />
 
       <section className="bg-guide-hero py-16">
         <div className="mx-auto max-w-[800px] px-5 text-center md:px-8">
