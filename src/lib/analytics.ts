@@ -17,6 +17,7 @@ export const ANALYTICS_EVENTS = {
   SIGN_IN: "sign_in",
   BROCHURE_REQUEST: "brochure_request",
   BROCHURE_WHATSAPP_FALLBACK: "brochure_whatsapp_fallback",
+  GATE_PROMPT: "gate_prompt",
 } as const;
 
 export type AnalyticsEventName =

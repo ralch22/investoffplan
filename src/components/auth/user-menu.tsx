@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { SignInModal } from "@/components/auth/sign-in-modal";
+import {
+  subscribeSignInModal,
+  type GateContext,
+} from "@/components/auth/sign-in-modal-bus";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { signOut, useSession } from "@/lib/auth/client";
 import { cn } from "@/lib/cn";
@@ -19,8 +23,18 @@ export function UserMenu({ solid }: UserMenuProps) {
   const { locale, dict } = useI18n();
   const { data: session, isPending } = useSession();
   const [modalOpen, setModalOpen] = useState(false);
+  const [gateContext, setGateContext] = useState<GateContext | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Freemium gates (compare cap, PDF export, deep analytics, …) open this
+  // modal programmatically via the sign-in bus, with contextual copy.
+  useEffect(() => {
+    return subscribeSignInModal((detail) => {
+      setGateContext(detail.context ?? null);
+      setModalOpen(true);
+    });
+  }, []);
 
   // Fire sign_in once per session token — covers both the Google redirect
   // return and the magic-link landing, where no in-page submit handler runs.
@@ -61,7 +75,10 @@ export function UserMenu({ solid }: UserMenuProps) {
       <>
         <button
           type="button"
-          onClick={() => setModalOpen(true)}
+          onClick={() => {
+            setGateContext(null);
+            setModalOpen(true);
+          }}
           disabled={isPending}
           className={cn(
             "iop-btn-press focus-ring rounded-full border px-3 py-2 text-xs font-semibold transition",
@@ -72,7 +89,14 @@ export function UserMenu({ solid }: UserMenuProps) {
         >
           {dict.auth.signIn}
         </button>
-        <SignInModal open={modalOpen} onClose={() => setModalOpen(false)} />
+        <SignInModal
+          open={modalOpen}
+          context={gateContext}
+          onClose={() => {
+            setModalOpen(false);
+            setGateContext(null);
+          }}
+        />
       </>
     );
   }

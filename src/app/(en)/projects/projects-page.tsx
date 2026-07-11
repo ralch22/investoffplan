@@ -17,6 +17,7 @@ import { ProjectMap } from "@/components/project-map";
 import { CollectionChips } from "@/components/collection-chips";
 import { ProjectsSearchSync } from "@/components/projects-search-sync";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
+import { useGate } from "@/components/auth/gate";
 import { cn } from "@/lib/cn";
 import type { CompareUnitId } from "@/lib/compare";
 import {
@@ -39,6 +40,10 @@ import { useI18n } from "@/i18n/locale-provider";
 import { unoptimizedProp } from "@/lib/asset-image";
 
 const isApiMode = process.env.NEXT_PUBLIC_CATALOG_API === "1";
+
+// Freemium UI cap: anonymous visitors can fill 2 compare slots; the 3rd add
+// prompts sign-in. Distinct from the hard parse cap in parseCompareIds (3).
+const ANON_COMPARE_CAP = 2;
 
 type CityCount = {
   slug: CitySlug | "all";
@@ -96,6 +101,7 @@ export function ProjectsPage({
   const [sort, setSort] = useState<SortOption>("featured");
   const [page, setPage] = useState(1);
   const [compareIds, setCompareIds] = useState<CompareUnitId[]>(getStoredCompareIds);
+  const compareGate = useGate("compare-slot");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("unit");
   const [cardLayout, setCardLayout] = useState<"grid" | "list" | "map">("grid");
@@ -214,7 +220,7 @@ export function ProjectsPage({
     updateFilters({ ...filters, city });
   }
 
-  function toggleCompare(id: CompareUnitId) {
+  function applyCompareToggle(id: CompareUnitId) {
     setCompareIds((prev) => {
       const removing = prev.includes(id);
       const atCapacity = !removing && prev.length >= 3;
@@ -231,6 +237,22 @@ export function ProjectsPage({
       setStoredCompareIds(next);
       return next;
     });
+  }
+
+  function toggleCompare(id: CompareUnitId) {
+    // Freemium: anonymous users get 2 compare slots; signing in unlocks the
+    // full 3. Only the ADD interaction is gated — deep links with 3 units
+    // still parse and render (parseCompareIds keeps its hard slice(0,3) cap),
+    // and the static HTML is identical for everyone.
+    const addingBeyondFreeCap =
+      !compareIds.includes(id) &&
+      compareIds.length >= ANON_COMPARE_CAP &&
+      !compareGate.allowed;
+    if (addingBeyondFreeCap) {
+      compareGate.request(() => applyCompareToggle(id));
+      return;
+    }
+    applyCompareToggle(id);
   }
 
   const meta = api?.meta ?? initialMeta;

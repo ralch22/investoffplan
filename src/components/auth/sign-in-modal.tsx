@@ -7,6 +7,7 @@ import { signIn } from "@/lib/auth/client";
 import { verifyTurnstileClient } from "@/lib/form-guard";
 import { useI18n } from "@/i18n/locale-provider";
 import { interpolate, localePath } from "@/i18n/config";
+import type { GateContext } from "@/components/auth/sign-in-modal-bus";
 
 // Google button only renders when the PUBLIC flag is on — NEXT_PUBLIC_* is
 // baked at build time, so this must be flipped together with the server-side
@@ -16,9 +17,11 @@ const GOOGLE_ENABLED = process.env.NEXT_PUBLIC_AUTH_GOOGLE === "1";
 interface SignInModalProps {
   open: boolean;
   onClose: () => void;
+  /** Gate context that opened the modal — swaps in contextual subtitle copy. */
+  context?: GateContext | null;
 }
 
-export function SignInModal({ open, onClose }: SignInModalProps) {
+export function SignInModal({ open, onClose, context }: SignInModalProps) {
   const { locale, dict } = useI18n();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [email, setEmail] = useState("");
@@ -36,6 +39,16 @@ export function SignInModal({ open, onClose }: SignInModalProps) {
   }, [open]);
 
   const callbackURL = localePath(locale, "/account");
+
+  const gateSubtitle = context
+    ? {
+        "compare-slot": dict.auth.gateCompare,
+        "pdf-export": dict.auth.gatePdf,
+        "save-search": dict.auth.gateSaveSearch,
+        "deep-analytics": dict.auth.gateDeepAnalytics,
+      }[context]
+    : null;
+  const subtitle = gateSubtitle ?? dict.auth.modalSubtitle;
 
   async function handleMagicLink(e: React.FormEvent) {
     e.preventDefault();
@@ -85,7 +98,7 @@ export function SignInModal({ open, onClose }: SignInModalProps) {
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="text-lg font-bold text-text-dark">{dict.auth.modalTitle}</h2>
-              <p className="mt-1 text-sm text-muted">{dict.auth.modalSubtitle}</p>
+              <p className="mt-1 text-sm text-muted">{subtitle}</p>
             </div>
             <button
               type="button"
