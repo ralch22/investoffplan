@@ -9,6 +9,7 @@ import { CityChips } from "@/components/city-chips";
 import { SortSelect } from "@/components/sort-select";
 import { CompareBar } from "@/components/compare-bar";
 import { ProjectCard } from "@/components/project-card";
+import { LocaleLink } from "@/components/locale-link";
 import { Pagination } from "@/components/pagination";
 import { MobileFilterSheet } from "@/components/mobile-filter-sheet";
 import { DeveloperSpotlight } from "@/components/developer-spotlight";
@@ -491,6 +492,14 @@ export function ProjectsPage({
                 >
                   {s.empty.clearAllFilters}
                 </button>
+                <p className="mt-6 text-sm">
+                  <LocaleLink
+                    href="/tools/investor-match"
+                    className="font-semibold text-brand hover:underline"
+                  >
+                    {dict.tools.investorMatch.serpCta}
+                  </LocaleLink>
+                </p>
               </div>
             ) : (
               pageItems.map((item, index) => (
