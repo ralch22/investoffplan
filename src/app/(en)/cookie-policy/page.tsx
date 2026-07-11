@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Cookie policy",
   description:
     "How invest off-plan uses cookies and local storage for favorites, compare, and currency preferences.",
+  alternates: enMeta("/cookie-policy"),
 };
 
 export default function CookiePolicyPage() {

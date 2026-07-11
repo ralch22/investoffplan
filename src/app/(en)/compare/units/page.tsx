@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description:
     "Compare up to three off-plan units side by side — price, handover, brochures, and payment plans.",
   alternates: { canonical: `${getSiteUrl()}/compare/units` },
+  robots: { index: false, follow: true },
 };
 
 interface PageProps {

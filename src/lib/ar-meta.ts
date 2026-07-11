@@ -29,3 +29,17 @@ export function arMeta({
     },
   };
 }
+
+/**
+ * Reciprocal alternates for an EN canonical route that has an /ar mirror.
+ * Pass the EN path (leading slash, no /ar, no trailing slash), e.g. "/developers"
+ * or `/developers/${slug}`. Produces canonical=EN + en/ar hreflang so Google
+ * treats the EN⇄AR pair as reciprocal.
+ */
+export function enMeta(path: string): NonNullable<import("next").Metadata["alternates"]> {
+  const base = getSiteUrl();
+  return {
+    canonical: `${base}${path}`,
+    languages: { en: `${base}${path}`, ar: `${base}/ar${path}` },
+  };
+}

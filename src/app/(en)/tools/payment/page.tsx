@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
 import { PaymentToolPicker } from "@/components/payment-tool-picker";
 import { getCatalogApi } from "@/lib/catalog";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Off-Plan Payment Plan Calculator — Dubai",
   description:
     "Model down-payment and construction installments for UAE off-plan projects.",
+  alternates: enMeta("/tools/payment"),
 };
 
 export default async function PaymentToolPage() {

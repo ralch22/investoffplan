@@ -8,6 +8,7 @@ import { GUIDE_CARDS, GUIDE_REASONS, getGuide } from "@/lib/figma-copy";
 import { getGuideBody } from "@/content/articles";
 import { ArticleBody } from "@/components/article-body";
 import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: guide.title,
     description: guide.description,
-    alternates: { canonical: `${getSiteUrl()}/guides/${slug}` },
+    alternates: enMeta(`/guides/${slug}`),
     openGraph: {
       title: guide.title,
       description: guide.description,

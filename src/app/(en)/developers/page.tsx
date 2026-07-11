@@ -9,11 +9,13 @@ import { DEVELOPER_PAGE_SIZE } from "@/lib/types";
 import { TopDevelopersChart } from "@/components/top-developers-chart";
 import { getDeveloperCityCounts, getDevelopers } from "@/lib/catalog";
 import { getHeroImage } from "@/lib/area-images";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Top Real Estate Developers in UAE",
   description:
     "Browse UAE off-plan developers with logos, founding year, project counts, and live inventory across Dubai, Abu Dhabi, Sharjah, and more.",
+  alternates: enMeta("/developers"),
 };
 
 export default async function DevelopersPage() {

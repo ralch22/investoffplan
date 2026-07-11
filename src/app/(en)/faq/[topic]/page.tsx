@@ -7,7 +7,7 @@ import { FaqAccordion } from "@/components/faq-accordion";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { FAQ_TOPICS, getFaqTopic } from "@/content/faq";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 
 interface PageProps {
   params: Promise<{ topic: string }>;
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `${topic.title} — FAQ`,
     description: topic.description,
-    alternates: { canonical: `${getSiteUrl()}/faq/${slug}` },
+    alternates: enMeta(`/faq/${slug}`),
   };
 }
 

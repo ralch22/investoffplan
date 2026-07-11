@@ -7,11 +7,13 @@ import { getAreaPricePoints } from "@/lib/price-map-data";
 import { getHeroImage } from "@/lib/area-images";
 import type { PropertyType } from "@/lib/types";
 import { PriceMapClient } from "./price-map-client";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Dubai Property Price Map — Launch Prices by Community",
   description:
     "Find UAE communities in your budget with an interactive launch-price map. Filter by bedrooms and property type.",
+  alternates: enMeta("/tools/price-map"),
 };
 
 function MapLoading() {

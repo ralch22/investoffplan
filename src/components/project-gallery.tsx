@@ -188,7 +188,7 @@ export function ProjectGallery({
                       : "border-transparent opacity-80 hover:border-border hover:opacity-100",
                   )}
                 >
-                  <Image src={src} alt="" fill className="object-cover" sizes="120px" {...unoptimizedProp(src)} />
+                  <Image src={src} alt={`${alt} — photo ${i + 1}`} fill className="object-cover" sizes="120px" {...unoptimizedProp(src)} />
                 </button>
               ))}
             </div>

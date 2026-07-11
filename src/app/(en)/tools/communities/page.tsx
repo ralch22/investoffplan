@@ -5,11 +5,13 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CommunityInsightsExplorer } from "@/components/community-insights-explorer";
 import { getCommunityInsights } from "@/lib/community-insights-data";
 import { getHeroImage } from "@/lib/area-images";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Dubai Community Insights — Compare Lifestyles & Yields",
   description:
     "Explore UAE communities by lifestyle — family-friendly, waterfront, urban, golf, investment, and luxury.",
+  alternates: enMeta("/tools/communities"),
 };
 
 export default async function CommunitiesToolPage() {

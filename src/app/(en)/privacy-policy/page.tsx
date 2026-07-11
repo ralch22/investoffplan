@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
   description:
     "How invest off-plan collects, uses, and protects your contact details and browsing data.",
+  alternates: enMeta("/privacy-policy"),
 };
 
 export default function PrivacyPolicyPage() {

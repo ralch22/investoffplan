@@ -9,13 +9,13 @@ import { getTopCoveredAreas, getComparisonList } from "@/lib/area-compare";
 import { getComparableProjectSlugs } from "@/lib/project-compare";
 import { getComparableDeveloperSlugs } from "@/lib/developer-compare";
 import { getCatalogApi, getDevelopers } from "@/lib/catalog";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Compare Dubai Communities & Off-Plan Projects",
   description:
     "Side-by-side comparisons on real Dubai Land Department 2025 data — sold prices, price per sqft, gross rental yields — across communities and off-plan projects.",
-  alternates: { canonical: `${getSiteUrl()}/compare` },
+  alternates: enMeta("/compare"),
 };
 
 interface PageProps {

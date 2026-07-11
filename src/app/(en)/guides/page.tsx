@@ -6,12 +6,12 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { GUIDE_CARDS } from "@/lib/figma-copy";
 import { getHeroImage } from "@/lib/area-images";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 import { localePath, type Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Off-Plan Buying Guides & Investor Insights",
-  alternates: { canonical: `${getSiteUrl()}/guides` },
+  alternates: enMeta("/guides"),
   description:
     "Expert guides on UAE off-plan investing, payment plans, Golden Visa, and market intelligence.",
 };

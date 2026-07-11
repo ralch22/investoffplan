@@ -9,13 +9,13 @@ import { getComparisonList } from "@/lib/area-compare";
 import { areaTagline } from "@/lib/figma-copy";
 import { getHeroImage } from "@/lib/area-images";
 import { unoptimizedProp } from "@/lib/asset-image";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Dubai Communities — Off-Plan Projects by Neighbourhood",
   description:
     "Explore off-plan projects by community — Downtown Dubai, Dubai Marina, JVC, Palm Jumeirah, and more. Real DLD market data and side-by-side comparisons.",
-  alternates: { canonical: `${getSiteUrl()}/communities` },
+  alternates: enMeta("/communities"),
 };
 
 export default async function CommunitiesPage() {

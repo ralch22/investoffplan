@@ -7,11 +7,13 @@ import { getCatalogAnalytics } from "@/lib/catalog-analytics";
 import { getCatalogApi } from "@/lib/catalog";
 import { getHeroImage } from "@/lib/area-images";
 import { getMapProjectsFromList } from "@/lib/map-data";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Dubai Off-Plan Projects Map — Browse by Location",
   description:
     "Explore UAE off-plan projects on an interactive map with pricing, handover, and direct links to brochures.",
+  alternates: enMeta("/map"),
 };
 
 function MapLoading() {

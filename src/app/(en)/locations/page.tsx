@@ -3,13 +3,13 @@ import { LocaleLink } from "@/components/locale-link";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { LOCATION_GUIDES } from "@/lib/location-guides";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Dubai Location Guides — Communities Ranked on Real Data",
   description:
     "Where to buy off-plan in Dubai: communities ranked on real Dubai Land Department data — best for families, highest rental yields, most affordable, best value per sqft, and most liquid for resale.",
-  alternates: { canonical: `${getSiteUrl()}/locations` },
+  alternates: enMeta("/locations"),
 };
 
 export default function LocationGuidesPage() {
