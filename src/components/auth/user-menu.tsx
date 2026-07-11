@@ -128,14 +128,22 @@ export function UserMenu({ solid }: UserMenuProps) {
           <p className="truncate px-3 pb-2 pt-1 text-xs text-muted" title={session.user.email}>
             {dict.auth.signedInAs} {session.user.email}
           </p>
-          <Link
-            href={localePath(locale, "/account")}
-            role="menuitem"
-            onClick={() => setMenuOpen(false)}
-            className="focus-ring block rounded-lg px-3 py-2 text-sm font-medium text-text-dark hover:bg-surface-alt"
-          >
-            {dict.auth.account}
-          </Link>
+          {[
+            { href: "/account", label: dict.auth.account },
+            { href: "/favorites", label: dict.auth.favorites },
+            { href: "/account#saved-searches", label: dict.account.savedSearches.title },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={localePath(locale, item.href)}
+              role="menuitem"
+              onClick={() => setMenuOpen(false)}
+              className="focus-ring block rounded-lg px-3 py-2 text-sm font-medium text-text-dark hover:bg-surface-alt"
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div className="my-1 border-t border-border" role="separator" />
           <button
             type="button"
             role="menuitem"
