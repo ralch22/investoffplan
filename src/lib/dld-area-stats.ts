@@ -58,3 +58,17 @@ export function getAreaStats(areaName: string | undefined | null): DldAreaStats 
 export function getDldSource(): { source: string; sourcePeriod: string } {
   return { source: store.source, sourcePeriod: store.sourcePeriod };
 }
+
+/**
+ * Dataset-wide totals for trust/data-provenance surfaces: sums `saleSample`
+ * across every area in the anonymized DLD stats store.
+ */
+export function getDldTotals(): { totalSales: number; areaCount: number } {
+  let totalSales = 0;
+  let areaCount = 0;
+  for (const key of Object.keys(store.areas)) {
+    totalSales += store.areas[key].saleSample;
+    areaCount += 1;
+  }
+  return { totalSales, areaCount };
+}

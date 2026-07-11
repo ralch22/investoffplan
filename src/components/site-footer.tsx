@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand-logo";
+import { LicenseBadge } from "@/components/trust/license-badge";
 import { NewsletterSection } from "@/components/newsletter-section";
 import { useI18n } from "@/i18n/locale-provider";
 import { interpolate, localePath } from "@/i18n/config";
@@ -124,6 +125,8 @@ export function SiteFooter() {
               <span dir="ltr">{interpolate(dict.footer.contact.telephone, { phone: "+971 44 321 620" })}</span>
               <span>{interpolate(dict.footer.contact.email, { email: "info@investoffplan.com" })}</span>
               <span>{dict.footer.contact.address}</span>
+              {/* Renders nothing until real ORN/DED numbers land in src/content/trust.ts */}
+              <LicenseBadge />
             </div>
             <div className="flex gap-5">
               <Link href="/privacy-policy" className="hover:text-white">{dict.footer.privacy}</Link>

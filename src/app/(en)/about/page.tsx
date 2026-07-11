@@ -6,6 +6,9 @@ import { ContactCta } from "@/components/contact-cta";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { getHeroImage } from "@/lib/area-images";
 import { getSiteStats } from "@/lib/catalog";
+import { DataSourcesStrip } from "@/components/trust/data-sources-strip";
+import { TestimonialsSection } from "@/components/trust/testimonials-section";
+import { LicenseBadge } from "@/components/trust/license-badge";
 
 export const metadata: Metadata = {
   title: "About invest off-plan — UAE Off-Plan Property Specialists",
@@ -34,6 +37,8 @@ export default async function AboutPage() {
       >
         <PrimaryButton href="/projects">Get Started</PrimaryButton>
       </PageHero>
+
+      <DataSourcesStrip />
 
       <section className="mx-auto max-w-[1200px] px-5 py-16 md:px-8">
         <h2 className="font-display text-3xl font-semibold text-text-dark">
@@ -69,17 +74,10 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-surface-darker py-16 text-white">
-        <div className="mx-auto max-w-[1200px] px-5 md:px-8">
-          <h2 className="font-display text-3xl font-semibold">
-            Client Experiences<span className="text-brand">.</span>
-          </h2>
-          <p className="mt-4 max-w-2xl text-white/80">
-            Buyers use invest off-plan to shortlist launches faster — with brochures,
-            handover dates, and unit-level pricing in one workflow.
-          </p>
-        </div>
-      </section>
+      {/* Content-gated trust sections — render nothing until real, consented
+          content lands in src/content/trust.ts (see docs/trust-content-needed.md). */}
+      <TestimonialsSection />
+      <LicenseBadge className="mx-auto block max-w-[1200px] px-5 md:px-8" />
 
       <ContactCta />
     </PageShell>
