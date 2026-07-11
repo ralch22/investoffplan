@@ -123,16 +123,13 @@ export function BrochureModal({
         `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`,
         { medium: "whatsapp", content: "brochure_modal_fallback" },
       );
-      try {
-        const w = window as any;
-        if (w.gtag) {
-          w.gtag("event", "brochure_request", { method: "whatsapp", project: projectName });
-        }
-        (w.dataLayer = w.dataLayer || []).push({
-          event: "brochure_whatsapp_fallback",
-          project_name: projectName,
-        });
-      } catch {}
+      trackEvent(ANALYTICS_EVENTS.BROCHURE_REQUEST, {
+        method: "whatsapp",
+        project: projectName,
+      });
+      trackEvent(ANALYTICS_EVENTS.BROCHURE_WHATSAPP_FALLBACK, {
+        project_name: projectName,
+      });
       window.open(waUrl, "_blank", "noopener,noreferrer");
     }
 

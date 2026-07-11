@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/i18n/locale-provider";
 import { localePath } from "@/i18n/config";
+import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 
 const CHIPS = ["Apartments", "Villas", "Emaar", "JVC", "Under AED 1M"];
 
@@ -29,6 +30,10 @@ export function MobileSearchSheet({ open, onClose }: { open: boolean; onClose: (
   const go = (term: string) => {
     onClose();
     const query = term.trim();
+    trackEvent(ANALYTICS_EVENTS.SEARCH_SUBMIT, {
+      query_length: query.length,
+      source: "sheet",
+    });
     router.push(
       localePath(locale, query ? `/projects?q=${encodeURIComponent(query)}` : "/projects"),
     );

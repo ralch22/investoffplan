@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/i18n/locale-provider";
 import { localePath } from "@/i18n/config";
+import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 
 function SearchIcon() {
@@ -48,6 +49,10 @@ export function HeaderSearch({ solid }: { solid: boolean }) {
     e.preventDefault();
     const query = q.trim();
     setOpen(false);
+    trackEvent(ANALYTICS_EVENTS.SEARCH_SUBMIT, {
+      query_length: query.length,
+      source: "header",
+    });
     router.push(
       localePath(locale, query ? `/projects?q=${encodeURIComponent(query)}` : "/projects"),
     );

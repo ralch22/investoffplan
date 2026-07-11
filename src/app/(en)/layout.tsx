@@ -5,6 +5,7 @@ import type { Metadata, Viewport } from "next";
 export const viewport: Viewport = { viewportFit: "cover" };
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { Inter, PT_Serif } from "next/font/google";
+import { Clarity } from "@/components/clarity";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { CatalogPrefetch } from "@/components/catalog-prefetch";
 import { MotionProvider } from "@/components/motion-provider";
@@ -84,6 +85,7 @@ export default async function RootLayout({
       <body className="min-h-full bg-background text-foreground">
         {gaMeasurementId ? <GoogleAnalytics gaId={gaMeasurementId} /> : null}
         {gtmId ? <GoogleTagManager gtmId={gtmId} /> : null}
+        <Clarity />
         <SiteJsonLd />
         <CatalogPrefetch />
         <NavDataProvider topCommunities={topCommunities}>

@@ -7,6 +7,7 @@ import { BrandLogo } from "@/components/brand-logo";
 import { CurrencySelector } from "@/components/currency-selector";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { useFavoritesCount } from "@/hooks/use-favorites-count";
+import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import type { CurrencyCode } from "@/lib/types";
 import { useI18n } from "@/i18n/locale-provider";
@@ -86,6 +87,10 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
     e.preventDefault();
     const query = q.trim();
     onClose();
+    trackEvent(ANALYTICS_EVENTS.SEARCH_SUBMIT, {
+      query_length: query.length,
+      source: "drawer",
+    });
     router.push(
       localePath(locale, query ? `/projects?q=${encodeURIComponent(query)}` : "/projects"),
     );

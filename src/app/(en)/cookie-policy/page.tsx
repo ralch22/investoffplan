@@ -27,7 +27,9 @@ export default function CookiePolicyPage() {
           </p>
           <p>
             We may use privacy-friendly analytics to understand which pages and filters
-            help buyers discover off-plan inventory more efficiently.
+            help buyers discover off-plan inventory more efficiently. Alongside Google
+            Analytics, we may use Microsoft Clarity to collect anonymised session
+            heatmaps that show how visitors interact with our pages.
           </p>
           <p>
             You can clear favorites and compare data at any time through your browser
