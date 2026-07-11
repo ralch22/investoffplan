@@ -14,6 +14,7 @@ import { cn } from "@/lib/cn";
 import { useI18n } from "@/i18n/locale-provider";
 import { interpolate, localePath } from "@/i18n/config";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { UserMenu } from "@/components/auth/user-menu";
 
 interface SiteHeaderProps {
   currency: CurrencyCode;
@@ -113,6 +114,9 @@ export function SiteHeader({
               </PrimaryButton>
             </span>
             <LanguageSwitcher solid={showSolidHeader} />
+            <span className="hidden sm:block">
+              <UserMenu solid={showSolidHeader} />
+            </span>
             {onCurrencyChange ? (
               <CurrencySelector value={currency} onChange={onCurrencyChange} />
             ) : (
