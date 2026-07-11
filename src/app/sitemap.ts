@@ -17,44 +17,33 @@ if (!base || base.includes("preview") || base.includes("emerge-digital")) {
 }
 const BASE = base;
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+type Entry = MetadataRoute.Sitemap[number];
+
+// Child sitemaps, in id order. Each is its own <urlset> under /sitemap/<id>.xml,
+// with /sitemap.xml as the auto-generated <sitemapindex>. Per-type grouping lets
+// GSC report indexing coverage per section (projects vs compare vs AR, etc.).
+let GROUPS: Entry[][] | null = null;
+
+async function buildGroups(): Promise<Entry[][]> {
+  if (GROUPS) return GROUPS;
+
   const api = await getCatalogApi();
   const catalogUpdated = new Date(api.meta.scrapedAt);
 
-  const staticRoutes = [
-    "",
-    "/projects",
-    "/developers",
-    "/communities",
-    "/compare",
-    "/compare/units",
-    "/locations",
-    "/guides",
-    "/faq",
-    "/map",
-    "/contact",
-    "/about",
-    "/news",
-    "/favorites",
-    "/tools",
-    "/tools/price-map",
-    "/tools/communities",
-    "/tools/rent-vs-buy",
-    "/tools/mortgage",
-    "/tools/residential",
-    "/tools/payment",
-    "/privacy-policy",
-    "/cookie-policy",
-  ].map(
-    (path) => ({
-      url: `${BASE}${path}`,
-      lastModified: catalogUpdated,
-      changeFrequency: "weekly" as const,
-      priority: path === "" ? 1 : 0.8,
-    }),
-  );
+  const staticRoutes: Entry[] = [
+    "", "/projects", "/developers", "/communities", "/compare", "/compare/units",
+    "/locations", "/guides", "/faq", "/map", "/contact", "/about", "/news",
+    "/favorites", "/tools", "/tools/price-map", "/tools/communities",
+    "/tools/rent-vs-buy", "/tools/mortgage", "/tools/residential", "/tools/payment",
+    "/privacy-policy", "/cookie-policy",
+  ].map((path) => ({
+    url: `${BASE}${path}`,
+    lastModified: catalogUpdated,
+    changeFrequency: "weekly" as const,
+    priority: path === "" ? 1 : 0.8,
+  }));
 
-  const projectRoutes = api.projects.map((p) => {
+  const projectRoutes: Entry[] = api.projects.map((p) => {
     const thumb = p.imageUrl
       ? p.imageUrl.startsWith("http")
         ? p.imageUrl
@@ -75,31 +64,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   });
 
   const developers = await getDevelopers();
-  const developerRoutes = developers.map((d) => ({
+  const developerRoutes: Entry[] = developers.map((d) => ({
     url: `${BASE}/developers/${d.slug}`,
-    lastModified: new Date(),
+    lastModified: catalogUpdated,
     changeFrequency: "monthly" as const,
     priority: 0.6,
   }));
 
   const communities = await getCommunities();
-  const areaRoutes = communities.map((c) => ({
+  const areaRoutes: Entry[] = communities.map((c) => ({
     url: `${BASE}/communities/${c.slug}`,
-    lastModified: new Date(),
+    lastModified: catalogUpdated,
     changeFrequency: "monthly" as const,
     priority: 0.6,
   }));
 
   const comparePairs = await getComparablePairSlugs();
-  const compareRoutes = comparePairs.map((pair) => ({
+  const compareRoutes: Entry[] = comparePairs.map((pair) => ({
     url: `${BASE}/compare/${pair}`,
-    lastModified: new Date(),
+    lastModified: catalogUpdated,
     changeFrequency: "monthly" as const,
     priority: 0.5,
   }));
 
   const projectComparePairs = await getComparableProjectSlugs();
-  const projectCompareRoutes = projectComparePairs.map((pair) => ({
+  const projectCompareRoutes: Entry[] = projectComparePairs.map((pair) => ({
     url: `${BASE}/compare-projects/${pair}`,
     lastModified: catalogUpdated,
     changeFrequency: "weekly" as const,
@@ -107,56 +96,55 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const developerComparePairs = await getComparableDeveloperSlugs();
-  const developerCompareRoutes = developerComparePairs.map((pair) => ({
+  const developerCompareRoutes: Entry[] = developerComparePairs.map((pair) => ({
     url: `${BASE}/compare-developers/${pair}`,
     lastModified: catalogUpdated,
     changeFrequency: "weekly" as const,
     priority: 0.5,
   }));
 
-  const locationGuideRoutes = LOCATION_GUIDES.map((g) => ({
+  const locationGuideRoutes: Entry[] = LOCATION_GUIDES.map((g) => ({
     url: `${BASE}/locations/${g.slug}`,
     lastModified: catalogUpdated,
     changeFrequency: "monthly" as const,
     priority: 0.6,
   }));
 
-  const guideRoutes = GUIDE_CARDS.filter((g) => g.href.startsWith("/guides/")).map((g) => ({
+  const guideRoutes: Entry[] = GUIDE_CARDS.filter((g) => g.href.startsWith("/guides/")).map((g) => ({
     url: `${BASE}${g.href}`,
-    lastModified: new Date(),
+    lastModified: catalogUpdated,
     changeFrequency: "monthly" as const,
     priority: 0.5,
   }));
 
-  const newsRoutes = getNewsArticles().map((article) => ({
+  const newsRoutes: Entry[] = getNewsArticles().map((article) => ({
     url: `${BASE}/news/${article.slug}`,
     lastModified: new Date(`${article.publishedAt}T00:00:00Z`),
     changeFrequency: "monthly" as const,
     priority: 0.5,
   }));
 
-  const collectionRoutes = COLLECTION_PAGES.map((page) => ({
+  const collectionRoutes: Entry[] = COLLECTION_PAGES.map((page) => ({
     url: `${BASE}/collections/${page.slug}`,
     lastModified: catalogUpdated,
     changeFrequency: "weekly" as const,
     priority: 0.6,
   }));
 
-  const faqRoutes = FAQ_TOPICS.map((topic) => ({
+  const faqRoutes: Entry[] = FAQ_TOPICS.map((topic) => ({
     url: `${BASE}/faq/${topic.slug}`,
-    lastModified: new Date(),
+    lastModified: catalogUpdated,
     changeFrequency: "monthly" as const,
     priority: 0.5,
   }));
 
-  // Arabic mirror — full route tree now exists under /ar.
   const arStaticPaths = [
     "/ar", "/ar/about", "/ar/contact", "/ar/projects", "/ar/communities",
     "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/compare", "/ar/locations", "/ar/map",
     "/ar/tools", "/ar/tools/mortgage", "/ar/tools/payment", "/ar/tools/rent-vs-buy",
     "/ar/tools/communities", "/ar/tools/price-map", "/ar/tools/residential",
   ];
-  const arStaticRoutes = arStaticPaths.map((path) => ({
+  const arStaticRoutes: Entry[] = arStaticPaths.map((path) => ({
     url: `${BASE}${path}`,
     lastModified: catalogUpdated,
     changeFrequency: "weekly" as const,
@@ -168,31 +156,48 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       },
     },
   }));
-  // AR detail-page mirrors, derived from the EN route arrays.
-  const arDetailRoutes = [
+  // AR detail mirrors, derived from the EN detail arrays (videos dropped — the
+  // EN video sitemap is canonical for video discovery).
+  const arDetailRoutes: Entry[] = [
     ...projectRoutes, ...areaRoutes, ...developerRoutes, ...guideRoutes,
     ...newsRoutes, ...collectionRoutes, ...faqRoutes, ...compareRoutes,
     ...projectCompareRoutes, ...locationGuideRoutes,
   ].map((r) => ({
-    ...r,
     url: r.url.replace(`${BASE}/`, `${BASE}/ar/`),
+    lastModified: r.lastModified,
+    changeFrequency: r.changeFrequency,
     priority: 0.5,
   }));
 
-  return [
-    ...staticRoutes,
-    ...arStaticRoutes,
-    ...arDetailRoutes,
-    ...projectRoutes,
-    ...developerRoutes,
-    ...areaRoutes,
-    ...compareRoutes,
-    ...projectCompareRoutes,
-    ...developerCompareRoutes,
-    ...locationGuideRoutes,
-    ...guideRoutes,
-    ...newsRoutes,
-    ...collectionRoutes,
-    ...faqRoutes,
+  GROUPS = [
+    // 0 core: static EN + AR static (with hreflang)
+    [...staticRoutes, ...arStaticRoutes],
+    // 1 projects (EN, with video entries)
+    projectRoutes,
+    // 2 communities + developers (EN)
+    [...areaRoutes, ...developerRoutes],
+    // 3 comparisons (EN)
+    [...compareRoutes, ...projectCompareRoutes, ...developerCompareRoutes],
+    // 4 content: locations, guides, news, collections, faq (EN)
+    [...locationGuideRoutes, ...guideRoutes, ...newsRoutes, ...collectionRoutes, ...faqRoutes],
+    // 5 Arabic detail mirror
+    arDetailRoutes,
   ];
+  return GROUPS;
+}
+
+export async function generateSitemaps(): Promise<{ id: number }[]> {
+  const groups = await buildGroups();
+  return groups.map((_, id) => ({ id }));
+}
+
+export default async function sitemap({
+  id,
+}: {
+  // Next 16 passes id as a Promise for dynamic metadata routes.
+  id: number | Promise<number>;
+}): Promise<MetadataRoute.Sitemap> {
+  const resolvedId = await Promise.resolve(id);
+  const groups = await buildGroups();
+  return groups[resolvedId] ?? [];
 }
