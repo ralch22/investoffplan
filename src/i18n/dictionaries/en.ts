@@ -174,6 +174,13 @@ const dict = {
     "resultsIn": "in {location}",
     "updated": "Updated {date}",
     "filtersAndSearch": "Filters & search",
+    "saveSearch": "Save search",
+    "saveSearchTitle": "Name this search",
+    "saveSearchPlaceholder": "e.g. 2-bed apartments in Dubai",
+    "saveSearchConfirm": "Save",
+    "saveSearchCancel": "Cancel",
+    "saveSearchSaved": "Search saved — weekly email alerts are on.",
+    "saveSearchError": "Couldn't save the search — please try again.",
     "view": {
       "grid": "Grid",
       "list": "List",
@@ -447,6 +454,19 @@ const dict = {
     "comingSoon": "Coming soon",
     "notSignedIn": "You're not signed in.",
     "loading": "Loading…"
+  },
+  "account": {
+    "savedSearches": {
+      "title": "Saved searches",
+      "empty": "No saved searches yet — save one from the projects page and we'll email you when matching projects launch.",
+      "alerts": "Email alerts",
+      "on": "On",
+      "off": "Off",
+      "delete": "Delete",
+      "view": "View results",
+      "loading": "Loading…",
+      "error": "Couldn't load your saved searches — please refresh."
+    }
   }
 } as const;
 

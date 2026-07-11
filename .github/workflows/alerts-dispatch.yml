@@ -1,0 +1,38 @@
+name: Alerts dispatch
+
+# Manually triggers the saved-search new-launch email digests
+# (POST /api/alerts/dispatch). Normally this runs automatically as the final
+# step of the weekly catalog-ingest workflow — use this for a re-run after a
+# failure or for testing once secrets are configured.
+#
+# Required GitHub repository secret:
+#   - ALERTS_DISPATCH_TOKEN  (must match the worker secret of the same name;
+#     see docs/alerts.md)
+#
+# The endpoint stops at a ~25s time budget and reports {processed, remaining};
+# this job loops until remaining is 0.
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch saved-search alerts
+        run: |
+          for i in $(seq 1 20); do
+            status=$(curl -s -o /tmp/alerts-body -w "%{http_code}" -X POST \
+              -H "x-alerts-token: ${{ secrets.ALERTS_DISPATCH_TOKEN }}" \
+              https://investoffplan.com/api/alerts/dispatch)
+            cat /tmp/alerts-body
+            if [ "$status" != "200" ]; then
+              echo "Alerts dispatch returned $status" >&2
+              exit 1
+            fi
+            remaining=$(sed -n 's/.*"remaining":\([0-9]*\).*/\1/p' /tmp/alerts-body)
+            if [ -z "$remaining" ] || [ "$remaining" = "0" ]; then
+              break
+            fi
+            echo "Continuing dispatch loop — $remaining searches remaining"
+          done

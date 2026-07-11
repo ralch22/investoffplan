@@ -7,6 +7,7 @@ import {
   MoreFiltersPanel,
   type DeveloperOption,
 } from "@/components/more-filters-panel";
+import { SaveSearchButton } from "@/components/save-search-button";
 import { useI18n } from "@/i18n/locale-provider";
 
 interface ProjectFiltersProps {
@@ -156,6 +157,10 @@ export function ProjectFilters({
           />
         </div>
       ) : null}
+
+      <div className="hidden md:col-span-full md:flex md:justify-end">
+        <SaveSearchButton filters={filters} />
+      </div>
     </div>
   );
 }

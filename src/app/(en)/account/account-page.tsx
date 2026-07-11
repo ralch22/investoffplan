@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { AccountSavedSearches } from "@/components/account-saved-searches";
 import { SignInModal } from "@/components/auth/sign-in-modal";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { signOut, useSession } from "@/lib/auth/client";
@@ -74,13 +75,7 @@ export function AccountPage() {
               </button>
             </section>
 
-            {/* Wave 4 placeholder — saved searches. */}
-            <section className="rounded-2xl border border-dashed border-border bg-surface-alt p-6">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.08em] text-muted-light">
-                {dict.auth.savedSearches}
-              </h2>
-              <p className="mt-3 text-sm text-muted">{dict.auth.comingSoon}</p>
-            </section>
+            <AccountSavedSearches />
             <section className="rounded-2xl border border-border bg-surface p-6">
               <h2 className="text-sm font-semibold uppercase tracking-[0.08em] text-muted-light">
                 {dict.auth.favoritesSection}

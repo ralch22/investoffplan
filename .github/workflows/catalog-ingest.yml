@@ -1,6 +1,9 @@
 name: Catalog ingest
 
 # Required GitHub repository secrets for weekly catalog scrape + production D1 upsert:
+#   - ALERTS_DISPATCH_TOKEN
+#       Must match the worker secret of the same name (docs/alerts.md). The
+#       final step triggers the saved-search alert digests after the ingest.
 #   - CLOUDFLARE_API_TOKEN
 #       Create a scoped API token in Cloudflare dashboard (My Profile > API Tokens).
 #       Permissions needed:
@@ -79,3 +82,27 @@ jobs:
           fi
           git commit -m "chore(catalog): weekly PF ingest $(date -u +%Y-%m-%d)"
           git push
+
+      # Saved-search alert digests — runs right after the ingest so
+      # first_seen_at rows stamped by this run are picked up while fresh.
+      # Loops on {remaining} (the endpoint stops at its 25s time budget).
+      # No-ops cleanly (401 is a hard failure; skipped email is not) while
+      # RESEND_API_KEY is not configured on the worker.
+      - name: Dispatch saved-search alerts
+        if: always()
+        run: |
+          for i in $(seq 1 20); do
+            status=$(curl -s -o /tmp/alerts-body -w "%{http_code}" -X POST \
+              -H "x-alerts-token: ${{ secrets.ALERTS_DISPATCH_TOKEN }}" \
+              https://investoffplan.com/api/alerts/dispatch)
+            cat /tmp/alerts-body
+            if [ "$status" != "200" ]; then
+              echo "Alerts dispatch returned $status" >&2
+              exit 1
+            fi
+            remaining=$(sed -n 's/.*"remaining":\([0-9]*\).*/\1/p' /tmp/alerts-body)
+            if [ -z "$remaining" ] || [ "$remaining" = "0" ]; then
+              break
+            fi
+            echo "Continuing dispatch loop — $remaining searches remaining"
+          done

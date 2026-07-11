@@ -214,8 +214,38 @@ async function main() {
       "upsert must update the changed field in place",
     );
 
+    // --- first_seen_at: stamped on insert, must SURVIVE later upserts ---
+    const firstSeen1 = await d1
+      .prepare("SELECT first_seen_at AS fsa, updated_at AS ua FROM projects WHERE id = ?")
+      .bind("p-1")
+      .first<{ fsa: string | null; ua: string }>();
+    assert.equal(
+      firstSeen1?.fsa,
+      fixture.scrapedAt,
+      "insert must stamp first_seen_at with the ingest run date",
+    );
+
+    const laterRun = buildFixture();
+    laterRun.scrapedAt = "2026-07-15T00:00:00.000Z";
+    await upsertCatalogFile(db, d1, laterRun);
+
+    const firstSeen2 = await d1
+      .prepare("SELECT first_seen_at AS fsa, updated_at AS ua FROM projects WHERE id = ?")
+      .bind("p-1")
+      .first<{ fsa: string | null; ua: string }>();
+    assert.equal(
+      firstSeen2?.fsa,
+      fixture.scrapedAt,
+      "re-upsert must NOT clobber first_seen_at (insert-only column)",
+    );
+    assert.equal(
+      firstSeen2?.ua,
+      laterRun.scrapedAt,
+      "re-upsert must still advance updated_at",
+    );
+
     console.log(
-      "[smoke:catalog-upsert] PASS — duplicates skipped, upsert idempotent, updates applied in place",
+      "[smoke:catalog-upsert] PASS — duplicates skipped, upsert idempotent, updates applied in place, first_seen_at survives",
     );
   } finally {
     await mf.dispose();
