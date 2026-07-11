@@ -27,6 +27,7 @@ export function CollectionChips({ value, onChange }: CollectionChipsProps) {
           key={c.id}
           type="button"
           onClick={() => onChange(c.id)}
+          aria-pressed={value === c.id}
           className={cn(
             "iop-btn-press focus-ring shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition",
             value === c.id

@@ -82,7 +82,7 @@ export function MortgageCalculator() {
       </section>
 
       <section className="space-y-6">
-        <div className="rounded-2xl bg-brand p-6 text-white">
+        <div className="rounded-2xl bg-brand p-6 text-white" role="status" aria-live="polite">
           <p className="text-sm font-semibold uppercase tracking-wide opacity-90">
             Monthly payment
           </p>

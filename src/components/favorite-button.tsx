@@ -39,6 +39,7 @@ export function FavoriteButton({
     <button
       type="button"
       aria-label={active ? "Remove from favorites" : "Add to favorites"}
+      aria-pressed={active}
       onClick={() => {
         const nowActive = toggleFavoriteSlug(slug).includes(slug);
         setActive(nowActive);

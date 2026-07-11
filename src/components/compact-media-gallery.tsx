@@ -164,10 +164,7 @@ export function CompactMediaGallery({
             >
               <ChevronIcon direction="right" />
             </button>
-            <div
-              className="absolute bottom-2 start-2 z-20 rounded-full bg-black/50 px-2.5 py-1 text-[11px] font-semibold tabular-nums text-white backdrop-blur-sm"
-              aria-live="polite"
-            >
+            <div className="absolute bottom-2 start-2 z-20 rounded-full bg-black/50 px-2.5 py-1 text-[11px] font-semibold tabular-nums text-white backdrop-blur-sm">
               {active + 1} / {count}
             </div>
           </>
