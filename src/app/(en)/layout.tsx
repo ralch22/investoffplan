@@ -21,10 +21,13 @@ export const revalidate = 3600;
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
 
+// Variable font (no explicit `weight`) → one woff2 covering the full weight
+// axis instead of four static instances preloaded on every page. All the
+// weights the UI uses (400/500/600/700) are still available. PT_Serif has no
+// variable version on Google Fonts, so it keeps explicit weights below.
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
