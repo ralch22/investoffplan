@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { PageShell } from "@/components/page-shell";
@@ -11,6 +11,7 @@ import { removeCompareId, serializeCompareIds } from "@/lib/compare";
 import { setStoredCompareIds } from "@/lib/compare-storage";
 import type { CompareUnitId } from "@/lib/compare";
 import { useCatalog, type FlatUnit } from "@/lib/catalog-browser";
+import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import {
   cityLabel,
   formatBeds,
@@ -94,6 +95,14 @@ export function ComparePage({ initialIds, initialItems }: ComparePageProps) {
     );
   }, [isApiMode, api, compareIds, initialItems]);
   const emptySlots = Math.max(0, MAX_SLOTS - items.length);
+
+  // Fire compare_view once per visit when a real comparison (2+ units) renders.
+  const compareViewFired = useRef(false);
+  useEffect(() => {
+    if (compareViewFired.current || items.length < 2) return;
+    compareViewFired.current = true;
+    trackEvent(ANALYTICS_EVENTS.COMPARE_VIEW, { item_count: items.length });
+  }, [items.length]);
 
   function removeUnit(id: CompareUnitId) {
     const next = removeCompareId(compareIds, id);

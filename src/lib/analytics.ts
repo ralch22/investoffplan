@@ -7,6 +7,16 @@ export const ANALYTICS_EVENTS = {
   CONTACT_SUBMIT: "contact_submit",
   COMPARE_ADD: "compare_add",
   WHATSAPP_CLICK: "whatsapp_click",
+  SEARCH_SUBMIT: "search_submit",
+  SUGGEST_CLICK: "search_suggest_click",
+  QUIZ_COMPLETE: "quiz_complete",
+  ROI_CALC: "roi_calc",
+  ALERT_SUBSCRIBE: "alert_subscribe",
+  COMPARE_VIEW: "compare_view",
+  PDP_SECTION_VIEW: "pdp_section_view",
+  SIGN_IN: "sign_in",
+  BROCHURE_REQUEST: "brochure_request",
+  BROCHURE_WHATSAPP_FALLBACK: "brochure_whatsapp_fallback",
 } as const;
 
 export type AnalyticsEventName =

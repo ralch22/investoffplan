@@ -16,6 +16,7 @@ import { DeveloperAttribution } from "@/components/developer-attribution";
 import { ShowcaseProjectCard } from "@/components/showcase-project-card";
 import { ProjectPaymentCalculator } from "@/components/project-payment-calculator";
 import { ProjectDetailNav } from "@/components/project-detail-nav";
+import { SectionViewTracker } from "@/components/section-view-tracker";
 import { ProjectSummaryRail } from "@/components/project-summary-rail";
 import { PROJECT_DETAIL_SECTIONS } from "@/lib/project-detail-sections";
 import { ProjectUnitsTable } from "@/components/project-units-table";
@@ -241,6 +242,16 @@ export default async function ProjectDetailPage({ params }: PageProps) {
     ? `AED ${firstUnitPpsf.toLocaleString()}/sqft`
     : null;
 
+  const detailSections = PROJECT_DETAIL_SECTIONS.filter((section) => {
+    if (section.id === "masterplan") return Boolean(project.masterPlanUrl);
+    if (section.id === "floor-plans") return (project.floorPlans?.length ?? 0) > 0;
+    if (section.id === "media")
+      return isEmbeddableVideo(resolvedVideoUrl) || Boolean(enrichment?.virtualTourUrl);
+    if (section.id === "living-in-area") return Boolean(areaInsights);
+    if (section.id === "related") return related.length > 0;
+    return true;
+  });
+
   return (
     <PageShell headerVariant="transparent" mobileDock="cta">
       <script
@@ -332,19 +343,9 @@ export default async function ProjectDetailPage({ params }: PageProps) {
           ]}
         />
         <div className="mt-4">
-          <ProjectDetailNav
-            sections={PROJECT_DETAIL_SECTIONS.filter((section) => {
-              if (section.id === "masterplan") return Boolean(project.masterPlanUrl);
-              if (section.id === "floor-plans")
-                return (project.floorPlans?.length ?? 0) > 0;
-              if (section.id === "media")
-                return isEmbeddableVideo(resolvedVideoUrl) || Boolean(enrichment?.virtualTourUrl);
-              if (section.id === "living-in-area") return Boolean(areaInsights);
-              if (section.id === "related") return related.length > 0;
-              return true;
-            })}
-          />
+          <ProjectDetailNav sections={detailSections} />
         </div>
+        <SectionViewTracker sections={detailSections.map((section) => section.id)} />
 
         <div className="mt-4 lg:grid lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start lg:gap-8">
           <div className="min-w-0">

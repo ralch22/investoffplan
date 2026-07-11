@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
+import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { localePath, type Locale } from "@/i18n/config";
 
 interface QuickFilter {
@@ -44,6 +45,10 @@ export function HeroSearch({
     const params = new URLSearchParams();
     if (query.trim()) params.set("q", query.trim());
     const qs = params.toString() ? `?${params}` : "";
+    trackEvent(ANALYTICS_EVENTS.SEARCH_SUBMIT, {
+      query_length: query.trim().length,
+      source: "hero",
+    });
     router.push(localePath(locale, `/projects${qs}`));
   }
 
