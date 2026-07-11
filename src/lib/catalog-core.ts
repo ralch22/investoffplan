@@ -97,6 +97,14 @@ function normalizeProject(p: Project & { citySlug?: string }): Project {
   };
 }
 
+/** Sort key that pushes no-price (launchPriceAed 0) units to the bottom of an
+ * ascending price sort instead of the top. */
+function priceAscKey(item: FlatUnit): number {
+  return item.unit.launchPriceAed > 0
+    ? item.unit.launchPriceAed
+    : Number.POSITIVE_INFINITY;
+}
+
 function handoverValue(handover?: string): number {
   if (!handover) return 9999;
   const match = handover.match(/Q(\d)\s+(\d{4})/);
@@ -219,7 +227,10 @@ export function createCatalogApi(raw: CatalogFile): CatalogApi {
             // (item.project) — item.catalog can carry a stale videoAvailable.
             return Boolean(item.project.videoAvailable && !item.project.videoUrl);
           case "under-2m":
-            return item.unit.launchPriceAed <= 2_000_000;
+            return (
+              item.unit.launchPriceAed > 0 &&
+              item.unit.launchPriceAed <= 2_000_000
+            );
           case "studio":
             return item.unit.beds === 0;
           case "waterfront":
@@ -295,7 +306,9 @@ export function createCatalogApi(raw: CatalogFile): CatalogApi {
       const sorted = [...items];
       switch (sort) {
         case "price-asc":
-          sorted.sort((a, b) => a.unit.launchPriceAed - b.unit.launchPriceAed);
+          // Units with no PF-stated price (launchPriceAed 0) must sink to the
+          // bottom, not lead the SERP with "Price on request" cards.
+          sorted.sort((a, b) => priceAscKey(a) - priceAscKey(b));
           break;
         case "price-desc":
           sorted.sort((a, b) => b.unit.launchPriceAed - a.unit.launchPriceAed);
@@ -315,7 +328,12 @@ export function createCatalogApi(raw: CatalogFile): CatalogApi {
           );
           break;
         case "value-asc":
-          sorted.sort((a, b) => valueScore(a) - valueScore(b));
+          // Zero-price units have a meaningless value score — keep them last.
+          sorted.sort((a, b) => {
+            const av = a.unit.launchPriceAed > 0 ? valueScore(a) : Number.POSITIVE_INFINITY;
+            const bv = b.unit.launchPriceAed > 0 ? valueScore(b) : Number.POSITIVE_INFINITY;
+            return av - bv;
+          });
           break;
         default:
           sorted.sort((a, b) => {
@@ -335,7 +353,7 @@ export function createCatalogApi(raw: CatalogFile): CatalogApi {
         seen.add(item.project.id);
         const cheapest = items
           .filter((x) => x.project.id === item.project.id)
-          .sort((a, b) => a.unit.launchPriceAed - b.unit.launchPriceAed)[0];
+          .sort((a, b) => priceAscKey(a) - priceAscKey(b))[0];
         out.push(cheapest ?? item);
       }
       return out;

@@ -7,10 +7,13 @@ function isCompareUnitId(value: string): value is CompareUnitId {
 
 export function parseCompareIds(raw: string | null | undefined): CompareUnitId[] {
   if (!raw) return [];
+  const seen = new Set<string>();
   return raw
     .split(",")
     .map((s) => s.trim())
     .filter(isCompareUnitId)
+    // De-dupe so the same unit can't render as two identical compare columns.
+    .filter((id) => (seen.has(id) ? false : (seen.add(id), true)))
     .slice(0, 3);
 }
 

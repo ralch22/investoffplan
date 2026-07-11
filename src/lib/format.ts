@@ -44,6 +44,9 @@ export function formatLaunchPrice(
   maxAed: number | undefined,
   currency: CurrencyCode,
 ): string {
+  // 0 = no PF-stated price (verified-claims: never invent one, never show
+  // "AED 0"). Mirrors the formatSqft "—" guard and the PDP fromPriceLabel.
+  if (!(minAed > 0)) return "Price on request";
   if (maxAed && maxAed > minAed) {
     return `${formatPrice(minAed, currency, { compact: true })} - ${formatPrice(maxAed, currency, { compact: true })}`;
   }
@@ -55,6 +58,7 @@ export function formatFromPrice(
   maxAed: number | undefined,
   currency: CurrencyCode,
 ): string {
+  if (!(minAed > 0)) return "Price on request";
   if (maxAed && maxAed > minAed) {
     return `FROM ${formatPrice(minAed, currency, { compact: true })} - ${formatPrice(maxAed, currency, { compact: true })}`;
   }

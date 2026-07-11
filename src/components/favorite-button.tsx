@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { isFavoriteSlug, toggleFavoriteSlug } from "@/lib/favorites";
+import {
+  FAVORITES_CHANGED_EVENT,
+  isFavoriteSlug,
+  toggleFavoriteSlug,
+} from "@/lib/favorites";
 import { cn } from "@/lib/cn";
 
 interface FavoriteButtonProps {
@@ -18,7 +22,16 @@ export function FavoriteButton({
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    setActive(isFavoriteSlug(slug));
+    // Subscribe so every FavoriteButton for the same slug (e.g. hero + related
+    // card) stays in sync when any one of them toggles, and across tabs.
+    const sync = () => setActive(isFavoriteSlug(slug));
+    sync();
+    window.addEventListener(FAVORITES_CHANGED_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(FAVORITES_CHANGED_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
   }, [slug]);
 
   return (

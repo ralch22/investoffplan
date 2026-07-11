@@ -437,7 +437,13 @@ export function ProjectsPage({
               >
                 {viewMode === "unit" ? s.view.showProjectView : s.view.showUnitView}
               </button>
-              <SortSelect value={sort} onChange={setSort} />
+              <SortSelect
+                value={sort}
+                onChange={(next) => {
+                  setSort(next);
+                  setPage(1);
+                }}
+              />
             </div>
           </div>
         </div>
