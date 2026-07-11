@@ -209,7 +209,17 @@ export async function getProjectsByArea(slug: string) {
 
 export async function getFeaturedProjects(limit = 4) {
   const api = await getCatalogApi();
-  return [...api.projects].filter((p) => p.isPremium).slice(0, limit);
+  // Editorial ordering: explicit featuredRank first (ascending), then the
+  // remaining premium pool in catalog order. Previously featuredRank was
+  // ignored entirely.
+  return [...api.projects]
+    .filter((p) => p.isPremium || p.featuredRank != null)
+    .sort(
+      (a, b) =>
+        (a.featuredRank ?? Number.MAX_SAFE_INTEGER) -
+        (b.featuredRank ?? Number.MAX_SAFE_INTEGER),
+    )
+    .slice(0, limit);
 }
 
 /**
