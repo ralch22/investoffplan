@@ -1,4 +1,12 @@
-import { index, integer, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import {
+  index,
+  integer,
+  primaryKey,
+  real,
+  sqliteTable,
+  text,
+  uniqueIndex,
+} from "drizzle-orm/sqlite-core";
 
 export const catalogMeta = sqliteTable("catalog_meta", {
   id: integer("id").primaryKey(),
@@ -288,4 +296,18 @@ export const verifications = sqliteTable(
     updatedAt: integer("updated_at", { mode: "timestamp_ms" }),
   },
   (table) => [index("verifications_identifier_idx").on(table.identifier)],
+);
+
+// Server-synced favorites (migration 0009_user_favorites.sql). created_at is
+// ISO-8601 TEXT (house style for app tables, unlike better-auth's epoch-ms).
+export const userFavorites = sqliteTable(
+  "user_favorites",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    projectSlug: text("project_slug").notNull(),
+    createdAt: text("created_at").notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.projectSlug] })],
 );

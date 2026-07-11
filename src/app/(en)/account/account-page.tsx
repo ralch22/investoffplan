@@ -1,20 +1,26 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { SignInModal } from "@/components/auth/sign-in-modal";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { signOut, useSession } from "@/lib/auth/client";
+import { useFavoritesCount } from "@/hooks/use-favorites-count";
 import { useI18n } from "@/i18n/locale-provider";
+import { interpolate, localePath } from "@/i18n/config";
 
 // Client shell: the page HTML is static (ISR discipline) — the session is
 // resolved exclusively in the browser via useSession. Never read cookies or
 // headers server-side for this page.
 export function AccountPage() {
-  const { dict } = useI18n();
+  const { locale, dict } = useI18n();
   const { data: session, isPending } = useSession();
   const [modalOpen, setModalOpen] = useState(false);
+  // localStorage is the read path; the sync hook (mounted in PageShell) keeps
+  // it merged with the server after sign-in.
+  const favoritesCount = useFavoritesCount();
 
   return (
     <PageShell>
@@ -68,18 +74,29 @@ export function AccountPage() {
               </button>
             </section>
 
-            {/* Wave 4 placeholders — saved searches + synced favorites. */}
+            {/* Wave 4 placeholder — saved searches. */}
             <section className="rounded-2xl border border-dashed border-border bg-surface-alt p-6">
               <h2 className="text-sm font-semibold uppercase tracking-[0.08em] text-muted-light">
                 {dict.auth.savedSearches}
               </h2>
               <p className="mt-3 text-sm text-muted">{dict.auth.comingSoon}</p>
             </section>
-            <section className="rounded-2xl border border-dashed border-border bg-surface-alt p-6">
+            <section className="rounded-2xl border border-border bg-surface p-6">
               <h2 className="text-sm font-semibold uppercase tracking-[0.08em] text-muted-light">
                 {dict.auth.favoritesSection}
               </h2>
-              <p className="mt-3 text-sm text-muted">{dict.auth.comingSoon}</p>
+              <div className="mt-4 flex items-baseline justify-between gap-4 text-sm">
+                <p className="font-medium text-text-dark">
+                  {interpolate(dict.auth.favoritesCount, { count: favoritesCount })}
+                </p>
+                <Link
+                  href={localePath(locale, "/favorites")}
+                  className="focus-ring font-semibold text-brand transition hover:underline"
+                >
+                  {dict.auth.viewFavorites}
+                </Link>
+              </div>
+              <p className="mt-2 text-sm text-muted">{dict.auth.favoritesSynced}</p>
             </section>
           </div>
         )}
