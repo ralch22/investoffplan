@@ -480,6 +480,7 @@ export function ProjectsPage({
                   onCompareToggle={toggleCompare}
                   layout={cardLayout}
                   featured={cardLayout === "grid" && index === 0 && currentPage === 1}
+                  placed={Boolean(item.placed)}
                   index={index}
                 />
               ))

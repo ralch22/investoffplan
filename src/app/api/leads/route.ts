@@ -6,6 +6,7 @@ import { leads } from "@/lib/db/schema";
 import { isHoneypotTripped } from "@/lib/form-guard";
 import { isTurnstileEnabled, verifyTurnstileToken } from "@/lib/turnstile";
 import { forwardLeadToGhl } from "@/lib/ghl";
+import { getPlacementLeadBoost } from "@/lib/placements";
 import { sendGa4GenerateLead } from "@/lib/ga4-mp";
 
 export const dynamic = "force-dynamic";
@@ -118,6 +119,11 @@ export async function POST(request: Request) {
   await db.insert(leads).values(lead);
 
   const forwardGhl = async () => {
+    // Paid-placement lead tagging: a lead against a project holding an active
+    // placement (lead_priority >= 1) gets the premium tags + "[FEATURED] "
+    // opportunity prefix. Same helper as /api/leads/retry so retried leads
+    // are tagged identically. Returns null (no-op) on any error.
+    const boost = await getPlacementLeadBoost(lead.projectSlug);
     const result = await forwardLeadToGhl({
       formType,
       name,
@@ -126,6 +132,8 @@ export async function POST(request: Request) {
       message: lead.message ?? undefined,
       projectSlug: lead.projectSlug ?? undefined,
       pagePath: lead.pagePath ?? undefined,
+      extraTags: boost?.extraTags,
+      opportunityNamePrefix: boost?.opportunityNamePrefix,
     });
     await db
       .update(leads)

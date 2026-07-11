@@ -15,6 +15,13 @@ export interface GhlLeadInput {
   message?: string;
   projectSlug?: string;
   pagePath?: string;
+  /**
+   * Extra contact tags appended to the defaults — used by the paid-placement
+   * rails to tag leads ("premium-placement", "placement:<surface>").
+   */
+  extraTags?: string[];
+  /** Prefix for the opportunity name (e.g. "[FEATURED] " for paid placements). */
+  opportunityNamePrefix?: string;
 }
 
 export type GhlForwardResult =
@@ -113,9 +120,10 @@ async function resolvePipeline(apiKey: string, locationId: string): Promise<Reso
 }
 
 function opportunityName(lead: GhlLeadInput): string {
+  const prefix = lead.opportunityNamePrefix ?? "";
   const who = lead.name?.trim() || lead.email || lead.phone || "Website lead";
   const what = lead.projectSlug ? ` — ${lead.projectSlug}` : "";
-  return `${who}${what} (${lead.formType})`.slice(0, 120);
+  return `${prefix}${who}${what} (${lead.formType})`.slice(0, 120);
 }
 
 /** Stage the lead into the pipeline as an open opportunity. Best-effort. */
@@ -201,7 +209,7 @@ export async function forwardLeadToGhl(lead: GhlLeadInput): Promise<GhlForwardRe
         ...(lead.email ? { email: lead.email } : {}),
         ...(lead.phone ? { phone: lead.phone } : {}),
         source: "investoffplan.com",
-        tags: ["investoffplan", `iop-${lead.formType}`],
+        tags: ["investoffplan", `iop-${lead.formType}`, ...(lead.extraTags ?? [])],
         // Lead owner (e.g. Jad) so the contact is owned + GHL notifies the
         // assignee. No-op until GHL_LEAD_OWNER_ID (a GHL user id) is set.
         ...(leadOwnerId ? { assignedTo: leadOwnerId } : {}),

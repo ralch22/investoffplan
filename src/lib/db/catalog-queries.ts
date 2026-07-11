@@ -1,5 +1,6 @@
 import { asc, count, eq, inArray } from "drizzle-orm";
-import { createCatalogApi, type CatalogFile, PAGE_SIZE } from "@/lib/catalog-core";
+import { createCatalogApi, type CatalogFile, type FlatUnit, PAGE_SIZE } from "@/lib/catalog-core";
+import { fetchActivePlacements } from "@/lib/placements";
 import {
   catalogQueryKey,
   decodeCatalogCursor,
@@ -413,6 +414,44 @@ export async function queryCatalogProjects(
   const view = query.view ?? "unit";
   const sort = query.sort ?? "featured";
   const collection = query.collection ?? "all";
+
+  // Paid serp-boost placements: pin to the TOP of the result list (so the top
+  // of page 1) — ONLY in the default "featured" sort. Explicit user sorts
+  // (price/handover/value) are never reordered by paid slots. One row per
+  // placed project is pinned (its first post-filter occurrence — in project
+  // view that's the aggregated row; in unit view the highest-ranked unit),
+  // flagged `placed: true` so the UI renders the ad-disclosure "Featured"
+  // badge. fetchActivePlacements returns [] on any error (or before the
+  // placements migration exists), leaving ordering exactly as today.
+  if (sort === "featured") {
+    const boosts = await fetchActivePlacements(db, "serp-boost");
+    if (boosts.length > 0) {
+      const rankBySlug = new Map<string, number>();
+      for (const boost of boosts) {
+        if (!rankBySlug.has(boost.projectSlug)) {
+          rankBySlug.set(boost.projectSlug, boost.rank);
+        }
+      }
+      const pinned = new Map<string, FlatUnit>();
+      const rest: FlatUnit[] = [];
+      for (const item of items) {
+        const slug = item.project.slug;
+        if (rankBySlug.has(slug) && !pinned.has(slug)) {
+          pinned.set(slug, { ...item, placed: true });
+        } else {
+          rest.push(item);
+        }
+      }
+      if (pinned.size > 0) {
+        const ordered = [...pinned.values()].sort(
+          (a, b) =>
+            (rankBySlug.get(a.project.slug) ?? Number.MAX_SAFE_INTEGER) -
+            (rankBySlug.get(b.project.slug) ?? Number.MAX_SAFE_INTEGER),
+        );
+        items = [...ordered, ...rest];
+      }
+    }
+  }
 
   const total = items.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));

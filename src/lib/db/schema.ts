@@ -148,6 +148,29 @@ export const catalogUnits = sqliteTable(
     index("catalog_units_property_type_idx").on(table.propertyType),
   ],
 );
+/**
+ * Paid featured-placement rails. Separate from `projects` on purpose: the
+ * weekly ingest clobbers projects rows, and a paid slot must survive it.
+ * A placement is active when starts_at <= now < featured_until.
+ */
+export const placements = sqliteTable(
+  "placements",
+  {
+    id: text("id").primaryKey(),
+    projectSlug: text("project_slug").notNull(),
+    surface: text("surface").notNull(),
+    rank: integer("rank").notNull().default(100),
+    startsAt: text("starts_at").notNull(),
+    featuredUntil: text("featured_until").notNull(),
+    leadPriority: integer("lead_priority").notNull().default(1),
+    notes: text("notes"),
+    createdAt: text("created_at").notNull(),
+  },
+  (table) => [
+    index("placements_active_idx").on(table.surface, table.featuredUntil, table.rank),
+  ],
+);
+
 export const leads = sqliteTable(
   "leads",
   {
