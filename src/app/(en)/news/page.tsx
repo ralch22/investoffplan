@@ -8,7 +8,7 @@ import { getHeroImage } from "@/lib/area-images";
 import { getSiteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
-  title: "Latest news",
+  title: "UAE Off-Plan Property News & Market Updates",
   description:
     "UAE off-plan market news, launch updates, and developer announcements from invest off-plan.",
   alternates: { canonical: `${getSiteUrl()}/news` },

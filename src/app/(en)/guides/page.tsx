@@ -9,7 +9,7 @@ import { getCatalogAnalytics } from "@/lib/catalog-analytics";
 import { getSiteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
-  title: "Guides & insights",
+  title: "Dubai Off-Plan Buying Guides & Investor Insights",
   alternates: { canonical: `${getSiteUrl()}/guides` },
   description:
     "Expert guides on UAE off-plan investing, payment plans, Golden Visa, and market intelligence.",

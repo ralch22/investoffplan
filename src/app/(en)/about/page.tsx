@@ -8,7 +8,7 @@ import { getHeroImage } from "@/lib/area-images";
 import { getSiteStats } from "@/lib/catalog";
 
 export const metadata: Metadata = {
-  title: "About us",
+  title: "About invest off-plan — UAE Off-Plan Property Specialists",
   description:
     "Meet the team behind invest off-plan — UAE off-plan intelligence with brochures, compare, and unit-level pricing.",
   alternates: {

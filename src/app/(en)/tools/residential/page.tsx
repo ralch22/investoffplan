@@ -9,7 +9,7 @@ import { getAreas } from "@/lib/catalog";
 import { getHeroImage } from "@/lib/area-images";
 
 export const metadata: Metadata = {
-  title: "Residential insights — project launch pricing",
+  title: "Dubai Residential Insights — Launch Prices & AED/sqft",
   description:
     "Launch-price intelligence per off-plan project — averages, price per sqft, and links to full PDPs.",
 };
