@@ -249,6 +249,12 @@ function InsightsPanel({ lp, dict }: { lp: LP; dict: Dict }) {
       <div>
         <p className={colHead}>{dict.nav.mega.buyerGuides}</p>
         <div className="grid grid-cols-2 gap-0.5">
+          <Link
+            href={lp("/market-report")}
+            className="iop-btn-press focus-ring col-span-2 block rounded-lg px-2 py-1.5 text-sm font-semibold text-brand transition hover:bg-surface-alt"
+          >
+            {dict.nav.marketReport} →
+          </Link>
           {GUIDE_CARDS.filter((g) => g.href.startsWith("/guides/")).map((g) => (
             <Link key={g.slug} href={lp(g.href)} className={megaLink}>{g.title}</Link>
           ))}

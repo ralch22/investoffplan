@@ -72,3 +72,15 @@ export function getDldTotals(): { totalSales: number; areaCount: number } {
   }
   return { totalSales, areaCount };
 }
+
+/**
+ * Every anonymized DLD area (sanitized), tagged with its store `key`, for
+ * market-wide rankings (price-trend movers, coverage). Same sanitize pass as
+ * getAreaStats so implausible yields never leak into an aggregate surface.
+ */
+export function getAllAreaStats(): Array<DldAreaStats & { key: string }> {
+  return Object.keys(store.areas).map((key) => ({
+    key,
+    ...sanitizeStats(store.areas[key]),
+  }));
+}
