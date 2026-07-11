@@ -7,6 +7,8 @@ import { PageHero } from "@/components/page-hero";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { MarketAdviceCta } from "@/components/market-advice-cta";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
+import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
+import { getSiteUrl } from "@/lib/site-url";
 import {
   buildComparisonFaqs,
   buildPros,
@@ -155,6 +157,18 @@ export default async function CompareAreasPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqPageJsonLd(faqs)) }}
         />
       ) : null}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbListJsonLd([
+              { name: "Home", url: getSiteUrl() },
+              { name: "Compare", url: `${getSiteUrl()}/compare` },
+              { name: `${a.area.name} vs ${b.area.name}` },
+            ]),
+          ),
+        }}
+      />
       <PageHero
         title={`${a.area.name} vs ${b.area.name}`}
         italicTitle

@@ -110,6 +110,26 @@ export function buildProjectJsonLd(opts: {
   };
 }
 
+/**
+ * Generic BreadcrumbList JSON-LD builder. Pass the same trail the visible
+ * <Breadcrumbs> component renders (same labels, same order) with absolute
+ * URLs. The final crumb (current page) conventionally omits `item`/url.
+ */
+export function buildBreadcrumbListJsonLd(
+  items: Array<{ name: string; url?: string }>,
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      ...(item.url ? { item: item.url } : {}),
+    })),
+  };
+}
+
 export function buildProjectBreadcrumbJsonLd(opts: {
   projectName: string;
   projectUrl: string;

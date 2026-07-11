@@ -10,6 +10,7 @@ import {
   buildGuideRanking,
   getLocationGuide,
 } from "@/lib/location-guides";
+import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
 
@@ -58,6 +59,18 @@ export default async function LocationGuidePage({ params }: PageProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbListJsonLd([
+              { name: "Home", url: base },
+              { name: "Location guides", url: `${base}/locations` },
+              { name: guide.label },
+            ]),
+          ),
+        }}
       />
       <PageHero title={guide.h1} italicTitle subtitle={guide.intro} />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">

@@ -7,6 +7,7 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import { GUIDE_CARDS, GUIDE_REASONS, getGuide } from "@/lib/figma-copy";
 import { getGuideBody } from "@/content/articles";
 import { ArticleBody } from "@/components/article-body";
+import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
 
@@ -51,8 +52,22 @@ export default async function GuideDetailPage({ params }: PageProps) {
     },
   ];
 
+  const siteUrl = getSiteUrl();
+
   return (
     <PageShell>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            buildBreadcrumbListJsonLd([
+              { name: "Home", url: siteUrl },
+              { name: "Guides", url: `${siteUrl}/guides` },
+              { name: guide.title },
+            ]),
+          ),
+        }}
+      />
       <section className="bg-guide-hero py-16">
         <div className="mx-auto max-w-[800px] px-5 text-center md:px-8">
           <h1 className="font-display text-4xl font-semibold text-text-dark md:text-5xl">
