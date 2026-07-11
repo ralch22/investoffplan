@@ -12,7 +12,7 @@ import { cardEntrance, cardHoverLift } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 import { unoptimizedProp } from "@/lib/asset-image";
 import { useI18n } from "@/i18n/locale-provider";
-import { localePath } from "@/i18n/config";
+import { localePath, interpolate } from "@/i18n/config";
 
 interface ShowcaseProjectCardProps {
   project: Project;
@@ -29,7 +29,7 @@ export function ShowcaseProjectCard({
   priorityImage = false,
   index = 0,
 }: ShowcaseProjectCardProps) {
-  const { locale } = useI18n();
+  const { locale, dict } = useI18n();
   const minPrice = Math.min(...project.units.map((u) => u.launchPriceAed));
   const isSoldOut = project.status === "sold-out";
 
@@ -66,13 +66,13 @@ export function ShowcaseProjectCard({
         <div className="card-photo-overlay absolute inset-0" />
         {isSoldOut ? (
           <span className="absolute start-4 top-4 rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white">
-            Sold out
+            {dict.common.soldOut}
           </span>
         ) : project.paymentPlan ? (
           <PaymentRibbon label={project.paymentPlan} />
         ) : (
           <span className="absolute start-4 top-4 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
-            Coming Soon
+            {dict.common.comingSoon}
           </span>
         )}
       </LocaleLink>
@@ -87,7 +87,7 @@ export function ShowcaseProjectCard({
           />
           {project.handover ? (
             <p className={cn("mt-1 font-display text-sm italic", dark ? "text-white/85" : "text-muted")}>
-              Handover {project.handover}
+              {interpolate(dict.common.handover, { date: project.handover })}
             </p>
           ) : null}
           <h3 className="mt-1 text-lg font-semibold">
@@ -100,14 +100,14 @@ export function ShowcaseProjectCard({
           </h3>
         </div>
         <p className={cn("text-sm font-semibold", dark ? "text-white" : "text-brand")}>
-          from {formatPrice(minPrice, "AED")}
+          {interpolate(dict.common.fromPrice, { price: formatPrice(minPrice, "AED") })}
         </p>
         <div className="flex flex-wrap items-center gap-2">
           <LocaleLink
             href={localePath(locale, `/projects/${project.slug}`)}
             className="iop-btn-press focus-ring rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
           >
-            View Details
+            {dict.common.viewDetails}
           </LocaleLink>
           <FavoriteButton slug={project.slug} />
           {project.coordinates ? (
@@ -120,7 +120,7 @@ export function ShowcaseProjectCard({
                   : "border-border text-muted hover:border-brand hover:text-brand",
               )}
             >
-              View on Map
+              {dict.common.viewOnMap}
             </LocaleLink>
           ) : null}
         </div>

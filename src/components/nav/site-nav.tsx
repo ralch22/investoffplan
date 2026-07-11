@@ -225,10 +225,25 @@ function ToolsPanel({ lp, dict }: { lp: LP; dict: Dict }) {
               href={lp(t.href)}
               className="iop-btn-press focus-ring group rounded-xl p-2.5 transition hover:bg-surface-alt"
             >
-              <span className="block text-sm font-semibold text-text-dark group-hover:text-brand">{t.title}</span>
+              <span className="block text-sm font-semibold text-text-dark group-hover:text-brand">
+                {t.slug === "roi" ? dict.tools.hubLinks.roi : t.title}
+              </span>
               <span className="mt-0.5 block text-xs leading-snug text-muted-light">{t.description}</span>
             </Link>
           ))}
+          {/* Investor Match lives outside DATAGURU_TOOLS (richer standalone card
+              on the hub) — surfaced here so it's reachable + Arabic-labelled. */}
+          <Link
+            href={lp("/tools/investor-match")}
+            className="iop-btn-press focus-ring group rounded-xl p-2.5 transition hover:bg-surface-alt"
+          >
+            <span className="block text-sm font-semibold text-text-dark group-hover:text-brand">
+              {dict.tools.hubLinks.investorMatch}
+            </span>
+            <span className="mt-0.5 block text-xs leading-snug text-muted-light">
+              {dict.tools.investorMatch.card.description}
+            </span>
+          </Link>
         </div>
       </div>
       <div className="border-s border-border ps-8">

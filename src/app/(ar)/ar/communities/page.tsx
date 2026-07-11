@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { getSiteUrl } from "@/lib/site-url";
+import { arMeta } from "@/lib/ar-meta";
 
 // AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
 export { default } from "@/app/(en)/communities/page";
 
-export const metadata: Metadata = (() => {
-  const base = getSiteUrl();
-  return { alternates: { canonical: `${base}/ar/communities`, languages: { en: `${base}/communities`, ar: `${base}/ar/communities` } } };
-})();
+export const metadata: Metadata = arMeta({
+  path: "/communities",
+  title: "المجتمعات العقارية على الخارطة في الإمارات",
+  description:
+    "استكشف مجتمعات العقارات على الخارطة في دبي والإمارات مع عدد المشاريع وأسعار الإطلاق وبيانات دائرة الأراضي والأملاك.",
+});

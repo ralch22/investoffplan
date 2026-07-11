@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import { getSiteUrl } from "@/lib/site-url";
+import { arMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
 
 // AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
 export { default } from "@/app/(en)/tools/investor-match/page";
 
-export const metadata: Metadata = (() => {
-  const base = getSiteUrl();
-  return {
-    alternates: {
-      canonical: `${base}/ar/tools/investor-match`,
-      languages: {
-        en: `${base}/tools/investor-match`,
-        ar: `${base}/ar/tools/investor-match`,
-      },
-    },
-  };
-})();
+const t = getDictionary("ar").tools.investorMatch;
+
+export const metadata: Metadata = arMeta({
+  path: "/tools/investor-match",
+  title: t.metaTitle,
+  description: t.metaDescription,
+});

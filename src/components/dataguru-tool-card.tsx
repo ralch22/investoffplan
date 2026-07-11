@@ -1,4 +1,7 @@
-import Link from "next/link";
+"use client";
+
+import { LocaleLink } from "@/components/locale-link";
+import { useI18n } from "@/i18n/locale-provider";
 import type { DataGuruTool } from "@/lib/dataguru";
 
 interface DataGuruToolCardProps {
@@ -6,8 +9,9 @@ interface DataGuruToolCardProps {
 }
 
 export function DataGuruToolCard({ tool }: DataGuruToolCardProps) {
+  const { dict } = useI18n();
   return (
-    <Link
+    <LocaleLink
       href={tool.href}
       className="group flex flex-col rounded-2xl border border-border bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-brand hover:shadow-md"
     >
@@ -21,11 +25,11 @@ export function DataGuruToolCard({ tool }: DataGuruToolCardProps) {
         {tool.description}
       </p>
       <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand">
-        Open tool
+        {dict.tools.openTool}
         <span aria-hidden className="transition group-hover:translate-x-0.5">
           →
         </span>
       </span>
-    </Link>
+    </LocaleLink>
   );
 }
