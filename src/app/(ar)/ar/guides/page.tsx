@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import { arMeta } from "@/lib/ar-meta";
+import InsightsPage from "@/app/(en)/guides/page";
 
-// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
-export { default } from "@/app/(en)/guides/page";
+// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider;
+// the locale prop keeps guide cards and CTAs in-locale.
+export default function ArabicInsightsPage() {
+  return <InsightsPage locale="ar" />;
+}
 
 export const metadata: Metadata = arMeta({
   path: "/guides",

@@ -9,9 +9,12 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import { getNewsArticle, getNewsArticles } from "@/content/articles";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
+import { localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  /** Set to "ar" by the /ar mirror so links and dates localize. */
+  locale?: Locale;
 }
 
 export function generateStaticParams() {
@@ -37,16 +40,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-function formatDate(iso: string): string {
-  return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
+function formatDate(iso: string, locale: Locale): string {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString(
+    locale === "ar" ? "ar-AE" : "en-GB",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    },
+  );
 }
 
-export default async function NewsArticlePage({ params }: PageProps) {
+export default async function NewsArticlePage({ params, locale = "en" }: PageProps) {
   const { slug } = await params;
   const article = getNewsArticle(slug);
   if (!article) notFound();
@@ -85,7 +91,7 @@ export default async function NewsArticlePage({ params }: PageProps) {
       <section className="bg-guide-hero py-16">
         <div className="mx-auto max-w-[800px] px-5 text-center md:px-8">
           <p className="text-sm font-semibold uppercase tracking-wide text-brand">
-            {formatDate(article.publishedAt)}
+            {formatDate(article.publishedAt, locale)}
           </p>
           <h1 className="mt-3 font-display text-4xl font-semibold text-text-dark md:text-5xl">
             {article.title}
@@ -142,11 +148,11 @@ export default async function NewsArticlePage({ params }: PageProps) {
               {related.map((other) => (
                 <Link
                   key={other.slug}
-                  href={`/news/${other.slug}`}
+                  href={localePath(locale, `/news/${other.slug}`)}
                   className="rounded-2xl border border-border bg-white p-5 transition hover:border-brand hover:shadow-md"
                 >
                   <p className="text-xs font-semibold uppercase tracking-wide text-brand">
-                    {formatDate(other.publishedAt)}
+                    {formatDate(other.publishedAt, locale)}
                   </p>
                   <p className="mt-2 text-sm font-semibold leading-snug text-text-dark">
                     {other.title}

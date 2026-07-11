@@ -2,8 +2,18 @@ import type { Metadata } from "next";
 import { getDeveloper } from "@/lib/catalog";
 import { getSiteUrl } from "@/lib/site-url";
 
-// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
-export { default, generateStaticParams } from "@/app/(en)/developers/[slug]/page";
+import DeveloperDetailPage, { generateStaticParams } from "@/app/(en)/developers/[slug]/page";
+
+// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider;
+// the locale prop localizes links, headings, and labels.
+export { generateStaticParams };
+
+export default function ArabicDeveloperDetailPage(props: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string; sort?: string }>;
+}) {
+  return <DeveloperDetailPage {...props} locale="ar" />;
+}
 
 export async function generateMetadata({
   params,

@@ -5,6 +5,8 @@ import { HoneypotField } from "@/components/honeypot-field";
 import { TurnstileField } from "@/components/turnstile-field";
 import { cn } from "@/lib/cn";
 import { submitLead } from "@/lib/leads-client";
+import { useI18n } from "@/i18n/locale-provider";
+import type { Dict } from "@/i18n";
 
 interface FormState {
   name: string;
@@ -18,12 +20,12 @@ interface FormErrors {
   email?: string;
 }
 
-function validate(values: FormState): FormErrors {
+function validate(values: FormState, t: Dict["footer"]["newsletter"]): FormErrors {
   const errors: FormErrors = {};
-  if (!values.name.trim()) errors.name = "Name is required";
+  if (!values.name.trim()) errors.name = t.nameRequired;
   const email = values.email.trim();
-  if (!email) errors.email = "Email is required";
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = "Enter a valid email";
+  if (!email) errors.email = t.emailRequired;
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = t.emailInvalid;
   return errors;
 }
 
@@ -32,6 +34,8 @@ interface NewsletterFormProps {
 }
 
 export function NewsletterForm({ dark = false }: NewsletterFormProps) {
+  const { dict } = useI18n();
+  const t = dict.footer.newsletter;
   const [values, setValues] = useState<FormState>({ name: "", phone: "", email: "", whatsapp: false });
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
@@ -49,7 +53,7 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setGuardError("");
-    const nextErrors = validate(values);
+    const nextErrors = validate(values, t);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
@@ -69,7 +73,7 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
       return;
     }
     if (!result.ok) {
-      setGuardError(result.error ?? "Unable to subscribe. Please try again.");
+      setGuardError(result.error ?? t.subscribeError);
       // The token was consumed (or stale) — reset the widget so the retry
       // submits a fresh one instead of 403ing forever.
       setTurnstileToken("");
@@ -90,8 +94,9 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
   if (submitted) {
     return (
       <div className={cn("mt-5 rounded-xl p-4 text-center text-sm", dark ? "bg-white/10 text-white/90" : "bg-brand/10 text-brand")}>
-        You&apos;re subscribed — we&apos;ll send launch alerts to{" "}
-        <span className="font-semibold">{values.email.trim()}</span>.
+        {t.successPrefix}{" "}
+        <span className="font-semibold">{values.email.trim()}</span>
+        {t.successSuffix}
       </div>
     );
   }
@@ -101,15 +106,15 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
       onSubmit={handleSubmit}
       className="relative mt-5 space-y-3"
       noValidate
-      aria-label="Newsletter signup"
+      aria-label={t.formAria}
     >
       <HoneypotField value={honeypot} onChange={setHoneypot} />
       <div className="grid grid-cols-2 gap-3">
         <div>
           <input
             type="text"
-            placeholder="Name..."
-            aria-label="Name"
+            placeholder={t.namePlaceholder}
+            aria-label={t.nameLabel}
             autoComplete="name"
             value={values.name}
             onChange={(e) => updateField("name", e.target.value)}
@@ -120,8 +125,8 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
         </div>
         <input
           type="tel"
-          placeholder="Phone..."
-          aria-label="Phone"
+          placeholder={t.phonePlaceholder}
+          aria-label={t.phoneLabel}
           autoComplete="tel"
           value={values.phone}
           onChange={(e) => updateField("phone", e.target.value)}
@@ -131,8 +136,8 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
       <div>
         <input
           type="email"
-          placeholder="Email..."
-          aria-label="Email"
+          placeholder={t.emailPlaceholder}
+          aria-label={t.emailLabel}
           autoComplete="email"
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
@@ -148,7 +153,7 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
           onChange={(e) => updateField("whatsapp", e.target.checked)}
           className="h-4 w-4 rounded accent-brand"
         />
-        Opt-in to receive WhatsApp exclusives
+        {t.whatsappOptIn}
       </label>
       <TurnstileField onToken={setTurnstileToken} action="newsletter" resetSignal={turnstileReset} />
       {guardError ? (
@@ -162,7 +167,7 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
           disabled={submitting}
           className="iop-btn-press inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-60"
         >
-          {submitting ? "Submitting…" : "Submit"}
+          {submitting ? dict.common.submitting : dict.common.submit}
           <svg viewBox="0 0 20 20" className="h-4 w-4 fill-none stroke-current stroke-2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
             <path d="M4 10h12M10 4l6 6-6 6" />
           </svg>

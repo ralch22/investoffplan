@@ -1,6 +1,11 @@
+"use client";
+
 import { NewsletterForm } from "@/components/newsletter-form";
+import { useI18n } from "@/i18n/locale-provider";
 
 export function NewsletterSection() {
+  const { dict } = useI18n();
+  const t = dict.footer.newsletter;
   return (
     <section className="relative overflow-hidden bg-surface-darker text-white">
       <div className="mx-auto grid grid-cols-1 max-w-[1200px] md:grid-cols-2">
@@ -18,10 +23,10 @@ export function NewsletterSection() {
           <div className="absolute inset-0 bg-gradient-to-br from-brand/80 via-surface-dark/70 to-surface-darker/90" />
           <div className="relative p-8 md:p-12">
             <p className="font-display text-[clamp(2rem,4vw,3.5rem)] font-semibold italic leading-tight text-white">
-              Off&#8209;Plan<br />Newsletter.
+              {t.titleLine1}<br />{t.titleLine2}
             </p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/75">
-              Exclusive insights on the latest off-plan opportunities.
+              {t.blurb}
             </p>
           </div>
         </div>

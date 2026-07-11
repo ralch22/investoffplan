@@ -6,6 +6,8 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { getNewsArticles } from "@/content/articles";
 import { getHeroImage } from "@/lib/area-images";
 import { getSiteUrl } from "@/lib/site-url";
+import { getDictionary } from "@/i18n";
+import { localePath, type Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "UAE Off-Plan Property News & Market Updates",
@@ -14,18 +16,29 @@ export const metadata: Metadata = {
   alternates: { canonical: `${getSiteUrl()}/news` },
 };
 
-function formatDate(iso: string): string {
-  return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
+function formatDate(iso: string, locale: Locale): string {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString(
+    locale === "ar" ? "ar-AE" : "en-GB",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+      timeZone: "UTC",
+    },
+  );
 }
 
-export default async function NewsPage() {
+// Also rendered by the /ar mirror with locale="ar" (chrome + RTL come from the
+// AR layout's LocaleProvider) — links and dates localize off this prop.
+export default async function NewsPage({
+  locale = "en",
+}: {
+  locale?: Locale;
+} = {}) {
   const [featured, ...rest] = getNewsArticles();
   const heroImage = await getHeroImage();
+  const dict = getDictionary(locale);
+  const lp = (href: string) => localePath(locale, href);
 
   return (
     <PageShell headerVariant="transparent">
@@ -55,10 +68,10 @@ export default async function NewsPage() {
               style={{ minHeight: "320px" }}
             >
               <p className="text-xs font-semibold uppercase tracking-wide text-brand">
-                {formatDate(featured.publishedAt)}
+                {formatDate(featured.publishedAt, locale)}
               </p>
               <h2 className="mt-2 text-2xl font-semibold md:text-3xl">
-                <Link href={`/news/${featured.slug}`} className="hover:text-brand">
+                <Link href={lp(`/news/${featured.slug}`)} className="hover:text-brand">
                   {featured.title}
                 </Link>
               </h2>
@@ -66,10 +79,10 @@ export default async function NewsPage() {
                 {featured.description}
               </p>
               <Link
-                href={`/news/${featured.slug}`}
+                href={lp(`/news/${featured.slug}`)}
                 className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand hover:text-white"
               >
-                Read More <span aria-hidden>→</span>
+                {dict.news.readMore} <span aria-hidden className="rtl:-scale-x-100">→</span>
               </Link>
             </div>
           </article>
@@ -85,18 +98,18 @@ export default async function NewsPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-surface-darker/95 via-surface-darker/40 to-transparent" />
               <div className="relative flex h-full flex-col justify-end p-6">
                 <p className="text-xs font-semibold uppercase tracking-wide text-brand">
-                  {formatDate(article.publishedAt)}
+                  {formatDate(article.publishedAt, locale)}
                 </p>
                 <h3 className="mt-1 text-lg font-semibold leading-snug">
-                  <Link href={`/news/${article.slug}`} className="hover:text-brand">
+                  <Link href={lp(`/news/${article.slug}`)} className="hover:text-brand">
                     {article.title}
                   </Link>
                 </h3>
                 <Link
-                  href={`/news/${article.slug}`}
+                  href={lp(`/news/${article.slug}`)}
                   className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand hover:text-white"
                 >
-                  Read More <span aria-hidden>→</span>
+                  {dict.news.readMore} <span aria-hidden className="rtl:-scale-x-100">→</span>
                 </Link>
               </div>
             </article>

@@ -309,7 +309,12 @@ export async function HomeBody({ locale }: { locale: Locale }) {
                     </p>
                     <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-light">
                       {dict.home.exploreCommunity}
-                      <span className="transition group-hover:translate-x-0.5" aria-hidden>→</span>
+                      <span
+                        className="transition group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5"
+                        aria-hidden
+                      >
+                        →
+                      </span>
                     </span>
                   </div>
                 </LocaleLink>

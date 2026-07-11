@@ -72,7 +72,7 @@ export function SiteHeader({
 
           <SiteNav solid={showSolidHeader} onOpenChange={setMegaOpen} />
 
-          <div className="ml-auto flex items-center gap-2 sm:gap-3">
+          <div className="ms-auto flex items-center gap-2 sm:gap-3">
             <HeaderSearch solid={showSolidHeader} />
             {/* Favorites — compact heart icon (count badge). Works signed-out
                 via localStorage; also listed in the account menu when signed in. */}

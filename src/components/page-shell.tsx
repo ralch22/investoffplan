@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { AdvisorWidget } from "@/components/advisor/advisor-widget";
 import { BottomTabBar } from "@/components/nav/bottom-tab-bar";
 import { useFavoritesSync } from "@/hooks/use-favorites-sync";
+import { useI18n } from "@/i18n/locale-provider";
 import type { CurrencyCode } from "@/lib/types";
 
 /** Which fixture owns the mobile bottom edge (exactly one). */
@@ -37,6 +38,7 @@ export function PageShell({
   // Server-favorites sync: merges localStorage with the account on sign-in.
   // PageShell mounts per page, but the hook dedupes module-wide per session.
   useFavoritesSync();
+  const { dict } = useI18n();
 
   const [internalCurrency, setInternalCurrency] = useState<CurrencyCode>("AED");
   const currency = currencyProp ?? internalCurrency;
@@ -49,7 +51,7 @@ export function PageShell({
       style={{ "--bottom-dock": DOCK_H[mobileDock] } as React.CSSProperties}
     >
       <a href="#main-content" className="skip-link">
-        Skip to content
+        {dict.a11y.skipToContent}
       </a>
       <SiteHeader
         currency={currency}

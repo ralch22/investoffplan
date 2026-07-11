@@ -36,7 +36,12 @@ export default function LocationGuidesPage() {
               <p className="mt-2 text-sm leading-relaxed text-muted">{guide.intro}</p>
               <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand">
                 See the ranking
-                <span className="transition group-hover:translate-x-0.5" aria-hidden>→</span>
+                <span
+                  className="transition group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5"
+                  aria-hidden
+                >
+                  →
+                </span>
               </span>
             </LocaleLink>
           ))}
