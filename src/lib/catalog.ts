@@ -9,6 +9,12 @@ import { parseFoundedYear } from "./developer-utils";
 import { getActivePlacements } from "./placements";
 import { cityLabel } from "./format";
 import { slugify } from "./slugify";
+import { communitySlugFor } from "./community-slug";
+import { getAreaStats } from "./dld-area-stats";
+import {
+  computeDeveloperProfile,
+  type DeveloperProfile,
+} from "./developer-score";
 import type { DeveloperSummary } from "./types";
 
 export type { DeveloperSummary };
@@ -166,6 +172,68 @@ export async function getDeveloper(slug: string): Promise<DeveloperSummary | nul
 export async function getProjectsByDeveloper(slug: string) {
   const api = await getCatalogApi();
   return api.projects.filter((p) => slugify(p.developer) === slug);
+}
+
+export type { DeveloperProfile };
+
+let cachedProfileNorms: { maxProjectCount: number; maxCommunityCount: number } | null =
+  null;
+
+/**
+ * Catalog-wide maxima used to normalize the Developer Profile scale & reach
+ * sub-metrics. Scans every project once (grouped by developer) and caches the
+ * result for the lifetime of the worker — the catalog is immutable per build.
+ */
+async function getDeveloperProfileNorms(): Promise<{
+  maxProjectCount: number;
+  maxCommunityCount: number;
+}> {
+  if (cachedProfileNorms) return cachedProfileNorms;
+  const api = await getCatalogApi();
+  const projectCounts = new Map<string, number>();
+  const communities = new Map<string, Set<string>>();
+  for (const project of api.projects) {
+    const slug = slugify(project.developer);
+    projectCounts.set(slug, (projectCounts.get(slug) ?? 0) + 1);
+    const set = communities.get(slug) ?? new Set<string>();
+    if (project.area) set.add(communitySlugFor(project.area));
+    communities.set(slug, set);
+  }
+  cachedProfileNorms = {
+    maxProjectCount: Math.max(1, ...projectCounts.values()),
+    maxCommunityCount: Math.max(
+      1,
+      ...[...communities.values()].map((set) => set.size),
+    ),
+  };
+  return cachedProfileNorms;
+}
+
+/**
+ * Data-derived Developer PROFILE for a developer slug — NOT a quality/delivery
+ * rating (see developer-score.ts). Computed at request time from the OWN
+ * off-plan catalog + official 2025 DLD area medians; no cookies/headers, so it
+ * stays ISR-friendly. Returns null when the developer has no listed projects.
+ */
+export async function getDeveloperProfile(
+  slug: string,
+): Promise<DeveloperProfile | null> {
+  const projects = await getProjectsByDeveloper(slug);
+  if (projects.length === 0) return null;
+  const { maxProjectCount, maxCommunityCount } = await getDeveloperProfileNorms();
+  return computeDeveloperProfile({
+    projects: projects.map((p) => ({
+      area: p.area,
+      paymentPlan: p.paymentPlan,
+      units: p.units.map((u) => ({
+        launchPriceAed: u.launchPriceAed,
+        sqftMin: u.sqftMin,
+      })),
+    })),
+    maxProjectCount,
+    maxCommunityCount,
+    areaMedianPpsqft: (area) => getAreaStats(area)?.medianPpsqft ?? null,
+  });
 }
 
 export async function getAreas(): Promise<AreaSummary[]> {

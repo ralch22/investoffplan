@@ -9,8 +9,14 @@ import { DeveloperContactPanel } from "@/components/developer-contact-panel";
 import { DeveloperLogo } from "@/components/developer-logo";
 import { DeveloperPaginationLinks } from "@/components/developer-pagination-links";
 import { DeveloperProjectCard } from "@/components/developer-project-card";
+import { DeveloperProfilePanel } from "@/components/developer-profile-panel";
 import { DeveloperSortControl } from "@/components/developer-sort-control";
-import { getDeveloper, getDevelopers, getProjectsByDeveloper } from "@/lib/catalog";
+import {
+  getDeveloper,
+  getDeveloperProfile,
+  getDevelopers,
+  getProjectsByDeveloper,
+} from "@/lib/catalog";
 import { developerDescription, sortDeveloperProjects } from "@/lib/developer-utils";
 import {
   buildDeveloperItemListJsonLd,
@@ -52,6 +58,7 @@ export default async function DeveloperDetailPage({
   const sort = (query.sort as SortOption | undefined) ?? "featured";
   const page = Math.max(1, Number(query.page ?? "1") || 1);
   const projects = await getProjectsByDeveloper(slug);
+  const profile = await getDeveloperProfile(slug);
   const sorted = sortDeveloperProjects(projects, sort);
   const totalPages = Math.max(1, Math.ceil(sorted.length / DEVELOPER_PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -164,6 +171,15 @@ export default async function DeveloperDetailPage({
             sort={sort}
           />
         </section>
+
+        {profile ? (
+          <div className="mt-12">
+            <DeveloperProfilePanel
+              developerName={developer.name}
+              profile={profile}
+            />
+          </div>
+        ) : null}
       </main>
 
       <DeveloperAboutSection

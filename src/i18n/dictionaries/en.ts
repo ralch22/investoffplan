@@ -565,6 +565,50 @@ const dict = {
       "assumptionReturnBase": "Return % is measured against total capital deployed (price + DLD fee if included).",
       "disclaimer": "Illustrative estimate from your inputs + 2025 DLD market data — not financial advice; verify independently."
     }
+  },
+  "developers": {
+    "profile": {
+      "heading": "Developer profile",
+      "subtitle": "A data-derived profile of this developer's off-plan catalog — not a quality or delivery rating.",
+      "tierLabel": "Catalog scale",
+      "notRanking": "A size-and-positioning snapshot — not a ranking of quality, reliability, or delivery.",
+      "tiers": {
+        "established": "Large portfolio",
+        "growing": "Mid-size portfolio",
+        "boutique": "Boutique portfolio"
+      },
+      "metrics": {
+        "portfolioScale": "Portfolio scale",
+        "geographicReach": "Geographic reach",
+        "buyerTerms": "Buyer-friendly terms",
+        "marketPositioning": "Market positioning"
+      },
+      "metricHints": {
+        "portfolioScale": "Off-plan projects in our catalog: {count}",
+        "geographicReach": "Communities built in: {count}",
+        "buyerTerms": "{count} of {total} with a post-handover plan",
+        "marketPositioning": "Median AED/sqft vs DLD area medians"
+      },
+      "positioning": {
+        "premium": "Premium",
+        "midMarket": "Mid-market",
+        "value": "Value"
+      },
+      "positioningNote": "Price positioning only — where their pricing sits versus the areas they build in — not quality or value for money.",
+      "positioningUnavailable": "Not enough DLD coverage in this developer's communities to place their pricing.",
+      "methodologyToggle": "How this profile is calculated",
+      "methodologyIntro": "Every figure is computed from data we hold — the developer's own off-plan catalog and official 2025 Dubai Land Department (DLD) records. Inputs:",
+      "inputs": {
+        "scale": "Portfolio scale — {count} projects, log-scaled against the largest catalog developer.",
+        "reach": "Geographic reach — {count} distinct communities, log-scaled against the widest-reaching developer.",
+        "terms": "Buyer-friendly terms — {count} of {total} projects publish a post-handover payment plan.",
+        "positioning": "Market positioning — median AED {devMedian}/sqft vs a AED {marketMedian}/sqft median across the {areas} communities with DLD data.",
+        "positioningNone": "Market positioning — excluded: none of this developer's communities have DLD coverage.",
+        "composite": "Catalog scale index — weighted average (scale {scaleW}%, reach {reachW}%, terms {termsW}%, positioning {positioningW}%), renormalized when positioning is unavailable. It reflects the size and pricing of the current off-plan catalog only — not delivery history."
+      },
+      "disclaimer": "This profile is derived only from the size and market positioning of this developer's off-plan catalog and 2025 Dubai Land Department data for the areas they build in. It is not a rating of construction quality, delivery timeliness, or financial stability.",
+      "source": "Sources: invest off-plan catalog · Dubai Land Department open data (2025)."
+    }
   }
 } as const;
 
