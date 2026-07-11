@@ -13,12 +13,16 @@ import "./globals.css";
  * (ar)/ar — so Next's 404 render tree (which only looks at root-segment
  * components) has no layout and used to fall back to the bare
  * `<html id="__next_error__">` shell with no lang/dir. This file IS the root
- * layout for unmatched URLs, so /ar/* 404s render Arabic copy inside a proper
- * RTL document and everything else gets the branded EN 404 — both with a real
- * 404 status (the old (en)/[...not-found] and (ar)/ar/[...not-found]
+ * layout for unmatched URLs, so a 404 renders inside a proper document with a
+ * real 404 status (the old (en)/[...not-found] and (ar)/ar/[...not-found]
  * catch-alls are gone; unmatched URLs land here directly).
  *
- * Locale detection: src/proxy.ts stamps `x-iop-locale: ar` on /ar requests.
+ * Locale detection: no middleware (Node.js middleware isn't supported on the
+ * Cloudflare Workers deploy target). global-not-found can't see the request
+ * pathname, so we fall back to Accept-Language — an Arabic-preferring browser
+ * gets the RTL Arabic 404, everyone else the branded EN one. Both are a real
+ * branded 404; getting the exact URL-locale is secondary to not shipping the
+ * bare `__next_error__` shell.
  */
 
 const inter = Inter({
@@ -69,8 +73,8 @@ const COPY = {
 
 export default async function GlobalNotFound() {
   const requestHeaders = await headers();
-  const locale: Locale =
-    requestHeaders.get("x-iop-locale") === "ar" ? "ar" : "en";
+  const acceptLanguage = requestHeaders.get("accept-language") ?? "";
+  const locale: Locale = /(^|,|\s)ar\b/i.test(acceptLanguage) ? "ar" : "en";
   const t = COPY[locale];
 
   return (
