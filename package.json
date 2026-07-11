@@ -44,13 +44,15 @@
   "dependencies": {
     "@next/third-parties": "^16.2.10",
     "@opennextjs/cloudflare": "^1.20.1",
+    "better-auth": "^1.6.23",
     "drizzle-orm": "^0.45.2",
     "framer-motion": "^12.42.2",
     "leaflet": "^1.9.4",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-leaflet": "^5.0.0"
+    "react-leaflet": "^5.0.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",

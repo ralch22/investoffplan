@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { SignInModal } from "@/components/auth/sign-in-modal";
+import { useSession } from "@/lib/auth/client";
 import { BrandLogo } from "@/components/brand-logo";
 import { CurrencySelector } from "@/components/currency-selector";
 import { LanguageSwitcher } from "@/components/language-switcher";
@@ -145,6 +147,7 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
                       </li>
                     );
                   })}
+                  {group.labelKey === "more" ? <MobileAuthRow onClose={onClose} /> : null}
                 </ul>
               </div>
             ))}
@@ -168,5 +171,35 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
         </nav>
       ) : null}
     </dialog>
+  );
+}
+
+// Sign in / Account row in the drawer's "More" group. Session state resolves
+// client-side only (useSession) so the drawer stays static-render safe.
+function MobileAuthRow({ onClose }: { onClose: () => void }) {
+  const { locale, dict } = useI18n();
+  const { data: session } = useSession();
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const rowClass =
+    "iop-btn-press focus-ring block w-full rounded-xl px-4 py-2.5 text-start text-sm font-medium text-muted transition hover:bg-surface-alt hover:text-text-dark";
+
+  if (session?.user) {
+    return (
+      <li>
+        <Link href={localePath(locale, "/account")} onClick={onClose} className={rowClass}>
+          {dict.auth.account}
+        </Link>
+      </li>
+    );
+  }
+
+  return (
+    <li>
+      <button type="button" onClick={() => setModalOpen(true)} className={rowClass}>
+        {dict.auth.signIn}
+      </button>
+      <SignInModal open={modalOpen} onClose={() => setModalOpen(false)} />
+    </li>
   );
 }

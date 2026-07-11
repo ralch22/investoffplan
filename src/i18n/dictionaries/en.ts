@@ -414,6 +414,36 @@ const dict = {
     "starterProjects": "Show me 2-beds under AED 2M in Dubai",
     "starterAreas": "Which areas have the most launches?",
     "starterProcess": "How does buying off-plan work?"
+  },
+  "auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "account": "Account",
+    "modalTitle": "Sign in to invest off-plan",
+    "modalSubtitle": "Save favorites and searches across your devices.",
+    "continueWithGoogle": "Continue with Google",
+    "or": "or",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "sendLink": "Email me a sign-in link",
+    "sending": "Sending…",
+    "sentTitle": "Check your inbox",
+    "sentBody": "We sent a sign-in link to {email}. It expires in a few minutes.",
+    "tryAgain": "Use a different email",
+    "invalidEmail": "Enter a valid email address.",
+    "error": "Couldn't send the link — please try again.",
+    "close": "Close sign in",
+    "menuAria": "Account menu",
+    "signedInAs": "Signed in as",
+    "accountTitle": "My account",
+    "accountSubtitle": "Manage your profile and saved items.",
+    "profile": "Profile",
+    "nameLabel": "Name",
+    "savedSearches": "Saved searches",
+    "favoritesSection": "Favorites",
+    "comingSoon": "Coming soon",
+    "notSignedIn": "You're not signed in.",
+    "loading": "Loading…"
   }
 } as const;
 
