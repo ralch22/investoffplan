@@ -3,56 +3,61 @@ import { cityLabel } from "@/lib/format";
 import { communitySlugFor } from "@/lib/community-slug";
 import { slugify } from "@/lib/slugify";
 import type { Project } from "@/lib/types";
+import { getDictionary } from "@/i18n";
+import { interpolate, type Locale } from "@/i18n/config";
 
 interface ProjectKeyFactsProps {
   project: Project;
+  locale?: Locale;
 }
 
-export function ProjectKeyFacts({ project }: ProjectKeyFactsProps) {
+export function ProjectKeyFacts({ project, locale = "en" }: ProjectKeyFactsProps) {
+  const dict = getDictionary(locale);
+  const kf = dict.pdp.keyFacts;
   const propertyTypes = [
     ...new Set(project.units.map((u) => u.propertyType)),
   ].map((t) => t.charAt(0).toUpperCase() + t.slice(1));
 
   const paymentLabel =
     project.paymentPlanCount && project.paymentPlanCount > 1
-      ? `See ${project.paymentPlanCount} payment plans`
-      : project.paymentPlan?.trim() || "On request";
+      ? interpolate(kf.seePaymentPlans, { count: project.paymentPlanCount })
+      : project.paymentPlan?.trim() || kf.onRequest;
 
   const facts = [
     {
-      label: "Delivery date",
-      value: project.handover ?? "To be announced",
+      label: kf.deliveryDate,
+      value: project.handover ?? kf.toBeAnnounced,
     },
     {
-      label: "Location",
+      label: kf.location,
       value: `${cityLabel(project.city)}, ${project.area}`,
       href: `/communities/${communitySlugFor(project.area)}`,
     },
     {
-      label: "Payment plan",
+      label: kf.paymentPlan,
       value: paymentLabel,
       href: "#calculator",
     },
     {
-      label: "Property types",
+      label: kf.propertyTypes,
       value: propertyTypes.join(", "),
     },
     {
-      label: "Government fee",
-      value: "4% DLD",
+      label: kf.governmentFee,
+      value: kf.governmentFeeValue,
     },
     {
-      label: "Ownership type",
-      value: "Freehold",
+      label: kf.ownershipType,
+      value: kf.freehold,
     },
     {
-      label: "Developer",
+      label: kf.developer,
       value: project.developer,
       href: `/developers/${slugify(project.developer)}`,
     },
     {
-      label: "Status",
-      value: formatStatus(project.status),
+      label: kf.status,
+      value: formatStatus(project.status, kf),
     },
   ];
 
@@ -62,7 +67,7 @@ export function ProjectKeyFacts({ project }: ProjectKeyFactsProps) {
         id="key-information-heading"
         className="font-display text-2xl font-semibold text-text-dark md:text-3xl"
       >
-        Key <em className="italic">information</em>
+        {kf.headingLead} <em className="italic">{kf.headingEm}</em>
       </h2>
       <dl className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {facts.map((fact) => (
@@ -89,15 +94,23 @@ export function ProjectKeyFacts({ project }: ProjectKeyFactsProps) {
   );
 }
 
-function formatStatus(status: Project["status"]): string {
+function formatStatus(
+  status: Project["status"],
+  kf: {
+    statusSoldOut: string;
+    statusUnderConstruction: string;
+    statusReady: string;
+    statusOffPlan: string;
+  },
+): string {
   switch (status) {
     case "sold-out":
-      return "Sold out";
+      return kf.statusSoldOut;
     case "under-construction":
-      return "Under construction";
+      return kf.statusUnderConstruction;
     case "ready":
-      return "Ready";
+      return kf.statusReady;
     default:
-      return "Off-plan";
+      return kf.statusOffPlan;
   }
 }

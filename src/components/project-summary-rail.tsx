@@ -8,6 +8,8 @@ import {
   WHATSAPP_PRIMARY_DISPLAY,
   waHref,
 } from "@/lib/contact-info";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 interface ProjectSummaryRailProps {
   projectName: string;
@@ -33,6 +35,8 @@ export function ProjectSummaryRail({
   brochureUrl,
 }: ProjectSummaryRailProps) {
   const [brochureOpen, setBrochureOpen] = useState(false);
+  const { dict } = useI18n();
+  const summary = dict.pdp.summary;
 
   const projectWhatsappHref = `https://wa.me/${whatsapp.replace(/\D/g, "")}`;
   const advisorText = `Hi, I'd like to speak to your off-plan team about ${projectName}.`;
@@ -46,16 +50,16 @@ export function ProjectSummaryRail({
   }
 
   const summaryRows = [
-    { label: "Payment plan", value: paymentPlan },
-    { label: "Delivery", value: handover },
-    { label: "Units", value: String(unitCount) },
+    { label: dict.pdp.keyFacts.paymentPlan, value: paymentPlan },
+    { label: summary.delivery, value: handover },
+    { label: summary.units, value: String(unitCount) },
   ];
 
   return (
     <>
       <div className="rounded-2xl border border-border bg-surface p-5 shadow-elevation-sm">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted-light">
-          Starting from
+          {summary.startingFrom}
         </p>
         <p className="mt-1 text-2xl font-semibold text-brand">{priceLabel}</p>
         {pricePerSqft ? (
@@ -82,7 +86,7 @@ export function ProjectSummaryRail({
             onClick={() => setBrochureOpen(true)}
             className="iop-btn-press focus-ring inline-flex items-center justify-center rounded-full bg-brand px-4 py-3 text-sm font-semibold text-white transition hover:bg-brand-dark"
           >
-            Download brochure
+            {dict.pdp.cta.downloadBrochure}
           </button>
           <a
             href={projectWhatsappHref}
@@ -92,18 +96,17 @@ export function ProjectSummaryRail({
             className="iop-btn-press focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-sm font-semibold text-white shadow-elevation-sm transition hover:bg-[#1ebe57]"
           >
             <WhatsAppIcon />
-            WhatsApp us
+            {summary.whatsappUs}
           </a>
         </div>
       </div>
 
       <div className="mt-4 rounded-2xl border border-border bg-brand-muted/40 p-5">
         <p className="text-base font-semibold text-text-dark">
-          Speak to our off-plan team
+          {summary.speakTeam}
         </p>
         <p className="mt-2 text-sm text-muted">
-          Our Dubai off-plan specialists can share availability, floor plans, and
-          the latest payment plans for {projectName}. No pressure, just answers.
+          {interpolate(summary.teamBody, { name: projectName })}
         </p>
         <a
           href={advisorHref}

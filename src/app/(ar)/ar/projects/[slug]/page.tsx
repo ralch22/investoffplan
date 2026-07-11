@@ -3,9 +3,20 @@ import { getProjectBySlug } from "@/lib/catalog";
 import { getSiteUrl } from "@/lib/site-url";
 
 // Reuse the EN project detail page under /ar — chrome + RTL come from the AR
-// layout's LocaleProvider. Metadata builds a localized Arabic title per project
-// with AR canonical + hreflang.
-export { default, generateStaticParams } from "@/app/(en)/projects/[slug]/page";
+// layout's LocaleProvider, and the locale="ar" prop threads the Arabic
+// dictionary into the server page + its server children. Metadata builds a
+// localized Arabic title per project with AR canonical + hreflang.
+import ProjectDetailPage, {
+  generateStaticParams,
+} from "@/app/(en)/projects/[slug]/page";
+
+export { generateStaticParams };
+
+export default function ArabicProjectDetailPage(props: {
+  params: Promise<{ slug: string }>;
+}) {
+  return <ProjectDetailPage {...props} locale="ar" />;
+}
 
 // Route config can't be re-exported (must be statically parseable) — keep in
 // sync with the EN page: fully-baked catalog, unknown slug = real 404.
