@@ -40,6 +40,11 @@ export interface FlatUnit {
   project: Project;
   unit: UnitType;
   catalog?: CatalogUnit;
+  /**
+   * True when this item was pinned by a PAID serp-boost placement (not organic
+   * isPremium). The UI must visibly label these ("Featured") — ad disclosure.
+   */
+  placed?: boolean;
 }
 
 export interface CatalogApi {

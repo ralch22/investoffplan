@@ -35,6 +35,12 @@ interface ProjectCardProps {
   onCompareToggle: (id: CompareUnitId) => void;
   layout?: "grid" | "list";
   featured?: boolean;
+  /**
+   * True when this card was surfaced by a PAID placement (serp-boost). Renders
+   * the existing Premium label style with the text "Featured" — paid slots are
+   * always visibly labeled (ad disclosure).
+   */
+  placed?: boolean;
   index?: number;
 }
 
@@ -45,6 +51,7 @@ export function ProjectCard({
   onCompareToggle,
   layout = "grid",
   featured = false,
+  placed = false,
   index = 0,
 }: ProjectCardProps) {
   const [brochureOpen, setBrochureOpen] = useState(false);
@@ -57,7 +64,14 @@ export function ProjectCard({
   const brochureUrl = resolveBrochureUrl(project);
   const ppsf = unitPricePerSqft({ project, unit, catalog });
   const paymentLabel = catalog?.paymentPlan || project.paymentPlan || "Payment Plan";
-  const statusLabel = isSoldOut ? "Sold out" : project.isPremium ? "Premium" : "Available";
+  const isPlaced = placed || Boolean(item.placed);
+  const statusLabel = isSoldOut
+    ? "Sold out"
+    : isPlaced
+      ? "Featured"
+      : project.isPremium
+        ? "Premium"
+        : "Available";
   const unitCount = catalog?.projectUnitCount ?? project.unitCount;
   const unitTypeLabel = unit.propertyType.toLowerCase();
 

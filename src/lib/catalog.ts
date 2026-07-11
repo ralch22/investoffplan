@@ -6,6 +6,7 @@ import { createCatalogApi, type CatalogApi, type CatalogFile } from "./catalog-c
 import { getDb } from "./db/client";
 import { fetchCatalogFile, fetchProjectBySlug as dbFetchProject } from "./db/catalog-queries";
 import { parseFoundedYear } from "./developer-utils";
+import { getActivePlacements } from "./placements";
 import { cityLabel } from "./format";
 import { slugify } from "./slugify";
 import type { DeveloperSummary } from "./types";
@@ -212,14 +213,42 @@ export async function getFeaturedProjects(limit = 4) {
   // Editorial ordering: explicit featuredRank first (ascending), then the
   // remaining premium pool in catalog order. Previously featuredRank was
   // ignored entirely.
-  return [...api.projects]
+  const pool = [...api.projects]
     .filter((p) => p.isPremium || p.featuredRank != null)
     .sort(
       (a, b) =>
         (a.featuredRank ?? Number.MAX_SAFE_INTEGER) -
         (b.featuredRank ?? Number.MAX_SAFE_INTEGER),
-    )
-    .slice(0, limit);
+    );
+
+  // Paid home-featured placements overlay — RUNTIME only. At static build
+  // (NEXT_IS_BUILD=1) there is no D1 context, so the build keeps the editorial
+  // pool exactly as before; at runtime, active placements (by rank) are pinned
+  // first and the editorial pool backfills to `limit`. getActivePlacements
+  // returns [] on any error, so behavior degrades to today's exactly.
+  // NOTE: the homepage is ISR (revalidate 3600), so a new/expired placement
+  // surfaces within <=1 hour of the change — not instantly.
+  if (process.env.NEXT_IS_BUILD !== "1") {
+    const placements = await getActivePlacements("home-featured");
+    if (placements.length > 0) {
+      const bySlug = new Map(api.projects.map((p) => [p.slug, p]));
+      const placed: typeof pool = [];
+      const seen = new Set<string>();
+      for (const placement of placements) {
+        // Skip unknown slugs (e.g. project dropped by a re-ingest) and dupes.
+        const project = bySlug.get(placement.projectSlug);
+        if (!project || seen.has(project.slug)) continue;
+        seen.add(project.slug);
+        placed.push(project);
+      }
+      if (placed.length > 0) {
+        const backfill = pool.filter((p) => !seen.has(p.slug));
+        return [...placed, ...backfill].slice(0, limit);
+      }
+    }
+  }
+
+  return pool.slice(0, limit);
 }
 
 /**

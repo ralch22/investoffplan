@@ -3,6 +3,7 @@ import { and, eq, inArray, isNull, lt, or, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db/client";
 import { leads } from "@/lib/db/schema";
 import { forwardLeadToGhl, isGhlConfigured } from "@/lib/ghl";
+import { getPlacementLeadBoost } from "@/lib/placements";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +52,9 @@ export async function POST(request: Request) {
 
   let sent = 0;
   for (const row of rows) {
+    // Re-derive paid-placement tagging identically to the live pipeline
+    // (/api/leads) so a retried lead reaches GHL with the same tags/prefix.
+    const boost = await getPlacementLeadBoost(row.projectSlug);
     const result = await forwardLeadToGhl({
       formType: row.formType,
       name: row.name ?? undefined,
@@ -59,6 +63,8 @@ export async function POST(request: Request) {
       message: row.message ?? undefined,
       projectSlug: row.projectSlug ?? undefined,
       pagePath: row.pagePath ?? undefined,
+      extraTags: boost?.extraTags,
+      opportunityNamePrefix: boost?.opportunityNamePrefix,
     });
     if (result.status === "sent") sent += 1;
     await db
