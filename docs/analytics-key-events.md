@@ -4,7 +4,7 @@ All custom events go through `trackEvent()` in `src/lib/analytics.ts`, which no-
 unless `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set at build time. Event names live in the
 `ANALYTICS_EVENTS` constant — never call `gtag`/`dataLayer` directly.
 
-## Event catalog (15 events)
+## Event catalog (16 events)
 
 | Event name | Params | Where fired | GA4 key event |
 |---|---|---|---|
@@ -19,6 +19,7 @@ unless `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set at build time. Event names live in
 | `search_suggest_click` | `suggestion`, `position` (planned) | Reserved — wire into search suggestions when built | — |
 | `quiz_complete` | `result`, `steps` (planned) | Reserved — investor-profile quiz | ✅ **Mark as key event** (once wired) |
 | `roi_calc` | `price`, `yield` (planned) | Reserved — PDP ROI calculator interaction | — |
+| `roi_calculate` | `price`, `yield`, `years`, `community` | `src/components/roi-estimator.tsx` — fired (debounced ~500ms) once inputs settle on `/tools/roi` | — |
 | `alert_subscribe` | `channel`, `topic` (planned) | Reserved — price/launch alert opt-in | ✅ **Mark as key event** (once wired) |
 | `pdp_section_view` | `section_id` | `src/components/section-view-tracker.tsx`, mounted on the PDP (`src/app/(en)/projects/[slug]/page.tsx`) — once per section per page view at 40% visibility | — |
 | `sign_in` | `method` (planned) | Reserved — account sign-in | — |
