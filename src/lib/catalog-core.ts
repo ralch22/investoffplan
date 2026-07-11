@@ -84,6 +84,120 @@ function stripTrailingDeveloperName(name: string, developer?: string): string {
   return name.replace(new RegExp(`\\s+by\\s+${esc}\\s*$`, "i"), "").trim() || name;
 }
 
+/** Case/accent-insensitive comparison key (so "Émerge" === "Emerge"). */
+function foldKey(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
+/**
+ * PF's location breadcrumb frequently repeats the project name as its trailing
+ * comma-segment ("Al Marjan Island, Arthouse Residences", "Meydan, Meydan
+ * Avenue, Émerge Residences") — the building name leaks into the location
+ * string. This is systematic across the PF catalog (~337 of 767 rows), so fix
+ * it deterministically at the single read chokepoint every server/client
+ * catalog read flows through rather than hand-editing rows. Only strips the last
+ * segment when it equals the project name (accent/case-insensitive) AND at least
+ * one location segment remains, so the field is never emptied and real
+ * sub-community names are preserved.
+ */
+export function stripTrailingProjectNameFromArea(
+  area: string | undefined,
+  name: string,
+): string {
+  if (!area) return area ?? "";
+  const parts = area.split(",").map((s) => s.trim()).filter(Boolean);
+  if (parts.length > 1 && foldKey(parts[parts.length - 1]) === foldKey(name)) {
+    parts.pop();
+  }
+  return parts.join(", ") || area;
+}
+
+/**
+ * Short, deterministic developer token used to disambiguate a colliding slug
+ * ("Aviaan Real Estate Development" → "aviaan", "Elysian Development" →
+ * "elysian"). First word of the developer slug; falls back to the full slug.
+ */
+function developerToken(developer?: string): string {
+  const s = slugify(developer ?? "");
+  return s.split("-")[0] || s;
+}
+
+/**
+ * Give a colliding project a distinct, deterministic, still-readable slug so
+ * BOTH twins get a reachable URL instead of one being silently dropped. Tries a
+ * short developer token first, then the full developer slug, then a numeric
+ * suffix — always returning something not already in `taken`.
+ */
+function disambiguateSlug(
+  base: string,
+  developer: string | undefined,
+  taken: Set<string>,
+): string {
+  const token = developerToken(developer);
+  const candidates = [token && `${base}-${token}`, `${base}-${slugify(developer ?? "")}`];
+  for (const c of candidates) {
+    if (c && !c.endsWith("-") && !taken.has(c)) return c;
+  }
+  let i = 2;
+  while (taken.has(`${base}-${token || "dup"}-${i}`)) i++;
+  return `${base}-${token || "dup"}-${i}`;
+}
+
+export interface SlugResolution<T> {
+  /** Projects to keep, each carrying its final (possibly disambiguated) slug. */
+  kept: T[];
+  /** projectId → final slug, for callers that link units back to a project. */
+  slugByProjectId: Map<string, string>;
+  /** Ids of the kept projects (units of dropped projects should be filtered). */
+  keptProjectIds: Set<string>;
+}
+
+/**
+ * Drop placeholder listings and resolve slug collisions so BOTH the static
+ * build (catalog.json), the D1 seed, and every client read agree on the same
+ * set of reachable, distinct slugs.
+ *
+ * - The FIRST project to claim a slug keeps it unchanged (existing URL / SEO is
+ *   preserved for the winner).
+ * - A genuinely different project (different id) that wants an already-taken
+ *   slug is DISAMBIGUATED (given a distinct slug) rather than dropped — the old
+ *   behaviour silently discarded the twin and made its inventory unreachable.
+ * - The bait-and-switch guard is kept for TRUE duplicates: a repeated row with
+ *   an id already kept is dropped (an identical project accidentally listed
+ *   twice — same id — must not spawn a second page).
+ *
+ * Deterministic: same input ordering → same slugs every build. Idempotent: run
+ * again over already-disambiguated rows (e.g. D1 reads after the seed applied
+ * the same resolution) and nothing changes.
+ */
+export function resolveProjectSlugs<
+  T extends { id: string; slug: string; developer?: string; name: string },
+>(rawProjects: T[]): SlugResolution<T> {
+  const seenSlugs = new Set<string>();
+  const keptProjectIds = new Set<string>();
+  const slugByProjectId = new Map<string, string>();
+  const kept: T[] = [];
+  for (const p of rawProjects) {
+    if (isPlaceholderProject(p.name)) continue;
+    // True duplicate: this exact project id was already kept. Drop it (the twin
+    // resolution below only fires for DIFFERENT ids sharing a slug).
+    if (keptProjectIds.has(p.id)) continue;
+    let slug = p.slug;
+    if (seenSlugs.has(slug)) {
+      slug = disambiguateSlug(p.slug, p.developer, seenSlugs);
+    }
+    seenSlugs.add(slug);
+    keptProjectIds.add(p.id);
+    slugByProjectId.set(p.id, slug);
+    kept.push(slug === p.slug ? p : ({ ...p, slug } as T));
+  }
+  return { kept, slugByProjectId, keptProjectIds };
+}
+
 function normalizeProject(p: Project & { citySlug?: string }): Project {
   const slug = (p.citySlug || p.city) as Project["city"];
   const pfFaqs = p.pfFaqs ? sanitizePfFaqs(p.pfFaqs) : undefined;
@@ -95,9 +209,11 @@ function normalizeProject(p: Project & { citySlug?: string }): Project {
   const hy = handoverYear(p.handover);
   const status: Project["status"] =
     p.status === "off-plan" && hy != null && hy < 2026 ? "ready" : p.status;
+  const name = stripTrailingDeveloperName(p.name, p.developer);
   return {
     ...p,
-    name: stripTrailingDeveloperName(p.name, p.developer),
+    name,
+    area: stripTrailingProjectNameFromArea(p.area, name),
     status,
     city: slug,
     imageGradient: p.imageGradient ?? "from-slate-800 via-slate-600 to-sky-700",
@@ -149,21 +265,14 @@ export function isPlaceholderProject(name: string): boolean {
 }
 
 export function createCatalogApi(raw: CatalogFile): CatalogApi {
-  // Drop placeholder listings and de-duplicate by slug (first occurrence wins —
-  // identical to the D1 seed's rule, so static build, D1, and the client all
-  // agree). Two different projects previously shared one URL (arthouse-residences
-  // = Cledor + Aviaan; emerge-residences = NAAS + Elysian): the losing card
-  // still rendered at a bait-and-switch price and linked to the other project's
-  // PDP. Its units are dropped too so SERP unit rows can't resurface it.
-  const seenSlugs = new Set<string>();
-  const keptProjectIds = new Set<string>();
-  const rawProjects = raw.projects.filter((p) => {
-    if (isPlaceholderProject(p.name)) return false;
-    if (seenSlugs.has(p.slug)) return false;
-    seenSlugs.add(p.slug);
-    keptProjectIds.add(p.id);
-    return true;
-  });
+  // Drop placeholder listings and resolve slug collisions (identical rule to the
+  // D1 seed, so static build, D1, and the client all agree). Two DIFFERENT
+  // projects previously shared one URL (arthouse-residences = Cledor + Aviaan;
+  // emerge-residences = NAAS + Elysian): first-wins silently DROPPED the twin,
+  // making its inventory unreachable. Now the twin is disambiguated to a
+  // distinct slug so both are reachable, while the winner's slug is preserved
+  // and true duplicates (same id repeated) are still dropped.
+  const { kept: rawProjects, keptProjectIds } = resolveProjectSlugs(raw.projects);
   const projects = rawProjects.map((p) =>
     normalizeProject(p as Project & { citySlug?: string }),
   );
