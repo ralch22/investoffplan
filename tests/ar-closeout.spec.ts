@@ -47,17 +47,30 @@ test.describe("AR close-out", () => {
     expect(html).toContain('dir="rtl"');
   });
 
-  test("a bogus /ar/* URL 404s in-locale (Arabic not-found)", async ({ page }) => {
-    const response = await page.goto("/ar/does-not-exist", { waitUntil: "commit" });
-    expect(response?.status()).toBe(404);
-    const html = await response!.text();
-    // The 404 stays IN ARABIC — Arabic not-found title + og:locale + noindex.
-    // (Next renders truly-unmatched routes in a global `<html id="__next_error__">`
-    // error shell that bypasses the locale layout's lang attribute, so we assert
-    // on the Arabic content/metadata that IS present rather than the html lang.)
-    expect(html).toContain("الصفحة غير موجودة"); // "page not found" in Arabic
-    expect(html).toContain("ar_AE"); // og:locale — AR context resolved
-    expect(html.toLowerCase()).toContain("noindex");
-    expect(html).not.toContain("Page not found"); // no EN fallback leak
+  test("a bogus URL 404s with a proper branded document (no bare error shell)", async ({
+    browser,
+    page,
+  }) => {
+    // globalNotFound renders a real branded 404 (lang/dir + noindex + 404 status)
+    // instead of the bare `<html id="__next_error__">` shell. Locale follows
+    // Accept-Language (Node.js middleware isn't supported on the Workers deploy
+    // target, so the 404 doc can't see the request path) — an Arabic-preferring
+    // browser gets the RTL Arabic 404.
+    const arCtx = await browser.newContext({ locale: "ar-AE" });
+    const arPage = await arCtx.newPage();
+    const arResp = await arPage.goto("/ar/does-not-exist", { waitUntil: "commit" });
+    expect(arResp?.status()).toBe(404);
+    const arHtml = await arResp!.text();
+    expect(arHtml).toContain("الصفحة غير موجودة"); // Arabic "page not found"
+    expect(arHtml).toContain("ar_AE");
+    expect(arHtml.toLowerCase()).toContain("noindex");
+    await arCtx.close();
+
+    // Default (English) browser gets the branded EN 404.
+    const enResp = await page.goto("/definitely-not-a-real-page", { waitUntil: "commit" });
+    expect(enResp?.status()).toBe(404);
+    const enHtml = await enResp!.text();
+    expect(enHtml).toContain("Page not found");
+    expect(enHtml.toLowerCase()).toContain("noindex");
   });
 });
