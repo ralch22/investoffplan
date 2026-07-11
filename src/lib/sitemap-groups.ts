@@ -24,7 +24,7 @@ type Entry = MetadataRoute.Sitemap[number];
 // GSC report indexing coverage per section (projects vs compare vs AR, etc.).
 let GROUPS: Entry[][] | null = null;
 
-async function buildGroups(): Promise<Entry[][]> {
+export async function buildGroups(): Promise<Entry[][]> {
   if (GROUPS) return GROUPS;
 
   const api = await getCatalogApi();
@@ -186,18 +186,3 @@ async function buildGroups(): Promise<Entry[][]> {
   return GROUPS;
 }
 
-export async function generateSitemaps(): Promise<{ id: number }[]> {
-  const groups = await buildGroups();
-  return groups.map((_, id) => ({ id }));
-}
-
-export default async function sitemap({
-  id,
-}: {
-  // Next 16 passes id as a Promise for dynamic metadata routes.
-  id: number | Promise<number>;
-}): Promise<MetadataRoute.Sitemap> {
-  const resolvedId = await Promise.resolve(id);
-  const groups = await buildGroups();
-  return groups[resolvedId] ?? [];
-}
