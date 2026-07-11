@@ -9,6 +9,7 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import { getNewsArticle, getNewsArticles } from "@/content/articles";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 import { localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: article.title,
     description: article.description,
-    alternates: { canonical: `${getSiteUrl()}/news/${slug}` },
+    alternates: enMeta(`/news/${slug}`),
     openGraph: {
       title: article.title,
       description: article.description,

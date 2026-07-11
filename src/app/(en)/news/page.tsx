@@ -5,7 +5,7 @@ import { PageHero } from "@/components/page-hero";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { getNewsArticles } from "@/content/articles";
 import { getHeroImage } from "@/lib/area-images";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
 import { localePath, type Locale } from "@/i18n/config";
 
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "UAE Off-Plan Property News & Market Updates",
   description:
     "UAE off-plan market news, launch updates, and developer announcements from invest off-plan.",
-  alternates: { canonical: `${getSiteUrl()}/news` },
+  alternates: enMeta("/news"),
 };
 
 function formatDate(iso: string, locale: Locale): string {

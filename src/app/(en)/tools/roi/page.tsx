@@ -6,13 +6,13 @@ import { RoiEstimator, type RoiCommunity } from "@/components/roi-estimator";
 import { getAreas } from "@/lib/catalog";
 import { getAreaStats } from "@/lib/dld-area-stats";
 import { getHeroImage } from "@/lib/area-images";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Off-Plan ROI & Rental Yield Estimator — Dubai",
   description:
     "Estimate off-plan rental yield, capital appreciation, and total return from your inputs and 2025 DLD market data — cash invested, net yield, and payback in one view.",
-  alternates: { canonical: `${getSiteUrl()}/tools/roi` },
+  alternates: enMeta("/tools/roi"),
 };
 
 /**

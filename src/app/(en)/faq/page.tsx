@@ -5,14 +5,14 @@ import { PageHero } from "@/components/page-hero";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { FAQ_TOPICS } from "@/content/faq";
 import { getHeroImage } from "@/lib/area-images";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 import { localePath, type Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Off-Plan Property FAQ",
   description:
     "Answers to the questions UAE off-plan buyers ask most — payment plans, escrow, Golden Visa, fees, handover, mortgages, and more.",
-  alternates: { canonical: `${getSiteUrl()}/faq` },
+  alternates: enMeta("/faq"),
 };
 
 // Also rendered by the /ar mirror with locale="ar" so topic links stay in-locale.

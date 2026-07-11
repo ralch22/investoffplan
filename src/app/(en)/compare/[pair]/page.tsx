@@ -15,7 +15,7 @@ import {
   getRelatedComparisons,
 } from "@/lib/compare-content";
 import { formatPrice } from "@/lib/format";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 import {
   buildAreaComparison,
   getComparablePairSlugs,
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         0,
         158,
       ),
-    alternates: { canonical: `${getSiteUrl()}/compare/${cmp.pairSlug}` },
+    alternates: enMeta(`/compare/${cmp.pairSlug}`),
   };
 }
 

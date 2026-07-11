@@ -4,11 +4,13 @@ import { PageHero } from "@/components/page-hero";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { RentVsBuyCalculator } from "@/components/rent-vs-buy-calculator";
 import { getHeroImage } from "@/lib/area-images";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Rent vs Buy Calculator — Dubai Property",
   description:
     "Compare monthly payments and long-term costs of renting versus buying property in the UAE.",
+  alternates: enMeta("/tools/rent-vs-buy"),
 };
 
 export default async function RentVsBuyPage() {

@@ -1,9 +1,35 @@
 import type { NextConfig } from "next";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
+// Top developers 404 on their short brand slug (e.g. /developers/emaar) when the
+// canonical detail route is the full slug. Permanent-redirect the aliases so the
+// brand shortcut resolves and link equity flows to the canonical page.
+const DEVELOPER_ALIASES: Record<string, string> = {
+  emaar: "emaar-properties",
+  damac: "damac-properties",
+  sobha: "sobha-realty",
+  aldar: "aldar-properties-pjsc",
+  alef: "alef-group",
+  reportage: "reportage-real-estate",
+  imtiaz: "imtiaz-developments",
+  modon: "modon-properties",
+  binghatti: "binghatti-developers",
+  wasl: "wasl-properties",
+  meraas: "meraas-holding",
+  azizi: "azizi-developments",
+  omniyat: "omniyat-group",
+  rak: "rak-properties",
+};
+
 const nextConfig: NextConfig = {
   experimental: { globalNotFound: true },
   allowedDevOrigins: ["127.0.0.1", "localhost"],
+  async redirects() {
+    return Object.entries(DEVELOPER_ALIASES).flatMap(([alias, canonical]) => [
+      { source: `/developers/${alias}`, destination: `/developers/${canonical}`, permanent: true },
+      { source: `/ar/developers/${alias}`, destination: `/ar/developers/${canonical}`, permanent: true },
+    ]);
+  },
   async headers() {
     return [
       {

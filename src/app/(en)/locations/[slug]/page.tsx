@@ -11,6 +11,7 @@ import {
   getLocationGuide,
 } from "@/lib/location-guides";
 import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: guide.title,
     description: guide.intro.slice(0, 158),
-    alternates: { canonical: `${getSiteUrl()}/locations/${slug}` },
+    alternates: enMeta(`/locations/${slug}`),
   };
 }
 

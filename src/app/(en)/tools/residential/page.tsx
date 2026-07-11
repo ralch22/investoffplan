@@ -7,11 +7,13 @@ import { ResidentialInsightsTable } from "@/components/residential-insights-tabl
 import { getResidentialBuildings } from "@/lib/residential-insights";
 import { getAreas } from "@/lib/catalog";
 import { getHeroImage } from "@/lib/area-images";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Dubai Residential Insights — Launch Prices & AED/sqft",
   description:
     "Launch-price intelligence per off-plan project — averages, price per sqft, and links to full PDPs.",
+  alternates: enMeta("/tools/residential"),
 };
 
 interface PageProps {

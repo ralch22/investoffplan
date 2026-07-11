@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { AccountPage } from "./account-page";
 import { getCommunities } from "@/lib/communities";
 import { getAreaStats } from "@/lib/dld-area-stats";
+import { getSiteUrl } from "@/lib/site-url";
 
 export const metadata: Metadata = {
   title: "My account",
   description: "Manage your invest off-plan profile, saved searches, and favorites.",
   robots: { index: false, follow: false },
+  alternates: { canonical: `${getSiteUrl()}/account` },
 };
 
 const ACCOUNT_REPORT_LINKS = 6;

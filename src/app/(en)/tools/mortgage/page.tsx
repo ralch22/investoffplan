@@ -5,13 +5,13 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { MortgageCalculator } from "@/components/mortgage-calculator";
 import { MortgagePreapprovalForm } from "@/components/mortgage-preapproval-form";
 import { getHeroImage } from "@/lib/area-images";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "UAE Mortgage Calculator & Pre-Approval",
   description:
     "Model UAE mortgage repayments, DLD fees, and cash-to-close — then request free pre-approval from licensed advisers.",
-  alternates: { canonical: `${getSiteUrl()}/tools/mortgage` },
+  alternates: enMeta("/tools/mortgage"),
 };
 
 export default async function MortgagePage() {

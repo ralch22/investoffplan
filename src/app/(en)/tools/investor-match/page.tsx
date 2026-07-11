@@ -4,11 +4,13 @@ import { PageHero } from "@/components/page-hero";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { InvestorMatchQuiz } from "@/components/investor-match-quiz";
 import { getHeroImage } from "@/lib/area-images";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Investor Match — Find Your Off-Plan Fit",
   description:
     "Answer 6 quick questions and get a ranked shortlist of UAE off-plan projects matched to your budget, goal, and lifestyle.",
+  alternates: enMeta("/tools/investor-match"),
 };
 
 export default async function InvestorMatchPage() {

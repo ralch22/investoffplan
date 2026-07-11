@@ -152,7 +152,7 @@ export function MediaGalleryLightbox({
                       : "border-transparent opacity-60 hover:opacity-100",
                   )}
                 >
-                  <Image src={src} alt="" fill className="object-cover" sizes="80px" {...unoptimizedProp(src)} />
+                  <Image src={src} alt={`${alt} — photo ${i + 1}`} fill className="object-cover" sizes="80px" {...unoptimizedProp(src)} />
                 </button>
               ))}
             </div>

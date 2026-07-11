@@ -23,6 +23,7 @@ import {
   buildDeveloperJsonLd,
 } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 import { DEVELOPER_PAGE_SIZE, type SortOption } from "@/lib/types";
 import { getDictionary } from "@/i18n";
 import { interpolate, localePath, type Locale } from "@/i18n/config";
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: `New & Off-Plan Projects by ${developer.name}`,
     description: `Browse ${developer.projectCount} off-plan projects by ${developer.name} in the UAE with launch prices, payment plans, and brochures.`,
-    alternates: { canonical: `${getSiteUrl()}/developers/${slug}` },
+    alternates: enMeta(`/developers/${slug}`),
   };
 }
 

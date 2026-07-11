@@ -7,11 +7,13 @@ import { InvestorMatchToolCard } from "@/components/investor-match-tool-card";
 import { DATAGURU_TOOLS } from "@/lib/dataguru";
 import { getHeroImage } from "@/lib/area-images";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
+import { enMeta } from "@/lib/ar-meta";
 
 export const metadata: Metadata = {
   title: "Dubai Property Data Toolkit — Free Investor Tools",
   description:
     "Property intelligence toolkit for UAE off-plan buyers — price map, community insights, rent vs buy calculator, and residential launch data.",
+  alternates: enMeta("/tools"),
 };
 
 export default async function ToolsHubPage() {
