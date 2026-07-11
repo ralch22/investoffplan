@@ -46,6 +46,10 @@ test.describe("InvestOffPlan extended flows", () => {
     await page.goto("/");
     await expect(page.getByAltText("invest off-plan").first()).toBeVisible({ timeout: 20000 });
     await expect(page.getByRole("heading", { name: /Latest launches/i })).toBeVisible();
+    // hero stat strip renders a real number (stats merged into the hero)
+    await expect(page.getByTestId("hero-stat-strip")).toContainText(/\d/);
+    // property-type chips demoted into Key Locations still expose type links
+    await expect(page.getByRole("link", { name: /Apartments from AED/i })).toBeVisible();
   });
 
   test("map deep-links to project from query", async ({ page }) => {
