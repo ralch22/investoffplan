@@ -120,7 +120,23 @@ writeFileSync(
   "utf8",
 );
 
+// Top DLD areas by gross rental yield — powers the smart-search "yield" intent.
+const dldStats = JSON.parse(
+  readFileSync(join(root, "data", "dld-area-stats.json"), "utf8"),
+);
+const yieldCommunities = Object.entries(dldStats.areas || {})
+  .filter(([, a]) => a.grossYieldPct != null && a.saleSample >= 40)
+  .sort(([, a], [, b]) => b.grossYieldPct - a.grossYieldPct)
+  .slice(0, 40)
+  .map(([key, a]) => ({ key, name: a.areaLabel, grossYieldPct: a.grossYieldPct }));
+
+writeFileSync(
+  join(outDir, "yield-communities.json"),
+  `${JSON.stringify(yieldCommunities)}\n`,
+  "utf8",
+);
+
 const liteKb = Math.round(JSON.stringify(liteCatalog).length / 1024);
 console.log(
-  `[sync-catalog] catalog.json + lite (${liteKb}KB) + map (${meta.unitCount} units, ${mapProjects.length} pins)`,
+  `[sync-catalog] catalog.json + lite (${liteKb}KB) + map (${meta.unitCount} units, ${mapProjects.length} pins) + yield (${yieldCommunities.length} areas)`,
 );
