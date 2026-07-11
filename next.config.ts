@@ -25,10 +25,20 @@ const nextConfig: NextConfig = {
   experimental: { globalNotFound: true },
   allowedDevOrigins: ["127.0.0.1", "localhost"],
   async redirects() {
-    return Object.entries(DEVELOPER_ALIASES).flatMap(([alias, canonical]) => [
+    const devAliases = Object.entries(DEVELOPER_ALIASES).flatMap(([alias, canonical]) => [
       { source: `/developers/${alias}`, destination: `/developers/${canonical}`, permanent: true },
       { source: `/ar/developers/${alias}`, destination: `/ar/developers/${canonical}`, permanent: true },
     ]);
+    // Bare index paths with no page (only /collections/[slug] and
+    // /reports/market/[slug] exist) 404 — send them to the nearest hub instead.
+    const indexRedirects = [
+      { source: "/collections", destination: "/projects", permanent: false },
+      { source: "/ar/collections", destination: "/ar/projects", permanent: false },
+      { source: "/reports", destination: "/market-report", permanent: false },
+      { source: "/reports/market", destination: "/market-report", permanent: false },
+      { source: "/ar/reports", destination: "/ar/market-report", permanent: false },
+    ];
+    return [...devAliases, ...indexRedirects];
   },
   async headers() {
     return [

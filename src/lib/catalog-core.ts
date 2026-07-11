@@ -87,9 +87,18 @@ function stripTrailingDeveloperName(name: string, developer?: string): string {
 function normalizeProject(p: Project & { citySlug?: string }): Project {
   const slug = (p.citySlug || p.city) as Project["city"];
   const pfFaqs = p.pfFaqs ? sanitizePfFaqs(p.pfFaqs) : undefined;
+  // A project whose handover quarter is already in the past can't honestly be
+  // labelled "off-plan" (upcoming). 26 such rows carry a pre-2026 handover but
+  // status "off-plan" → relabel to "ready" so the developer-card badge reads
+  // correctly. (2026 hardcoded to match the Latest-Launches guard; keeps
+  // static build == D1 deterministic rather than drifting with request time.)
+  const hy = handoverYear(p.handover);
+  const status: Project["status"] =
+    p.status === "off-plan" && hy != null && hy < 2026 ? "ready" : p.status;
   return {
     ...p,
     name: stripTrailingDeveloperName(p.name, p.developer),
+    status,
     city: slug,
     imageGradient: p.imageGradient ?? "from-slate-800 via-slate-600 to-sky-700",
     featuredRank: p.featuredRank ?? 999,
