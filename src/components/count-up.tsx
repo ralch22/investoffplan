@@ -18,7 +18,10 @@ interface CountUpProps {
  */
 export function CountUp({ value, className, durationMs = 900 }: CountUpProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  // Bottom-only inset: "-40px" on all sides excludes elements within 40px of
+  // the viewport's LEFT/RIGHT edges too — the hero strip's first/last stats
+  // never "entered view" and stayed at 0.
+  const inView = useInView(ref, { once: true, margin: "0px 0px -40px 0px" });
   const reduced = useReducedMotion();
   const [display, setDisplay] = useState(0);
 
