@@ -1,0 +1,1421 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: mobile-overflow.spec.ts >> Mobile — no horizontal overflow >> /projects does not scroll horizontally at 375px
+- Location: tests/mobile-overflow.spec.ts:12:9
+
+# Error details
+
+```
+Error: /projects: 400px content in 375px viewport
+
+expect(received).toBeLessThanOrEqual(expected)
+
+Expected: <= 377
+Received:    400
+```
+
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#main-content"
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - link "invest off-plan" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "invest off-plan" [ref=e8]
+        - generic [ref=e9]:
+          - link "Favorites" [ref=e10] [cursor=pointer]:
+            - /url: /favorites
+            - img [ref=e11]
+          - link "العربية" [ref=e13] [cursor=pointer]:
+            - /url: /ar/projects
+          - group "Currency" [ref=e14]:
+            - button "AED" [pressed] [ref=e15]
+            - button "USD" [ref=e16]
+          - button "Open menu" [ref=e17]:
+            - img [ref=e18]
+    - main [ref=e20]:
+      - generic [ref=e23]:
+        - heading "Search Results" [level=1] [ref=e24]:
+          - text: Search
+          - emphasis [ref=e25]: Results
+        - paragraph [ref=e26]: Properties in UAE
+      - main [ref=e27]:
+        - generic [ref=e29]:
+          - button "Filters & search" [ref=e31]
+          - generic [ref=e32]:
+            - heading "2,241 Total unit options in UAE" [level=2] [ref=e33]
+            - paragraph [ref=e34]: 2,241 results · Updated 7 Jul 2026
+          - generic [ref=e35]:
+            - generic [ref=e36]:
+              - button "Grid" [ref=e37]
+              - button "List" [ref=e38]
+              - button "Map" [ref=e39]
+            - button "Show project view" [ref=e40]
+            - combobox [ref=e42]:
+              - option "Featured" [selected]
+              - 'option "Price: Low to High"'
+              - 'option "Price: High to Low"'
+              - option "Best value (AED/sqft)"
+              - 'option "Handover: Soonest"'
+              - 'option "Handover: Latest"'
+        - generic [ref=e43]:
+          - group "Filter by city" [ref=e44]:
+            - button "All UAE(2241)" [pressed] [ref=e45]:
+              - text: All UAE
+              - generic [ref=e46]: (2241)
+            - button "Dubai(1786)" [ref=e47]:
+              - text: Dubai
+              - generic [ref=e48]: (1786)
+            - button "Ras Al Khaimah(164)" [ref=e49]:
+              - text: Ras Al Khaimah
+              - generic [ref=e50]: (164)
+            - button "Abu Dhabi(155)" [ref=e51]:
+              - text: Abu Dhabi
+              - generic [ref=e52]: (155)
+            - button "Sharjah(53)" [ref=e53]:
+              - text: Sharjah
+              - generic [ref=e54]: (53)
+            - button "Umm Al Quwain(53)" [ref=e55]:
+              - text: Umm Al Quwain
+              - generic [ref=e56]: (53)
+            - button "Ajman(25)" [ref=e57]:
+              - text: Ajman
+              - generic [ref=e58]: (25)
+            - button "Fujairah(5)" [ref=e59]:
+              - text: Fujairah
+              - generic [ref=e60]: (5)
+          - generic [ref=e61]:
+            - button "All" [ref=e62]
+            - button "Premium" [ref=e63]
+            - button "Brochure PDF" [ref=e64]
+            - button "Video" [ref=e65]
+            - button "Virtual tour" [ref=e66]
+            - button "Under AED 2M" [ref=e67]
+            - button "Studio" [ref=e68]
+            - button "Waterfront" [ref=e69]
+        - generic [ref=e72]:
+          - img [ref=e73]
+          - text: Compare
+        - generic [ref=e75]:
+          - article [ref=e76]:
+            - generic [ref=e77]:
+              - generic [ref=e78]:
+                - link "View 105 Residences" [ref=e79] [cursor=pointer]:
+                  - /url: /projects/105-residences
+                  - img "105 Residences — photo 1 of 7" [ref=e80]
+                - button "Previous photo" [ref=e81]:
+                  - img [ref=e82]
+                - button "Next photo" [ref=e84]:
+                  - img [ref=e85]
+                - generic [ref=e87]: 1 / 7
+                - button "View 105 Residences photos fullscreen" [ref=e88]:
+                  - img [ref=e89]
+              - generic:
+                - generic: 10/35/5/50
+            - generic [ref=e91]:
+              - generic [ref=e92]:
+                - generic [ref=e94]: 2 apartment units
+                - generic [ref=e95]:
+                  - generic [ref=e96]: Premium
+                  - button "Add to favorites" [ref=e97]:
+                    - img [ref=e98]
+              - generic [ref=e100]:
+                - paragraph [ref=e101]:
+                  - link "Kamdar Developments logo" [ref=e102] [cursor=pointer]:
+                    - /url: /developers/kamdar-developments
+                    - img "Kamdar Developments logo" [ref=e103]
+                  - link "Kamdar Developments" [ref=e105] [cursor=pointer]:
+                    - /url: /developers/kamdar-developments
+                - paragraph [ref=e106]: Handover Q2 2027
+                - heading "105 Residences" [level=3] [ref=e107]:
+                  - link "105 Residences" [ref=e108] [cursor=pointer]:
+                    - /url: /projects/105-residences
+                - paragraph [ref=e109]: Jumeirah Village Circle, District 13
+                - paragraph [ref=e110]: 1 Bed · 678 - 1,001 sqft · apartment · AED 1,882/sqft
+                - paragraph [ref=e111]: FROM AED 1,275,888
+                - generic [ref=e112]:
+                  - link "View Details" [ref=e113] [cursor=pointer]:
+                    - /url: /projects/105-residences
+                  - generic [ref=e115] [cursor=pointer]:
+                    - checkbox "Compare 105 Residences" [ref=e116]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e117] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20105%20Residences%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e118]
+                    - text: WhatsApp
+                  - link "Download brochure for 105 Residences" [ref=e120] [cursor=pointer]:
+                    - /url: /cdn/projects/105-residences/brochure.pdf
+                    - text: Brochure
+          - article [ref=e121]:
+            - generic [ref=e122]:
+              - generic [ref=e123]:
+                - link "View 105 Residences" [ref=e124] [cursor=pointer]:
+                  - /url: /projects/105-residences
+                  - img "105 Residences — photo 1 of 7" [ref=e125]
+                - button "Previous photo" [ref=e126]:
+                  - img [ref=e127]
+                - button "Next photo" [ref=e129]:
+                  - img [ref=e130]
+                - generic [ref=e132]: 1 / 7
+                - button "View 105 Residences photos fullscreen" [ref=e133]:
+                  - img [ref=e134]
+              - generic:
+                - generic: 10/35/5/50
+            - generic [ref=e136]:
+              - generic [ref=e137]:
+                - generic [ref=e139]: 2 apartment units
+                - generic [ref=e140]:
+                  - generic [ref=e141]: Premium
+                  - button "Add to favorites" [ref=e142]:
+                    - img [ref=e143]
+              - generic [ref=e145]:
+                - paragraph [ref=e146]:
+                  - link "Kamdar Developments logo" [ref=e147] [cursor=pointer]:
+                    - /url: /developers/kamdar-developments
+                    - img "Kamdar Developments logo" [ref=e148]
+                  - link "Kamdar Developments" [ref=e150] [cursor=pointer]:
+                    - /url: /developers/kamdar-developments
+                - paragraph [ref=e151]: Handover Q2 2027
+                - heading "105 Residences" [level=3] [ref=e152]:
+                  - link "105 Residences" [ref=e153] [cursor=pointer]:
+                    - /url: /projects/105-residences
+                - paragraph [ref=e154]: Jumeirah Village Circle, District 13
+                - paragraph [ref=e155]: 2 Beds · 1,335 - 1,894 sqft · apartment · AED 1,573/sqft
+                - paragraph [ref=e156]: FROM AED 2,100,000
+                - generic [ref=e157]:
+                  - link "View Details" [ref=e158] [cursor=pointer]:
+                    - /url: /projects/105-residences
+                  - generic [ref=e160] [cursor=pointer]:
+                    - checkbox "Compare 105 Residences" [ref=e161]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e162] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20105%20Residences%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e163]
+                    - text: WhatsApp
+                  - link "Download brochure for 105 Residences" [ref=e165] [cursor=pointer]:
+                    - /url: /cdn/projects/105-residences/brochure.pdf
+                    - text: Brochure
+          - article [ref=e166]:
+            - generic [ref=e167]:
+              - generic [ref=e168]:
+                - link "View 113 Residences" [ref=e169] [cursor=pointer]:
+                  - /url: /projects/113-residences
+                  - img "113 Residences — photo 1 of 1" [ref=e170]
+                - button "View 113 Residences photos fullscreen" [ref=e171]:
+                  - img [ref=e172]
+              - generic:
+                - generic: 20/30/50
+            - generic [ref=e174]:
+              - generic [ref=e175]:
+                - generic [ref=e177]: 4 apartment units
+                - generic [ref=e178]:
+                  - generic [ref=e179]: Premium
+                  - button "Add to favorites" [ref=e180]:
+                    - img [ref=e181]
+              - generic [ref=e183]:
+                - paragraph [ref=e184]:
+                  - link "Iman Developers logo" [ref=e185] [cursor=pointer]:
+                    - /url: /developers/iman-developers
+                    - img "Iman Developers logo" [ref=e186]
+                  - link "Iman Developers" [ref=e188] [cursor=pointer]:
+                    - /url: /developers/iman-developers
+                - paragraph [ref=e189]: Handover Q2 2029
+                - heading "113 Residences" [level=3] [ref=e190]:
+                  - link "113 Residences" [ref=e191] [cursor=pointer]:
+                    - /url: /projects/113-residences
+                - paragraph [ref=e192]: Al Sufouh
+                - paragraph [ref=e193]: 1 Bed · 689 sqft · apartment · AED 2,612/sqft
+                - paragraph [ref=e194]: FROM AED 1,800,000
+                - generic [ref=e195]:
+                  - link "View Details" [ref=e196] [cursor=pointer]:
+                    - /url: /projects/113-residences
+                  - generic [ref=e198] [cursor=pointer]:
+                    - checkbox "Compare 113 Residences" [ref=e199]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e200] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20113%20Residences%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e201]
+                    - text: WhatsApp
+                  - link "Download brochure for 113 Residences" [ref=e203] [cursor=pointer]:
+                    - /url: https://new-projects-media.propertyfinder.com/project/61a78e63-ebee-4648-aa25-632f5b88f308/master_plan/image/Qkqi2ODD9JK9-_5rBhHucZDahlco7DqsMqypX0ZinSY=/original.webp
+                    - text: Brochure
+          - article [ref=e204]:
+            - generic [ref=e205]:
+              - generic [ref=e206]:
+                - link "View 113 Residences" [ref=e207] [cursor=pointer]:
+                  - /url: /projects/113-residences
+                  - img "113 Residences — photo 1 of 1" [ref=e208]
+                - button "View 113 Residences photos fullscreen" [ref=e209]:
+                  - img [ref=e210]
+              - generic:
+                - generic: 20/30/50
+            - generic [ref=e212]:
+              - generic [ref=e213]:
+                - generic [ref=e215]: 4 apartment units
+                - generic [ref=e216]:
+                  - generic [ref=e217]: Premium
+                  - button "Add to favorites" [ref=e218]:
+                    - img [ref=e219]
+              - generic [ref=e221]:
+                - paragraph [ref=e222]:
+                  - link "Iman Developers logo" [ref=e223] [cursor=pointer]:
+                    - /url: /developers/iman-developers
+                    - img "Iman Developers logo" [ref=e224]
+                  - link "Iman Developers" [ref=e226] [cursor=pointer]:
+                    - /url: /developers/iman-developers
+                - paragraph [ref=e227]: Handover Q2 2029
+                - heading "113 Residences" [level=3] [ref=e228]:
+                  - link "113 Residences" [ref=e229] [cursor=pointer]:
+                    - /url: /projects/113-residences
+                - paragraph [ref=e230]: Al Sufouh
+                - paragraph [ref=e231]: 2 Beds · 1,033 sqft · apartment · AED 2,478/sqft
+                - paragraph [ref=e232]: FROM AED 2,560,000
+                - generic [ref=e233]:
+                  - link "View Details" [ref=e234] [cursor=pointer]:
+                    - /url: /projects/113-residences
+                  - generic [ref=e236] [cursor=pointer]:
+                    - checkbox "Compare 113 Residences" [ref=e237]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e238] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20113%20Residences%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e239]
+                    - text: WhatsApp
+                  - link "Download brochure for 113 Residences" [ref=e241] [cursor=pointer]:
+                    - /url: https://new-projects-media.propertyfinder.com/project/61a78e63-ebee-4648-aa25-632f5b88f308/master_plan/image/Qkqi2ODD9JK9-_5rBhHucZDahlco7DqsMqypX0ZinSY=/original.webp
+                    - text: Brochure
+          - article [ref=e242]:
+            - generic [ref=e243]:
+              - generic [ref=e244]:
+                - link "View 113 Residences" [ref=e245] [cursor=pointer]:
+                  - /url: /projects/113-residences
+                  - img "113 Residences — photo 1 of 1" [ref=e246]
+                - button "View 113 Residences photos fullscreen" [ref=e247]:
+                  - img [ref=e248]
+              - generic:
+                - generic: 20/30/50
+            - generic [ref=e250]:
+              - generic [ref=e251]:
+                - generic [ref=e253]: 4 apartment units
+                - generic [ref=e254]:
+                  - generic [ref=e255]: Premium
+                  - button "Add to favorites" [ref=e256]:
+                    - img [ref=e257]
+              - generic [ref=e259]:
+                - paragraph [ref=e260]:
+                  - link "Iman Developers logo" [ref=e261] [cursor=pointer]:
+                    - /url: /developers/iman-developers
+                    - img "Iman Developers logo" [ref=e262]
+                  - link "Iman Developers" [ref=e264] [cursor=pointer]:
+                    - /url: /developers/iman-developers
+                - paragraph [ref=e265]: Handover Q2 2029
+                - heading "113 Residences" [level=3] [ref=e266]:
+                  - link "113 Residences" [ref=e267] [cursor=pointer]:
+                    - /url: /projects/113-residences
+                - paragraph [ref=e268]: Al Sufouh
+                - paragraph [ref=e269]: 3 Beds · 1,593 sqft · apartment · AED 2,291/sqft
+                - paragraph [ref=e270]: FROM AED 3,650,000
+                - generic [ref=e271]:
+                  - link "View Details" [ref=e272] [cursor=pointer]:
+                    - /url: /projects/113-residences
+                  - generic [ref=e274] [cursor=pointer]:
+                    - checkbox "Compare 113 Residences" [ref=e275]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e276] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20113%20Residences%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e277]
+                    - text: WhatsApp
+                  - link "Download brochure for 113 Residences" [ref=e279] [cursor=pointer]:
+                    - /url: https://new-projects-media.propertyfinder.com/project/61a78e63-ebee-4648-aa25-632f5b88f308/master_plan/image/Qkqi2ODD9JK9-_5rBhHucZDahlco7DqsMqypX0ZinSY=/original.webp
+                    - text: Brochure
+          - article [ref=e280]:
+            - generic [ref=e281]:
+              - generic [ref=e282]:
+                - link "View 113 Residences" [ref=e283] [cursor=pointer]:
+                  - /url: /projects/113-residences
+                  - img "113 Residences — photo 1 of 1" [ref=e284]
+                - button "View 113 Residences photos fullscreen" [ref=e285]:
+                  - img [ref=e286]
+              - generic:
+                - generic: 20/30/50
+            - generic [ref=e288]:
+              - generic [ref=e289]:
+                - generic [ref=e291]: 4 duplex units
+                - generic [ref=e292]:
+                  - generic [ref=e293]: Premium
+                  - button "Add to favorites" [ref=e294]:
+                    - img [ref=e295]
+              - generic [ref=e297]:
+                - paragraph [ref=e298]:
+                  - link "Iman Developers logo" [ref=e299] [cursor=pointer]:
+                    - /url: /developers/iman-developers
+                    - img "Iman Developers logo" [ref=e300]
+                  - link "Iman Developers" [ref=e302] [cursor=pointer]:
+                    - /url: /developers/iman-developers
+                - paragraph [ref=e303]: Handover Q2 2029
+                - heading "113 Residences" [level=3] [ref=e304]:
+                  - link "113 Residences" [ref=e305] [cursor=pointer]:
+                    - /url: /projects/113-residences
+                - paragraph [ref=e306]: Al Sufouh
+                - paragraph [ref=e307]: 4 Beds · 2,476 sqft · duplex · AED 2,197/sqft
+                - paragraph [ref=e308]: FROM AED 5,440,000
+                - generic [ref=e309]:
+                  - link "View Details" [ref=e310] [cursor=pointer]:
+                    - /url: /projects/113-residences
+                  - generic [ref=e312] [cursor=pointer]:
+                    - checkbox "Compare 113 Residences" [ref=e313]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e314] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20113%20Residences%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e315]
+                    - text: WhatsApp
+                  - link "Download brochure for 113 Residences" [ref=e317] [cursor=pointer]:
+                    - /url: https://new-projects-media.propertyfinder.com/project/61a78e63-ebee-4648-aa25-632f5b88f308/master_plan/image/Qkqi2ODD9JK9-_5rBhHucZDahlco7DqsMqypX0ZinSY=/original.webp
+                    - text: Brochure
+          - article [ref=e318]:
+            - generic [ref=e319]:
+              - generic [ref=e320]:
+                - link "View 1WOOD Residence Phase 2 By Object 1" [ref=e321] [cursor=pointer]:
+                  - /url: /projects/1wood-residence-phase-2-by-object-1
+                  - img "1WOOD Residence Phase 2 By Object 1 — photo 1 of 6" [ref=e322]
+                - button "Previous photo" [ref=e323]:
+                  - img [ref=e324]
+                - button "Next photo" [ref=e326]:
+                  - img [ref=e327]
+                - generic [ref=e329]: 1 / 6
+                - button "View 1WOOD Residence Phase 2 By Object 1 photos fullscreen" [ref=e330]:
+                  - img [ref=e331]
+              - generic:
+                - generic: 2 Payment Plans
+            - generic [ref=e333]:
+              - generic [ref=e334]:
+                - generic [ref=e336]: 4 apartment units
+                - generic [ref=e337]:
+                  - generic [ref=e338]: Premium
+                  - button "Add to favorites" [ref=e339]:
+                    - img [ref=e340]
+              - generic [ref=e342]:
+                - paragraph [ref=e343]:
+                  - link "Object 1 logo" [ref=e344] [cursor=pointer]:
+                    - /url: /developers/object-1
+                    - img "Object 1 logo" [ref=e345]
+                  - link "Object 1" [ref=e347] [cursor=pointer]:
+                    - /url: /developers/object-1
+                - paragraph [ref=e348]: Handover Q4 2027
+                - heading "1WOOD Residence Phase 2 By Object 1" [level=3] [ref=e349]:
+                  - link "1WOOD Residence Phase 2 By Object 1" [ref=e350] [cursor=pointer]:
+                    - /url: /projects/1wood-residence-phase-2-by-object-1
+                - paragraph [ref=e351]: Jumeirah Village Circle, District 14
+                - paragraph [ref=e352]: 1 Bed · 581 - 1,152 sqft · apartment · AED 2,006/sqft
+                - paragraph [ref=e353]: FROM AED 1,165,460
+                - generic [ref=e354]:
+                  - link "View Details" [ref=e355] [cursor=pointer]:
+                    - /url: /projects/1wood-residence-phase-2-by-object-1
+                  - generic [ref=e357] [cursor=pointer]:
+                    - checkbox "Compare 1WOOD Residence Phase 2 By Object 1" [ref=e358]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e359] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%201WOOD%20Residence%20Phase%202%20By%20Object%201%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e360]
+                    - text: WhatsApp
+                  - link "Download brochure for 1WOOD Residence Phase 2 By Object 1" [ref=e362] [cursor=pointer]:
+                    - /url: /cdn/projects/1wood-residence-phase-2-by-object-1/brochure.pdf
+                    - text: Brochure
+          - article [ref=e363]:
+            - generic [ref=e364]:
+              - generic [ref=e365]:
+                - link "View 1WOOD Residence Phase 2 By Object 1" [ref=e366] [cursor=pointer]:
+                  - /url: /projects/1wood-residence-phase-2-by-object-1
+                  - img "1WOOD Residence Phase 2 By Object 1 — photo 1 of 6" [ref=e367]
+                - button "Previous photo" [ref=e368]:
+                  - img [ref=e369]
+                - button "Next photo" [ref=e371]:
+                  - img [ref=e372]
+                - generic [ref=e374]: 1 / 6
+                - button "View 1WOOD Residence Phase 2 By Object 1 photos fullscreen" [ref=e375]:
+                  - img [ref=e376]
+              - generic:
+                - generic: 2 Payment Plans
+            - generic [ref=e378]:
+              - generic [ref=e379]:
+                - generic [ref=e381]: 4 apartment units
+                - generic [ref=e382]:
+                  - generic [ref=e383]: Premium
+                  - button "Add to favorites" [ref=e384]:
+                    - img [ref=e385]
+              - generic [ref=e387]:
+                - paragraph [ref=e388]:
+                  - link "Object 1 logo" [ref=e389] [cursor=pointer]:
+                    - /url: /developers/object-1
+                    - img "Object 1 logo" [ref=e390]
+                  - link "Object 1" [ref=e392] [cursor=pointer]:
+                    - /url: /developers/object-1
+                - paragraph [ref=e393]: Handover Q4 2027
+                - heading "1WOOD Residence Phase 2 By Object 1" [level=3] [ref=e394]:
+                  - link "1WOOD Residence Phase 2 By Object 1" [ref=e395] [cursor=pointer]:
+                    - /url: /projects/1wood-residence-phase-2-by-object-1
+                - paragraph [ref=e396]: Jumeirah Village Circle, District 14
+                - paragraph [ref=e397]: 2 Beds · 829 - 2,013 sqft · apartment · AED 1,529/sqft
+                - paragraph [ref=e398]: FROM AED 1,267,583
+                - generic [ref=e399]:
+                  - link "View Details" [ref=e400] [cursor=pointer]:
+                    - /url: /projects/1wood-residence-phase-2-by-object-1
+                  - generic [ref=e402] [cursor=pointer]:
+                    - checkbox "Compare 1WOOD Residence Phase 2 By Object 1" [ref=e403]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e404] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%201WOOD%20Residence%20Phase%202%20By%20Object%201%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e405]
+                    - text: WhatsApp
+                  - link "Download brochure for 1WOOD Residence Phase 2 By Object 1" [ref=e407] [cursor=pointer]:
+                    - /url: /cdn/projects/1wood-residence-phase-2-by-object-1/brochure.pdf
+                    - text: Brochure
+          - article [ref=e408]:
+            - generic [ref=e409]:
+              - generic [ref=e410]:
+                - link "View 1WOOD Residence Phase 2 By Object 1" [ref=e411] [cursor=pointer]:
+                  - /url: /projects/1wood-residence-phase-2-by-object-1
+                  - img "1WOOD Residence Phase 2 By Object 1 — photo 1 of 6" [ref=e412]
+                - button "Previous photo" [ref=e413]:
+                  - img [ref=e414]
+                - button "Next photo" [ref=e416]:
+                  - img [ref=e417]
+                - generic [ref=e419]: 1 / 6
+                - button "View 1WOOD Residence Phase 2 By Object 1 photos fullscreen" [ref=e420]:
+                  - img [ref=e421]
+              - generic:
+                - generic: 2 Payment Plans
+            - generic [ref=e423]:
+              - generic [ref=e424]:
+                - generic [ref=e426]: 4 apartment units
+                - generic [ref=e427]:
+                  - generic [ref=e428]: Premium
+                  - button "Add to favorites" [ref=e429]:
+                    - img [ref=e430]
+              - generic [ref=e432]:
+                - paragraph [ref=e433]:
+                  - link "Object 1 logo" [ref=e434] [cursor=pointer]:
+                    - /url: /developers/object-1
+                    - img "Object 1 logo" [ref=e435]
+                  - link "Object 1" [ref=e437] [cursor=pointer]:
+                    - /url: /developers/object-1
+                - paragraph [ref=e438]: Handover Q4 2027
+                - heading "1WOOD Residence Phase 2 By Object 1" [level=3] [ref=e439]:
+                  - link "1WOOD Residence Phase 2 By Object 1" [ref=e440] [cursor=pointer]:
+                    - /url: /projects/1wood-residence-phase-2-by-object-1
+                - paragraph [ref=e441]: Jumeirah Village Circle, District 14
+                - paragraph [ref=e442]: Studio · 388 - 420 sqft · apartment · AED 2,031/sqft
+                - paragraph [ref=e443]: FROM AED 788,117
+                - generic [ref=e444]:
+                  - link "View Details" [ref=e445] [cursor=pointer]:
+                    - /url: /projects/1wood-residence-phase-2-by-object-1
+                  - generic [ref=e447] [cursor=pointer]:
+                    - checkbox "Compare 1WOOD Residence Phase 2 By Object 1" [ref=e448]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e449] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%201WOOD%20Residence%20Phase%202%20By%20Object%201%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e450]
+                    - text: WhatsApp
+                  - link "Download brochure for 1WOOD Residence Phase 2 By Object 1" [ref=e452] [cursor=pointer]:
+                    - /url: /cdn/projects/1wood-residence-phase-2-by-object-1/brochure.pdf
+                    - text: Brochure
+          - article [ref=e453]:
+            - generic [ref=e454]:
+              - generic [ref=e455]:
+                - link "View 1WOOD Residence Phase 2 By Object 1" [ref=e456] [cursor=pointer]:
+                  - /url: /projects/1wood-residence-phase-2-by-object-1
+                  - img "1WOOD Residence Phase 2 By Object 1 — photo 1 of 6" [ref=e457]
+                - button "Previous photo" [ref=e458]:
+                  - img [ref=e459]
+                - button "Next photo" [ref=e461]:
+                  - img [ref=e462]
+                - generic [ref=e464]: 1 / 6
+                - button "View 1WOOD Residence Phase 2 By Object 1 photos fullscreen" [ref=e465]:
+                  - img [ref=e466]
+              - generic:
+                - generic: 2 Payment Plans
+            - generic [ref=e468]:
+              - generic [ref=e469]:
+                - generic [ref=e471]: 4 apartment units
+                - generic [ref=e472]:
+                  - generic [ref=e473]: Premium
+                  - button "Add to favorites" [ref=e474]:
+                    - img [ref=e475]
+              - generic [ref=e477]:
+                - paragraph [ref=e478]:
+                  - link "Object 1 logo" [ref=e479] [cursor=pointer]:
+                    - /url: /developers/object-1
+                    - img "Object 1 logo" [ref=e480]
+                  - link "Object 1" [ref=e482] [cursor=pointer]:
+                    - /url: /developers/object-1
+                - paragraph [ref=e483]: Handover Q4 2027
+                - heading "1WOOD Residence Phase 2 By Object 1" [level=3] [ref=e484]:
+                  - link "1WOOD Residence Phase 2 By Object 1" [ref=e485] [cursor=pointer]:
+                    - /url: /projects/1wood-residence-phase-2-by-object-1
+                - paragraph [ref=e486]: Jumeirah Village Circle, District 14
+                - paragraph [ref=e487]: 3 Beds · 1,302 sqft · apartment · AED 1,415/sqft
+                - paragraph [ref=e488]: FROM AED 1,842,253
+                - generic [ref=e489]:
+                  - link "View Details" [ref=e490] [cursor=pointer]:
+                    - /url: /projects/1wood-residence-phase-2-by-object-1
+                  - generic [ref=e492] [cursor=pointer]:
+                    - checkbox "Compare 1WOOD Residence Phase 2 By Object 1" [ref=e493]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e494] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%201WOOD%20Residence%20Phase%202%20By%20Object%201%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e495]
+                    - text: WhatsApp
+                  - link "Download brochure for 1WOOD Residence Phase 2 By Object 1" [ref=e497] [cursor=pointer]:
+                    - /url: /cdn/projects/1wood-residence-phase-2-by-object-1/brochure.pdf
+                    - text: Brochure
+          - article [ref=e498]:
+            - generic [ref=e499]:
+              - generic [ref=e500]:
+                - link "View 311 Boulevard" [ref=e501] [cursor=pointer]:
+                  - /url: /projects/311-boulevard
+                  - img "311 Boulevard — photo 1 of 6" [ref=e502]
+                - button "Previous photo" [ref=e503]:
+                  - img [ref=e504]
+                - button "Next photo" [ref=e506]:
+                  - img [ref=e507]
+                - generic [ref=e509]: 1 / 6
+                - button "View 311 Boulevard photos fullscreen" [ref=e510]:
+                  - img [ref=e511]
+              - generic:
+                - generic: 5/60/15/20
+            - generic [ref=e513]:
+              - generic [ref=e514]:
+                - generic [ref=e516]: 3 apartment units
+                - generic [ref=e517]:
+                  - generic [ref=e518]: Premium
+                  - button "Add to favorites" [ref=e519]:
+                    - img [ref=e520]
+              - generic [ref=e522]:
+                - paragraph [ref=e523]:
+                  - link "Bam Eskan Real Estate logo" [ref=e524] [cursor=pointer]:
+                    - /url: /developers/bam-eskan-real-estate
+                    - img "Bam Eskan Real Estate logo" [ref=e525]
+                  - link "Bam Eskan Real Estate" [ref=e527] [cursor=pointer]:
+                    - /url: /developers/bam-eskan-real-estate
+                - paragraph [ref=e528]: Handover Q4 2027
+                - heading "311 Boulevard" [level=3] [ref=e529]:
+                  - link "311 Boulevard" [ref=e530] [cursor=pointer]:
+                    - /url: /projects/311-boulevard
+                - paragraph [ref=e531]: Jumeirah Village Circle, District 13
+                - paragraph [ref=e532]: 1 Bed · 732 sqft · apartment · AED 1,366/sqft
+                - paragraph [ref=e533]: FROM AED 1,000,000
+                - generic [ref=e534]:
+                  - link "View Details" [ref=e535] [cursor=pointer]:
+                    - /url: /projects/311-boulevard
+                  - generic [ref=e537] [cursor=pointer]:
+                    - checkbox "Compare 311 Boulevard" [ref=e538]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e539] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20311%20Boulevard%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e540]
+                    - text: WhatsApp
+                  - link "Download brochure for 311 Boulevard" [ref=e542] [cursor=pointer]:
+                    - /url: /cdn/projects/311-boulevard/brochure.pdf
+                    - text: Brochure
+          - article [ref=e543]:
+            - generic [ref=e544]:
+              - generic [ref=e545]:
+                - link "View 311 Boulevard" [ref=e546] [cursor=pointer]:
+                  - /url: /projects/311-boulevard
+                  - img "311 Boulevard — photo 1 of 6" [ref=e547]
+                - button "Previous photo" [ref=e548]:
+                  - img [ref=e549]
+                - button "Next photo" [ref=e551]:
+                  - img [ref=e552]
+                - generic [ref=e554]: 1 / 6
+                - button "View 311 Boulevard photos fullscreen" [ref=e555]:
+                  - img [ref=e556]
+              - generic:
+                - generic: 5/60/15/20
+            - generic [ref=e558]:
+              - generic [ref=e559]:
+                - generic [ref=e561]: 3 apartment units
+                - generic [ref=e562]:
+                  - generic [ref=e563]: Premium
+                  - button "Add to favorites" [ref=e564]:
+                    - img [ref=e565]
+              - generic [ref=e567]:
+                - paragraph [ref=e568]:
+                  - link "Bam Eskan Real Estate logo" [ref=e569] [cursor=pointer]:
+                    - /url: /developers/bam-eskan-real-estate
+                    - img "Bam Eskan Real Estate logo" [ref=e570]
+                  - link "Bam Eskan Real Estate" [ref=e572] [cursor=pointer]:
+                    - /url: /developers/bam-eskan-real-estate
+                - paragraph [ref=e573]: Handover Q4 2027
+                - heading "311 Boulevard" [level=3] [ref=e574]:
+                  - link "311 Boulevard" [ref=e575] [cursor=pointer]:
+                    - /url: /projects/311-boulevard
+                - paragraph [ref=e576]: Jumeirah Village Circle, District 13
+                - paragraph [ref=e577]: 2 Beds · 958 - 1,055 sqft · apartment · AED 1,670/sqft
+                - paragraph [ref=e578]: FROM AED 1,600,000
+                - generic [ref=e579]:
+                  - link "View Details" [ref=e580] [cursor=pointer]:
+                    - /url: /projects/311-boulevard
+                  - generic [ref=e582] [cursor=pointer]:
+                    - checkbox "Compare 311 Boulevard" [ref=e583]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e584] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20311%20Boulevard%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e585]
+                    - text: WhatsApp
+                  - link "Download brochure for 311 Boulevard" [ref=e587] [cursor=pointer]:
+                    - /url: /cdn/projects/311-boulevard/brochure.pdf
+                    - text: Brochure
+          - article [ref=e588]:
+            - generic [ref=e589]:
+              - generic [ref=e590]:
+                - link "View 311 Boulevard" [ref=e591] [cursor=pointer]:
+                  - /url: /projects/311-boulevard
+                  - img "311 Boulevard — photo 1 of 6" [ref=e592]
+                - button "Previous photo" [ref=e593]:
+                  - img [ref=e594]
+                - button "Next photo" [ref=e596]:
+                  - img [ref=e597]
+                - generic [ref=e599]: 1 / 6
+                - button "View 311 Boulevard photos fullscreen" [ref=e600]:
+                  - img [ref=e601]
+              - generic:
+                - generic: 5/60/15/20
+            - generic [ref=e603]:
+              - generic [ref=e604]:
+                - generic [ref=e606]: 3 apartment units
+                - generic [ref=e607]:
+                  - generic [ref=e608]: Premium
+                  - button "Add to favorites" [ref=e609]:
+                    - img [ref=e610]
+              - generic [ref=e612]:
+                - paragraph [ref=e613]:
+                  - link "Bam Eskan Real Estate logo" [ref=e614] [cursor=pointer]:
+                    - /url: /developers/bam-eskan-real-estate
+                    - img "Bam Eskan Real Estate logo" [ref=e615]
+                  - link "Bam Eskan Real Estate" [ref=e617] [cursor=pointer]:
+                    - /url: /developers/bam-eskan-real-estate
+                - paragraph [ref=e618]: Handover Q4 2027
+                - heading "311 Boulevard" [level=3] [ref=e619]:
+                  - link "311 Boulevard" [ref=e620] [cursor=pointer]:
+                    - /url: /projects/311-boulevard
+                - paragraph [ref=e621]: Jumeirah Village Circle, District 13
+                - paragraph [ref=e622]: Studio · 452 - 495 sqft · apartment · AED 1,659/sqft
+                - paragraph [ref=e623]: FROM AED 750,000
+                - generic [ref=e624]:
+                  - link "View Details" [ref=e625] [cursor=pointer]:
+                    - /url: /projects/311-boulevard
+                  - generic [ref=e627] [cursor=pointer]:
+                    - checkbox "Compare 311 Boulevard" [ref=e628]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e629] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20311%20Boulevard%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e630]
+                    - text: WhatsApp
+                  - link "Download brochure for 311 Boulevard" [ref=e632] [cursor=pointer]:
+                    - /url: /cdn/projects/311-boulevard/brochure.pdf
+                    - text: Brochure
+          - article [ref=e633]:
+            - generic [ref=e634]:
+              - generic [ref=e635]:
+                - link "View AB Cleo" [ref=e636] [cursor=pointer]:
+                  - /url: /projects/ab-cleo
+                  - img "AB Cleo — photo 1 of 3" [ref=e637]
+                - button "Previous photo" [ref=e638]:
+                  - img [ref=e639]
+                - button "Next photo" [ref=e641]:
+                  - img [ref=e642]
+                - generic [ref=e644]: 1 / 3
+                - button "View AB Cleo photos fullscreen" [ref=e645]:
+                  - img [ref=e646]
+              - generic:
+                - generic: 10/40/50
+            - generic [ref=e648]:
+              - generic [ref=e649]:
+                - generic [ref=e651]: 3 apartment units
+                - generic [ref=e652]:
+                  - generic [ref=e653]: Premium
+                  - button "Add to favorites" [ref=e654]:
+                    - img [ref=e655]
+              - generic [ref=e657]:
+                - paragraph [ref=e658]:
+                  - link "AB Developers logo" [ref=e659] [cursor=pointer]:
+                    - /url: /developers/ab-developers
+                    - img "AB Developers logo" [ref=e660]
+                  - link "AB Developers" [ref=e662] [cursor=pointer]:
+                    - /url: /developers/ab-developers
+                - paragraph [ref=e663]: Handover Q1 2027
+                - heading "AB Cleo" [level=3] [ref=e664]:
+                  - link "AB Cleo" [ref=e665] [cursor=pointer]:
+                    - /url: /projects/ab-cleo
+                - paragraph [ref=e666]: Jebel Ali
+                - paragraph [ref=e667]: 2 Beds · 1,208 sqft · apartment · AED 1,202/sqft
+                - paragraph [ref=e668]: FROM AED 1,452,000
+                - generic [ref=e669]:
+                  - link "View Details" [ref=e670] [cursor=pointer]:
+                    - /url: /projects/ab-cleo
+                  - generic [ref=e672] [cursor=pointer]:
+                    - checkbox "Compare AB Cleo" [ref=e673]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e674] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20AB%20Cleo%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e675]
+                    - text: WhatsApp
+                  - link "Download brochure for AB Cleo" [ref=e677] [cursor=pointer]:
+                    - /url: /cdn/projects/ab-cleo/brochure.pdf
+                    - text: Brochure
+          - article [ref=e678]:
+            - generic [ref=e679]:
+              - generic [ref=e680]:
+                - link "View AB Cleo" [ref=e681] [cursor=pointer]:
+                  - /url: /projects/ab-cleo
+                  - img "AB Cleo — photo 1 of 3" [ref=e682]
+                - button "Previous photo" [ref=e683]:
+                  - img [ref=e684]
+                - button "Next photo" [ref=e686]:
+                  - img [ref=e687]
+                - generic [ref=e689]: 1 / 3
+                - button "View AB Cleo photos fullscreen" [ref=e690]:
+                  - img [ref=e691]
+              - generic:
+                - generic: 10/40/50
+            - generic [ref=e693]:
+              - generic [ref=e694]:
+                - generic [ref=e696]: 3 apartment units
+                - generic [ref=e697]:
+                  - generic [ref=e698]: Premium
+                  - button "Add to favorites" [ref=e699]:
+                    - img [ref=e700]
+              - generic [ref=e702]:
+                - paragraph [ref=e703]:
+                  - link "AB Developers logo" [ref=e704] [cursor=pointer]:
+                    - /url: /developers/ab-developers
+                    - img "AB Developers logo" [ref=e705]
+                  - link "AB Developers" [ref=e707] [cursor=pointer]:
+                    - /url: /developers/ab-developers
+                - paragraph [ref=e708]: Handover Q1 2027
+                - heading "AB Cleo" [level=3] [ref=e709]:
+                  - link "AB Cleo" [ref=e710] [cursor=pointer]:
+                    - /url: /projects/ab-cleo
+                - paragraph [ref=e711]: Jebel Ali
+                - paragraph [ref=e712]: 1 Bed · 684 sqft · apartment · AED 1,509/sqft
+                - paragraph [ref=e713]: FROM AED 1,032,000
+                - generic [ref=e714]:
+                  - link "View Details" [ref=e715] [cursor=pointer]:
+                    - /url: /projects/ab-cleo
+                  - generic [ref=e717] [cursor=pointer]:
+                    - checkbox "Compare AB Cleo" [ref=e718]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e719] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20AB%20Cleo%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e720]
+                    - text: WhatsApp
+                  - link "Download brochure for AB Cleo" [ref=e722] [cursor=pointer]:
+                    - /url: /cdn/projects/ab-cleo/brochure.pdf
+                    - text: Brochure
+          - article [ref=e723]:
+            - generic [ref=e724]:
+              - generic [ref=e725]:
+                - link "View AB Cleo" [ref=e726] [cursor=pointer]:
+                  - /url: /projects/ab-cleo
+                  - img "AB Cleo — photo 1 of 3" [ref=e727]
+                - button "Previous photo" [ref=e728]:
+                  - img [ref=e729]
+                - button "Next photo" [ref=e731]:
+                  - img [ref=e732]
+                - generic [ref=e734]: 1 / 3
+                - button "View AB Cleo photos fullscreen" [ref=e735]:
+                  - img [ref=e736]
+              - generic:
+                - generic: 10/40/50
+            - generic [ref=e738]:
+              - generic [ref=e739]:
+                - generic [ref=e741]: 3 apartment units
+                - generic [ref=e742]:
+                  - generic [ref=e743]: Premium
+                  - button "Add to favorites" [ref=e744]:
+                    - img [ref=e745]
+              - generic [ref=e747]:
+                - paragraph [ref=e748]:
+                  - link "AB Developers logo" [ref=e749] [cursor=pointer]:
+                    - /url: /developers/ab-developers
+                    - img "AB Developers logo" [ref=e750]
+                  - link "AB Developers" [ref=e752] [cursor=pointer]:
+                    - /url: /developers/ab-developers
+                - paragraph [ref=e753]: Handover Q1 2027
+                - heading "AB Cleo" [level=3] [ref=e754]:
+                  - link "AB Cleo" [ref=e755] [cursor=pointer]:
+                    - /url: /projects/ab-cleo
+                - paragraph [ref=e756]: Jebel Ali
+                - paragraph [ref=e757]: Studio · 355 sqft · apartment · AED 1,994/sqft
+                - paragraph [ref=e758]: FROM AED 708,000
+                - generic [ref=e759]:
+                  - link "View Details" [ref=e760] [cursor=pointer]:
+                    - /url: /projects/ab-cleo
+                  - generic [ref=e762] [cursor=pointer]:
+                    - checkbox "Compare AB Cleo" [ref=e763]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e764] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20AB%20Cleo%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e765]
+                    - text: WhatsApp
+                  - link "Download brochure for AB Cleo" [ref=e767] [cursor=pointer]:
+                    - /url: /cdn/projects/ab-cleo/brochure.pdf
+                    - text: Brochure
+          - article [ref=e768]:
+            - generic [ref=e769]:
+              - generic [ref=e770]:
+                - link "View Aelin" [ref=e771] [cursor=pointer]:
+                  - /url: /projects/aelin
+                  - img "Aelin — photo 1 of 1" [ref=e772]
+                - button "View Aelin photos fullscreen" [ref=e773]:
+                  - img [ref=e774]
+              - generic:
+                - generic: 0/60/40
+            - generic [ref=e776]:
+              - generic [ref=e777]:
+                - generic [ref=e779]: 3 apartment units
+                - generic [ref=e780]:
+                  - generic [ref=e781]: Premium
+                  - button "Add to favorites" [ref=e782]:
+                    - img [ref=e783]
+              - generic [ref=e785]:
+                - paragraph [ref=e786]:
+                  - link "Zoya Developments logo" [ref=e787] [cursor=pointer]:
+                    - /url: /developers/zoya-developments
+                    - img "Zoya Developments logo" [ref=e788]
+                  - link "Zoya Developments" [ref=e790] [cursor=pointer]:
+                    - /url: /developers/zoya-developments
+                - paragraph [ref=e791]: Handover Q3 2028
+                - heading "Aelin" [level=3] [ref=e792]:
+                  - link "Aelin" [ref=e793] [cursor=pointer]:
+                    - /url: /projects/aelin
+                - paragraph [ref=e794]: Dubai Land Residence Complex
+                - paragraph [ref=e795]: 1 Bed · 797 sqft · apartment · AED 1,380/sqft
+                - paragraph [ref=e796]: FROM AED 1,100,000
+                - generic [ref=e797]:
+                  - link "View Details" [ref=e798] [cursor=pointer]:
+                    - /url: /projects/aelin
+                  - generic [ref=e800] [cursor=pointer]:
+                    - checkbox "Compare Aelin" [ref=e801]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e802] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20Aelin%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e803]
+                    - text: WhatsApp
+                  - link "Download brochure for Aelin" [ref=e805] [cursor=pointer]:
+                    - /url: "#brochure-request"
+                    - text: Brochure
+          - article [ref=e806]:
+            - generic [ref=e807]:
+              - generic [ref=e808]:
+                - link "View Aelin" [ref=e809] [cursor=pointer]:
+                  - /url: /projects/aelin
+                  - img "Aelin — photo 1 of 1" [ref=e810]
+                - button "View Aelin photos fullscreen" [ref=e811]:
+                  - img [ref=e812]
+              - generic:
+                - generic: 0/60/40
+            - generic [ref=e814]:
+              - generic [ref=e815]:
+                - generic [ref=e817]: 3 apartment units
+                - generic [ref=e818]:
+                  - generic [ref=e819]: Premium
+                  - button "Add to favorites" [ref=e820]:
+                    - img [ref=e821]
+              - generic [ref=e823]:
+                - paragraph [ref=e824]:
+                  - link "Zoya Developments logo" [ref=e825] [cursor=pointer]:
+                    - /url: /developers/zoya-developments
+                    - img "Zoya Developments logo" [ref=e826]
+                  - link "Zoya Developments" [ref=e828] [cursor=pointer]:
+                    - /url: /developers/zoya-developments
+                - paragraph [ref=e829]: Handover Q3 2028
+                - heading "Aelin" [level=3] [ref=e830]:
+                  - link "Aelin" [ref=e831] [cursor=pointer]:
+                    - /url: /projects/aelin
+                - paragraph [ref=e832]: Dubai Land Residence Complex
+                - paragraph [ref=e833]: 2 Beds · 1,098 sqft · apartment · AED 1,366/sqft
+                - paragraph [ref=e834]: FROM AED 1,500,000
+                - generic [ref=e835]:
+                  - link "View Details" [ref=e836] [cursor=pointer]:
+                    - /url: /projects/aelin
+                  - generic [ref=e838] [cursor=pointer]:
+                    - checkbox "Compare Aelin" [ref=e839]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e840] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20Aelin%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e841]
+                    - text: WhatsApp
+                  - link "Download brochure for Aelin" [ref=e843] [cursor=pointer]:
+                    - /url: "#brochure-request"
+                    - text: Brochure
+          - article [ref=e844]:
+            - generic [ref=e845]:
+              - generic [ref=e846]:
+                - link "View Aelin" [ref=e847] [cursor=pointer]:
+                  - /url: /projects/aelin
+                  - img "Aelin — photo 1 of 1" [ref=e848]
+                - button "View Aelin photos fullscreen" [ref=e849]:
+                  - img [ref=e850]
+              - generic:
+                - generic: 0/60/40
+            - generic [ref=e852]:
+              - generic [ref=e853]:
+                - generic [ref=e855]: 3 apartment units
+                - generic [ref=e856]:
+                  - generic [ref=e857]: Premium
+                  - button "Add to favorites" [ref=e858]:
+                    - img [ref=e859]
+              - generic [ref=e861]:
+                - paragraph [ref=e862]:
+                  - link "Zoya Developments logo" [ref=e863] [cursor=pointer]:
+                    - /url: /developers/zoya-developments
+                    - img "Zoya Developments logo" [ref=e864]
+                  - link "Zoya Developments" [ref=e866] [cursor=pointer]:
+                    - /url: /developers/zoya-developments
+                - paragraph [ref=e867]: Handover Q3 2028
+                - heading "Aelin" [level=3] [ref=e868]:
+                  - link "Aelin" [ref=e869] [cursor=pointer]:
+                    - /url: /projects/aelin
+                - paragraph [ref=e870]: Dubai Land Residence Complex
+                - paragraph [ref=e871]: Studio · 398 sqft · apartment · AED 1,884/sqft
+                - paragraph [ref=e872]: FROM AED 750,000
+                - generic [ref=e873]:
+                  - link "View Details" [ref=e874] [cursor=pointer]:
+                    - /url: /projects/aelin
+                  - generic [ref=e876] [cursor=pointer]:
+                    - checkbox "Compare Aelin" [ref=e877]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e878] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20Aelin%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e879]
+                    - text: WhatsApp
+                  - link "Download brochure for Aelin" [ref=e881] [cursor=pointer]:
+                    - /url: "#brochure-request"
+                    - text: Brochure
+          - article [ref=e882]:
+            - generic [ref=e883]:
+              - generic [ref=e884]:
+                - link "View Al Aamra Tower 1" [ref=e885] [cursor=pointer]:
+                  - /url: /projects/al-aamra-tower
+                  - img "Al Aamra Tower 1 — photo 1 of 1" [ref=e886]
+                - button "View Al Aamra Tower 1 photos fullscreen" [ref=e887]:
+                  - img [ref=e888]
+              - generic:
+                - generic: 5/95/0
+            - generic [ref=e890]:
+              - generic [ref=e891]:
+                - generic [ref=e893]: 1 apartment unit
+                - generic [ref=e894]:
+                  - generic [ref=e895]: Premium
+                  - button "Add to favorites" [ref=e896]:
+                    - img [ref=e897]
+              - generic [ref=e899]:
+                - paragraph [ref=e900]:
+                  - link "GJ Real Estate logo" [ref=e901] [cursor=pointer]:
+                    - /url: /developers/gj-real-estate
+                    - img "GJ Real Estate logo" [ref=e902]
+                  - link "GJ Real Estate" [ref=e904] [cursor=pointer]:
+                    - /url: /developers/gj-real-estate
+                - paragraph [ref=e905]: Handover Q4 2027
+                - heading "Al Aamra Tower 1" [level=3] [ref=e906]:
+                  - link "Al Aamra Tower 1" [ref=e907] [cursor=pointer]:
+                    - /url: /projects/al-aamra-tower
+                - paragraph [ref=e908]: Al Amerah, Al Aamra Tower
+                - paragraph [ref=e909]: 1 Bed · 75 - 118 sqft · apartment · AED 7,520/sqft
+                - paragraph [ref=e910]: FROM AED 564,000
+                - generic [ref=e911]:
+                  - link "View Details" [ref=e912] [cursor=pointer]:
+                    - /url: /projects/al-aamra-tower
+                  - generic [ref=e914] [cursor=pointer]:
+                    - checkbox "Compare Al Aamra Tower 1" [ref=e915]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e916] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20Al%20Aamra%20Tower%201%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e917]
+                    - text: WhatsApp
+                  - link "Download brochure for Al Aamra Tower 1" [ref=e919] [cursor=pointer]:
+                    - /url: /cdn/projects/al-aamra-tower/brochure.pdf
+                    - text: Brochure
+          - article [ref=e920]:
+            - generic [ref=e921]:
+              - generic [ref=e922]:
+                - link "View Al Ghadeer Gardens" [ref=e923] [cursor=pointer]:
+                  - /url: /projects/al-ghadeer-gardens
+                  - img "Al Ghadeer Gardens — photo 1 of 5" [ref=e924]
+                - button "Previous photo" [ref=e925]:
+                  - img [ref=e926]
+                - button "Next photo" [ref=e928]:
+                  - img [ref=e929]
+                - generic [ref=e931]: 1 / 5
+                - button "View Al Ghadeer Gardens photos fullscreen" [ref=e932]:
+                  - img [ref=e933]
+              - generic:
+                - generic: 5/50/45
+            - generic [ref=e935]:
+              - generic [ref=e936]:
+                - generic [ref=e938]: 3 villa units
+                - generic [ref=e939]:
+                  - generic [ref=e940]: Premium
+                  - button "Add to favorites" [ref=e941]:
+                    - img [ref=e942]
+              - generic [ref=e944]:
+                - paragraph [ref=e945]:
+                  - link "Aldar Properties PJSC logo" [ref=e946] [cursor=pointer]:
+                    - /url: /developers/aldar-properties-pjsc
+                    - img "Aldar Properties PJSC logo" [ref=e947]
+                  - link "Aldar Properties PJSC" [ref=e949] [cursor=pointer]:
+                    - /url: /developers/aldar-properties-pjsc
+                - paragraph [ref=e950]: Handover Q4 2029
+                - heading "Al Ghadeer Gardens" [level=3] [ref=e951]:
+                  - link "Al Ghadeer Gardens" [ref=e952] [cursor=pointer]:
+                    - /url: /projects/al-ghadeer-gardens
+                - paragraph [ref=e953]: Al Ghadeer
+                - paragraph [ref=e954]: 4 Beds · 2,669 sqft · villa · AED 1,124/sqft
+                - paragraph [ref=e955]: FROM AED 3,000,000
+                - generic [ref=e956]:
+                  - link "View Details" [ref=e957] [cursor=pointer]:
+                    - /url: /projects/al-ghadeer-gardens
+                  - generic [ref=e959] [cursor=pointer]:
+                    - checkbox "Compare Al Ghadeer Gardens" [ref=e960]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e961] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20Al%20Ghadeer%20Gardens%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e962]
+                    - text: WhatsApp
+                  - link "Download brochure for Al Ghadeer Gardens" [ref=e964] [cursor=pointer]:
+                    - /url: "#brochure-request"
+                    - text: Brochure
+          - article [ref=e965]:
+            - generic [ref=e966]:
+              - generic [ref=e967]:
+                - link "View Al Ghadeer Gardens" [ref=e968] [cursor=pointer]:
+                  - /url: /projects/al-ghadeer-gardens
+                  - img "Al Ghadeer Gardens — photo 1 of 5" [ref=e969]
+                - button "Previous photo" [ref=e970]:
+                  - img [ref=e971]
+                - button "Next photo" [ref=e973]:
+                  - img [ref=e974]
+                - generic [ref=e976]: 1 / 5
+                - button "View Al Ghadeer Gardens photos fullscreen" [ref=e977]:
+                  - img [ref=e978]
+              - generic:
+                - generic: 5/50/45
+            - generic [ref=e980]:
+              - generic [ref=e981]:
+                - generic [ref=e983]: 3 townhouse units
+                - generic [ref=e984]:
+                  - generic [ref=e985]: Premium
+                  - button "Add to favorites" [ref=e986]:
+                    - img [ref=e987]
+              - generic [ref=e989]:
+                - paragraph [ref=e990]:
+                  - link "Aldar Properties PJSC logo" [ref=e991] [cursor=pointer]:
+                    - /url: /developers/aldar-properties-pjsc
+                    - img "Aldar Properties PJSC logo" [ref=e992]
+                  - link "Aldar Properties PJSC" [ref=e994] [cursor=pointer]:
+                    - /url: /developers/aldar-properties-pjsc
+                - paragraph [ref=e995]: Handover Q4 2029
+                - heading "Al Ghadeer Gardens" [level=3] [ref=e996]:
+                  - link "Al Ghadeer Gardens" [ref=e997] [cursor=pointer]:
+                    - /url: /projects/al-ghadeer-gardens
+                - paragraph [ref=e998]: Al Ghadeer
+                - paragraph [ref=e999]: 3 Beds · 2,142 sqft · townhouse · AED 1,027/sqft
+                - paragraph [ref=e1000]: FROM 2.2M AED - 2.4M AED
+                - generic [ref=e1001]:
+                  - link "View Details" [ref=e1002] [cursor=pointer]:
+                    - /url: /projects/al-ghadeer-gardens
+                  - generic [ref=e1004] [cursor=pointer]:
+                    - checkbox "Compare Al Ghadeer Gardens" [ref=e1005]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e1006] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20Al%20Ghadeer%20Gardens%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e1007]
+                    - text: WhatsApp
+                  - link "Download brochure for Al Ghadeer Gardens" [ref=e1009] [cursor=pointer]:
+                    - /url: "#brochure-request"
+                    - text: Brochure
+          - article [ref=e1010]:
+            - generic [ref=e1011]:
+              - generic [ref=e1012]:
+                - link "View Al Ghadeer Gardens" [ref=e1013] [cursor=pointer]:
+                  - /url: /projects/al-ghadeer-gardens
+                  - img "Al Ghadeer Gardens — photo 1 of 5" [ref=e1014]
+                - button "Previous photo" [ref=e1015]:
+                  - img [ref=e1016]
+                - button "Next photo" [ref=e1018]:
+                  - img [ref=e1019]
+                - generic [ref=e1021]: 1 / 5
+                - button "View Al Ghadeer Gardens photos fullscreen" [ref=e1022]:
+                  - img [ref=e1023]
+              - generic:
+                - generic: 5/50/45
+            - generic [ref=e1025]:
+              - generic [ref=e1026]:
+                - generic [ref=e1028]: 3 townhouse units
+                - generic [ref=e1029]:
+                  - generic [ref=e1030]: Premium
+                  - button "Add to favorites" [ref=e1031]:
+                    - img [ref=e1032]
+              - generic [ref=e1034]:
+                - paragraph [ref=e1035]:
+                  - link "Aldar Properties PJSC logo" [ref=e1036] [cursor=pointer]:
+                    - /url: /developers/aldar-properties-pjsc
+                    - img "Aldar Properties PJSC logo" [ref=e1037]
+                  - link "Aldar Properties PJSC" [ref=e1039] [cursor=pointer]:
+                    - /url: /developers/aldar-properties-pjsc
+                - paragraph [ref=e1040]: Handover Q4 2029
+                - heading "Al Ghadeer Gardens" [level=3] [ref=e1041]:
+                  - link "Al Ghadeer Gardens" [ref=e1042] [cursor=pointer]:
+                    - /url: /projects/al-ghadeer-gardens
+                - paragraph [ref=e1043]: Al Ghadeer
+                - paragraph [ref=e1044]: 2 Beds · 1,647 sqft · townhouse · AED 1,032/sqft
+                - paragraph [ref=e1045]: FROM AED 1,700,000
+                - generic [ref=e1046]:
+                  - link "View Details" [ref=e1047] [cursor=pointer]:
+                    - /url: /projects/al-ghadeer-gardens
+                  - generic [ref=e1049] [cursor=pointer]:
+                    - checkbox "Compare Al Ghadeer Gardens" [ref=e1050]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e1051] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20Al%20Ghadeer%20Gardens%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e1052]
+                    - text: WhatsApp
+                  - link "Download brochure for Al Ghadeer Gardens" [ref=e1054] [cursor=pointer]:
+                    - /url: "#brochure-request"
+                    - text: Brochure
+          - article [ref=e1055]:
+            - generic [ref=e1056]:
+              - generic [ref=e1057]:
+                - link "View Al Hamra Greens" [ref=e1058] [cursor=pointer]:
+                  - /url: /projects/al-hamra-greens
+                  - img "Al Hamra Greens — photo 1 of 8" [ref=e1059]
+                - button "Previous photo" [ref=e1060]:
+                  - img [ref=e1061]
+                - button "Next photo" [ref=e1063]:
+                  - img [ref=e1064]
+                - generic [ref=e1066]: 1 / 8
+                - button "View Al Hamra Greens photos fullscreen" [ref=e1067]:
+                  - img [ref=e1068]
+              - generic:
+                - generic: 20/50/30
+            - generic [ref=e1070]:
+              - generic [ref=e1071]:
+                - generic [ref=e1073]: 3 apartment units
+                - generic [ref=e1074]:
+                  - generic [ref=e1075]: Premium
+                  - button "Add to favorites" [ref=e1076]:
+                    - img [ref=e1077]
+              - generic [ref=e1079]:
+                - paragraph [ref=e1080]:
+                  - link "Al Hamra Real Estate Management Services logo" [ref=e1081] [cursor=pointer]:
+                    - /url: /developers/al-hamra-real-estate-management-services
+                    - img "Al Hamra Real Estate Management Services logo" [ref=e1082]
+                  - link "Al Hamra Real Estate Management Services" [ref=e1084] [cursor=pointer]:
+                    - /url: /developers/al-hamra-real-estate-management-services
+                - paragraph [ref=e1085]: Handover Q1 2028
+                - heading "Al Hamra Greens" [level=3] [ref=e1086]:
+                  - link "Al Hamra Greens" [ref=e1087] [cursor=pointer]:
+                    - /url: /projects/al-hamra-greens
+                - paragraph [ref=e1088]: Al Hamra Village, Al Hamra Greens
+                - paragraph [ref=e1089]: 2 Beds · 1,044 sqft · apartment · AED 1,830/sqft
+                - paragraph [ref=e1090]: FROM AED 1,910,000
+                - generic [ref=e1091]:
+                  - link "View Details" [ref=e1092] [cursor=pointer]:
+                    - /url: /projects/al-hamra-greens
+                  - generic [ref=e1094] [cursor=pointer]:
+                    - checkbox "Compare Al Hamra Greens" [ref=e1095]
+                    - text: Compare
+                  - link "WhatsApp" [ref=e1096] [cursor=pointer]:
+                    - /url: https://wa.me/971585276222?text=Hi%2C%20I'm%20interested%20in%20Al%20Hamra%20Greens%20on%20InvestOffPlan.&utm_source=investoffplan&utm_medium=whatsapp&utm_campaign=cta&utm_content=contact_button
+                    - img [ref=e1097]
+                    - text: WhatsApp
+                  - link "Download brochure for Al Hamra Greens" [ref=e1099] [cursor=pointer]:
+                    - /url: /cdn/projects/al-hamra-greens/brochure.pdf
+                    - text: Brochure
+        - navigation "Pagination" [ref=e1100]:
+          - button "Prev" [disabled] [ref=e1101]
+          - button "1" [ref=e1102]
+          - button "2" [ref=e1103]
+          - button "3" [ref=e1104]
+          - button "4" [ref=e1105]
+          - button "5" [ref=e1106]
+          - button "6" [ref=e1107]
+          - button "7" [ref=e1108]
+          - button "Next" [ref=e1109]
+    - contentinfo [ref=e1110]:
+      - generic [ref=e1112]:
+        - generic [ref=e1113]:
+          - img [ref=e1114]
+          - generic [ref=e1116]:
+            - paragraph [ref=e1117]:
+              - text: Off‑Plan
+              - text: Newsletter.
+            - paragraph [ref=e1118]: Exclusive insights on the latest off-plan opportunities.
+        - form "Newsletter signup" [ref=e1120]:
+          - textbox [ref=e1121]
+          - generic [ref=e1122]:
+            - textbox "Name" [ref=e1124]:
+              - /placeholder: Name...
+            - textbox "Phone" [ref=e1125]:
+              - /placeholder: Phone...
+          - textbox "Email" [ref=e1127]:
+            - /placeholder: Email...
+          - generic [ref=e1128] [cursor=pointer]:
+            - checkbox "Opt-in to receive WhatsApp exclusives" [ref=e1129]
+            - text: Opt-in to receive WhatsApp exclusives
+          - button "Submit" [ref=e1131]:
+            - text: Submit
+            - img [ref=e1132]
+      - generic [ref=e1134]:
+        - generic [ref=e1135]:
+          - generic [ref=e1136]:
+            - img [ref=e1137]
+            - generic [ref=e1139]:
+              - img "invest off-plan" [ref=e1140]
+              - navigation [ref=e1141]:
+                - link "Projects" [ref=e1142] [cursor=pointer]:
+                  - /url: /projects
+                - link "Developers" [ref=e1143] [cursor=pointer]:
+                  - /url: /developers
+                - link "Communities" [ref=e1144] [cursor=pointer]:
+                  - /url: /communities
+                - link "Locations" [ref=e1145] [cursor=pointer]:
+                  - /url: /locations
+                - link "Market Report" [ref=e1146] [cursor=pointer]:
+                  - /url: /market-report
+                - link "Compare" [ref=e1147] [cursor=pointer]:
+                  - /url: /compare
+                - link "Data toolkit" [ref=e1148] [cursor=pointer]:
+                  - /url: /tools
+                - link "Map" [ref=e1149] [cursor=pointer]:
+                  - /url: /map
+                - link "Guides" [ref=e1150] [cursor=pointer]:
+                  - /url: /guides
+                - link "News" [ref=e1151] [cursor=pointer]:
+                  - /url: /news
+                - link "FAQ" [ref=e1152] [cursor=pointer]:
+                  - /url: /faq
+                - link "About" [ref=e1153] [cursor=pointer]:
+                  - /url: /about
+                - link "Contact" [ref=e1154] [cursor=pointer]:
+                  - /url: /contact
+          - generic [ref=e1155]:
+            - generic [ref=e1156]:
+              - paragraph [ref=e1157]: Guides
+              - list [ref=e1158]:
+                - listitem [ref=e1159]:
+                  - link "Buying Off-Plan" [ref=e1160] [cursor=pointer]:
+                    - /url: /guides/why-invest-off-plan-dubai
+                - listitem [ref=e1161]:
+                  - link "Finding the Right Developer" [ref=e1162] [cursor=pointer]:
+                    - /url: /developers
+                - listitem [ref=e1163]:
+                  - link "Understanding Payment Plans" [ref=e1164] [cursor=pointer]:
+                    - /url: /guides/understanding-payment-plans
+                - listitem [ref=e1165]:
+                  - link "Off-Plan for Foreign Investors" [ref=e1166] [cursor=pointer]:
+                    - /url: /guides/foreign-investor-guide
+                - listitem [ref=e1167]:
+                  - link "Acquiring the Golden Visa" [ref=e1168] [cursor=pointer]:
+                    - /url: /faq/golden-visa
+            - generic [ref=e1169]:
+              - paragraph [ref=e1170]: Collections
+              - list [ref=e1171]:
+                - listitem [ref=e1172]:
+                  - link "Waterfront Projects" [ref=e1173] [cursor=pointer]:
+                    - /url: /collections/waterfront
+                - listitem [ref=e1174]:
+                  - link "Branded Residences" [ref=e1175] [cursor=pointer]:
+                    - /url: /collections/branded
+                - listitem [ref=e1176]:
+                  - link "Under AED 2M" [ref=e1177] [cursor=pointer]:
+                    - /url: /collections/under-2m
+                - listitem [ref=e1178]:
+                  - link "Dubai Off-Plan" [ref=e1179] [cursor=pointer]:
+                    - /url: /collections/dubai
+                - listitem [ref=e1180]:
+                  - link "Ras Al Khaimah" [ref=e1181] [cursor=pointer]:
+                    - /url: /collections/ras-al-khaimah
+        - generic [ref=e1182]:
+          - generic [ref=e1183]:
+            - generic [ref=e1184]:
+              - generic [ref=e1185]: "Telephone: +971 44 321 620"
+              - generic [ref=e1186]: "Email: info@investoffplan.com"
+              - generic [ref=e1187]: "Address: Business Bay, Dubai"
+              - generic [ref=e1188]: ARLO PROPERTIES L.L.C · ORN 50276 · DED 1493767
+            - generic [ref=e1189]:
+              - link "Privacy" [ref=e1190] [cursor=pointer]:
+                - /url: /privacy-policy
+              - link "Cookies" [ref=e1191] [cursor=pointer]:
+                - /url: /cookie-policy
+          - paragraph [ref=e1193]: © 2026 invest off-plan · Operated by ARLO PROPERTIES L.L.C · DED licence 1493767 · RERA ORN 50276 — a licensed real estate brokerage in Dubai
+    - button "Off-Plan Advisor" [ref=e1194]:
+      - img [ref=e1195]
+    - navigation "Primary" [ref=e1197]:
+      - generic [ref=e1198]:
+        - link "Explore" [ref=e1199] [cursor=pointer]:
+          - /url: /projects
+          - img [ref=e1200]
+          - text: Explore
+        - link "Areas" [ref=e1204] [cursor=pointer]:
+          - /url: /communities
+          - img [ref=e1205]
+          - text: Areas
+        - button "Search" [ref=e1209]:
+          - img [ref=e1210]
+          - text: Search
+        - link "Compare" [ref=e1213] [cursor=pointer]:
+          - /url: /compare
+          - img [ref=e1214]
+          - text: Compare
+        - link "Saved" [ref=e1217] [cursor=pointer]:
+          - /url: /favorites
+          - img [ref=e1219]
+          - text: Saved
+  - alert [ref=e1221]
+```
+
+# Test source
+
+```ts
+  1  | import { test, expect } from "./fixtures";
+  2  | 
+  3  | // Regression guard: no horizontal scroll at mobile width. A grid with responsive
+  4  | // column counts (e.g. `grid lg:grid-cols-3`) but NO base `grid-cols-1` sizes its
+  5  | // single implicit column to the content max-content on mobile, overflowing the
+  6  | // viewport. This asserts document.scrollWidth stays within the viewport.
+  7  | const MOBILE = { width: 375, height: 812 };
+  8  | const PAGES = ["/", "/projects", "/developers", "/tools/roi", "/communities"];
+  9  | 
+  10 | test.describe("Mobile — no horizontal overflow", () => {
+  11 |   for (const path of PAGES) {
+  12 |     test(`${path} does not scroll horizontally at 375px`, async ({ page }) => {
+  13 |       await page.setViewportSize(MOBILE);
+  14 |       await page.goto(path, { waitUntil: "domcontentloaded" });
+  15 |       // Let layout settle (fonts/images can nudge width briefly).
+  16 |       await page.waitForTimeout(400);
+  17 |       const { scrollW, clientW } = await page.evaluate(() => ({
+  18 |         scrollW: document.documentElement.scrollWidth,
+  19 |         clientW: document.documentElement.clientWidth,
+  20 |       }));
+  21 |       // 2px tolerance for sub-pixel rounding.
+> 22 |       expect(scrollW, `${path}: ${scrollW}px content in ${clientW}px viewport`).toBeLessThanOrEqual(
+     |                                                                                 ^ Error: /projects: 400px content in 375px viewport
+  23 |         clientW + 2,
+  24 |       );
+  25 |     });
+  26 |   }
+  27 | });
+  28 | 
+```

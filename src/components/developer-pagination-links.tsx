@@ -28,7 +28,7 @@ export function DeveloperPaginationLinks({
   return (
     <nav
       aria-label="Pagination"
-      className="flex items-center justify-center gap-1 pt-10"
+      className="flex flex-wrap items-center justify-center gap-1 pt-10"
     >
       <Link
         href={pageHref(Math.max(1, page - 1), sort)}
