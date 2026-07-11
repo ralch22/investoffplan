@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CurrencySelector } from "@/components/currency-selector";
 import { MobileNav } from "@/components/mobile-nav";
-import { PrimaryButton } from "@/components/ui/primary-button";
 import type { CurrencyCode } from "@/lib/types";
 import { BrandLogo } from "@/components/brand-logo";
 import { SiteNav } from "@/components/nav/site-nav";
@@ -75,6 +74,8 @@ export function SiteHeader({
 
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
             <HeaderSearch solid={showSolidHeader} />
+            {/* Favorites — compact heart icon (count badge). Works signed-out
+                via localStorage; also listed in the account menu when signed in. */}
             <Link
               href={localePath(locale, "/favorites")}
               aria-label={
@@ -83,36 +84,35 @@ export function SiteHeader({
                   : dict.nav.favorites
               }
               className={cn(
-                "relative rounded-full border transition focus-ring iop-btn-press",
-                "inline-flex h-10 w-10 items-center justify-center sm:h-auto sm:w-auto sm:px-3 sm:py-2 sm:text-xs sm:font-semibold",
+                "iop-btn-press focus-ring relative inline-flex h-10 w-10 items-center justify-center rounded-full border transition",
                 !showSolidHeader
                   ? "border-white/30 text-white/90 hover:border-white hover:bg-white/10"
                   : "border-border text-muted hover:border-brand hover:text-brand",
               )}
             >
-              <span className="sm:hidden" aria-hidden>
-                ★
-              </span>
-              <span className="hidden sm:inline">{dict.nav.favorites}</span>
+              <svg
+                viewBox="0 0 24 24"
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden
+              >
+                <path d="M12 20.5s-7-4.3-9.2-8.4C1.3 9.3 2.6 5.5 6 5.5c2 0 3.2 1.2 4 2.3.8-1.1 2-2.3 4-2.3 3.4 0 4.7 3.8 3.2 6.6C19 16.2 12 20.5 12 20.5z" />
+              </svg>
               {favoritesCount > 0 ? (
                 <span
                   className={cn(
-                    "absolute -end-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold text-white",
-                    !showSolidHeader ? "bg-white text-brand" : "bg-brand",
+                    "absolute -end-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold",
+                    !showSolidHeader ? "bg-white text-brand" : "bg-brand text-white",
                   )}
                 >
                   {favoritesCount}
                 </span>
               ) : null}
             </Link>
-            <span className="hidden sm:block">
-              <PrimaryButton
-                href={localePath(locale, "/communities")}
-                className="px-4 py-2 text-xs"
-              >
-                {dict.nav.areaProperties}
-              </PrimaryButton>
-            </span>
             <LanguageSwitcher solid={showSolidHeader} />
             <span className="hidden sm:block">
               <UserMenu solid={showSolidHeader} />

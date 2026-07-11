@@ -55,7 +55,6 @@ const NAV_GROUPS: NavGroup[] = [
   {
     labelKey: "more",
     items: [
-      { href: "/favorites", key: "favorites" },
       { href: "/about", key: "about" },
       { href: "/contact", key: "contact" },
     ],
@@ -111,6 +110,8 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
             <SearchSuggest variant="drawer" onNavigate={onClose} />
           </div>
 
+          <MobileAccountSection onClose={onClose} favoritesCount={favoritesCount} />
+
           <div className="flex-1 overflow-y-auto px-3 py-3">
             {NAV_GROUPS.map((group) => (
               <div key={group.labelKey} className="mb-4">
@@ -136,19 +137,11 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
                               : "text-muted hover:bg-surface-alt hover:text-text-dark",
                           )}
                         >
-                          <span className="flex items-center justify-between gap-2">
-                            {dict.nav[item.key]}
-                            {item.href === "/favorites" && favoritesCount > 0 ? (
-                              <span className="rounded-full bg-brand px-2 py-0.5 text-xs font-bold text-white">
-                                {favoritesCount}
-                              </span>
-                            ) : null}
-                          </span>
+                          {dict.nav[item.key]}
                         </Link>
                       </li>
                     );
                   })}
-                  {group.labelKey === "more" ? <MobileAuthRow onClose={onClose} /> : null}
                 </ul>
               </div>
             ))}
@@ -175,32 +168,82 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
   );
 }
 
-// Sign in / Account row in the drawer's "More" group. Session state resolves
-// client-side only (useSession) so the drawer stays static-render safe.
-function MobileAuthRow({ onClose }: { onClose: () => void }) {
+// Prominent account section at the TOP of the drawer (login-consolidated).
+// Signed-in: greeting + Account / Favorites / Saved-searches. Signed-out: a
+// clear Sign-in CTA + benefit line + Favorites (localStorage works signed-out).
+// Session resolves client-side only (useSession) so the drawer stays static-safe.
+function MobileAccountSection({
+  onClose,
+  favoritesCount,
+}: {
+  onClose: () => void;
+  favoritesCount: number;
+}) {
   const { locale, dict } = useI18n();
   const { data: session } = useSession();
   const [modalOpen, setModalOpen] = useState(false);
 
   const rowClass =
-    "iop-btn-press focus-ring block w-full rounded-xl px-4 py-2.5 text-start text-sm font-medium text-muted transition hover:bg-surface-alt hover:text-text-dark";
+    "iop-btn-press focus-ring flex items-center justify-between gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-muted transition hover:bg-surface-alt hover:text-text-dark";
+
+  const favoritesRow = (
+    <Link href={localePath(locale, "/favorites")} onClick={onClose} className={rowClass}>
+      {dict.auth.favorites}
+      {favoritesCount > 0 ? (
+        <span className="rounded-full bg-brand px-2 py-0.5 text-xs font-bold text-white">
+          {favoritesCount}
+        </span>
+      ) : null}
+    </Link>
+  );
 
   if (session?.user) {
+    const initial = (session.user.name || session.user.email || "?")
+      .trim()
+      .charAt(0)
+      .toUpperCase();
     return (
-      <li>
+      <div className="border-b border-border px-3 py-3">
+        <div className="mb-1 flex items-center gap-3 px-1">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-muted text-sm font-bold text-brand-dark">
+            {initial}
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-sm font-semibold text-text-dark">
+              {session.user.name || dict.auth.myAccount}
+            </span>
+            <span className="block truncate text-xs text-muted">{session.user.email}</span>
+          </span>
+        </div>
         <Link href={localePath(locale, "/account")} onClick={onClose} className={rowClass}>
           {dict.auth.account}
         </Link>
-      </li>
+        {favoritesRow}
+        <Link
+          href={localePath(locale, "/account#saved-searches")}
+          onClick={onClose}
+          className={rowClass}
+        >
+          {dict.account.savedSearches.title}
+        </Link>
+      </div>
     );
   }
 
   return (
-    <li>
-      <button type="button" onClick={() => setModalOpen(true)} className={rowClass}>
+    <div className="border-b border-border px-3 py-3">
+      <button
+        type="button"
+        onClick={() => setModalOpen(true)}
+        className="iop-btn-press focus-ring flex w-full items-center justify-center rounded-full border border-brand py-2.5 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
+      >
         {dict.auth.signIn}
       </button>
+      <p className="px-1 pt-2 text-xs leading-relaxed text-muted-light">
+        {dict.auth.signInBenefit}
+      </p>
+      {favoritesRow}
       <SignInModal open={modalOpen} onClose={() => setModalOpen(false)} />
-    </li>
+    </div>
   );
 }

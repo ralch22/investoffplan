@@ -27,12 +27,18 @@ test.describe("SearchSuggest typeahead", () => {
       .getByRole("option", { name: /Jumeirah Village Circle/i })
       .first();
     await expect(jvcOption).toBeVisible();
-    // Keyboard-select the first option (the JVC community). Confirm the
-    // highlight has actually LANDED on it (aria-selected) before pressing
-    // Enter — this removes the flake where Enter fired before the ArrowDown
-    // state settled and the no-highlight fallback routed to /projects?q= instead.
-    await input.press("ArrowDown");
-    await expect(jvcOption).toHaveAttribute("aria-selected", "true");
+    // Keyboard-select the first option (the JVC community). The component
+    // resets `highlight` to -1 on every keystroke (onChange), which can race a
+    // programmatic ArrowDown and leave nothing highlighted. Retry the keypress
+    // until the highlight actually lands on JVC — pressing from a reset -1
+    // always re-lands on index 0 (JVC), so this never overshoots. Only THEN
+    // press Enter (else the no-highlight fallback routes to /projects?q=).
+    await expect(async () => {
+      await input.press("ArrowDown");
+      await expect(jvcOption).toHaveAttribute("aria-selected", "true", {
+        timeout: 500,
+      });
+    }).toPass({ timeout: 10_000 });
     await input.press("Enter");
     await page.waitForURL(/\/communities\/jumeirah-village-circle/, { timeout: 15_000 });
   });

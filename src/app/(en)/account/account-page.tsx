@@ -80,7 +80,9 @@ export function AccountPage({ reportLinks = [] }: AccountPageProps) {
               </button>
             </section>
 
-            <AccountSavedSearches />
+            <div id="saved-searches" className="scroll-mt-24">
+              <AccountSavedSearches />
+            </div>
             <section className="rounded-2xl border border-border bg-surface p-6">
               <h2 className="text-sm font-semibold uppercase tracking-[0.08em] text-muted-light">
                 {dict.auth.favoritesSection}

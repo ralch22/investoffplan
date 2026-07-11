@@ -250,7 +250,6 @@ function ToolsPanel({ lp, dict }: { lp: LP; dict: Dict }) {
         <p className={colHead}>{dict.nav.mega.marketData}</p>
         <div className="space-y-0.5">
           <Link href={lp("/compare")} className={megaLink}>{dict.nav.mega.compareHub}</Link>
-          <Link href={lp("/market-data")} className={megaLink}>{dict.nav.mega.marketData}</Link>
           <Link href={lp("/map")} className={megaLink}>{dict.nav.map}</Link>
         </div>
       </div>
