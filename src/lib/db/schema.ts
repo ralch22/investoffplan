@@ -176,3 +176,20 @@ export const leads = sqliteTable(
     index("leads_created_at_idx").on(table.createdAt),
   ],
 );
+
+export const emailLog = sqliteTable(
+  "email_log",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id"),
+    email: text("email").notNull(),
+    kind: text("kind").notNull(),
+    savedSearchId: text("saved_search_id"),
+    resendId: text("resend_id"),
+    status: text("status").notNull().default("pending"),
+    error: text("error"),
+    payload: text("payload"),
+    createdAt: text("created_at").notNull(),
+  },
+  (table) => [index("email_log_kind_idx").on(table.kind, table.createdAt)],
+);

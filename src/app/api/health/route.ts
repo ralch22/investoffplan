@@ -3,6 +3,7 @@ import { getCatalogAnalytics } from "@/lib/catalog-analytics";
 import { isFirecrawlConfigured } from "@/lib/firecrawl";
 import { getEnrichmentMeta } from "@/lib/enrichments";
 import { isTurnstileEnabled } from "@/lib/turnstile";
+import { isEmailConfigured } from "@/lib/email/resend";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getDb } from "@/lib/db/client";
 import { fetchCatalogMeta, isCatalogDbSeeded, verifyCatalogSeed } from "@/lib/db/catalog-queries";
@@ -68,6 +69,9 @@ export async function GET() {
     },
     security: {
       turnstileEnabled: isTurnstileEnabled(),
+    },
+    email: {
+      configured: isEmailConfigured(),
     },
   });
 }
