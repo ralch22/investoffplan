@@ -6,6 +6,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { FAQ_TOPICS } from "@/content/faq";
 import { getHeroImage } from "@/lib/area-images";
 import { getSiteUrl } from "@/lib/site-url";
+import { localePath, type Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Off-Plan Property FAQ",
@@ -14,7 +15,12 @@ export const metadata: Metadata = {
   alternates: { canonical: `${getSiteUrl()}/faq` },
 };
 
-export default async function FaqHubPage() {
+// Also rendered by the /ar mirror with locale="ar" so topic links stay in-locale.
+export default async function FaqHubPage({
+  locale = "en",
+}: {
+  locale?: Locale;
+} = {}) {
   const heroImage = await getHeroImage();
 
   return (
@@ -37,7 +43,7 @@ export default async function FaqHubPage() {
           {FAQ_TOPICS.map((topic) => (
             <Link
               key={topic.slug}
-              href={`/faq/${topic.slug}`}
+              href={localePath(locale, `/faq/${topic.slug}`)}
               className="rounded-2xl border border-border bg-white p-6 shadow-sm transition hover:border-brand hover:shadow-md"
             >
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand text-sm font-bold text-white">

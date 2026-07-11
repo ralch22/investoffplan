@@ -91,6 +91,25 @@ export const ar: Dict = {
       "email": "البريد الإلكتروني: {email}",
       "address": "العنوان: الخليج التجاري، دبي"
     },
+    "newsletter": {
+      "titleLine1": "النشرة البريدية",
+      "titleLine2": "للعقارات على الخارطة.",
+      "blurb": "رؤى حصرية حول أحدث فرص العقارات على الخارطة.",
+      "formAria": "الاشتراك في النشرة البريدية",
+      "nameLabel": "الاسم",
+      "namePlaceholder": "الاسم...",
+      "phoneLabel": "الهاتف",
+      "phonePlaceholder": "الهاتف...",
+      "emailLabel": "البريد الإلكتروني",
+      "emailPlaceholder": "البريد الإلكتروني...",
+      "whatsappOptIn": "أوافق على استلام عروض حصرية عبر واتساب",
+      "nameRequired": "الاسم مطلوب",
+      "emailRequired": "البريد الإلكتروني مطلوب",
+      "emailInvalid": "أدخل بريداً إلكترونياً صحيحاً",
+      "subscribeError": "تعذّر الاشتراك. حاول مرة أخرى.",
+      "successPrefix": "تم اشتراكك — سنرسل تنبيهات الإطلاقات إلى",
+      "successSuffix": "."
+    },
     "privacy": "الخصوصية",
     "cookies": "ملفات تعريف الارتباط",
     "legal": "© {year} invest off-plan · مشغَّل من أرلو للعقارات ش.ذ.م.م · رخصة اقتصادية دبي 1493767 · رقم التسجيل العقاري ORN 50276 — وساطة عقارية مرخّصة في دبي"
@@ -126,7 +145,27 @@ export const ar: Dict = {
     "readMore": "اقرأ المزيد",
     "breadcrumbAria": "مسار التنقل",
     "paginationAria": "ترقيم الصفحات",
-    "viewAll": "عرض الكل ←"
+    "viewAll": "عرض الكل ←",
+    "home": "الرئيسية",
+    "featured": "مميّز",
+    "brochure": "البروشور",
+    "compareProject": "قارن {name}"
+  },
+  "a11y": {
+    "skipToContent": "تخطَّ إلى المحتوى"
+  },
+  "news": {
+    "readMore": "اقرأ المزيد"
+  },
+  "favorites": {
+    "titlePrefix": "قائمتي",
+    "titleEm": "المفضلة.",
+    "subtitle": "عقاراتك المحفوظة على الخارطة",
+    "loading": "جارٍ تحميل المشاريع المحفوظة…",
+    "emptyTitle": "لا توجد مفضلات بعد",
+    "emptyBody": "اضغط على النجمة في أي بطاقة مشروع لحفظه هنا.",
+    "browseProjects": "تصفّح المشاريع",
+    "browseMore": "تصفّح المزيد من المشاريع"
   },
   "home": {
     "heroEyebrow": "معلومات موثوقة عن العقارات على الخارطة في الإمارات للمشترين الجادّين",
@@ -698,6 +737,15 @@ export const ar: Dict = {
     }
   },
   "developers": {
+    "foundedIn": "تأسست عام {year}",
+    "showProjects": "عرض المشاريع",
+    "launchPrice": "سعر الإطلاق",
+    "offPlan": "على الخارطة",
+    "ready": "جاهز",
+    "contactTitle": "تواصل مع المطوّر",
+    "contactBody": "تحدّث مع فريقنا حول إطلاقات {name} والبروشورات وخطط السداد.",
+    "email": "البريد الإلكتروني",
+    "projectsByHeading": "مشاريع جديدة وعلى الخارطة من {name}",
     "profile": {
       "heading": "ملف المطوّر",
       "subtitle": "ملف مبني على البيانات لكتالوج المطوّر على الخارطة — وليس تقييماً للجودة أو التسليم.",

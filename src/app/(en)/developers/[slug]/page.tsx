@@ -24,10 +24,14 @@ import {
 } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { DEVELOPER_PAGE_SIZE, type SortOption } from "@/lib/types";
+import { getDictionary } from "@/i18n";
+import { interpolate, localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ page?: string; sort?: string }>;
+  /** Set to "ar" by the /ar mirror so links and page chrome localize. */
+  locale?: Locale;
 }
 
 export async function generateStaticParams() {
@@ -49,7 +53,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function DeveloperDetailPage({
   params,
   searchParams,
+  locale = "en",
 }: PageProps) {
+  const dict = getDictionary(locale);
   const { slug } = await params;
   const query = await searchParams;
   const developer = await getDeveloper(slug);
@@ -114,7 +120,9 @@ export default async function DeveloperDetailPage({
               />
               <div className="min-w-0">
                 {developer.foundedYear ? (
-                  <p className="text-sm text-muted">Founded in {developer.foundedYear}</p>
+                  <p className="text-sm text-muted">
+                    {interpolate(dict.developers.foundedIn, { year: developer.foundedYear })}
+                  </p>
                 ) : null}
                 <p className="mt-1 text-2xl font-semibold text-text-dark">{developer.name}</p>
                 <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
@@ -140,11 +148,17 @@ export default async function DeveloperDetailPage({
                 id="developer-projects-heading"
                 className="font-display text-3xl font-semibold text-text-dark md:text-4xl"
               >
-                New &amp; Off-Plan Projects by {developer.name}
+                {interpolate(dict.developers.projectsByHeading, { name: developer.name })}
               </h1>
               <p className="mt-2 text-sm font-medium text-muted">{countLabel}</p>
             </div>
-            <Suspense fallback={<span className="text-sm text-muted">Sort by: Featured</span>}>
+            <Suspense
+              fallback={
+                <span className="text-sm text-muted">
+                  {dict.serp.sort.sortBy} {dict.serp.sort.featured}
+                </span>
+              }
+            >
               <DeveloperSortControl value={sort} />
             </Suspense>
           </div>
@@ -197,7 +211,7 @@ export default async function DeveloperDetailPage({
             <h2 className="font-display text-2xl font-semibold text-text-dark md:text-3xl">
               Other Developers
             </h2>
-            <Link href="/developers" className="text-sm font-semibold text-brand">
+            <Link href={localePath(locale, "/developers")} className="text-sm font-semibold text-brand">
               View all developers →
             </Link>
           </div>
@@ -205,7 +219,7 @@ export default async function DeveloperDetailPage({
             {others.map((dev) => (
               <Link
                 key={dev.slug}
-                href={`/developers/${dev.slug}`}
+                href={localePath(locale, `/developers/${dev.slug}`)}
                 className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-semibold text-text-dark transition hover:border-brand hover:text-brand"
               >
                 <DeveloperLogo

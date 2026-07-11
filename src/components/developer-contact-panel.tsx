@@ -3,6 +3,8 @@
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { WHATSAPP_PRIMARY } from "@/lib/contact-info";
 import { withUtm } from "@/lib/utm";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 const SITE_EMAIL = "info@investoffplan.com";
 const SITE_WHATSAPP = WHATSAPP_PRIMARY;
@@ -14,6 +16,7 @@ interface DeveloperContactPanelProps {
 export function DeveloperContactPanel({
   developerName,
 }: DeveloperContactPanelProps) {
+  const { dict } = useI18n();
   const emailSubject = encodeURIComponent(`Enquiry about ${developerName} projects`);
   const emailHref = `mailto:${SITE_EMAIL}?subject=${emailSubject}`;
   const whatsappText = encodeURIComponent(
@@ -26,9 +29,9 @@ export function DeveloperContactPanel({
 
   return (
     <div className="w-full max-w-sm shrink-0 rounded-2xl border border-border bg-white p-5 shadow-sm">
-      <h2 className="text-lg font-semibold text-text-dark">Contact developer</h2>
+      <h2 className="text-lg font-semibold text-text-dark">{dict.developers.contactTitle}</h2>
       <p className="mt-2 text-sm text-muted">
-        Speak with our team about {developerName} launches, brochures, and payment plans.
+        {interpolate(dict.developers.contactBody, { name: developerName })}
       </p>
       <div className="mt-4 flex flex-col gap-2">
         <a
@@ -36,7 +39,7 @@ export function DeveloperContactPanel({
           className="iop-btn-press focus-ring inline-flex items-center justify-center gap-2 rounded-full border border-border px-4 py-2.5 text-sm font-semibold text-text-dark transition hover:border-brand hover:text-brand"
         >
           <EmailIcon />
-          Email
+          {dict.developers.email}
         </a>
         <a
           href={whatsappHref}
@@ -51,7 +54,7 @@ export function DeveloperContactPanel({
           className="iop-btn-press focus-ring inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white shadow-elevation-sm transition hover:bg-[#1ebe57]"
         >
           <WhatsAppIcon />
-          WhatsApp
+          {dict.common.whatsapp}
         </a>
       </div>
     </div>

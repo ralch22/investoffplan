@@ -74,7 +74,7 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
       {
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: `${getSiteUrl()}${lp("/")}` },
+          { "@type": "ListItem", position: 1, name: dict.common.home, item: `${getSiteUrl()}${lp("/")}` },
           { "@type": "ListItem", position: 2, name: t.title, item: canonical },
         ],
       },

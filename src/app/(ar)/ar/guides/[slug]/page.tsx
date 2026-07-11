@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getGuide } from "@/lib/figma-copy";
 import { getSiteUrl } from "@/lib/site-url";
 
 // AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
@@ -8,5 +9,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const base = getSiteUrl();
   const path = `/guides/${slug}`;
-  return { alternates: { canonical: `${base}/ar${path}`, languages: { en: `${base}${path}`, ar: `${base}/ar${path}` } } };
+  const alternates = {
+    canonical: `${base}/ar${path}`,
+    languages: { en: `${base}${path}`, ar: `${base}/ar${path}` },
+  };
+  const guide = getGuide(slug);
+  if (!guide) return { title: "الدليل غير موجود", alternates };
+  return {
+    title: `${guide.title} | دليل الشراء على الخارطة`,
+    description: `دليل المشتري للعقارات على الخارطة في الإمارات: ${guide.description}`,
+    alternates,
+  };
 }

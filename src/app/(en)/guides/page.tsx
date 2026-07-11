@@ -7,6 +7,7 @@ import { GUIDE_CARDS } from "@/lib/figma-copy";
 import { getHeroImage } from "@/lib/area-images";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
 import { getSiteUrl } from "@/lib/site-url";
+import { localePath, type Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Off-Plan Buying Guides & Investor Insights",
@@ -15,7 +16,12 @@ export const metadata: Metadata = {
     "Expert guides on UAE off-plan investing, payment plans, Golden Visa, and market intelligence.",
 };
 
-export default async function InsightsPage() {
+// Also rendered by the /ar mirror with locale="ar" so guide/CTA links stay in-locale.
+export default async function InsightsPage({
+  locale = "en",
+}: {
+  locale?: Locale;
+} = {}) {
   const analytics = await getCatalogAnalytics();
   const brochureGap = analytics.projectCount - analytics.brochureCount;
   const heroImage = await getHeroImage();
@@ -39,7 +45,7 @@ export default async function InsightsPage() {
           {GUIDE_CARDS.map((guide) => (
             <Link
               key={guide.title}
-              href={guide.href}
+              href={localePath(locale, guide.href)}
               className="rounded-2xl border border-border bg-white p-6 shadow-sm transition hover:border-brand hover:shadow-md"
             >
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand text-white">
@@ -68,14 +74,14 @@ export default async function InsightsPage() {
             </div>
             <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
               <Link
-                href="/projects?collection=brochure"
+                href={localePath(locale, "/projects?collection=brochure")}
                 className="inline-flex items-center justify-center rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-dark"
               >
                 Browse with brochures
               </Link>
               {brochureGap > 0 ? (
                 <Link
-                  href="/projects"
+                  href={localePath(locale, "/projects")}
                   className="inline-flex items-center justify-center rounded-full border border-border px-6 py-3 text-sm font-semibold text-text-dark transition hover:border-brand hover:text-brand"
                 >
                   {brochureGap} projects — request PDF
@@ -101,7 +107,7 @@ export default async function InsightsPage() {
                 handover timeline, and brochure-backed project research.
               </p>
               <Link
-                href="/tools/payment"
+                href={localePath(locale, "/tools/payment")}
                 className="mt-4 inline-block rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-brand hover:bg-white/90"
               >
                 Open calculator

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { serializeCompareIds } from "@/lib/compare";
 import type { CompareUnitId } from "@/lib/compare";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 interface CompareBarProps {
   selectedIds: CompareUnitId[];
@@ -89,6 +91,7 @@ export function CompareCheckbox({
   variant?: "default" | "light";
   label?: string;
 }) {
+  const { dict } = useI18n();
   const checked = selectedIds.includes(id);
   const disabled = !checked && selectedIds.length >= 3;
 
@@ -105,10 +108,14 @@ export function CompareCheckbox({
         checked={checked}
         disabled={disabled}
         onChange={() => onToggle(id)}
-        aria-label={label ? `Compare ${label}` : "Compare unit"}
+        aria-label={
+          label
+            ? interpolate(dict.common.compareProject, { name: label })
+            : dict.common.compareUnit
+        }
         className="focus-ring h-4 w-4 rounded border-border text-brand"
       />
-      Compare
+      {dict.common.compare}
     </label>
   );
 }

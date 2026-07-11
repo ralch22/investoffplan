@@ -1,6 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 interface BrochureButtonProps {
   url: string;
@@ -17,6 +19,7 @@ export function BrochureButton({
   className,
   onOpenModal,
 }: BrochureButtonProps) {
+  const { dict } = useI18n();
   const handleClick = (e: React.MouseEvent) => {
     if (onOpenModal) {
       e.preventDefault();
@@ -36,7 +39,7 @@ export function BrochureButton({
           className,
         )}
       >
-        Download Free PDF Brochure →
+        {dict.common.downloadFreePdfBrochure}
       </a>
     );
   }
@@ -53,7 +56,7 @@ export function BrochureButton({
           className,
         )}
       >
-        Download Brochure →
+        {dict.common.downloadBrochure}
       </a>
     );
   }
@@ -65,13 +68,13 @@ export function BrochureButton({
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
-        aria-label={`Download brochure for ${projectName}`}
+        aria-label={interpolate(dict.common.downloadBrochureFor, { name: projectName })}
         className={cn(
           "inline-flex items-center justify-center rounded-full border border-white/80 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-text-dark",
           className,
         )}
       >
-        Brochure
+        {dict.common.brochure}
       </a>
     );
   }
@@ -82,13 +85,13 @@ export function BrochureButton({
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleClick}
-      aria-label={`Download brochure for ${projectName}`}
+      aria-label={interpolate(dict.common.downloadBrochureFor, { name: projectName })}
       className={cn(
         "inline-flex items-center justify-center rounded-xl border border-brand-outline px-4 py-3 text-sm font-semibold text-brand-outline transition hover:border-brand-dark hover:text-brand-dark",
         className,
       )}
     >
-      Brochure
+      {dict.common.brochure}
     </a>
   );
 }

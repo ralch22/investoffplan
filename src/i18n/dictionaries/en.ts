@@ -89,6 +89,25 @@ const dict = {
       "email": "Email: {email}",
       "address": "Address: Business Bay, Dubai"
     },
+    "newsletter": {
+      "titleLine1": "Off‑Plan",
+      "titleLine2": "Newsletter.",
+      "blurb": "Exclusive insights on the latest off-plan opportunities.",
+      "formAria": "Newsletter signup",
+      "nameLabel": "Name",
+      "namePlaceholder": "Name...",
+      "phoneLabel": "Phone",
+      "phonePlaceholder": "Phone...",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Email...",
+      "whatsappOptIn": "Opt-in to receive WhatsApp exclusives",
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Enter a valid email",
+      "subscribeError": "Unable to subscribe. Please try again.",
+      "successPrefix": "You're subscribed — we'll send launch alerts to",
+      "successSuffix": "."
+    },
     "privacy": "Privacy",
     "cookies": "Cookies",
     "legal": "© {year} invest off-plan · Operated by ARLO PROPERTIES L.L.C · DED licence 1493767 · RERA ORN 50276 — a licensed real estate brokerage in Dubai"
@@ -124,7 +143,27 @@ const dict = {
     "readMore": "Read more",
     "breadcrumbAria": "Breadcrumb",
     "paginationAria": "Pagination",
-    "viewAll": "View All →"
+    "viewAll": "View All →",
+    "home": "Home",
+    "featured": "Featured",
+    "brochure": "Brochure",
+    "compareProject": "Compare {name}"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content"
+  },
+  "news": {
+    "readMore": "Read More"
+  },
+  "favorites": {
+    "titlePrefix": "My",
+    "titleEm": "Favorites.",
+    "subtitle": "Your saved off-plan properties",
+    "loading": "Loading saved projects…",
+    "emptyTitle": "No favorites yet",
+    "emptyBody": "Tap the star on any project card to save it here.",
+    "browseProjects": "Browse Projects",
+    "browseMore": "Browse more projects"
   },
   "home": {
     "heroEyebrow": "UAE off-plan intelligence for serious buyers",
@@ -696,6 +735,15 @@ const dict = {
     }
   },
   "developers": {
+    "foundedIn": "Founded in {year}",
+    "showProjects": "Show projects",
+    "launchPrice": "Launch price",
+    "offPlan": "Off-plan",
+    "ready": "Ready",
+    "contactTitle": "Contact developer",
+    "contactBody": "Speak with our team about {name} launches, brochures, and payment plans.",
+    "email": "Email",
+    "projectsByHeading": "New & Off-Plan Projects by {name}",
     "profile": {
       "heading": "Developer profile",
       "subtitle": "A data-derived profile of this developer's off-plan catalog — not a quality or delivery rating.",

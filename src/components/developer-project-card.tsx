@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { LocaleLink } from "@/components/locale-link";
 import { ContactButton } from "@/components/contact-button";
@@ -7,6 +9,8 @@ import { cityLabel, formatLaunchPrice, formatPrice } from "@/lib/format";
 import type { Project } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { unoptimizedProp } from "@/lib/asset-image";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 interface DeveloperProjectCardProps {
   project: Project;
@@ -17,6 +21,7 @@ export function DeveloperProjectCard({
   project,
   priorityImage = false,
 }: DeveloperProjectCardProps) {
+  const { dict } = useI18n();
   const minPrice = Math.min(...project.units.map((unit) => unit.launchPriceAed));
   const maxPrice = Math.max(
     ...project.units.map((unit) => unit.launchPriceMaxAed ?? unit.launchPriceAed),
@@ -28,10 +33,10 @@ export function DeveloperProjectCard({
     project.locationFull ??
     [cityLabel(project.city), project.area].filter(Boolean).join(", ");
   const statusBadge = isSoldOut
-    ? "Sold out"
+    ? dict.common.soldOut
     : project.status === "ready"
-      ? "Ready"
-      : "Off-plan";
+      ? dict.developers.ready
+      : dict.developers.offPlan;
 
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-elevation-md">
@@ -86,7 +91,7 @@ export function DeveloperProjectCard({
         <div className="mt-auto space-y-3 pt-1">
           <div>
             <p className="text-xs font-medium uppercase tracking-wide text-muted-light">
-              Launch price
+              {dict.developers.launchPrice}
             </p>
             <p className="text-lg font-bold text-brand">
               {formatLaunchPrice(minPrice, maxPrice > minPrice ? maxPrice : undefined, "AED")}
@@ -101,7 +106,7 @@ export function DeveloperProjectCard({
               href={`/projects/${project.slug}`}
               className="rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
             >
-              View Details
+              {dict.common.viewDetails}
             </LocaleLink>
             {!isSoldOut ? (
               <ContactButton
@@ -111,7 +116,7 @@ export function DeveloperProjectCard({
               />
             ) : (
               <span className="rounded-full bg-surface-alt px-4 py-2 text-sm font-semibold text-muted">
-                from {formatPrice(minPrice, "AED")}
+                {interpolate(dict.common.fromPrice, { price: formatPrice(minPrice, "AED") })}
               </span>
             )}
           </div>

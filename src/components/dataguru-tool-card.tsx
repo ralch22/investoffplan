@@ -26,7 +26,10 @@ export function DataGuruToolCard({ tool }: DataGuruToolCardProps) {
       </p>
       <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand">
         {dict.tools.openTool}
-        <span aria-hidden className="transition group-hover:translate-x-0.5">
+        <span
+          aria-hidden
+          className="transition group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5"
+        >
           →
         </span>
       </span>

@@ -1,4 +1,8 @@
+"use client";
+
 import type { Project } from "@/lib/types";
+import { useI18n } from "@/i18n/locale-provider";
+import type { Locale } from "@/i18n/config";
 
 interface ProjectTimelineProps {
   project: Project;
@@ -10,10 +14,14 @@ interface Milestone {
   state: "done" | "active" | "upcoming";
 }
 
-function formatMonth(iso: string): string | null {
+function formatMonth(iso: string, locale: Locale): string | null {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return null;
-  return d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  // EN keeps the original en-US rendering; AR gets Arabic month names.
+  return d.toLocaleDateString(locale === "ar" ? "ar-AE" : "en-US", {
+    month: "short",
+    year: "numeric",
+  });
 }
 
 /**
@@ -24,7 +32,10 @@ function formatMonth(iso: string): string | null {
  * status-derived states, never invented dates.
  */
 export function ProjectTimeline({ project }: ProjectTimelineProps) {
-  const salesStart = project.salesStartDate ? formatMonth(project.salesStartDate) : null;
+  const { locale } = useI18n();
+  const salesStart = project.salesStartDate
+    ? formatMonth(project.salesStartDate, locale)
+    : null;
   const progress =
     typeof project.constructionProgress === "number" &&
     project.constructionProgress > 0 &&

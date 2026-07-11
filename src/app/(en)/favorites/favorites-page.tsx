@@ -1,15 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { PageShell } from "@/components/page-shell";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ShowcaseProjectCard } from "@/components/showcase-project-card";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { FAVORITES_CHANGED_EVENT, getFavoriteSlugs } from "@/lib/favorites";
 import type { Project } from "@/lib/types";
+import { useI18n } from "@/i18n/locale-provider";
 
 export function FavoritesPage() {
+  const { dict } = useI18n();
+  const t = dict.favorites;
   const [slugs, setSlugs] = useState<string[]>(getFavoriteSlugs);
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(slugs.length > 0);
@@ -58,9 +61,9 @@ export function FavoritesPage() {
         <div className="absolute inset-0 bg-hero-overlay" />
         <div className="relative mx-auto max-w-[1200px] px-5 py-20 text-center md:px-8 md:py-28">
           <h1 className="font-display text-4xl font-semibold md:text-5xl">
-            My <em className="italic">Favorites.</em>
+            {t.titlePrefix} <em className="italic">{t.titleEm}</em>
           </h1>
-          <p className="mt-3 text-white/85">Your saved off-plan properties</p>
+          <p className="mt-3 text-white/85">{t.subtitle}</p>
         </div>
       </section>
 
@@ -68,21 +71,19 @@ export function FavoritesPage() {
         <Breadcrumbs
           items={[
             { label: "Home", href: "/" },
-            { label: "Favorites" },
+            { label: dict.nav.favorites },
           ]}
         />
         {loading ? (
           <div className="mt-8 rounded-2xl border border-border bg-surface-alt p-12 text-center text-sm text-muted">
-            Loading saved projects…
+            {t.loading}
           </div>
         ) : projects.length === 0 ? (
           <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface-alt p-12 text-center">
-            <p className="text-lg font-medium text-text-dark">No favorites yet</p>
-            <p className="mt-2 text-sm text-muted">
-              Tap the star on any project card to save it here.
-            </p>
+            <p className="text-lg font-medium text-text-dark">{t.emptyTitle}</p>
+            <p className="mt-2 text-sm text-muted">{t.emptyBody}</p>
             <PrimaryButton href="/projects" className="mt-6">
-              Browse Projects
+              {t.browseProjects}
             </PrimaryButton>
           </div>
         ) : (
@@ -95,12 +96,12 @@ export function FavoritesPage() {
 
         {projects.length > 0 ? (
           <div className="mt-10 text-center">
-            <Link
+            <LocaleLink
               href="/projects"
               className="rounded-full border border-brand px-6 py-3 text-sm font-semibold text-brand hover:bg-brand hover:text-white"
             >
-              Browse more projects
-            </Link>
+              {t.browseMore}
+            </LocaleLink>
           </div>
         ) : null}
       </main>
