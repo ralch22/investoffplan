@@ -10,7 +10,6 @@ export { generateStaticParams };
 
 export default function ArabicDeveloperDetailPage(props: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ page?: string; sort?: string }>;
 }) {
   return <DeveloperDetailPage {...props} locale="ar" />;
 }
