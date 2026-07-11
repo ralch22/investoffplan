@@ -541,7 +541,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             <h2 className="text-xl font-semibold text-text-dark">
               More in {cityLabel(project.city)}
             </h2>
-            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (
                 <ShowcaseProjectCard key={p.id} project={p} />
               ))}

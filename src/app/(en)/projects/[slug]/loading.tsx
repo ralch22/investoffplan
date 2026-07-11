@@ -21,7 +21,7 @@ export default function ProjectDetailLoading() {
       </section>
       <div className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
         <div className="skeleton h-6 w-40 rounded opacity-30" />
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[0, 1, 2, 3].map((i) => (
             <div key={i} className="skeleton h-24 rounded-2xl opacity-30" />
           ))}

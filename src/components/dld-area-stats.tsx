@@ -53,7 +53,7 @@ export function DldAreaStatsBand({ stats, areaName, source }: Props) {
         What {areaName} actually sold for in 2025 — from official Dubai Land Department records.
       </p>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {tiles.map((tile) => (
           <div key={tile.label} className="rounded-2xl border border-border bg-white p-5 shadow-elevation-sm">
             <p className="font-display text-2xl font-semibold tabular-nums text-brand md:text-3xl">

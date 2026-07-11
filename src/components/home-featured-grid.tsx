@@ -38,7 +38,7 @@ export function HomeFeaturedGrid({ latest, featured }: HomeFeaturedGridProps) {
               {dict.home.seeAll}
             </LocaleLink>
           </div>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {latest.map((project, index) => (
               <ShowcaseProjectCard
                 index={index}
@@ -72,7 +72,7 @@ export function HomeFeaturedGrid({ latest, featured }: HomeFeaturedGridProps) {
               </LocaleLink>
             </div>
             {/* 1 hero + 4 support — a bento rhythm break, not two full-width slabs */}
-            <div className="mt-8 grid gap-5 lg:grid-cols-3">
+            <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-3">
               <div className="lg:col-span-2">
                 <ShowcaseProjectCard
                   project={featured[0]}

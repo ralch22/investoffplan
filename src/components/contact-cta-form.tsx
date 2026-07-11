@@ -136,7 +136,7 @@ export function ContactCtaForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="relative mt-6 grid gap-3 sm:grid-cols-2" noValidate>
+    <form onSubmit={handleSubmit} className="relative mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2" noValidate>
       <HoneypotField value={honeypot} onChange={setHoneypot} />
       <div>
         <input

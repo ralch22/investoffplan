@@ -64,7 +64,7 @@ export function ProjectKeyFacts({ project }: ProjectKeyFactsProps) {
       >
         Key <em className="italic">information</em>
       </h2>
-      <dl className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <dl className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {facts.map((fact) => (
           <div
             key={fact.label}

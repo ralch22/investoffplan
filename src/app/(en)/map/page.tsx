@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 function MapLoading() {
   return (
-    <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[340px_1fr]">
       <div className="skeleton h-12 rounded-xl" />
       <div className="skeleton min-h-[360px] rounded-2xl" />
     </div>
@@ -52,7 +52,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
       </main>
 
       <section className="border-t border-border bg-white py-14">
-        <div className="mx-auto grid max-w-[1200px] gap-8 px-5 md:grid-cols-2 md:items-center md:px-8">
+        <div className="mx-auto grid grid-cols-1 max-w-[1200px] gap-8 px-5 md:grid-cols-2 md:items-center md:px-8">
           <div className="rounded-2xl bg-brand/10 p-8">
             <p className="text-4xl font-semibold text-brand">10 Years</p>
             <p className="mt-2 text-xl font-semibold text-text-dark">Golden Visa</p>

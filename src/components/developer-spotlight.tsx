@@ -17,7 +17,7 @@ export function DeveloperSpotlight() {
       <p className="mt-1 text-sm text-slate-500">
         Project counts synced from Property Finder developer pages
       </p>
-      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {devs.map((dev) => (
           <Link
             key={dev.id}

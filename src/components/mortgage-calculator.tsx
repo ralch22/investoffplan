@@ -27,7 +27,7 @@ export function MortgageCalculator() {
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1fr]">
       <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-text-dark">Your mortgage</h2>
         <p className="mt-1 text-sm text-muted">

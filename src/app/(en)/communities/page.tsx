@@ -46,7 +46,7 @@ export default async function CommunitiesPage() {
               View all →
             </LocaleLink>
           </div>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {featuredWithImages.map(({ community, imageUrl }) => (
               <LocaleLink
                 key={community.slug}
@@ -98,7 +98,7 @@ export default async function CommunitiesPage() {
             <p className="mt-2 max-w-xl text-sm text-muted">
               Side-by-side on real 2025 sold prices and gross rental yields.
             </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {comparisons.map((c) => (
                 <LocaleLink
                   key={c.pairSlug}

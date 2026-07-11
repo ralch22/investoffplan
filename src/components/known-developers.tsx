@@ -14,7 +14,7 @@ export function KnownDevelopers() {
       <h2 className="text-xl font-semibold text-slate-900">
         Projects by Known Developers in UAE
       </h2>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {devs.map((dev) => (
           <Link
             key={dev.id}

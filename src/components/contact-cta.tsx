@@ -10,7 +10,7 @@ const INFO_ITEMS = [
 export function ContactCta() {
   return (
     <section className="bg-surface-darker py-16 text-white">
-      <div className="mx-auto grid max-w-[1200px] gap-10 px-5 md:grid-cols-2 md:items-center md:px-8">
+      <div className="mx-auto grid grid-cols-1 max-w-[1200px] gap-10 px-5 md:grid-cols-2 md:items-center md:px-8">
         <div className="overflow-hidden rounded-2xl bg-white text-text-dark shadow-xl">
           <div className="bg-brand px-6 py-4 text-center font-semibold text-white">
             Get information on

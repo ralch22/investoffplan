@@ -126,7 +126,7 @@ export default async function MarketReportPage({ params }: PageProps) {
       {/* Market summary */}
       <section className="report-section mt-8">
         <h2 className="font-display text-xl font-semibold">{s.summaryTitle}</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {summaryTiles.map((tile) => (
             <div key={tile.label} className="rounded-2xl border border-border p-4">
               <p className="font-display text-xl font-semibold tabular-nums text-brand">

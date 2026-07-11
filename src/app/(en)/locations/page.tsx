@@ -21,7 +21,7 @@ export default function LocationGuidesPage() {
         subtitle="Where to buy in Dubai, answered with data — communities ranked on real Dubai Land Department 2025 transactions and our live off-plan catalog."
       />
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           {LOCATION_GUIDES.map((guide) => (
             <LocaleLink
               key={guide.slug}

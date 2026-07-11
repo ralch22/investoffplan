@@ -118,7 +118,7 @@ export function ProjectMedia({ videoUrl, virtualTourUrl, projectName }: ProjectM
     <section id="media" className="mt-12 scroll-mt-24">
       <h2 className="text-xl font-semibold text-text-dark">Video &amp; virtual tour</h2>
       <p className="mt-1 text-sm text-muted">Walkthroughs and 3D tours from the developer.</p>
-      <div className="mt-5 grid gap-5 md:grid-cols-2">
+      <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
         {showVideo && videoMedia ? (
           videoMedia.kind === "file" && videoMedia.fileSrc ? (
             <VideoFile src={videoMedia.fileSrc} title={`${projectName} video`} />

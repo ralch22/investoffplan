@@ -188,7 +188,7 @@ export default async function CompareDevelopersPage({ params }: PageProps) {
         </div>
 
         {/* Where they build */}
-        <section className="mt-10 grid gap-5 md:grid-cols-2">
+        <section className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
           {[a, b].map((side) => (
             <div key={side.slug} className="rounded-2xl border border-border bg-white p-6 shadow-sm">
               <h3 className="text-lg font-semibold text-text-dark">Where {side.name} builds</h3>

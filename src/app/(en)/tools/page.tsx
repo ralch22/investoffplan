@@ -34,7 +34,7 @@ export default async function ToolsHubPage() {
           and payment calculators they do not offer on new projects.
         </p>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {DATAGURU_TOOLS.map((tool) => (
             <DataGuruToolCard key={tool.slug} tool={tool} />
           ))}

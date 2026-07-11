@@ -63,7 +63,7 @@ export default async function ArabicContactPage() {
           ]}
         />
 
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
           {CHANNELS.map((channel) => (
             <a
               key={channel.label}
