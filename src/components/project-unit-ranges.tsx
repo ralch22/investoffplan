@@ -28,9 +28,13 @@ export function ProjectUnitRanges({ units }: ProjectUnitRangesProps) {
     existing.sqftMax = Math.max(existing.sqftMax, maxSqft);
   }
 
+  // sqft 0 = size unknown (dev-fallback ingest units carry only PF-stated
+  // facts) — rows without a real size render the type alone, never "0 sqft".
   const rows = [...groups.values()].sort((a, b) => a.beds - b.beds);
 
   if (rows.length === 0) return null;
+  const allUnknown = rows.every((row) => !(row.sqftMin > 0));
+  if (allUnknown) return null;
 
   return (
     <div className="mt-6">
@@ -43,10 +47,14 @@ export function ProjectUnitRanges({ units }: ProjectUnitRangesProps) {
             <span className="font-semibold capitalize">
               {formatBeds(row.beds)} {row.propertyType}s
             </span>
-            {" — sizes "}
-            {row.sqftMin === row.sqftMax
-              ? formatSqft(row.sqftMin)
-              : `${formatSqft(row.sqftMin)} to ${formatSqft(row.sqftMax)}`}
+            {row.sqftMin > 0 ? (
+              <>
+                {" — sizes "}
+                {row.sqftMin === row.sqftMax
+                  ? formatSqft(row.sqftMin)
+                  : `${formatSqft(row.sqftMin)} to ${formatSqft(row.sqftMax)}`}
+              </>
+            ) : null}
           </li>
         ))}
       </ul>

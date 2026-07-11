@@ -30,6 +30,10 @@ export function parsePaymentPlan(plan: string): {
   handoverPct: number;
   afterPct: number;
 } | null {
+  // Only parse plans that ARE numeric splits ("20/40/40", "5 / 30 / 65").
+  // Junk labels like "2 Payment Plans" previously matched their "2" and the
+  // calculator rendered a fabricated 2% down payment (102 live projects).
+  if (!/^\d+(\s*\/\s*\d+)+$/.test(plan.trim())) return null;
   const nums = plan.match(/\d+/g)?.map(Number);
   if (!nums?.length) return null;
   const [down = 0, during = 0, handover = 0, after = 0] = nums;

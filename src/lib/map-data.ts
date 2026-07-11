@@ -34,10 +34,12 @@ export function getMapProjectsFromList(projects: Project[]): MapProject[] {
       city: p.city,
       lat: p.coordinates!.lat,
       lng: p.coordinates!.lng,
-      minPriceAed:
-        p.units && p.units.length > 0
-          ? Math.min(...p.units.map((u) => u.launchPriceAed))
-          : p.minPriceAed ?? 0,
+      minPriceAed: (() => {
+        const priced = (p.units ?? []).filter((u) => u.launchPriceAed > 0);
+        return priced.length
+          ? Math.min(...priced.map((u) => u.launchPriceAed))
+          : p.minPriceAed ?? 0;
+      })(),
       handover: p.handover,
       imageUrl: p.imageUrl,
     }));

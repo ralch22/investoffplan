@@ -30,7 +30,10 @@ export function ShowcaseProjectCard({
   index = 0,
 }: ShowcaseProjectCardProps) {
   const { locale, dict } = useI18n();
-  const minPrice = Math.min(...project.units.map((u) => u.launchPriceAed));
+  const pricedUnits = project.units.filter((u) => u.launchPriceAed > 0);
+  const minPrice = pricedUnits.length
+    ? Math.min(...pricedUnits.map((u) => u.launchPriceAed))
+    : 0;
   const isSoldOut = project.status === "sold-out";
 
   return (
@@ -99,9 +102,12 @@ export function ShowcaseProjectCard({
             </LocaleLink>
           </h3>
         </div>
-        <p className={cn("text-sm font-semibold", dark ? "text-white" : "text-brand")}>
-          {interpolate(dict.common.fromPrice, { price: formatPrice(minPrice, "AED") })}
-        </p>
+        {/* 0 = no stated price — hide rather than render "from AED 0". */}
+        {minPrice > 0 ? (
+          <p className={cn("text-sm font-semibold", dark ? "text-white" : "text-brand")}>
+            {interpolate(dict.common.fromPrice, { price: formatPrice(minPrice, "AED") })}
+          </p>
+        ) : null}
         <div className="flex flex-wrap items-center gap-2">
           <LocaleLink
             href={localePath(locale, `/projects/${project.slug}`)}

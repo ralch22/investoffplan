@@ -118,7 +118,7 @@ export function ProjectMapInner({
             >
               <p className="text-sm font-semibold text-text-dark">{p.name}</p>
               <p className="mt-1 text-xs text-muted">
-                {p.developer} · FROM {formatMapPrice(p.minPriceAed)}
+                {p.developer}{p.minPriceAed > 0 ? <> · FROM {formatMapPrice(p.minPriceAed)}</> : null}
               </p>
             </button>
           ))}
@@ -172,7 +172,9 @@ export function ProjectMapInner({
                   {selected.developer} · {selected.area}
                 </p>
                 <p className="mt-1 text-sm font-semibold text-brand">
-                  FROM {formatMapPrice(selected.minPriceAed)}
+                  {selected.minPriceAed > 0
+                    ? `FROM ${formatMapPrice(selected.minPriceAed)}`
+                    : "Price on request"}
                   {selected.handover ? ` · ${selected.handover}` : ""}
                 </p>
               </div>
