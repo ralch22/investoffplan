@@ -31,7 +31,7 @@ export async function buildGroups(): Promise<Entry[][]> {
   const catalogUpdated = new Date(api.meta.scrapedAt);
 
   const staticRoutes: Entry[] = [
-    "", "/projects", "/developers", "/communities", "/compare", "/compare/units",
+    "", "/projects", "/developers", "/communities", "/market-report", "/compare", "/compare/units",
     "/locations", "/guides", "/faq", "/map", "/contact", "/about", "/news",
     "/favorites", "/tools", "/tools/price-map", "/tools/communities",
     "/tools/rent-vs-buy", "/tools/mortgage", "/tools/residential", "/tools/payment",
@@ -40,7 +40,17 @@ export async function buildGroups(): Promise<Entry[][]> {
     url: `${BASE}${path}`,
     lastModified: catalogUpdated,
     changeFrequency: "weekly" as const,
-    priority: path === "" ? 1 : 0.8,
+    priority: path === "" ? 1 : path === "/market-report" ? 0.9 : 0.8,
+    ...(path === "/market-report"
+      ? {
+          alternates: {
+            languages: {
+              en: `${BASE}/market-report`,
+              ar: `${BASE}/ar/market-report`,
+            },
+          },
+        }
+      : {}),
   }));
 
   const projectRoutes: Entry[] = api.projects.map((p) => {
@@ -140,6 +150,7 @@ export async function buildGroups(): Promise<Entry[][]> {
 
   const arStaticPaths = [
     "/ar", "/ar/about", "/ar/contact", "/ar/projects", "/ar/communities",
+    "/ar/market-report",
     "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/compare", "/ar/locations", "/ar/map",
     "/ar/tools", "/ar/tools/mortgage", "/ar/tools/payment", "/ar/tools/rent-vs-buy",
     "/ar/tools/communities", "/ar/tools/price-map", "/ar/tools/residential",

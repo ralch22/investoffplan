@@ -16,7 +16,7 @@ import { useI18n } from "@/i18n/locale-provider";
 import { localePath } from "@/i18n/config";
 
 type NavKey =
-  | "projects" | "dataToolkit" | "developers" | "areas" | "marketData"
+  | "projects" | "dataToolkit" | "developers" | "areas" | "marketData" | "marketReport"
   | "locations" | "map" | "guides" | "news" | "favorites" | "about" | "contact" | "faq";
 
 interface NavGroup {
@@ -46,6 +46,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     labelKey: "insights",
     items: [
+      { href: "/market-report", key: "marketReport" },
       { href: "/guides", key: "guides" },
       { href: "/news", key: "news" },
       { href: "/faq", key: "faq" },

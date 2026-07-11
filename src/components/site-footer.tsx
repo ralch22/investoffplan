@@ -12,6 +12,7 @@ const MAIN_LINKS = [
   { href: "/developers", key: "developers" },
   { href: "/communities", key: "areas" },
   { href: "/locations", key: "locations" },
+  { href: "/market-report", key: "marketReport" },
   { href: "/compare", key: "marketData" },
   { href: "/tools", key: "dataToolkit" },
   { href: "/map", key: "map" },
