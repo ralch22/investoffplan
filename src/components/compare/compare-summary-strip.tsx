@@ -1,0 +1,85 @@
+import type { FlatUnit } from "@/lib/catalog-browser";
+import type { CurrencyCode } from "@/lib/types";
+import {
+  compareUnitKey,
+  computeCompareWinners,
+  type CompareStatsMap,
+} from "@/lib/compare-stats";
+import { unitPricePerSqft } from "@/lib/investment-metrics";
+import { formatPrice } from "@/lib/format";
+
+interface Chip {
+  label: string;
+  projectName: string;
+  value: string;
+}
+
+/**
+ * At-a-glance winner chips above the compare table. Only renders chips whose
+ * metric has a strict winner; renders nothing when no chip qualifies.
+ */
+export function CompareSummaryStrip({
+  items,
+  stats,
+  currency,
+}: {
+  items: FlatUnit[];
+  stats: CompareStatsMap;
+  currency: CurrencyCode;
+}) {
+  if (items.length < 2) return null;
+  const winners = computeCompareWinners(items, stats);
+  const byKey = new Map(items.map((i) => [compareUnitKey(i), i]));
+
+  const chips: Chip[] = [];
+  const push = (
+    key: string | null,
+    label: string,
+    value: (item: FlatUnit) => string | null,
+  ) => {
+    const item = key ? byKey.get(key) : undefined;
+    if (!item) return;
+    const v = value(item);
+    if (v == null) return;
+    chips.push({ label, projectName: item.project.name, value: v });
+  };
+
+  push(winners.lowestPpsqft, "Best value", (i) => {
+    const v = unitPricePerSqft(i);
+    return v ? `AED ${v.toLocaleString()}/sqft` : null;
+  });
+  push(winners.highestYield, "Highest yield", (i) => {
+    const y = stats[i.project.id]?.grossYieldPct;
+    return y != null ? `${y}% gross` : null;
+  });
+  push(winners.earliestHandover, "Earliest handover", (i) =>
+    i.project.handover ?? null,
+  );
+  push(winners.lowestPrice, "Lowest entry", (i) =>
+    formatPrice(i.unit.launchPriceAed, currency, { compact: true }),
+  );
+
+  if (chips.length === 0) return null;
+
+  return (
+    <div
+      data-testid="compare-summary-strip"
+      className="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4"
+    >
+      {chips.map((chip) => (
+        <div
+          key={chip.label}
+          className="rounded-xl border border-border bg-white p-3 shadow-elevation-sm"
+        >
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
+            {chip.label} <span className="text-brand">▲</span>
+          </p>
+          <p className="mt-1 truncate text-sm font-semibold text-text-dark">
+            {chip.projectName}
+          </p>
+          <p className="text-xs tabular-nums text-muted">{chip.value}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
