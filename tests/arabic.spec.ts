@@ -43,6 +43,18 @@ test.describe("Arabic locale", () => {
     await expect(page.getByRole("button", { name: "شبكة" }).first()).toBeVisible();
   });
 
+  // #320 — hero "properties in {location}" must not interpolate bare EN "UAE".
+  test("/ar/projects hero uses Arabic all-UAE location (not EN UAE)", async ({
+    page,
+  }) => {
+    await page.goto("/ar/projects");
+    await expect(page.locator("html")).toHaveAttribute("lang", "ar");
+    const heroSub = page.locator("section").filter({ has: page.getByRole("heading", { level: 1 }) }).locator("p").first();
+    await expect(heroSub).toContainText("عقارات في");
+    await expect(heroSub).toContainText("كل الإمارات");
+    await expect(heroSub).not.toContainText("UAE");
+  });
+
   // #280 — SERP developer blocks stay under /ar after catalog hydrate.
   test("/ar/projects developer spotlight/known links under /ar", async ({
     page,
