@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import CompareProjectsPage, { generateStaticParams } from "@/app/(en)/compare-projects/[pair]/page";
 import { buildProjectComparison } from "@/lib/project-compare";
 import { arMeta } from "@/lib/ar-meta";
@@ -19,7 +20,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { pair } = await params;
   const cmp = await buildProjectComparison(pair, "ar");
-  if (!cmp) return arMeta({ path: `/compare-projects/${pair}`, title: "مقارنة غير موجودة" });
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!cmp) notFound();
   return arMeta({
     path: `/compare-projects/${cmp.pairSlug}`,
     title: comparePairTitle(cmp.a.name, cmp.b.name, "off-plan"),

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getCatalogApi, getProjectBySlug } from "@/lib/catalog";
 import { shouldNoindexProject } from "@/lib/catalog-core";
 import { getSiteUrl } from "@/lib/site-url";
@@ -36,7 +37,8 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
     languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` },
   };
   const project = await getProjectBySlug(slug);
-  if (!project) return { title: "المشروع غير موجود", alternates };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!project) notFound();
   const areaName = project.area.split(",")[0]?.trim() || project.area;
 
   // Mirror the EN title logic: append the developer only on a genuine

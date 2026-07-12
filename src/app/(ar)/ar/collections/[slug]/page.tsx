@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { arMeta } from "@/lib/ar-meta";
 import { getCollectionPage } from "@/lib/collections";
 import CollectionsSlugPage, {
@@ -16,7 +17,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const page = getCollectionPage(slug);
-  if (!page) return arMeta({ path: `/collections/${slug}` });
+  // Soft metadata (no real 404) with HTTP 200 is banned (#241 / #322).
+  if (!page) notFound();
   const chrome = collectionChrome("ar", slug);
   return {
     ...arMeta({ path: `/collections/${slug}` }),

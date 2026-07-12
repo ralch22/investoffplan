@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import {
   articleDescription,
   articleTitle,
@@ -33,7 +34,8 @@ export async function generateMetadata({
     languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` },
   };
   const article = getNewsArticle(slug);
-  if (!article) return { title: "المقال غير موجود", alternates };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!article) notFound();
   const title = articleTitle(article, "ar");
   const description = articleDescription(article, "ar");
   return {

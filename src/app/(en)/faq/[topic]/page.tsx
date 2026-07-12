@@ -37,7 +37,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { topic: slug } = await params;
   const chrome = topicChrome("en", slug);
-  if (!chrome) return { title: "FAQ not found" };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!chrome) notFound();
   const dict = getDictionary("en");
   const title = `${chrome.title} — ${dict.faq.topicTitleSuffix}`;
 

@@ -32,7 +32,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const guide = getLocationGuide(slug);
-  if (!guide) return { title: "Guide not found" };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!guide) notFound();
   return {
     title: guide.title,
     description: guide.intro.slice(0, 158),

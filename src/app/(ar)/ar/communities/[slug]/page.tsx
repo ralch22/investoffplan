@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getCommunity } from "@/lib/communities";
 import { getSiteUrl } from "@/lib/site-url";
 import CommunityDetailPage, { generateStaticParams } from "@/app/(en)/communities/[slug]/page";
@@ -29,7 +30,8 @@ export async function generateMetadata({
     languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` },
   };
   const community = await getCommunity(slug);
-  if (!community) return { title: "المجتمع غير موجود", alternates };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!community) notFound();
   return {
     title: `عقارات على الخارطة في ${community.name}، ${community.cityLabel}`,
     description: `${community.projectCount} مشروعاً على الخارطة للبيع في ${community.name}، ${community.cityLabel} — الأسعار ومخططات الطوابق وخطط السداد وبيانات دائرة الأراضي والأملاك.`,

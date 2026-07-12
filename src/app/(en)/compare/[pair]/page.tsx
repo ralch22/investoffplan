@@ -45,7 +45,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { pair } = await params;
   const cmp = await buildAreaComparison(pair);
-  if (!cmp) return { title: "Comparison not found" };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!cmp) notFound();
   const a = cmp.a.area.name;
   const b = cmp.b.area.name;
   const yA = cmp.a.stats?.grossYieldPct;

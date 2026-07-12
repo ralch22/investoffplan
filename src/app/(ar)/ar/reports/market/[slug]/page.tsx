@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { arMeta } from "@/lib/ar-meta";
 import { getCommunity } from "@/lib/communities";
 import { interpolate } from "@/i18n/config";
@@ -20,13 +21,8 @@ export async function generateMetadata({
   const { slug } = await params;
   const community = await getCommunity(slug);
   const path = `/reports/market/${slug}`;
-  if (!community) {
-    return {
-      ...arMeta({ path }),
-      title: "التقرير غير موجود",
-      robots: { index: false, follow: false },
-    };
-  }
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!community) notFound();
   return {
     ...arMeta({ path }),
     title: interpolate(ar.reports.reportTitle, { name: community.name }),

@@ -121,9 +121,10 @@ test.describe("Content routes", () => {
     expect((titleMatch?.[1] ?? "").length).toBeLessThanOrEqual(70);
   });
 
-  // #241 — EN soft-404s: unknown detail slugs must be real HTTP 404s (not 200
-  // "… not found" shells). Matches projects/AR which already set dynamicParams=false.
-  test("unknown EN community/developer/news/guide slugs return 404", async ({
+  // #241 / #319 / #322 — unknown detail slugs must be real HTTP 404s (not 200
+  // "… not found" soft shells). generateMetadata must call notFound(), not return
+  // a soft title. Covers residual EN + AR routes beyond #319.
+  test("unknown EN/AR detail slugs return hard 404 (no soft metadata titles)", async ({
     page,
   }) => {
     for (const path of [
@@ -131,15 +132,38 @@ test.describe("Content routes", () => {
       "/developers/definitely-not-a-real-developer-xyz",
       "/news/definitely-not-a-real-article-xyz",
       "/guides/definitely-not-a-real-guide-xyz",
+      "/projects/definitely-not-a-real-project-xyz",
+      "/collections/definitely-not-a-real-collection-xyz",
+      "/locations/definitely-not-a-real-location-xyz",
+      "/faq/definitely-not-a-real-topic-xyz",
+      "/reports/market/definitely-not-a-real-report-xyz",
+      "/ar/communities/definitely-not-a-real-community-xyz",
+      "/ar/developers/definitely-not-a-real-developer-xyz",
+      "/ar/news/definitely-not-a-real-article-xyz",
+      "/ar/guides/definitely-not-a-real-guide-xyz",
+      "/ar/projects/definitely-not-a-real-project-xyz",
+      "/ar/collections/definitely-not-a-real-collection-xyz",
+      "/ar/locations/definitely-not-a-real-location-xyz",
+      "/ar/faq/definitely-not-a-real-topic-xyz",
+      "/ar/reports/market/definitely-not-a-real-report-xyz",
     ]) {
       const response = await page.goto(path, { waitUntil: "commit" });
       expect(response?.status(), path).toBe(404);
       const body = await response!.text();
-      expect(body).toContain("Page not found");
-      // Soft-404 titles must not win.
+      // Soft-404 entity titles must not win (EN).
       expect(body).not.toMatch(
-        /<title>(Community|Developer|Article|Guide) not found/i,
+        /<title>[^<]*(Community|Developer|Article|Guide|Project|Collection|FAQ|Report|Comparison) not found/i,
       );
+      // Soft AR entity titles (not the real branded 404 "الصفحة غير موجودة").
+      expect(body).not.toMatch(
+        /<title>[^<]*(المشروع غير موجود|المجتمع غير موجود|المطوّر غير موجود|المقال غير موجود|الدليل غير موجود|مقارنة غير موجودة|التقرير غير موجود)/,
+      );
+      // Real branded not-found chrome must win.
+      if (path.startsWith("/ar/")) {
+        expect(body).toContain("الصفحة غير موجودة");
+      } else {
+        expect(body).toContain("Page not found");
+      }
     }
   });
 

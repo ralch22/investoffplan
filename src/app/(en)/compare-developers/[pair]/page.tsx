@@ -40,7 +40,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { pair } = await params;
   const cmp = await buildDeveloperComparison(pair);
-  if (!cmp) return { title: "Comparison not found" };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!cmp) notFound();
   // Plain title + layout brand suffix; cap so full SERP title stays ≤60 chars.
   return {
     title: comparePairTitle(cmp.a.name, cmp.b.name, "developers"),

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { arMeta } from "@/lib/ar-meta";
 import { getLocationGuide, guideText } from "@/lib/location-guides";
 import LocationGuidePage, { generateStaticParams } from "@/app/(en)/locations/[slug]/page";
@@ -13,7 +14,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const guide = getLocationGuide(slug);
-  if (!guide) return arMeta({ path: `/locations/${slug}` });
+  // Soft metadata (no real 404) with HTTP 200 is banned (#241 / #322).
+  if (!guide) notFound();
   // Prefer AR h1/intro for <title>/description — guide.title is EN-only (#269).
   const arTitle = guideText(guide, "h1", "ar");
   const arIntro = guideText(guide, "intro", "ar");

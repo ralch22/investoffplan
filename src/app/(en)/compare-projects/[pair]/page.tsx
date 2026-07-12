@@ -36,7 +36,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { pair } = await params;
   const cmp = await buildProjectComparison(pair, "en");
-  if (!cmp) return { title: "Comparison not found" };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!cmp) notFound();
   const { a, b } = cmp;
   // Plain title + layout brand; enMeta for reciprocal hreflang with /ar mirror.
   return {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getDeveloper } from "@/lib/catalog";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -28,7 +29,8 @@ export async function generateMetadata({
     languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` },
   };
   const developer = await getDeveloper(slug);
-  if (!developer) return { title: "المطوّر غير موجود", alternates };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!developer) notFound();
   return {
     title: `مشاريع ${developer.name} على الخارطة في الإمارات`,
     description: `تصفّح ${developer.projectCount} مشروعاً على الخارطة من ${developer.name} في الإمارات مع أسعار الإطلاق وخطط السداد والبروشورات.`,

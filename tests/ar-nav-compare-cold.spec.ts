@@ -95,11 +95,28 @@ test.describe("AR nav loop stays in /ar", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "ar");
 
     const mainNav = page.getByRole("navigation", { name: "القائمة الرئيسية" });
+    await expect(mainNav).toBeVisible();
+
+    // Open via click only (hover+click races toggle). Hover portaled panel after
+    // open so scheduleClose cannot unmount mid-assert (#325/#329 CI).
+    async function openMega(name: RegExp, panelId: string) {
+      const btn = mainNav.getByRole("button", { name });
+      await expect(btn).toBeVisible();
+      await btn.click();
+      await expect(btn).toHaveAttribute("aria-expanded", "true", {
+        timeout: 5_000,
+      });
+      const panel = page.locator(`#${panelId}`);
+      await expect(panel).toBeVisible({ timeout: 10_000 });
+      await panel.hover();
+      return panel;
+    }
 
     // Communities → location guide labels (LOCATION_GUIDE_LINKS.labelAr).
-    await mainNav.getByRole("button", { name: /المجتمعات السكنية/ }).click();
-    const communitiesPanel = page.locator("#meganav-communities");
-    await expect(communitiesPanel).toBeVisible({ timeout: 10_000 });
+    const communitiesPanel = await openMega(
+      /المجتمعات السكنية/,
+      "meganav-communities",
+    );
     await expect(
       communitiesPanel.getByRole("link", { name: "الأفضل للعائلات" }),
     ).toBeVisible();
@@ -108,9 +125,7 @@ test.describe("AR nav loop stays in /ar", () => {
     ).toHaveCount(0);
 
     // Tools → dict.tools.cards titles (not EN DATAGURU_TOOLS).
-    await mainNav.getByRole("button", { name: /البيانات والأدوات/ }).click();
-    const toolsPanel = page.locator("#meganav-tools");
-    await expect(toolsPanel).toBeVisible({ timeout: 10_000 });
+    const toolsPanel = await openMega(/البيانات والأدوات/, "meganav-tools");
     await expect(
       toolsPanel.getByRole("link", { name: /خريطة الأسعار/ }),
     ).toBeVisible();
@@ -122,8 +137,7 @@ test.describe("AR nav loop stays in /ar", () => {
     ).toHaveCount(0);
 
     // Insights → dict.pages.guides.cards titles (not EN GUIDE_CARDS).
-    await mainNav.getByRole("button", { name: /^رؤى/ }).click();
-    const insightsPanel = page.locator("#meganav-insights");
+    const insightsPanel = await openMega(/^رؤى/, "meganav-insights");
     await expect(insightsPanel).toBeVisible({ timeout: 10_000 });
     await expect(
       insightsPanel.getByRole("link", {
