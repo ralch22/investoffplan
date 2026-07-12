@@ -274,15 +274,36 @@ export function ProjectsPage({
     return viewMode === "project" ? api.aggregateProjectView(sorted) : sorted;
   }, [api, allUnits, filters, sort, viewMode, collection]);
 
+  // True when any SERP filter/collection narrows the catalog (ignore layout/sort/page).
+  // Used so the Map view does not flash every pin while the client catalog hydrates
+  // with filters already active (deep-link or user clicked Map before hydrate).
+  const hasActiveFilters = useMemo(
+    () =>
+      filters.city !== "all" ||
+      filters.query !== "" ||
+      filters.propertyType !== "all" ||
+      filters.beds !== "all" ||
+      filters.minPrice !== null ||
+      filters.maxPrice !== null ||
+      filters.developer !== "all" ||
+      filters.paymentPlan !== "all" ||
+      filters.handoverBy !== "all" ||
+      filters.amenities.length > 0 ||
+      collection !== "all",
+    [filters, collection],
+  );
+
   // Project ids that survive the active filters, derived from the SAME `filtered`
   // set that drives the grid/list. Threaded into <ProjectMap> so the Map view
-  // shows exactly the filtered projects (grid/list/map stay consistent). `null`
-  // until the client catalog hydrates → the map shows all pins in the meantime,
-  // matching its own fallback to `initialProjects`.
+  // shows exactly the filtered projects (grid/list/map stay consistent) for
+  // beds/type/price and every other filter — without extending the lean MapProject
+  // shape. `null` only when no filters are active and catalog is still loading
+  // (show all pins from initialProjects). Empty Set while filters are active but
+  // catalog not ready → avoid unfiltered flash.
   const mapVisibleProjectIds = useMemo(() => {
-    if (!api) return null;
+    if (!api) return hasActiveFilters ? new Set<string>() : null;
     return new Set(filtered.map((item) => item.project.id));
-  }, [api, filtered]);
+  }, [api, filtered, hasActiveFilters]);
 
   const catalogReady = Boolean(api);
   // Before the first API response lands (and in the SSR HTML), fall back to
