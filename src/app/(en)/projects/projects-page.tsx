@@ -393,10 +393,11 @@ export function ProjectsPage({
       ? interpolate(s.heading, { count: resultCount.toLocaleString() })
       : interpolate(s.headingProjects, { count: resultCount.toLocaleString() });
 
+  // Locale-aware all-UAE token — bare "UAE" leaked into AR hero (#320).
   const locationLabel =
     filters.city !== "all"
       ? cities.find((c) => c.slug === filters.city)?.label
-      : "UAE";
+      : s.locationAll;
 
   // Suppress the skeleton on first load in the default view — the SSR-provided
   // cards are already on screen and the first API response only confirms them.
@@ -468,7 +469,9 @@ export function ProjectsPage({
             )}
           </h1>
           <p className="mt-3 text-lg text-white/85">
-            {interpolate(s.propertiesIn, { location: locationLabel ?? "UAE" })}
+            {interpolate(s.propertiesIn, {
+              location: locationLabel ?? s.locationAll,
+            })}
           </p>
         </div>
       </section>
