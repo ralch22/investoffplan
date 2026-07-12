@@ -123,6 +123,15 @@ test.describe("Compare cold path (promise cache)", () => {
     expect(html).not.toContain("Open the unit comparator");
     expect(html).toContain("قارن الوحدات");
     expect(html).toContain("افتح مقارنة الوحدات");
+    // #299 — projects/developers sections + yield/DLD note (residual after #248).
+    expect(html).not.toContain("Compare projects");
+    expect(html).not.toContain("Compare developers");
+    expect(html).not.toContain("Gross yield");
+    expect(html).not.toContain("All figures are anonymized");
+    expect(html).not.toContain("Head-to-head on price");
+    expect(html).not.toContain("Portfolio size, entry prices");
+    expect(html).toContain("قارن المشاريع");
+    expect(html).toContain("قارن المطوّرين");
   });
 
   // Issue #205 — bare pair-index paths must not 404 (live audit D).
