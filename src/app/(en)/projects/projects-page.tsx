@@ -113,7 +113,7 @@ export function ProjectsPage({
   const [compareIds, setCompareIds] = useState<CompareUnitId[]>(getStoredCompareIds);
   const compareGate = useGate("compare-slot");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>("unit");
+  const [viewMode, setViewMode] = useState<ViewMode>("project");
   const [cardLayout, setCardLayout] = useState<"grid" | "list" | "map">("grid");
   const [collection, setCollection] = useState<CollectionFilter>("all");
 
@@ -179,7 +179,7 @@ export function ProjectsPage({
     filters.amenities.length === 0 &&
     collection === "all" &&
     sort === "featured" &&
-    viewMode === "unit" &&
+    viewMode === "project" &&
     page === 1 &&
     cardLayout !== "map";
 

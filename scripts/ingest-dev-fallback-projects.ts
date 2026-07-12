@@ -89,7 +89,16 @@ async function fetchDevPage(
 ): Promise<{ projects: FallbackProject[]; total?: number }> {
   const url = `https://www.propertyfinder.ae${path}?view=unit_types${page > 1 ? `&page=${page}` : ""}`;
   const res = await fetch(url, { headers: { "User-Agent": UA } });
-  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  // 404 means either no more pages (page > 1) or dev page doesn't support
+  // view=unit_types (page 1 — Emaar and similar devs with unit-level feeds).
+  // In both cases treat as empty result so the run continues.
+  if (!res.ok) {
+    if (res.status === 404) {
+      console.warn(`[dev-fallback]   404 ${url} — skipping`);
+      return { projects: [] };
+    }
+    throw new Error(`HTTP ${res.status} for ${url}`);
+  }
   const html = await res.text();
   const m = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
   if (!m) return { projects: [] };

@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const api = await getCatalogApi();
-  const initialPageItems = api.sortUnits(api.flattenCatalogUnits(), "featured").slice(0, PAGE_SIZE);
+  const initialPageItems = api.aggregateProjectView(api.sortUnits(api.flattenCatalogUnits(), "featured")).slice(0, PAGE_SIZE);
   const initialCityCounts = api.getCityCounts();
   const initialMapProjects = getMapProjectsFromList(api.projects);
   const [developers, amenityOptions] = await Promise.all([
@@ -64,7 +64,7 @@ export default async function Page() {
         }}
         initialPageItems={initialPageItems}
         initialCityCounts={initialCityCounts}
-        initialResultCount={api.meta.unitCount}
+        initialResultCount={api.meta.projectCount}
         initialMapProjects={initialMapProjects}
         developerOptions={developerOptions}
         amenityOptions={amenityOptions}
