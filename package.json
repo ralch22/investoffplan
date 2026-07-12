@@ -28,6 +28,7 @@
     "db:seed:remote": "node scripts/seed-remote-d1.mjs",
     "db:upsert:local": "tsx scripts/upsert-catalog-to-d1.ts",
     "db:upsert:remote": "tsx scripts/upsert-catalog-to-d1.ts --remote",
+    "catalog:disambiguate-slugs": "npx tsx scripts/apply-slug-disambiguation-to-catalog.ts",
     "ingest:catalog": "tsx scripts/catalog-ingest-pipeline.ts",
     "ingest:catalog:smoke": "tsx scripts/catalog-ingest-pipeline.ts --smoke --remote",
     "smoke:catalog-upsert": "tsx scripts/smoke-catalog-upsert.ts",

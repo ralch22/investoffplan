@@ -21,6 +21,10 @@ export const KNOWN_PROJECT_SLUG_RENAMES: Readonly<Record<string, string>> = {
   "294267ab-c22c-4b14-82be-0b33cc1036d3": "emerge-residences",
   // Émerge Residences — Elysian Development
   "a7b340ae-5517-4880-9e37-b919a164b941": "emerge-residences-elysian",
+  // Nobu Residences — H&H Development Al Marjan (winner keeps bare slug)
+  "91f91db5-a8e7-4998-8e07-e48c14186616": "nobu-residences",
+  // Nobu Residences — Aldar Saadiyat
+  "8e7d7b65-c663-4a2a-ae76-cc80be2d2074": "nobu-residences-aldar",
 };
 
 /**
@@ -28,8 +32,8 @@ export const KNOWN_PROJECT_SLUG_RENAMES: Readonly<Record<string, string>> = {
  *
  * Covers developer-token / full-developer-slug forms people (or older
  * disambiguation fallbacks) may hit. The surviving bare slugs
- * (`arthouse-residences`, `emerge-residences`) are intentionally absent —
- * redirecting them would bait-and-switch the winner's SEO.
+ * (`arthouse-residences`, `emerge-residences`, `nobu-residences`) are
+ * intentionally absent — redirecting them would bait-and-switch the winner's SEO.
  */
 export const PROJECT_SLUG_REDIRECTS: Readonly<Record<string, string>> = {
   // Aviaan twin — full developer slug form → short token form
@@ -42,4 +46,9 @@ export const PROJECT_SLUG_REDIRECTS: Readonly<Record<string, string>> = {
   // NAAS winner — developer-token / full forms → bare surviving slug
   "emerge-residences-naas": "emerge-residences",
   "emerge-residences-naas-development": "emerge-residences",
+  // Aldar twin — full developer slug form → short token form
+  "nobu-residences-aldar-properties-pjsc": "nobu-residences-aldar",
+  // H&H winner — developer-token forms → bare surviving slug
+  "nobu-residences-h": "nobu-residences",
+  "nobu-residences-h-h-development": "nobu-residences",
 };
