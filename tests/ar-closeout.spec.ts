@@ -43,6 +43,22 @@ test.describe("AR close-out", () => {
     expect(html).not.toContain(">Under AED 1M<");
   });
 
+  // #321 — AR PDP generated FAQ band uses Arabic templates, not EN buildProjectFaqs.
+  test("/ar/projects PDP generated FAQs are Arabic", async ({ page }) => {
+    const response = await page.goto("/ar/projects/105-residences", {
+      waitUntil: "commit",
+    });
+    expect(response?.status()).toBe(200);
+    const html = await response!.text();
+    expect(html).toContain('lang="ar"');
+    // Arabic FAQ stems from dict.pdp.generatedFaqs
+    expect(html).toMatch(/كم تبلغ أسعار|ما هي أسعار الإطلاق|كم تكلفة الوحدة|متى يكتمل|ما خطة السداد|من المطوّر/);
+    // English FAQ stems must not win on AR PDP.
+    expect(html).not.toContain("What do apartments at");
+    expect(html).not.toContain("Who is the developer behind");
+    expect(html).not.toContain("What are launch prices at");
+  });
+
   // Residual: residential tools form labels from dict (not hard-coded EN).
   test("/ar/tools/residential residual form chrome is Arabic", async ({ page }) => {
     const response = await page.goto("/ar/tools/residential", {
