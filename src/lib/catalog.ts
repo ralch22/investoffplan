@@ -38,35 +38,45 @@ export interface InsightStat {
 }
 
 let cachedApi: CatalogApi | null = null;
+// Promise-singleton prevents thundering-herd: concurrent callers on a cold
+// isolate all await the same in-flight load instead of firing N parallel fetches.
+let loadingPromise: Promise<CatalogApi> | null = null;
 
 export async function getCatalogApi(): Promise<CatalogApi> {
   if (cachedApi) return cachedApi;
+  if (loadingPromise) return loadingPromise;
 
-  const isStaticBuild = process.env.NEXT_IS_BUILD === "1";
-  if (process.env.NEXT_PUBLIC_CATALOG_API === "1" && !isStaticBuild) {
-    const db = await getDb();
-    if (db) {
-      const raw = await fetchCatalogFile(db);
-      if (raw) {
-        cachedApi = createCatalogApi(raw);
-        return cachedApi;
+  loadingPromise = (async () => {
+    const isStaticBuild = process.env.NEXT_IS_BUILD === "1";
+    if (process.env.NEXT_PUBLIC_CATALOG_API === "1" && !isStaticBuild) {
+      const db = await getDb();
+      if (db) {
+        const raw = await fetchCatalogFile(db);
+        if (raw) {
+          cachedApi = createCatalogApi(raw);
+          loadingPromise = null;
+          return cachedApi;
+        }
       }
     }
-  }
 
-  try {
-    const raw = JSON.parse(readFileSync(join(process.cwd(), "data/catalog.json"), "utf8")) as CatalogFile;
-    cachedApi = createCatalogApi(raw);
-  } catch {
-    // Apex fallback — a missing env var must not point data fetches at the
-    // preview Worker (src/lib/site-url.ts defaults to the production domain).
-    const base = getSiteUrl();
-    // catalog.json is excluded from CF assets (>25 MB); use the lite mirror instead.
-    const res = await fetch(`${base}/data/catalog-lite.json`, { next: { revalidate: 3600 } });
-    const raw = (await res.json()) as CatalogFile;
-    cachedApi = createCatalogApi(raw);
-  }
-  return cachedApi;
+    try {
+      const raw = JSON.parse(readFileSync(join(process.cwd(), "data/catalog.json"), "utf8")) as CatalogFile;
+      cachedApi = createCatalogApi(raw);
+    } catch {
+      // Apex fallback — a missing env var must not point data fetches at the
+      // preview Worker (src/lib/site-url.ts defaults to the production domain).
+      const base = getSiteUrl();
+      // catalog.json is excluded from CF assets (>25 MB); use the lite mirror instead.
+      const res = await fetch(`${base}/data/catalog-lite.json`, { next: { revalidate: 3600 } });
+      const raw = (await res.json()) as CatalogFile;
+      cachedApi = createCatalogApi(raw);
+    }
+    loadingPromise = null;
+    return cachedApi!;
+  })();
+
+  return loadingPromise;
 }
 
 export async function getDevelopers(): Promise<DeveloperSummary[]> {
