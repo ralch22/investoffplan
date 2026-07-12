@@ -210,4 +210,27 @@ test.describe("Advanced SERP filters", () => {
     await expect(page.getByLabel("Developer")).toHaveValue("emaar-properties");
     await expect(page.getByLabel("Handover by")).toHaveValue("2028");
   });
+
+  test("deep-link hydrates page + sort and keeps them in the URL", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/projects?page=2&sort=price-asc&city=dubai");
+    await waitForCatalogHydration(page);
+
+    // Sort restored from ?sort (not the default "Featured").
+    await expect(
+      page.getByRole("combobox", { name: /Sort by/i }),
+    ).toHaveValue("price-asc");
+    // Page restored from ?page — the active pager button is page 2.
+    await expect(page.getByRole("button", { name: "Page 2" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+
+    // The write-effect must NOT strip page/sort from the URL (the original bug).
+    await expect(page).toHaveURL(/[?&]page=2(?:&|$)/, { timeout: 10_000 });
+    await expect(page).toHaveURL(/[?&]sort=price-asc(?:&|$)/);
+    await expect(page).toHaveURL(/[?&]city=dubai(?:&|$)/);
+  });
 });

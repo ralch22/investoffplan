@@ -18,6 +18,7 @@ import {
   formatBeds,
   formatFromPrice,
   formatLaunchPrice,
+  formatPricePerSqft,
   formatSqft,
 } from "@/lib/format";
 import { resolveBrochureUrl } from "@/lib/brochure";
@@ -170,7 +171,7 @@ export function ProjectCard({
             <p className="line-clamp-2 text-sm text-white/80">
               {formatBeds(unit.beds)} · {formatSqft(unit.sqftMin, unit.sqftMax)} ·{" "}
               {unit.propertyType}
-              {ppsf ? ` · AED ${ppsf.toLocaleString()}/sqft` : ""}
+              {ppsf ? ` · ${formatPricePerSqft(ppsf, currency)}` : ""}
             </p>
             <p className="text-xl font-bold text-white">
               {formatFromPrice(unit.launchPriceAed, unit.launchPriceMaxAed, currency)}

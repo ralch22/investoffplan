@@ -65,6 +65,16 @@ export function formatFromPrice(
   return `FROM ${formatPrice(minAed, currency)}`;
 }
 
+export function formatPricePerSqft(
+  ppsfAed: number | null | undefined,
+  currency: CurrencyCode,
+): string | null {
+  // Converts the per-sqft price into the active currency (formatPrice handles
+  // the AED→USD rate + symbol) so it never disagrees with the headline price.
+  if (!ppsfAed || !(ppsfAed > 0)) return null;
+  return `${formatPrice(ppsfAed, currency)}/sqft`;
+}
+
 export function formatSqft(min: number, max?: number): string {
   // 0 = size unknown (e.g. dev-fallback ingest units carry only PF-stated
   // facts) — render the app-wide "—" placeholder, never "0 sqft".

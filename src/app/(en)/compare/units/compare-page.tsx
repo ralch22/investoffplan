@@ -33,6 +33,7 @@ import { PaymentPlanBar } from "@/components/compare/payment-plan-bar";
 import { CompareSummaryStrip } from "@/components/compare/compare-summary-strip";
 import { getProjectGalleryImages } from "@/lib/project-gallery-images";
 import { cn } from "@/lib/cn";
+import { useCurrency } from "@/hooks/use-currency";
 import type { CurrencyCode } from "@/lib/types";
 
 interface ComparePageProps {
@@ -145,7 +146,7 @@ export function ComparePage({
   initialStats = {},
 }: ComparePageProps) {
   const { api, loading } = useCatalog();
-  const [currency, setCurrency] = useState<CurrencyCode>("AED");
+  const currency = useCurrency();
   const router = useRouter();
   const [compareIds, setCompareIds] = useState<CompareUnitId[]>(initialIds);
   const items = useMemo(() => {
@@ -188,11 +189,7 @@ export function ComparePage({
   }
 
   return (
-    <PageShell
-      currency={currency}
-      onCurrencyChange={setCurrency}
-      headerVariant="transparent"
-    >
+    <PageShell headerVariant="transparent" showCurrency>
       <section className="relative overflow-hidden bg-surface-dark text-white">
         <div className="absolute inset-0 bg-hero-overlay" />
         <div className="relative mx-auto max-w-[1200px] px-5 py-20 text-center md:px-8 md:py-28">

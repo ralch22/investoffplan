@@ -26,12 +26,12 @@ import {
   setStoredCompareIds,
 } from "@/lib/compare-storage";
 import { PAGE_SIZE, useCatalog, type FlatUnit } from "@/lib/catalog-browser";
+import { useCurrency } from "@/hooks/use-currency";
 import type { MapProject } from "@/lib/map-data";
 import { ProjectsSkeleton } from "@/components/projects-skeleton";
 import type {
   CitySlug,
   CollectionFilter,
-  CurrencyCode,
   ProjectFilters as Filters,
   SortOption,
   ViewMode,
@@ -91,14 +91,23 @@ export function ProjectsPage({
   amenityOptions = [],
 }: ProjectsPageProps) {
   const { api, loading, error } = useCatalog();
-  const [currency, setCurrency] = useState<CurrencyCode>("AED");
+  const currency = useCurrency();
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
 
-  const handleSync = useCallback((syncedFilters: Filters, syncedCollection: CollectionFilter) => {
-    setFilters(syncedFilters);
-    setCollection(syncedCollection);
-    setPage(1);
-  }, []);
+  const handleSync = useCallback(
+    (
+      syncedFilters: Filters,
+      syncedCollection: CollectionFilter,
+      syncedPage: number,
+      syncedSort: SortOption,
+    ) => {
+      setFilters(syncedFilters);
+      setCollection(syncedCollection);
+      setSort(syncedSort);
+      setPage(syncedPage);
+    },
+    [],
+  );
   const [sort, setSort] = useState<SortOption>("featured");
   const [page, setPage] = useState(1);
   const [compareIds, setCompareIds] = useState<CompareUnitId[]>(getStoredCompareIds);
@@ -285,7 +294,7 @@ export function ProjectsPage({
 
   if (error && !api) {
     return (
-      <PageShell headerVariant="transparent">
+      <PageShell headerVariant="transparent" showCurrency>
         <section className="relative overflow-hidden bg-surface-dark text-white">
           <div className="absolute inset-0 bg-hero-overlay" />
           <div className="relative mx-auto max-w-[1200px] px-5 py-20 text-center md:px-8 md:py-28">
@@ -314,16 +323,14 @@ export function ProjectsPage({
   }
 
   return (
-    <PageShell
-      currency={currency}
-      onCurrencyChange={setCurrency}
-      headerVariant="transparent"
-    >
+    <PageShell headerVariant="transparent" showCurrency>
       <Suspense fallback={null}>
-        <ProjectsSearchSync 
-          filters={filters} 
-          collection={collection} 
-          onSync={handleSync} 
+        <ProjectsSearchSync
+          filters={filters}
+          collection={collection}
+          page={page}
+          sort={sort}
+          onSync={handleSync}
         />
       </Suspense>
       <section className="relative overflow-hidden bg-surface-dark text-white">

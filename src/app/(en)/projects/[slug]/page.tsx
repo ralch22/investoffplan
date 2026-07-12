@@ -18,6 +18,7 @@ import { ProjectPaymentCalculator } from "@/components/project-payment-calculato
 import { ProjectDetailNav } from "@/components/project-detail-nav";
 import { SectionViewTracker } from "@/components/section-view-tracker";
 import { ProjectSummaryRail } from "@/components/project-summary-rail";
+import { Price, PricePerSqft } from "@/components/currency-price";
 import { PROJECT_DETAIL_SECTIONS } from "@/lib/project-detail-sections";
 import { ProjectUnitsTable } from "@/components/project-units-table";
 import { ProjectMedia } from "@/components/project-media";
@@ -38,7 +39,6 @@ import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
 import { getProjectComparisonLinks } from "@/lib/project-compare";
 import {
   cityLabel,
-  formatPrice,
 } from "@/lib/format";
 import { stripTrailingDeveloper } from "@/lib/developer-utils";
 import { buildFactualSummary } from "@/lib/project-factual-summary";
@@ -210,8 +210,6 @@ export default async function ProjectDetailPage({
   const minPrice = pricedUnits.length
     ? Math.min(...pricedUnits.map((u) => u.launchPriceAed))
     : 0;
-  const fromPriceLabel =
-    minPrice > 0 ? formatPrice(minPrice, "AED") : dict.pdp.priceOnRequest;
   // UAE grants a 10-year Golden Visa for property investment >= AED 2M.
   const goldenVisaEligible = project.units.some((u) => u.launchPriceAed >= 2_000_000);
   const projectCompareLinks = await getProjectComparisonLinks(project);
@@ -318,9 +316,6 @@ export default async function ProjectDetailPage({
   const firstUnitPpsf = project.units[0]
     ? unitPricePerSqft({ project, unit: project.units[0] })
     : null;
-  const pricePerSqftLabel = firstUnitPpsf
-    ? `AED ${firstUnitPpsf.toLocaleString()}/sqft`
-    : null;
 
   const detailSections = PROJECT_DETAIL_SECTIONS.filter((section) => {
     if (section.id === "masterplan") return Boolean(project.masterPlanUrl);
@@ -333,7 +328,7 @@ export default async function ProjectDetailPage({
   });
 
   return (
-    <PageShell headerVariant="transparent" mobileDock="cta">
+    <PageShell headerVariant="transparent" mobileDock="cta" showCurrency>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -387,12 +382,28 @@ export default async function ProjectDetailPage({
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {[
-              { label: dict.pdp.hero.statFrom, value: fromPriceLabel },
-              { label: dict.pdp.hero.statPayment, value: project.paymentPlan },
-              { label: dict.pdp.hero.statUnits, value: String(project.unitCount) },
-              { label: dict.pdp.hero.statType, value: project.units[0]?.propertyType ?? dict.pdp.hero.apartment },
+              {
+                label: dict.pdp.hero.statFrom,
+                value: <Price aed={minPrice} fallback={dict.pdp.priceOnRequest} />,
+                show: true,
+              },
+              {
+                label: dict.pdp.hero.statPayment,
+                value: project.paymentPlan,
+                show: Boolean(project.paymentPlan?.trim()),
+              },
+              {
+                label: dict.pdp.hero.statUnits,
+                value: String(project.unitCount),
+                show: true,
+              },
+              {
+                label: dict.pdp.hero.statType,
+                value: project.units[0]?.propertyType ?? dict.pdp.hero.apartment,
+                show: true,
+              },
             ]
-              .filter((stat) => stat.value?.trim())
+              .filter((stat) => stat.show)
               .map((stat) => (
               <div
                 key={stat.label}
@@ -489,16 +500,14 @@ export default async function ProjectDetailPage({
         </div>
 
         <p className="mt-4 text-2xl font-semibold text-brand">
-          {minPrice > 0 ? <>{dict.pdp.fromUpper} {formatPrice(minPrice, "AED")}</> : dict.pdp.priceOnRequestUpper}
-          {project.units[0] ? (
+          {minPrice > 0 ? (
+            <>{dict.pdp.fromUpper} <Price aed={minPrice} /></>
+          ) : (
+            dict.pdp.priceOnRequestUpper
+          )}
+          {firstUnitPpsf ? (
             <span className="ms-3 text-base font-medium text-muted">
-              {(() => {
-                const ppsf = unitPricePerSqft({
-                  project,
-                  unit: project.units[0],
-                });
-                return ppsf ? `· AED ${ppsf.toLocaleString()}/sqft` : "";
-              })()}
+              · <PricePerSqft aed={firstUnitPpsf} />
             </span>
           ) : null}
         </p>
@@ -636,8 +645,8 @@ export default async function ProjectDetailPage({
             <ProjectSummaryRail
               projectName={project.name}
               projectSlug={project.slug}
-              priceLabel={fromPriceLabel}
-              pricePerSqft={pricePerSqftLabel}
+              minPriceAed={minPrice}
+              pricePerSqftAed={firstUnitPpsf}
               paymentPlan={project.paymentPlan}
               unitCount={project.unitCount}
               handover={project.handover ?? dict.pdp.keyFacts.toBeAnnounced}

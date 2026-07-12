@@ -2,15 +2,46 @@
 
 import { useEffect, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import type { ProjectFilters as Filters, CollectionFilter, CitySlug } from "@/lib/types";
+import type {
+  ProjectFilters as Filters,
+  CollectionFilter,
+  CitySlug,
+  SortOption,
+} from "@/lib/types";
+
+const SORT_OPTIONS: readonly SortOption[] = [
+  "featured",
+  "price-asc",
+  "price-desc",
+  "value-asc",
+  "handover-asc",
+  "handover-desc",
+];
+
+function isSortOption(value: string): value is SortOption {
+  return (SORT_OPTIONS as readonly string[]).includes(value);
+}
 
 interface ProjectsSearchSyncProps {
   filters: Filters;
   collection: CollectionFilter;
-  onSync: (filters: Filters, collection: CollectionFilter) => void;
+  page: number;
+  sort: SortOption;
+  onSync: (
+    filters: Filters,
+    collection: CollectionFilter,
+    page: number,
+    sort: SortOption,
+  ) => void;
 }
 
-export function ProjectsSearchSync({ filters, collection, onSync }: ProjectsSearchSyncProps) {
+export function ProjectsSearchSync({
+  filters,
+  collection,
+  page,
+  sort,
+  onSync,
+}: ProjectsSearchSyncProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -25,6 +56,8 @@ export function ProjectsSearchSync({ filters, collection, onSync }: ProjectsSear
     let hasUpdates = false;
     const newFilters = { ...filters };
     let newCollection = collection;
+    let newPage = page;
+    let newSort = sort;
 
     const q = searchParams.get("q") ?? searchParams.get("query");
     if (q) { newFilters.query = q; hasUpdates = true; }
@@ -81,10 +114,24 @@ export function ProjectsSearchSync({ filters, collection, onSync }: ProjectsSear
       hasUpdates = true;
     }
 
-    if (hasUpdates) {
-      onSync(newFilters, newCollection);
+    const pageParam = searchParams.get("page");
+    if (pageParam) {
+      const n = Number(pageParam);
+      // Positive int only; clamp ≥1 so ?page=0 / ?page=-3 / ?page=abc never
+      // poison pagination.
+      if (Number.isInteger(n) && n >= 1) { newPage = n; hasUpdates = true; }
     }
-  }, [searchParams, filters, collection, onSync]);
+
+    const sortParam = searchParams.get("sort");
+    if (sortParam && isSortOption(sortParam)) {
+      newSort = sortParam;
+      hasUpdates = true;
+    }
+
+    if (hasUpdates) {
+      onSync(newFilters, newCollection, newPage, newSort);
+    }
+  }, [searchParams, filters, collection, page, sort, onSync]);
 
   // Write to URL on changes
   useEffect(() => {
@@ -110,14 +157,17 @@ export function ProjectsSearchSync({ filters, collection, onSync }: ProjectsSear
     if (filters.paymentPlan !== "all") params.set("pay", filters.paymentPlan);
     if (filters.handoverBy !== "all") params.set("handover", String(filters.handoverBy));
     if (filters.amenities.length > 0) params.set("amen", filters.amenities.join(","));
-    
+    // Only serialize non-default page/sort so the clean default URL stays clean.
+    if (page > 1) params.set("page", String(page));
+    if (sort !== "featured") params.set("sort", sort);
+
     const newSearch = params.toString();
     const currentSearch = searchParams.toString();
-    
+
     if (newSearch !== currentSearch) {
       router.replace(`${pathname}${newSearch ? `?${newSearch}` : ""}`, { scroll: false });
     }
-  }, [filters, collection, pathname, router, searchParams]);
+  }, [filters, collection, page, sort, pathname, router, searchParams]);
 
   return null;
 }

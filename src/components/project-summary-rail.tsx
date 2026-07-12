@@ -8,14 +8,16 @@ import {
   WHATSAPP_PRIMARY_DISPLAY,
   waHref,
 } from "@/lib/contact-info";
+import { useCurrency } from "@/hooks/use-currency";
+import { formatPrice, formatPricePerSqft } from "@/lib/format";
 import { useI18n } from "@/i18n/locale-provider";
 import { interpolate } from "@/i18n/config";
 
 interface ProjectSummaryRailProps {
   projectName: string;
   projectSlug: string;
-  priceLabel: string;
-  pricePerSqft?: string | null;
+  minPriceAed: number;
+  pricePerSqftAed?: number | null;
   paymentPlan: string;
   unitCount: number;
   handover: string;
@@ -26,8 +28,8 @@ interface ProjectSummaryRailProps {
 export function ProjectSummaryRail({
   projectName,
   projectSlug,
-  priceLabel,
-  pricePerSqft,
+  minPriceAed,
+  pricePerSqftAed,
   paymentPlan,
   unitCount,
   handover,
@@ -36,7 +38,13 @@ export function ProjectSummaryRail({
 }: ProjectSummaryRailProps) {
   const [brochureOpen, setBrochureOpen] = useState(false);
   const { dict } = useI18n();
+  const currency = useCurrency();
   const summary = dict.pdp.summary;
+
+  // Convert through the shared currency so the rail agrees with the hero + SERP.
+  const priceLabel =
+    minPriceAed > 0 ? formatPrice(minPriceAed, currency) : dict.pdp.priceOnRequest;
+  const pricePerSqft = formatPricePerSqft(pricePerSqftAed, currency);
 
   const projectWhatsappHref = `https://wa.me/${whatsapp.replace(/\D/g, "")}`;
   const advisorText = `Hi, I'd like to speak to your off-plan team about ${projectName}.`;
