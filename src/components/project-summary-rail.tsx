@@ -9,7 +9,7 @@ import {
   waHref,
 } from "@/lib/contact-info";
 import { useCurrency } from "@/hooks/use-currency";
-import { formatPrice, formatPricePerSqft } from "@/lib/format";
+import { formatPrice, pricePerSqftLabel } from "@/lib/format";
 import { hasPaymentPlan } from "@/lib/investment-metrics";
 import { useI18n } from "@/i18n/locale-provider";
 import { interpolate } from "@/i18n/config";
@@ -45,7 +45,7 @@ export function ProjectSummaryRail({
   // Convert through the shared currency so the rail agrees with the hero + SERP.
   const priceLabel =
     minPriceAed > 0 ? formatPrice(minPriceAed, currency) : dict.pdp.priceOnRequest;
-  const pricePerSqft = formatPricePerSqft(pricePerSqftAed, currency);
+  const pricePerSqft = pricePerSqftLabel(pricePerSqftAed, currency, dict);
 
   const projectWhatsappHref = `https://wa.me/${whatsapp.replace(/\D/g, "")}`;
   const advisorText = interpolate(summary.advisorWaMessage, { projectName });

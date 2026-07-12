@@ -16,7 +16,7 @@ import {
   bedsLabel,
   cityLabel,
   formatPrice,
-  formatSqft,
+  sqftLabel,
   propertyTypeLabel,
 } from "@/lib/format";
 import { useI18n } from "@/i18n/locale-provider";
@@ -103,7 +103,7 @@ export function ComparePage({
     // "Bedrooms" row injected per-render below (locale-aware).
     {
       label: dict.compare.squareFootage,
-      render: (item) => formatSqft(item.unit.sqftMin, item.unit.sqftMax),
+      render: (item) => sqftLabel(item.unit.sqftMin, item.unit.sqftMax, dict),
       num: (item) => (item.unit.sqftMin > 0 ? item.unit.sqftMin : null),
       better: "higher",
     },
@@ -272,6 +272,7 @@ export function ComparePage({
                 earliestHandover: dict.compare.earliestHandover,
                 lowestEntry: dict.compare.lowestEntry,
                 grossPct: dict.compare.grossPct,
+                perSqftSuffix: `/${dict.format.sqft.replace("{value}", "").trim() || "sqft"}`,
               }}
             />
 

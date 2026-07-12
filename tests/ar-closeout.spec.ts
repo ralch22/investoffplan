@@ -56,6 +56,21 @@ test.describe("AR close-out", () => {
     expect(html).not.toContain(">Search project<");
   });
 
+  // #324 — AR PDP unit size chrome uses dict (قدم مربعة), not bare English "sqft".
+  test("/ar/projects PDP unit size chrome is Arabic sqft", async ({ page }) => {
+    const response = await page.goto("/ar/projects/105-residences", {
+      waitUntil: "commit",
+    });
+    expect(response?.status()).toBe(200);
+    const html = await response!.text();
+    expect(html).toContain('lang="ar"');
+    // Server-rendered unit table / ranges use sqftLabel → dict.format.sqft.
+    expect(html).toMatch(/قدم مربعة/);
+    // Bare English unit suffix must not win in the main content chrome.
+    // (JSON-LD / RSC may still mention English field names — scope to body text.)
+    expect(html).not.toMatch(/>\s*[\d,.]+\s*sqft\s*</i);
+  });
+
   test("/ar/tools/roi returns 200", async ({ page }) => {
     const response = await page.goto("/ar/tools/roi", { waitUntil: "commit" });
     expect(response?.status()).toBe(200);

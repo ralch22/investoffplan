@@ -1,7 +1,7 @@
 import {
   bedsLabel,
-  formatSqft,
   propertyTypeLabel,
+  sqftLabel,
 } from "@/lib/format";
 import { LaunchPrice } from "@/components/currency-price";
 import { hasPaymentPlan } from "@/lib/investment-metrics";
@@ -38,7 +38,7 @@ export function ProjectUnitsTable({ units, project, locale = "en" }: ProjectUnit
               <tr key={unit.id} className="border-b border-border last:border-0">
                 <td className="px-4 py-3 text-text-dark">{bedsLabel(unit.beds, dict)}</td>
                 <td className="px-4 py-3 text-muted">
-                  {formatSqft(unit.sqftMin, unit.sqftMax)}
+                  {sqftLabel(unit.sqftMin, unit.sqftMax, dict)}
                 </td>
                 <td className="px-4 py-3 capitalize text-muted">{propertyTypeLabel(unit.propertyType, dict, locale)}</td>
                 <td className="px-4 py-3 font-semibold tabular-nums text-brand">
@@ -65,7 +65,7 @@ export function ProjectUnitsTable({ units, project, locale = "en" }: ProjectUnit
                   {bedsLabel(unit.beds, dict)} · {propertyTypeLabel(unit.propertyType, dict, locale)}
                 </p>
                 <p className="mt-1 text-sm text-muted">
-                  {formatSqft(unit.sqftMin, unit.sqftMax)}
+                  {sqftLabel(unit.sqftMin, unit.sqftMax, dict)}
                 </p>
               </div>
               <p className="shrink-0 text-end font-semibold text-brand">

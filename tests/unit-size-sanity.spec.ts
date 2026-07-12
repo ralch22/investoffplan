@@ -9,8 +9,18 @@ import {
   unitSqftBand,
   type CatalogFile,
 } from "../src/lib/catalog-core";
-import { formatSqft } from "../src/lib/format";
+import {
+  formatFromPrice,
+  formatLaunchPrice,
+  formatPricePerSqft,
+  formatSqft,
+  fromPriceLabel,
+  launchPriceLabel,
+  pricePerSqftLabel,
+  sqftLabel,
+} from "../src/lib/format";
 import { pricePerSqft } from "../src/lib/investment-metrics";
+import { getDictionary } from "../src/i18n";
 
 test.describe("unitSqftBand thresholds", () => {
   test("apartment studio–3BR tops out at 6_000", () => {
@@ -92,6 +102,53 @@ test.describe("pricePerSqft + formatSqft safety nets", () => {
     expect(formatSqft(1_000_000)).toBe("—");
     expect(formatSqft(549, 917_122)).toBe("549 sqft");
     expect(formatSqft(35_845)).toBe("35,845 sqft");
+  });
+
+  // #324 — locale-aware labels: EN byte-stable vs legacy helpers; AR uses dict.
+  test("sqftLabel / fromPriceLabel / launchPriceLabel EN match legacy helpers", () => {
+    const en = getDictionary("en");
+    expect(sqftLabel(1_000_000, undefined, en)).toBe(formatSqft(1_000_000));
+    expect(sqftLabel(549, 917_122, en)).toBe(formatSqft(549, 917_122));
+    expect(sqftLabel(35_845, undefined, en)).toBe(formatSqft(35_845));
+    expect(sqftLabel(800, 1_200, en)).toBe(formatSqft(800, 1_200));
+
+    expect(fromPriceLabel(0, undefined, "AED", en)).toBe(
+      formatFromPrice(0, undefined, "AED"),
+    );
+    expect(fromPriceLabel(1_500_000, undefined, "AED", en)).toBe(
+      formatFromPrice(1_500_000, undefined, "AED"),
+    );
+    expect(fromPriceLabel(1_000_000, 2_000_000, "AED", en)).toBe(
+      formatFromPrice(1_000_000, 2_000_000, "AED"),
+    );
+
+    expect(launchPriceLabel(0, undefined, "AED", en)).toBe(
+      formatLaunchPrice(0, undefined, "AED"),
+    );
+    expect(launchPriceLabel(2_500_000, undefined, "AED", en)).toBe(
+      formatLaunchPrice(2_500_000, undefined, "AED"),
+    );
+    expect(pricePerSqftLabel(1_200, "AED", en)).toBe(
+      formatPricePerSqft(1_200, "AED"),
+    );
+  });
+
+  test("sqftLabel / fromPriceLabel AR use Arabic chrome (not EN sqft/FROM)", () => {
+    const ar = getDictionary("ar");
+    expect(sqftLabel(549, undefined, ar)).toContain("قدم");
+    expect(sqftLabel(549, undefined, ar)).not.toMatch(/sqft/i);
+    expect(sqftLabel(800, 1_200, ar)).toContain("قدم");
+    expect(fromPriceLabel(0, undefined, "AED", ar)).toBe(ar.pdp.priceOnRequest);
+    expect(fromPriceLabel(0, undefined, "AED", ar)).not.toBe("Price on request");
+    expect(fromPriceLabel(1_500_000, undefined, "AED", ar)).toContain(
+      ar.format.fromUpper,
+    );
+    expect(fromPriceLabel(1_500_000, undefined, "AED", ar)).not.toMatch(/^FROM /);
+    expect(launchPriceLabel(0, undefined, "AED", ar)).toBe(ar.pdp.priceOnRequest);
+    const ppsf = pricePerSqftLabel(1_200, "AED", ar);
+    expect(ppsf).toBeTruthy();
+    expect(ppsf!).toContain("قدم");
+    expect(ppsf!).not.toMatch(/\/sqft$/i);
   });
 });
 

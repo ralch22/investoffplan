@@ -1,4 +1,4 @@
-import { bedsLabel, formatSqft, propertyTypeLabel } from "@/lib/format";
+import { bedsLabel, propertyTypeLabel, sqftLabel } from "@/lib/format";
 import type { UnitType } from "@/lib/types";
 import { getDictionary } from "@/i18n";
 import type { Locale } from "@/i18n/config";
@@ -56,8 +56,8 @@ export function ProjectUnitRanges({ units, locale = "en" }: ProjectUnitRangesPro
               <>
                 {` — ${u.sizesLabel} `}
                 {row.sqftMin === row.sqftMax
-                  ? formatSqft(row.sqftMin)
-                  : `${formatSqft(row.sqftMin)} ${u.sizeTo} ${formatSqft(row.sqftMax)}`}
+                  ? sqftLabel(row.sqftMin, undefined, dict)
+                  : `${sqftLabel(row.sqftMin, undefined, dict)} ${u.sizeTo} ${sqftLabel(row.sqftMax, undefined, dict)}`}
               </>
             ) : null}
           </li>
