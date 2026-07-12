@@ -25,6 +25,7 @@ import { ProjectMedia } from "@/components/project-media";
 import { isEmbeddableVideo } from "@/lib/media";
 import { ShareButton } from "@/components/share-button";
 import { getProjectBySlug, slugify } from "@/lib/catalog";
+import { shouldNoindexProject } from "@/lib/catalog-core";
 import { getAreaInsightsForProject } from "@/lib/area-insights";
 import { ProjectLivingInArea } from "@/components/project-living-in-area";
 import { ProjectMasterplan } from "@/components/project-masterplan";
@@ -155,6 +156,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title: { absolute: seoTitle },
     description,
+    // PF placeholder marketing names (slug new-project-by-*) keep a soft title
+    // but stay noindex until a real name lands in the scrape.
+    ...(shouldNoindexProject(project)
+      ? { robots: { index: false, follow: true } }
+      : {}),
     alternates: {
       canonical: `${getSiteUrl()}/projects/${slug}`,
       languages: {

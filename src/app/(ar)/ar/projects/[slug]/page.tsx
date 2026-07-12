@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getCatalogApi, getProjectBySlug } from "@/lib/catalog";
+import { shouldNoindexProject } from "@/lib/catalog-core";
 import { getSiteUrl } from "@/lib/site-url";
 
 // Reuse the EN project detail page under /ar — chrome + RTL come from the AR
@@ -58,6 +59,9 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   return {
     title,
     description: `${project.name} من ${project.developer} في ${areaName} — مخططات الطوابق والبروشور وخطط السداد والأسعار على مستوى الوحدة.`,
+    ...(shouldNoindexProject(project)
+      ? { robots: { index: false, follow: true } }
+      : {}),
     alternates,
   };
 }

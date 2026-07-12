@@ -1,5 +1,5 @@
 import type { CatalogUnit, DevListEntry, Project, UnitType } from "@/lib/types";
-import { sanitizeUnitSizes } from "@/lib/catalog-core";
+import { displayProjectName, sanitizeUnitSizes } from "@/lib/catalog-core";
 import { sanitizePfFaqs, type PfFaq } from "@/lib/sanitize-html";
 import type {
   catalogUnits,
@@ -41,7 +41,9 @@ export function rowToProject(row: ProjectRow, units: ProjectUnitRow[]): Project 
     id: row.id,
     slug: row.slug,
     pfSlug: row.pfSlug ?? undefined,
-    name: row.name,
+    // Display-layer soft-title for PF "New Project by X" placeholders (matches
+    // createCatalogApi / normalizeProject — D1 may still store the raw scrape).
+    name: displayProjectName(row.name, row.developer),
     developer: row.developer,
     developerInitials: row.developerInitials,
     developerLogo: row.developerLogo ?? undefined,
@@ -104,7 +106,7 @@ export function rowToCatalogUnit(row: CatalogUnitRow): CatalogUnit {
     id: row.id,
     projectId: row.projectId,
     projectSlug: row.projectSlug,
-    projectName: row.projectName,
+    projectName: displayProjectName(row.projectName, row.developer),
     pfSlug: row.pfSlug ?? undefined,
     developer: row.developer,
     developerLogo: row.developerLogo ?? undefined,

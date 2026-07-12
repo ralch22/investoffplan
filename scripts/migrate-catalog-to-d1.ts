@@ -124,10 +124,11 @@ async function main() {
     }
   }
 
-  // Mirror createCatalogApi EXACTLY: drop placeholders, drop true-duplicate rows
-  // (same id), and DISAMBIGUATE genuinely-different projects that collide on a
-  // slug (so both twins are seeded with distinct, reachable slugs) — using the
-  // shared resolver so D1, the static build, and the client agree slug-for-slug.
+  // Mirror createCatalogApi EXACTLY: drop true-duplicate rows (same id), and
+  // DISAMBIGUATE genuinely-different projects that collide on a slug (so both
+  // twins are seeded with distinct, reachable slugs) — using the shared
+  // resolver so D1, the static build, and the client agree slug-for-slug.
+  // PF "New Project by X" placeholders are kept (soft-titled on read).
   const { kept: projectRows, slugByProjectId } = resolveProjectSlugs(raw.projects);
   for (const [id, slug] of slugByProjectId) {
     const original = raw.projects.find((p) => p.id === id);

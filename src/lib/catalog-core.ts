@@ -157,9 +157,8 @@ export interface SlugResolution<T> {
 }
 
 /**
- * Drop placeholder listings and resolve slug collisions so BOTH the static
- * build (catalog.json), the D1 seed, and every client read agree on the same
- * set of reachable, distinct slugs.
+ * Resolve slug collisions so BOTH the static build (catalog.json), the D1 seed,
+ * and every client read agree on the same set of reachable, distinct slugs.
  *
  * - The FIRST project to claim a slug keeps it unchanged (existing URL / SEO is
  *   preserved for the winner).
@@ -169,6 +168,9 @@ export interface SlugResolution<T> {
  * - The bait-and-switch guard is kept for TRUE duplicates: a repeated row with
  *   an id already kept is dropped (an identical project accidentally listed
  *   twice — same id — must not spawn a second page).
+ * - PF placeholder marketing names ("New Project by X") are KEPT (they often
+ *   carry real unit inventory) and soft-titled later in displayProjectName /
+ *   normalizeProject — dropping them was a silent inventory loss.
  *
  * Deterministic: same input ordering → same slugs every build. Idempotent: run
  * again over already-disambiguated rows (e.g. D1 reads after the seed applied
@@ -182,7 +184,6 @@ export function resolveProjectSlugs<
   const slugByProjectId = new Map<string, string>();
   const kept: T[] = [];
   for (const p of rawProjects) {
-    if (isPlaceholderProject(p.name)) continue;
     // True duplicate: this exact project id was already kept. Drop it (the twin
     // resolution below only fires for DIFFERENT ids sharing a slug).
     if (keptProjectIds.has(p.id)) continue;
@@ -328,7 +329,8 @@ function normalizeProject(p: Project & { citySlug?: string }): Project {
   const hy = handoverYear(p.handover);
   const status: Project["status"] =
     p.status === "off-plan" && hy != null && hy < 2026 ? "ready" : p.status;
-  const name = stripTrailingDeveloperName(p.name, p.developer);
+  // Soft-title PF placeholders (#182); size-gate unit inventory (#180).
+  const name = displayProjectName(p.name, developer);
   const units = (p.units ?? []).map((u) => sanitizeUnitSizes(u));
   return {
     ...p,
@@ -380,31 +382,74 @@ export function matchesPaymentPlan(
   return segments.length >= 4 && segments.every(Number.isFinite) && segments[3] > 0;
 }
 
-/** PF publishes unnamed placeholder listings ("New Project by X") — never a
- * real, linkable project. */
+/**
+ * PF publishes unnamed placeholder marketing names that start with
+ * "New Project by …" (exact prefix — not legitimate titles like
+ * "Harbor Lights by Emaar" or "Off-Plan & New Projects by Emaar").
+ */
 export function isPlaceholderProject(name: string): boolean {
   return /^\s*new project by\b/i.test(name);
 }
 
+/**
+ * Display-layer title for a project name. Rewrites PF placeholders to a safer
+ * "{developer} off-plan project" string used everywhere (cards, PDP H1, SEO
+ * title, JSON-LD). Legitimate "… by {developer}" names are unchanged aside from
+ * the usual trailing-developer strip.
+ */
+export function displayProjectName(name: string, developer?: string): string {
+  if (isPlaceholderProject(name)) {
+    const fromField = developer?.replace(/\s+/g, " ").trim();
+    const fromName = name.match(/^\s*new project by\s+(.+?)\s*$/i)?.[1]?.replace(
+      /\s+/g,
+      " ",
+    ).trim();
+    const dev = fromField || fromName || "Developer";
+    return `${dev} off-plan project`;
+  }
+  return stripTrailingDeveloperName(name, developer);
+}
+
+/**
+ * Soft-noindex signal for PF placeholder listings until a real marketing name
+ * lands. Prefer the stable PF slug prefix; also match raw placeholder names for
+ * callers that have not yet run displayProjectName.
+ */
+export function shouldNoindexProject(project: {
+  name: string;
+  slug: string;
+}): boolean {
+  return (
+    isPlaceholderProject(project.name) ||
+    /^new-project-by-/i.test(project.slug)
+  );
+}
+
 export function createCatalogApi(raw: CatalogFile): CatalogApi {
-  // Drop placeholder listings and resolve slug collisions (identical rule to the
-  // D1 seed, so static build, D1, and the client all agree). Two DIFFERENT
-  // projects previously shared one URL (arthouse-residences = Cledor + Aviaan;
-  // emerge-residences = NAAS + Elysian): first-wins silently DROPPED the twin,
-  // making its inventory unreachable. Now the twin is disambiguated to a
-  // distinct slug so both are reachable, while the winner's slug is preserved
-  // and true duplicates (same id repeated) are still dropped.
+  // Resolve slug collisions (identical rule to the D1 seed, so static build,
+  // D1, and the client all agree). Two DIFFERENT projects previously shared one
+  // URL (arthouse-residences = Cledor + Aviaan; emerge-residences = NAAS +
+  // Elysian): first-wins silently DROPPED the twin, making its inventory
+  // unreachable. Now the twin is disambiguated to a distinct slug so both are
+  // reachable, while the winner's slug is preserved and true duplicates (same
+  // id repeated) are still dropped. PF placeholder names are soft-titled in
+  // normalizeProject (not dropped — they often carry real unit inventory).
   const { kept: rawProjects, keptProjectIds } = resolveProjectSlugs(raw.projects);
   const projects = rawProjects.map((p) =>
     normalizeProject(p as Project & { citySlug?: string }),
   );
-  // Size gate on catalog units (SERP flatten + any api.units consumers).
+  // Size gate (#180) + soft-title unit.projectName for SERP cards (#182).
   const units = raw.units
     .filter((u) => keptProjectIds.has(u.projectId))
-    .map((u) => sanitizeUnitSizes(u));
+    .map((u) =>
+      sanitizeUnitSizes({
+        ...u,
+        projectName: displayProjectName(u.projectName, u.developer),
+      }),
+    );
   const meta: CatalogMeta = {
-    // Recompute from the filtered set so headline counts match what's browsable
-    // (dropping placeholders/dup-slugs would otherwise leave stats overstated).
+    // Recompute from the resolved set so headline counts match what's browsable
+    // (dropping true-duplicate ids would otherwise leave stats overstated).
     unitCount: units.length,
     projectCount: projects.length,
     scrapedAt: raw.scrapedAt,
