@@ -61,7 +61,8 @@ export async function getCatalogApi(): Promise<CatalogApi> {
     // Apex fallback — a missing env var must not point data fetches at the
     // preview Worker (src/lib/site-url.ts defaults to the production domain).
     const base = getSiteUrl();
-    const res = await fetch(`${base}/data/catalog.json`, { next: { revalidate: 3600 } });
+    // catalog.json is excluded from CF assets (>25 MB); use the lite mirror instead.
+    const res = await fetch(`${base}/data/catalog-lite.json`, { next: { revalidate: 3600 } });
     const raw = (await res.json()) as CatalogFile;
     cachedApi = createCatalogApi(raw);
   }

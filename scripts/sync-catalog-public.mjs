@@ -1,4 +1,4 @@
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
@@ -6,7 +6,9 @@ const src = join(root, "data", "catalog.json");
 const outDir = join(root, "public", "data");
 
 mkdirSync(outDir, { recursive: true });
-copyFileSync(src, join(outDir, "catalog.json"));
+// NOTE: Do NOT copy catalog.json to public/data/ — at 30+ MB it exceeds the
+// 25 MB CF Workers asset limit. Runtime reads go to D1; the fallback in
+// catalog.ts uses catalog-lite.json which is < 5 MB.
 
 const catalog = JSON.parse(readFileSync(src, "utf8"));
 
