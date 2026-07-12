@@ -39,7 +39,10 @@ export function HeroSearch({
   const router = useRouter();
 
   return (
-    <div className={cn("w-full max-w-3xl", className)}>
+    // relative z-30: lift the whole search (incl. its absolute suggestions
+    // dropdown) above the sibling hero CTA, which otherwise renders on top of
+    // the dropdown and covers a suggestion row.
+    <div className={cn("relative z-30 w-full max-w-3xl", className)}>
       <SearchSuggest variant="hero" placeholder={placeholder} searchLabel={searchLabel} />
       <div className="mt-3 flex flex-wrap gap-2">
         <span className="self-center text-xs font-medium text-white/70">{popularLabel}</span>

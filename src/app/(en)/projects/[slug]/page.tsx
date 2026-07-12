@@ -407,7 +407,7 @@ export default async function ProjectDetailPage({
                 href="#project-gallery"
                 className="rounded-full border border-white/35 bg-white/10 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
               >
-                {interpolate(dict.pdp.hero.photos, { count: additionalPhotoCount + 1 })}
+                {interpolate(dict.pdp.hero.photos, { count: additionalPhotoCount })}
               </a>
             ) : null}
           </div>

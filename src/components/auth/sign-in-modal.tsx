@@ -39,6 +39,19 @@ export function SignInModal({ open, onClose, context }: SignInModalProps) {
     else if (!open && dialog.open) dialog.close();
   }, [open]);
 
+  // Escape fires the native `cancel` event; sync it to React `open` so the
+  // effect above doesn't immediately re-open the dialog (Escape otherwise no-ops).
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const handleCancel = (e: Event) => {
+      e.preventDefault();
+      onClose();
+    };
+    dialog.addEventListener("cancel", handleCancel);
+    return () => dialog.removeEventListener("cancel", handleCancel);
+  }, [onClose]);
+
   const callbackURL = localePath(locale, "/account");
 
   const gateSubtitle = context

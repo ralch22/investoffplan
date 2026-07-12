@@ -71,6 +71,20 @@ export function BrochureModal({
     else if (!open && dialog.open) dialog.close();
   }, [open]);
 
+  // Escape fires the native `cancel` event; sync it to React state so the
+  // parent's `open` flips to false — otherwise the [open] effect above just
+  // re-opens the dialog and Escape appears to do nothing.
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const handleCancel = (e: Event) => {
+      e.preventDefault();
+      onClose();
+    };
+    dialog.addEventListener("cancel", handleCancel);
+    return () => dialog.removeEventListener("cancel", handleCancel);
+  }, [onClose]);
+
   const hasPdf = isDownloadablePdfUrl(brochureUrl);
 
   async function handleSubmit(e: React.FormEvent) {
