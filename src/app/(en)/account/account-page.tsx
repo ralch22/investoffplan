@@ -111,7 +111,7 @@ export function AccountPage({ reportLinks = [] }: AccountPageProps) {
                   {reportLinks.map((r) => (
                     <Link
                       key={r.slug}
-                      href={`/reports/market/${r.slug}`}
+                      href={localePath(locale, `/reports/market/${r.slug}`)}
                       className="iop-btn-press focus-ring rounded-full border border-border px-4 py-1.5 text-sm font-medium text-text-dark transition hover:border-brand hover:text-brand"
                     >
                       {r.name}

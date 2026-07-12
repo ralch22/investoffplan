@@ -84,6 +84,8 @@ const nextConfig: NextConfig = {
       { source: "/reports", destination: "/market-report", permanent: false },
       { source: "/reports/market", destination: "/market-report", permanent: false },
       { source: "/ar/reports", destination: "/ar/market-report", permanent: false },
+      // Parity with EN /reports/market → hub (was missing; AR bare path 404'd).
+      { source: "/ar/reports/market", destination: "/ar/market-report", permanent: false },
     ];
     return [
       ...devAliases,
