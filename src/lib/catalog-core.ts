@@ -3,6 +3,7 @@ import {
   isWaterfront,
   valueScore,
 } from "./investment-metrics";
+import { KNOWN_PROJECT_SLUG_RENAMES } from "./project-slug-renames";
 import { sanitizePfFaqs } from "./sanitize-html";
 import { slugify } from "./slugify";
 import type {
@@ -15,6 +16,12 @@ import type {
   SortOption,
   UnitType,
 } from "./types";
+
+// Re-export so seed/upsert/next.config consumers can import renames from one place.
+export {
+  KNOWN_PROJECT_SLUG_RENAMES,
+  PROJECT_SLUG_REDIRECTS,
+} from "./project-slug-renames";
 
 export interface CatalogFile {
   version: 2;
@@ -157,24 +164,28 @@ export interface SlugResolution<T> {
 }
 
 /**
- * Resolve slug collisions so BOTH the static build (catalog.json), the D1 seed,
- * and every client read agree on the same set of reachable, distinct slugs.
+ * Resolve slug collisions so the static build (catalog.json), D1 seed, weekly
+ * upsert, and every client read agree on the same set of reachable, distinct
+ * slugs.
  *
- * - The FIRST project to claim a slug keeps it unchanged (existing URL / SEO is
- *   preserved for the winner).
+ * Resolution order per project:
+ * 1. Known permanent rename (`KNOWN_PROJECT_SLUG_RENAMES` by project id) —
+ *    pins arthouse / emerge twins so scrape order cannot bait-and-switch the
+ *    surviving bare slug.
+ * 2. Else the project's scraped slug, if free.
+ * 3. Else disambiguate with a developer token (generic collision path).
+ *
  * - A genuinely different project (different id) that wants an already-taken
- *   slug is DISAMBIGUATED (given a distinct slug) rather than dropped — the old
- *   behaviour silently discarded the twin and made its inventory unreachable.
- * - The bait-and-switch guard is kept for TRUE duplicates: a repeated row with
- *   an id already kept is dropped (an identical project accidentally listed
- *   twice — same id — must not spawn a second page).
+ *   slug is DISAMBIGUATED rather than dropped — the old first-wins behaviour
+ *   silently discarded the twin and made its inventory unreachable.
+ * - TRUE duplicates (same id repeated) are still dropped so one project cannot
+ *   spawn two pages.
  * - PF placeholder marketing names ("New Project by X") are KEPT (they often
  *   carry real unit inventory) and soft-titled later in displayProjectName /
  *   normalizeProject — dropping them was a silent inventory loss.
  *
- * Deterministic: same input ordering → same slugs every build. Idempotent: run
- * again over already-disambiguated rows (e.g. D1 reads after the seed applied
- * the same resolution) and nothing changes.
+ * Deterministic + order-stable for known twins. Idempotent: re-running over
+ * already-disambiguated rows (D1 reads after seed) changes nothing.
  */
 export function resolveProjectSlugs<
   T extends { id: string; slug: string; developer?: string; name: string },
@@ -187,8 +198,11 @@ export function resolveProjectSlugs<
     // True duplicate: this exact project id was already kept. Drop it (the twin
     // resolution below only fires for DIFFERENT ids sharing a slug).
     if (keptProjectIds.has(p.id)) continue;
-    let slug = p.slug;
+    const preferred = KNOWN_PROJECT_SLUG_RENAMES[p.id];
+    let slug = preferred ?? p.slug;
     if (seenSlugs.has(slug)) {
+      // Preferred rename collided (shouldn't for known twins) — fall back to
+      // deterministic developer-token disambiguation off the scraped base.
       slug = disambiguateSlug(p.slug, p.developer, seenSlugs);
     }
     seenSlugs.add(slug);

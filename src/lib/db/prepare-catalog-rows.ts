@@ -1,4 +1,7 @@
-import type { CatalogFile } from "@/lib/catalog-core";
+import {
+  resolveProjectSlugs,
+  type CatalogFile,
+} from "@/lib/catalog-core";
 import type { CatalogUnit, DevListEntry, Project } from "@/lib/types";
 import { stringifyJsonArray } from "./mappers";
 
@@ -22,25 +25,50 @@ export interface PreparedCatalogRows {
   cityCounts: CatalogFile["cityCounts"];
   developerSerpLinks: CatalogFile["developerSerpLinks"];
   devList: DevListEntry[];
+  /**
+   * Slugs that were true same-id duplicates (a row whose id was already kept).
+   * Twin collisions (different id, same scraped slug) are NO longer skipped —
+   * they are disambiguated via `resolveProjectSlugs` and kept.
+   */
   skippedDuplicateSlugs: string[];
   skippedDuplicateUnitIds: string[];
+  /** Project ids whose final slug differs from the scraped slug. */
+  disambiguatedSlugs: Array<{ id: string; from: string; to: string }>;
 }
 
 export function prepareCatalogRows(raw: CatalogFile): PreparedCatalogRows {
-  const seenSlugs = new Set<string>();
-  const projects: Project[] = [];
-  const skippedDuplicateSlugs: string[] = [];
+  // Same resolver as createCatalogApi + migrate-catalog-to-d1 so the weekly
+  // upsert cannot re-drop arthouse / emerge twins (or any future collision).
+  const { kept, slugByProjectId, keptProjectIds } = resolveProjectSlugs(
+    raw.projects,
+  );
 
+  // Surface true same-id dups that resolveProjectSlugs silently drops (same id
+  // listed twice). Different-id twins are kept with distinct slugs, not skipped.
+  const seenIds = new Set<string>();
+  const skippedDuplicateSlugs: string[] = [];
   for (const project of raw.projects) {
-    if (seenSlugs.has(project.slug)) {
+    if (seenIds.has(project.id)) {
       skippedDuplicateSlugs.push(project.slug);
       continue;
     }
-    seenSlugs.add(project.slug);
-    projects.push(project);
+    seenIds.add(project.id);
   }
 
-  const projectIds = new Set(projects.map((p) => p.id));
+  const disambiguatedSlugs: PreparedCatalogRows["disambiguatedSlugs"] = [];
+  for (const project of kept) {
+    const original = raw.projects.find((p) => p.id === project.id);
+    if (original && original.slug !== project.slug) {
+      disambiguatedSlugs.push({
+        id: project.id,
+        from: original.slug,
+        to: project.slug,
+      });
+    }
+  }
+
+  const projects = kept as Project[];
+  const projectIds = keptProjectIds;
   const seenUnitIds = new Set<string>();
   const skippedDuplicateUnitIds: string[] = [];
   const projectUnits: PreparedProjectUnit[] = [];
@@ -75,7 +103,14 @@ export function prepareCatalogRows(raw: CatalogFile): PreparedCatalogRows {
       continue;
     }
     seenCatalogUnitIds.add(unit.id);
-    catalogUnits.push(unit);
+    // Follow the project's disambiguated slug so SERP unit rows link to the
+    // correct (now-reachable) PDP instead of the collision winner's.
+    const finalSlug = slugByProjectId.get(unit.projectId) ?? unit.projectSlug;
+    catalogUnits.push(
+      finalSlug === unit.projectSlug
+        ? unit
+        : { ...unit, projectSlug: finalSlug },
+    );
   }
 
   return {
@@ -88,6 +123,7 @@ export function prepareCatalogRows(raw: CatalogFile): PreparedCatalogRows {
     devList: raw.devList ?? [],
     skippedDuplicateSlugs,
     skippedDuplicateUnitIds,
+    disambiguatedSlugs,
   };
 }
 

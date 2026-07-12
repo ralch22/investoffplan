@@ -37,7 +37,9 @@ async function main() {
   );
 
   if (stats.skippedDuplicateSlugs > 0) {
-    console.log(`[db:upsert] Skipped ${stats.skippedDuplicateSlugs} duplicate slugs`);
+    console.log(
+      `[db:upsert] Skipped ${stats.skippedDuplicateSlugs} same-id duplicate project rows`,
+    );
   }
 
   await dispose();
