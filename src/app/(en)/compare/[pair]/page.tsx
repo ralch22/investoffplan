@@ -340,7 +340,7 @@ export default async function CompareAreasPage({ params, locale = "en" }: PagePr
           {[a, b].map((side) => (
             <Link
               key={side.area.slug}
-              href={`/projects?q=${encodeURIComponent(side.area.name)}`}
+              href={localePath(locale, `/projects?q=${encodeURIComponent(side.area.name)}`)}
               className="iop-btn-press focus-ring rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
             >
               {interpolate(dict.pages.compare.browseCta, { name: side.area.name })}
@@ -370,7 +370,7 @@ export default async function CompareAreasPage({ params, locale = "en" }: PagePr
               {related.map((r) => (
                 <Link
                   key={r.pairSlug}
-                  href={`/compare/${r.pairSlug}`}
+                  href={localePath(locale, `/compare/${r.pairSlug}`)}
                   className="iop-btn-press focus-ring rounded-full border border-border bg-white px-4 py-1.5 text-sm font-medium text-muted transition hover:border-brand hover:text-brand"
                 >
                   {r.label}

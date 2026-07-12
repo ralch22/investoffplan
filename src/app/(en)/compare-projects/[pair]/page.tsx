@@ -92,10 +92,10 @@ function Row({
   );
 }
 
-function Head({ side }: { side: ProjectSide }) {
+function Head({ side, locale }: { side: ProjectSide; locale: Locale }) {
   return (
     <th className="px-4 py-4 text-center align-top">
-      <Link href={`/projects/${side.slug}`} className="group block">
+      <Link href={localePath(locale, `/projects/${side.slug}`)} className="group block">
         <div className="relative mx-auto mb-2 h-20 w-full max-w-[160px] overflow-hidden rounded-lg">
           {side.imageUrl ? (
             <Image
@@ -150,8 +150,8 @@ export default async function CompareProjectsPage({ params, locale = "en" }: Pag
                 <th className="px-4 py-4 text-start text-xs font-semibold uppercase tracking-wide text-muted">
                   {t.metricHeader}
                 </th>
-                <Head side={a} />
-                <Head side={b} />
+                <Head side={a} locale={locale} />
+                <Head side={b} locale={locale} />
               </tr>
             </thead>
             <tbody>
@@ -175,7 +175,7 @@ export default async function CompareProjectsPage({ params, locale = "en" }: Pag
           {[a, b].map((side) => (
             <Link
               key={side.slug}
-              href={`/projects/${side.slug}`}
+              href={localePath(locale, `/projects/${side.slug}`)}
               className="iop-btn-press focus-ring rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
             >
               {interpolate(t.viewProjectCta, { name: side.name })}

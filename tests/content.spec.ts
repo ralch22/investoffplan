@@ -226,4 +226,23 @@ test.describe("Content routes", () => {
     expect(html).not.toMatch(/<title>Understanding Payment Plans/i);
     expect(html).not.toMatch(/>Understanding Payment Plans</);
   });
+
+
+  // #277 — AR compare pair pages must keep project/developer CTAs in-locale.
+  test("AR compare-projects pair links stay on /ar/projects/*", async ({ page }) => {
+    const hub = await page.goto("/ar/compare-projects", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(hub?.ok()).toBeTruthy();
+    const hubHtml = await page.content();
+    const pairPath = hubHtml.match(/href="(\/ar\/compare-projects\/[a-z0-9-]+)"/)?.[1];
+    expect(pairPath).toBeTruthy();
+    const res = await page.goto(pairPath!, { waitUntil: "domcontentloaded" });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    expect(html).toMatch(/href="\/ar\/projects\/[a-z0-9-]+"/);
+    // Body CTAs must not dump AR users onto bare EN PDP paths.
+    expect(html).not.toMatch(/href="\/projects\/[a-z0-9-]+"/);
+  });
+
 });
