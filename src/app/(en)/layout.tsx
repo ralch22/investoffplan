@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   openGraph: {
     siteName: "invest off-plan",
-    locale: "en_AE",
+    locale: "en_US",
     type: "website",
     title: "invest off-plan | UAE Off-Plan Properties",
     description:

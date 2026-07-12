@@ -35,7 +35,7 @@ export function ProjectLivingInArea({ insights, locale = "en" }: ProjectLivingIn
             <div className="relative min-h-[200px] md:min-h-[260px]">
               <Image
                 src={insights.heroImage}
-                alt=""
+                alt={insights.name.split(",")[0]}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
