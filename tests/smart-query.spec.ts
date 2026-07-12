@@ -77,7 +77,9 @@ const CASES: Case[] = [
   {
     name: "plain project prefix match",
     input: "azizi venice",
-    matched: [{ kind: "project", slug: "azizi-venice-15" }],
+    // Catalog has base slug `azizi-venice` plus numbered phases; prefix match
+    // prefers the exact/shortest project slug over a phase suffix.
+    matched: [{ kind: "project", slug: "azizi-venice" }],
     residual: "",
   },
   {

@@ -21,9 +21,11 @@ test.describe("Project gallery", () => {
     }
 
     await fullscreen.click();
-    await expect(page.getByRole("dialog")).toBeVisible();
+    // Cookie consent also uses role=dialog — always scope by gallery name.
+    const galleryDialog = page.getByRole("dialog", { name: /photo gallery/i });
+    await expect(galleryDialog).toBeVisible();
     await page.getByRole("button", { name: "Close gallery" }).click();
-    await expect(page.getByRole("dialog")).toBeHidden();
+    await expect(galleryDialog).toBeHidden();
   });
 
   test("SERP card gallery cycles photos and opens lightbox", async ({ page }) => {
@@ -36,13 +38,17 @@ test.describe("Project gallery", () => {
     const next = card.getByRole("button", { name: "Next photo" });
     if (await next.isVisible()) {
       await next.click();
-      await expect(card.locator("[aria-live='polite']")).toHaveText("2 / 7");
+      // Card overlay counter (not lightbox — both can match "2 / N" under the article).
+      await expect(
+        card.locator("div.absolute.bottom-2").filter({ hasText: /^\d+\s*\/\s*\d+$/ }),
+      ).toHaveText(/^2\s*\/\s*\d+$/);
     }
 
     await card.getByRole("button", { name: /photos fullscreen/i }).click();
-    await expect(page.getByRole("dialog")).toBeVisible();
+    const galleryDialog = page.getByRole("dialog", { name: /photo gallery/i });
+    await expect(galleryDialog).toBeVisible();
     await page.getByRole("button", { name: "Close gallery" }).click();
-    await expect(page.getByRole("dialog")).toBeHidden();
+    await expect(galleryDialog).toBeHidden();
   });
 
   test("Compare view shows gallery per column", async ({ page }) => {

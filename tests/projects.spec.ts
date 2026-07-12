@@ -2,10 +2,11 @@ import { test, expect } from "./fixtures";
 import { waitForCatalog, waitForCatalogHydration } from "./helpers";
 
 test.describe("InvestOffPlan projects page", () => {
-  test("loads listing with unit-count heading", async ({ page }) => {
+  test("loads listing with project-count heading", async ({ page }) => {
     await page.goto("/projects");
+    // Default SERP view is project (not unit) — heading uses headingProjects.
     await expect(
-      page.getByRole("heading", { name: /Total unit options in UAE/i }),
+      page.getByRole("heading", { name: /New off-plan projects in UAE/i }),
     ).toBeVisible();
     await waitForCatalog(page);
   });
@@ -83,14 +84,17 @@ test.describe("InvestOffPlan projects page", () => {
     expect(await readCount()).toBeGreaterThan(0);
   });
 
-  test("toggles project view", async ({ page }) => {
+  test("toggles between project and unit view", async ({ page }) => {
     await page.goto("/projects");
     await waitForCatalog(page);
-    await page.getByRole("button", { name: "Project view" }).click();
+    // Default is project view; button label is "Show unit view".
+    await page.getByRole("button", { name: /Show unit view/i }).click();
     await expect(
-      page.getByRole("heading", {
-        name: /\d[\d,]* New Off-Plan Projects in UAE/i,
-      }),
+      page.getByRole("heading", { name: /Total unit options in UAE/i }),
+    ).toBeVisible({ timeout: 15_000 });
+    await page.getByRole("button", { name: /Show project view/i }).click();
+    await expect(
+      page.getByRole("heading", { name: /New off-plan projects in UAE/i }),
     ).toBeVisible({ timeout: 15_000 });
   });
 });
@@ -149,7 +153,7 @@ test.describe("InvestOffPlan site routes", () => {
     await page.getByRole("button", { name: "Clear all filters" }).click();
     await waitForCatalog(page);
     await expect(
-      page.getByRole("heading", { name: /Total unit options in UAE/i }),
+      page.getByRole("heading", { name: /New off-plan projects in UAE/i }),
     ).toBeVisible();
   });
 });
