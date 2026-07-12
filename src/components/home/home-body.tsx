@@ -153,6 +153,9 @@ export async function HomeBody({ locale }: { locale: Locale }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
       />
+      {/* Sole LCP candidate on home: one full-bleed hero with fetchpriority=high.
+          Below-fold grids must not pass priorityImage (see HomeFeaturedGrid, #187).
+          min-h reserves layout space so the fill image does not shift content (CLS). */}
       <section className="relative flex min-h-[min(100dvh,880px)] flex-col justify-end overflow-hidden bg-surface-dark text-white">
         {heroImage ? (
           <Image
@@ -163,6 +166,9 @@ export async function HomeBody({ locale }: { locale: Locale }) {
             priority
             fetchPriority="high"
             sizes="100vw"
+            // Prefer higher quality when the optimizer runs; external/cdn
+            // heroes set unoptimized and ignore this prop.
+            quality={80}
             {...unoptimizedProp(heroImage)}
           />
         ) : null}
