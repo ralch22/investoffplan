@@ -1,6 +1,14 @@
 import { getDevelopers, getProjectsByDeveloper } from "@/lib/catalog";
 import type { DeveloperSummary } from "@/lib/types";
 import { firstSegment } from "@/lib/community-slug";
+import type { DeveloperComparison, DeveloperSide } from "@/lib/developer-compare-content";
+
+export type { DeveloperComparison, DeveloperSide } from "@/lib/developer-compare-content";
+export {
+  buildDeveloperFaqs,
+  buildDeveloperPros,
+  buildDeveloperSuitability,
+} from "@/lib/developer-compare-content";
 
 /**
  * Developer-vs-developer comparisons (SEO-plan pillar). KPIs come from the
@@ -12,25 +20,6 @@ import { firstSegment } from "@/lib/community-slug";
 const TOP_DEVELOPERS = 20;
 const MIN_PROJECTS = 3;
 const SEP = "-vs-";
-
-export interface DeveloperSide {
-  slug: string;
-  name: string;
-  logoUrl?: string;
-  projectCount: number;
-  unitCount: number;
-  fromPrice: number | null;
-  avgPpsf: number | null;
-  communities: string[];
-  handoverYears: number[];
-  premiumShare: number;
-}
-
-export interface DeveloperComparison {
-  pairSlug: string;
-  a: DeveloperSide;
-  b: DeveloperSide;
-}
 
 async function comparableDevelopers(): Promise<DeveloperSummary[]> {
   const developers = await getDevelopers();
@@ -130,29 +119,29 @@ export async function buildDeveloperComparison(
   return { pairSlug: pairSlug(slugA, slugB), a, b };
 }
 
-/** Data-driven FAQs for the developer pair (rendered + FAQPage JSON-LD). */
-export function buildDeveloperFaqs(cmp: DeveloperComparison): Array<{ q: string; a: string }> {
-  const { a, b } = cmp;
-  const faqs: Array<{ q: string; a: string }> = [];
-  const big = a.projectCount >= b.projectCount ? a : b;
-  const small = big === a ? b : a;
-  faqs.push({
-    q: `Who has more off-plan projects, ${a.name} or ${b.name}?`,
-    a: `${big.name} — ${big.projectCount} live off-plan projects with ${big.unitCount.toLocaleString()} unit options on this portal, vs ${small.projectCount} projects from ${small.name}.`,
-  });
-  if (a.fromPrice != null && b.fromPrice != null) {
-    const cheap = a.fromPrice <= b.fromPrice ? a : b;
-    const dear = cheap === a ? b : a;
-    faqs.push({
-      q: `Which developer has the lower entry price?`,
-      a: `${cheap.name} — launches from AED ${Math.round(cheap.fromPrice!).toLocaleString()}, vs AED ${Math.round(dear.fromPrice!).toLocaleString()} for ${dear.name}.`,
-    });
+/**
+ * Related developer pairs for the internal-linking mesh — other top-comparable
+ * developers paired with either side of the current comparison.
+ */
+export async function getRelatedDeveloperComparisons(
+  cmp: DeveloperComparison,
+  limit = 6,
+): Promise<{ pairSlug: string; label: string }[]> {
+  const devs = await comparableDevelopers();
+  const sideSlugs = new Set([cmp.a.slug, cmp.b.slug]);
+  const others = devs.filter((d) => !sideSlugs.has(d.slug));
+  const seen = new Set<string>([cmp.pairSlug]);
+  const out: { pairSlug: string; label: string }[] = [];
+
+  // Prefer pairing each side with the next-largest peers (interleaved).
+  for (const other of others) {
+    for (const side of [cmp.a, cmp.b]) {
+      const slug = pairSlug(side.slug, other.slug);
+      if (seen.has(slug)) continue;
+      seen.add(slug);
+      out.push({ pairSlug: slug, label: `${side.name} vs ${other.name}` });
+      if (out.length >= limit) return out;
+    }
   }
-  const wide = a.communities.length >= b.communities.length ? a : b;
-  const narrow = wide === a ? b : a;
-  faqs.push({
-    q: `Which developer covers more communities?`,
-    a: `${wide.name} builds across ${wide.communities.length} communities (led by ${wide.communities.slice(0, 3).join(", ")}), vs ${narrow.communities.length} for ${narrow.name}.`,
-  });
-  return faqs;
+  return out;
 }

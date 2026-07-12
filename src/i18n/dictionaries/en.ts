@@ -509,6 +509,8 @@ const dict = {
       "priceOnly": "Launch prices start from {price}.",
       "planOnly": "The project offers a {plan} payment plan.",
       "handover": "Handover is expected in {handover}.",
+      "inventorySingle": "Catalog unit options include {beds} configurations ({count} listed).",
+      "inventoryRange": "Catalog unit options span {minBeds} to {maxBeds} ({count} configurations listed).",
       "types": {
         "apartment": "apartment",
         "villa": "villa",
@@ -1086,12 +1088,23 @@ const dict = {
       "rowCommunities": "Communities covered",
       "rowHandover": "Handover pipeline",
       "rowHandoverHint": "Earliest–latest year",
+      "rowPremiumShare": "Premium-flagged share",
+      "rowPremiumShareHint": "Share of projects flagged premium in catalog",
+      "kpiProjects": "Projects",
+      "kpiUnits": "Unit options",
+      "kpiFromPrice": "From price",
+      "kpiCommunities": "Communities",
       "verdictDisclaimer": "All figures come from our live off-plan catalog (project and unit-level launch data). We do not join developer names against DLD transaction records, so sold-price aggregates remain community-level only.",
       "whereBuilds": "Where {name} builds",
       "projectsCta": "{name} projects",
       "verdictLargerPortfolio": "{name} has the larger live portfolio ({count} projects)",
       "verdictLowerPrice": "{name} has the lower entry price (from {price})",
-      "verdictMoreCommunities": "{name} covers more communities ({count})"
+      "verdictMoreCommunities": "{name} covers more communities ({count})",
+      "caseForEachHeading": "The case for each",
+      "trailingFallback": "Trails {name} on the measured catalog metrics — weigh the table above against your priorities.",
+      "whoSuitsHeading": "Who each suits",
+      "specialistFallback": "A specialist catalog play — check live projects to see if the inventory fits.",
+      "relatedHeading": "Related developer comparisons"
     },
     "map": {
       "heroTitle": "Project map",

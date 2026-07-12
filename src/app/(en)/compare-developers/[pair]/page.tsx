@@ -10,7 +10,10 @@ import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import {
   buildDeveloperComparison,
   buildDeveloperFaqs,
+  buildDeveloperPros,
+  buildDeveloperSuitability,
   getComparableDeveloperSlugs,
+  getRelatedDeveloperComparisons,
   type DeveloperComparison,
   type DeveloperSide,
 } from "@/lib/developer-compare";
@@ -120,9 +123,37 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
 
   const dict = getDictionary(locale);
   const { a, b } = cmp;
+  const prosA = buildDeveloperPros(a, b);
+  const prosB = buildDeveloperPros(b, a);
+  const suitA = buildDeveloperSuitability(a, b);
+  const suitB = buildDeveloperSuitability(b, a);
   const faqs = buildDeveloperFaqs(cmp);
+  const related = await getRelatedDeveloperComparisons(cmp);
   const money = (n: number | null) =>
     n != null && n > 0 ? formatPrice(Math.round(n), "AED") : "—";
+
+  const scorecards = [
+    {
+      label: dict.pages.compareDev.kpiProjects,
+      aVal: String(a.projectCount),
+      bVal: String(b.projectCount),
+    },
+    {
+      label: dict.pages.compareDev.kpiUnits,
+      aVal: a.unitCount.toLocaleString(),
+      bVal: b.unitCount.toLocaleString(),
+    },
+    {
+      label: dict.pages.compareDev.kpiFromPrice,
+      aVal: money(a.fromPrice),
+      bVal: money(b.fromPrice),
+    },
+    {
+      label: dict.pages.compareDev.kpiCommunities,
+      aVal: String(a.communities.length),
+      bVal: String(b.communities.length),
+    },
+  ];
 
   return (
     <PageShell headerVariant="transparent">
@@ -139,7 +170,27 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
       />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
         <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: dict.pages.compare.breadcrumb, href: "/compare" }, { label: `${a.name} vs ${b.name}` }]} />
-        <div className="overflow-x-auto rounded-2xl border border-border bg-white shadow-elevation-sm">
+
+        {/* KPI scorecards — at-a-glance decision layer */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {scorecards.map((card) => (
+            <div key={card.label} className="rounded-2xl border border-border bg-white p-4 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">{card.label}</p>
+              <div className="mt-2 space-y-1">
+                <p className="flex items-baseline justify-between gap-2 text-sm">
+                  <span className="truncate text-muted-light">{a.name}</span>
+                  <span className="font-semibold tabular-nums text-text-dark">{card.aVal}</span>
+                </p>
+                <p className="flex items-baseline justify-between gap-2 text-sm">
+                  <span className="truncate text-muted-light">{b.name}</span>
+                  <span className="font-semibold tabular-nums text-text-dark">{card.bVal}</span>
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 overflow-x-auto rounded-2xl border border-border bg-white shadow-elevation-sm">
           <table className="w-full">
             <thead>
               <tr className="bg-surface-alt">
@@ -175,6 +226,10 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
               <Row label={dict.pages.compareDev.rowCommunities} better="higher"
                 aVal={String(a.communities.length)} bVal={String(b.communities.length)}
                 aNum={a.communities.length} bNum={b.communities.length} />
+              <Row label={dict.pages.compareDev.rowPremiumShare} hint={dict.pages.compareDev.rowPremiumShareHint} better="none"
+                aVal={`${Math.round(a.premiumShare * 100)}%`}
+                bVal={`${Math.round(b.premiumShare * 100)}%`}
+                aNum={a.premiumShare} bNum={b.premiumShare} />
               <Row label={dict.pages.compareDev.rowHandover} hint={dict.pages.compareDev.rowHandoverHint} better="none"
                 aVal={handoverSpan(a)} bVal={handoverSpan(b)}
                 aNum={null} bNum={null} />
@@ -191,6 +246,74 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
             {dict.pages.compareDev.verdictDisclaimer}
           </p>
         </div>
+
+        {/* Programmatic pros — the case for each developer */}
+        {prosA.length > 0 || prosB.length > 0 ? (
+          <section className="mt-10">
+            <h2 className="font-display text-2xl font-semibold text-text-dark">
+              {dict.pages.compareDev.caseForEachHeading}<span className="text-brand">.</span>
+            </h2>
+            <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+              {[
+                { side: a, pros: prosA },
+                { side: b, pros: prosB },
+              ].map(({ side, pros }) => (
+                <div key={side.slug} className="rounded-2xl border border-border bg-white p-6 shadow-sm">
+                  <h3 className="text-lg font-semibold text-text-dark">{side.name}</h3>
+                  {pros.length > 0 ? (
+                    <ul className="mt-3 space-y-2">
+                      {pros.map((pro) => (
+                        <li key={pro} className="flex gap-2 text-sm leading-relaxed text-muted">
+                          <span className="mt-0.5 shrink-0 text-brand" aria-hidden>✓</span>
+                          {pro}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="mt-3 text-sm text-muted">
+                      {interpolate(dict.pages.compareDev.trailingFallback, {
+                        name: side.slug === a.slug ? b.name : a.name,
+                      })}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {/* Who each suits */}
+        {suitA.length > 0 || suitB.length > 0 ? (
+          <section className="mt-10">
+            <h2 className="font-display text-2xl font-semibold text-text-dark">
+              {dict.pages.compareDev.whoSuitsHeading}<span className="text-brand">.</span>
+            </h2>
+            <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+              {[
+                { side: a, suits: suitA },
+                { side: b, suits: suitB },
+              ].map(({ side, suits }) => (
+                <div key={side.slug} className="rounded-2xl border border-border bg-surface-alt p-6">
+                  <h3 className="text-lg font-semibold text-text-dark">{side.name}</h3>
+                  {suits.length > 0 ? (
+                    <dl className="mt-3 space-y-3">
+                      {suits.map((s) => (
+                        <div key={s.profile}>
+                          <dt className="text-sm font-semibold text-brand">{s.profile}</dt>
+                          <dd className="mt-0.5 text-sm leading-relaxed text-muted">{s.reason}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  ) : (
+                    <p className="mt-3 text-sm text-muted">
+                      {dict.pages.compareDev.specialistFallback}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {/* Where they build */}
         <section className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -237,6 +360,26 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
         ) : null}
 
         <MarketAdviceCta context={`${a.name} vs ${b.name}`} locale={locale} />
+
+        {/* Related comparisons — internal-linking mesh */}
+        {related.length > 0 ? (
+          <section className="mt-10">
+            <h2 className="text-lg font-semibold text-text-dark">
+              {dict.pages.compareDev.relatedHeading}
+            </h2>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {related.map((r) => (
+                <Link
+                  key={r.pairSlug}
+                  href={`/compare-developers/${r.pairSlug}`}
+                  className="iop-btn-press focus-ring rounded-full border border-border bg-white px-4 py-1.5 text-sm font-medium text-muted transition hover:border-brand hover:text-brand"
+                >
+                  {r.label}
+                </Link>
+              ))}
+            </div>
+          </section>
+        ) : null}
       </main>
     </PageShell>
   );
