@@ -46,17 +46,14 @@
   --bottom-dock: 0px;
   /* CookieConsentBanner sets --consent-h on :root when visible (else 0). */
   --consent-h: 0px;
-  /* Gap between the dock edge and floating widgets (advisor FAB, etc.). */
-  --fab-gap: 0.875rem;
   /*
-   * Bottom offset for fixed FABs / chat panels.
-   * = dock height (tabs/CTA/safe-area) + consent banner + breathing room.
-   * Consumers: bottom: var(--fab-bottom). Do not re-add safe-area.
-   * --bottom-dock is overridden per-page on PageShell; var() resolves there.
+   * Gap between the dock edge and floating widgets (advisor FAB, etc.).
+   * Prefer calc(var(--bottom-dock) + var(--consent-h, 0px) + var(--fab-gap))
+   * on fixed consumers — do not re-add safe-area (dock tokens include it).
+   * Avoid a root-level --fab-bottom calc(): nested var(--bottom-dock) would
+   * resolve against :root (0px), not PageShell's per-page override.
    */
-  --fab-bottom: calc(
-    var(--bottom-dock) + var(--consent-h, 0px) + var(--fab-gap)
-  );
+  --fab-gap: 0.875rem;
   --z-subheader: 30;
   --z-sticky: 40;
   --z-bottom-bar: 45;
