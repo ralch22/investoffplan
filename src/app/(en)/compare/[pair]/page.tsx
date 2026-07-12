@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { FaqAccordion } from "@/components/faq-accordion";
@@ -25,15 +25,17 @@ import {
   type AreaComparison,
 } from "@/lib/area-compare";
 import { getDictionary } from "@/i18n";
-import { interpolate, type Locale } from "@/i18n/config";
+import { interpolate, localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ pair: string }>;
   locale?: Locale;
 }
 
-// Pairs are derived at build time from community slugs — unknown pairs are 404.
-export const dynamicParams = false;
+// Canonical A-vs-B pairs are SSG'd. Reverse B-vs-A is allowed at request time
+// (dynamicParams) and permanentRedirect'd to the alphabetical slug — baking
+// reverse into generateStaticParams left next start serving soft-200s (CI #244).
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const pairs = await getComparablePairSlugs();
@@ -129,6 +131,10 @@ export default async function CompareAreasPage({ params, locale = "en" }: PagePr
   const { pair } = await params;
   const cmp = await buildAreaComparison(pair);
   if (!cmp) notFound();
+  // Canonical alphabetical pair slug (A-vs-B); reverse deep links 308 here.
+  if (pair !== cmp.pairSlug) {
+    permanentRedirect(localePath(locale, `/compare/${cmp.pairSlug}`));
+  }
 
   const dict = getDictionary(locale);
   const { a, b } = cmp;
