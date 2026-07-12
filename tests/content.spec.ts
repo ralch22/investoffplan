@@ -202,4 +202,15 @@ test.describe("Content routes", () => {
       expect(html, path).not.toMatch(/<title>Off-Plan Projects in Dubai \|/i);
     }
   });
+
+  // AR about CTA must not dump users onto EN /projects (PrimaryButton is not
+  // locale-aware — use /ar/projects). Same fix applied to (ar)/ar/not-found.tsx.
+  test("AR about Get-started CTA stays on /ar/projects", async ({ page }) => {
+    const res = await page.goto("/ar/about", { waitUntil: "domcontentloaded" });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    expect(html).toMatch(/href="\/ar\/projects"/);
+    // Bare EN /projects must not appear as a CTA href on the AR about page.
+    expect(html).not.toMatch(/href="\/projects"/);
+  });
 });
