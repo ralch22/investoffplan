@@ -172,7 +172,11 @@ const dict = {
     "fullscreen": "Fullscreen",
     "clear": "Clear",
     "filter": "Filter",
-    "clearFilters": "Clear filters"
+    "clearFilters": "Clear filters",
+    "goHome": "Go home",
+    "notFoundHeading": "Page not found",
+    "notFoundBody": "We couldn't find the page you're looking for. It may have moved or been removed.",
+    "browseProjectsCta": "Browse projects"
   },
   "errorPage": {
     "label": "Error",
