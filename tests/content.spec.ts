@@ -169,6 +169,20 @@ test.describe("Content routes", () => {
     expect(reportHtml).not.toContain(`href="/communities/${communitySlug}"`);
   });
 
+  // #289 — AR PDP living-in-area chrome must not hardcode EN.
+  test("AR PDP living-in-area heading is Arabic", async ({ page }) => {
+    const res = await page.goto("/ar/projects/105-residences", {
+      waitUntil: "commit",
+    });
+    expect(res?.status()).toBe(200);
+    const html = await res!.text();
+    expect(html).toContain('lang="ar"');
+    expect(html).toContain("العيش في");
+    expect(html).not.toContain(">Living in <");
+    expect(html).not.toContain("active off-plan launches with");
+    expect(html).toMatch(/استكشف .+ ←/);
+  });
+
   // #252 — AR FAQ hub hero + topic cards must not stay English.
   test("AR FAQ hub H1 and topic cards are Arabic", async ({ page }) => {
     const res = await page.goto("/ar/faq", { waitUntil: "domcontentloaded" });

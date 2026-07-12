@@ -662,10 +662,14 @@ export const ar: Dict = {
       "colFrom": "من"
     },
     "livingArea": {
+      "headingPrefix": "العيش في",
       "projects": "المشاريع",
       "unitOptions": "خيارات الوحدات",
       "from": "من",
-      "avgLaunch": "متوسط الإطلاق"
+      "avgLaunch": "متوسط الإطلاق",
+      "projectsInArea": "مشاريع على الخارطة في هذه المنطقة",
+      "body": "{city} · {count} إطلاقاً نشطاً على الخارطة مع تسعير على مستوى الوحدة وبروشورات على invest off-plan.",
+      "exploreCta": "استكشف {name} ←"
     }
   },
   "forms": {
