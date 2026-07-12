@@ -110,13 +110,16 @@ test.describe("Content routes", () => {
   });
 
   // #243 — reverse pair order must land on alphabetical canonical (not 404).
+  // Middleware 308s B-vs-A → A-vs-B; Playwright follows redirects so final URL
+  // is canonical and status is 200 on the destination page.
   test("reverse area compare pair redirects to canonical order", async ({ page }) => {
     const reverse = "/compare/jumeirah-village-circle-vs-dubai-marina";
     const canonical = "/compare/dubai-marina-vs-jumeirah-village-circle";
     const res = await page.goto(reverse, { waitUntil: "commit" });
     expect(res?.status()).toBe(200);
     expect(page.url()).toContain(canonical);
-    const body = await res!.text();
+    // Final response body (after redirect follow).
+    const body = await page.content();
     expect(body).toMatch(/Dubai Marina/i);
     expect(body).toMatch(/Jumeirah Village Circle/i);
   });
