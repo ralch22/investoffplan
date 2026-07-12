@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
-import { getSiteUrl } from "@/lib/site-url";
+import { arMeta } from "@/lib/ar-meta";
 import { CommunityInsightsPageContent } from "@/app/(en)/tools/communities/page";
 
-export const metadata: Metadata = (() => {
-  const base = getSiteUrl();
-  return {
-    alternates: {
-      canonical: `${base}/ar/tools/communities`,
-      languages: { "x-default": `${base}/tools/communities`, en: `${base}/tools/communities`, ar: `${base}/ar/tools/communities` },
-    },
-  };
-})();
+export const metadata: Metadata = arMeta({
+  path: "/tools/communities",
+  title: "رؤى مجتمعات دبي — قارن أنماط الحياة والعوائد",
+  description:
+    "استكشف مجتمعات الإمارات حسب أسلوب الحياة — عائلية، واجهة بحرية، حضرية، غولف، استثمار، وفاخرة.",
+});
 
 export default async function ArCommunityInsightsPage() {
   return <CommunityInsightsPageContent locale="ar" />;
