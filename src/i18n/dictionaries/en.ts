@@ -1340,9 +1340,47 @@ const dict = {
       "allUae": "All UAE"
     },
     "guides": {
+      "heroTitle": "Investment Guides",
+      "heroSubtitle": "Understand the Off-Plan Property Market.",
+      "dataCoverageEyebrow": "Data coverage",
+      "brochureBackedHeading": "{count} brochure-backed projects",
+      "brochureBackedBody": "{pct}% of our {projects} tracked projects include an official PDF. Browse listings with verified brochures, or request the rest via WhatsApp.",
+      "browseBrochures": "Browse with brochures",
+      "requestPdf": "{count} projects — request PDF",
+      "yearsLabel": "10 Years",
+      "goldenVisaTitle": "Golden Visa",
+      "goldenVisaBody": "Qualifying off-plan investments can unlock long-term UAE residency benefits for international buyers.",
+      "toolsHint": "Use our payment calculator and compare tools to model entry price, handover timeline, and brochure-backed project research.",
+      "openCalculator": "Open calculator",
       "ctaHeading": "Invest in Your Own Off-Plan Property.",
       "ctaButton": "Browse Projects",
-      "backLink": "← All investment guides"
+      "backLink": "← All investment guides",
+      "cards": {
+        "why-invest-off-plan-dubai": {
+          "title": "Why Invest in Off-Plan Dubai",
+          "description": "Launch pricing, payment-plan leverage, and capital-growth dynamics — why buying before completion can outperform ready property."
+        },
+        "understanding-payment-plans": {
+          "title": "Understanding Payment Plans",
+          "description": "Decode 60/40, 80/20, and post-handover structures — what you pay at booking, during construction, and after keys."
+        },
+        "roi-capital-appreciation": {
+          "title": "ROI & Capital Appreciation",
+          "description": "How price-per-sqft, handover dates, and payment plans affect your return profile."
+        },
+        "foreign-investor-guide": {
+          "title": "Foreign Investor Guide",
+          "description": "Everything international buyers need to know about UAE off-plan purchases."
+        },
+        "upcoming-projects": {
+          "title": "Upcoming Projects to Watch",
+          "description": "Curated launches across Dubai, Abu Dhabi, and the wider UAE market."
+        },
+        "compare-units": {
+          "title": "Compare Units Side-by-Side",
+          "description": "Evaluate up to three units on price, handover, brochures, and amenities."
+        }
+      }
     }
   },
   "developers": {
