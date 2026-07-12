@@ -6,15 +6,19 @@ import {
   MediaGalleryLightbox,
   ExpandIcon,
 } from "@/components/media-gallery-lightbox";
-import { formatBeds } from "@/lib/format";
+import { bedsLabel } from "@/lib/format";
 import type { FloorPlan, Project } from "@/lib/types";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 import { unoptimizedProp } from "@/lib/asset-image";
 
 interface ProjectFloorPlansProps {
   project: Project;
+  locale?: Locale;
 }
 
-export function ProjectFloorPlans({ project }: ProjectFloorPlansProps) {
+export function ProjectFloorPlans({ project, locale = "en" }: ProjectFloorPlansProps) {
+  const dict = getDictionary(locale);
   const plans = project.floorPlans ?? [];
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
@@ -56,7 +60,7 @@ export function ProjectFloorPlans({ project }: ProjectFloorPlansProps) {
           {bedOptions.map((beds) => (
             <BedChip
               key={beds}
-              label={formatBeds(beds)}
+              label={bedsLabel(beds, dict)}
               active={bedsFilter === beds}
               onClick={() => setBedsFilter(beds)}
             />
@@ -78,7 +82,7 @@ export function ProjectFloorPlans({ project }: ProjectFloorPlansProps) {
             <div className="relative h-48 w-full overflow-hidden rounded-xl bg-surface-alt">
               <Image
                 src={plan.imageUrl}
-                alt={`${formatBeds(plan.beds)} floor plan — ${project.name}`}
+                alt={`${bedsLabel(plan.beds, dict)} floor plan — ${project.name}`}
                 fill
                 className="object-contain transition group-hover:scale-[1.02]"
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -90,7 +94,7 @@ export function ProjectFloorPlans({ project }: ProjectFloorPlansProps) {
             </div>
             <div className="mt-3 flex items-center justify-between gap-2 px-1 pb-1">
               <p className="text-sm font-semibold text-text-dark">
-                {formatBeds(plan.beds)}
+                {bedsLabel(plan.beds, dict)}
                 {plan.layoutType ? ` · ${plan.layoutType}` : ""}
               </p>
               {plan.area ? (

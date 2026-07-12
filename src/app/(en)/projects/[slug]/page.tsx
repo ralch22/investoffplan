@@ -554,7 +554,7 @@ export default async function ProjectDetailPage({
 
         <ProjectMasterplan project={project} />
 
-        <ProjectFloorPlans project={project} />
+        <ProjectFloorPlans project={project} locale={locale} />
         </div>
 
         {areaInsights ? <ProjectLivingInArea insights={areaInsights} /> : null}

@@ -1,4 +1,6 @@
 import type { CurrencyCode } from "./types";
+import type { Dict } from "@/i18n";
+import { interpolate } from "@/i18n/config";
 
 const AED_TO_USD = 0.272;
 
@@ -37,6 +39,38 @@ export function formatPriceRange(
 export function formatBeds(beds: number): string {
   if (beds === 0) return "Studio";
   return beds === 1 ? "1 Bed" : `${beds} Beds`;
+}
+
+/**
+ * Locale-aware bedroom label. EN output is byte-identical to {@link formatBeds}
+ * ("Studio" / "1 Bed" / "N Beds"); AR reads natural plurals from the dictionary.
+ * Use this at any call site that has a `dict` (surfaces reachable under /ar).
+ */
+export function bedsLabel(beds: number, dict: Dict): string {
+  if (beds === 0) return dict.format.beds.studio;
+  if (beds === 1) return dict.format.beds.one;
+  return interpolate(dict.format.beds.many, { count: beds });
+}
+
+/**
+ * Locale-aware property-type noun ("apartment"/"villa"/"townhouse"/"penthouse").
+ * EN returns the raw catalog value unchanged (byte-identical to prior render);
+ * AR maps to the localized noun from `serp.filters`. Unknown types pass through.
+ */
+export function propertyTypeLabel(
+  propertyType: string,
+  dict: Dict,
+  locale: string,
+): string {
+  if (locale !== "ar") return propertyType;
+  const key = propertyType.toLowerCase();
+  const names: Record<string, string> = {
+    apartment: dict.serp.filters.apartment,
+    villa: dict.serp.filters.villa,
+    townhouse: dict.serp.filters.townhouse,
+    penthouse: dict.serp.filters.penthouse,
+  };
+  return names[key] ?? propertyType;
 }
 
 export function formatLaunchPrice(

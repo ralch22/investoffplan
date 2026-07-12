@@ -1,6 +1,7 @@
 import {
-  formatBeds,
+  bedsLabel,
   formatSqft,
+  propertyTypeLabel,
 } from "@/lib/format";
 import { LaunchPrice } from "@/components/currency-price";
 import type { Project, UnitType } from "@/lib/types";
@@ -14,7 +15,8 @@ interface ProjectUnitsTableProps {
 }
 
 export function ProjectUnitsTable({ units, project, locale = "en" }: ProjectUnitsTableProps) {
-  const u = getDictionary(locale).pdp.units;
+  const dict = getDictionary(locale);
+  const u = dict.pdp.units;
   return (
     <>
       <div className="mt-4 hidden overflow-hidden rounded-xl border border-border bg-white md:block">
@@ -30,11 +32,11 @@ export function ProjectUnitsTable({ units, project, locale = "en" }: ProjectUnit
           <tbody>
             {units.map((unit) => (
               <tr key={unit.id} className="border-b border-border last:border-0">
-                <td className="px-4 py-3 text-text-dark">{formatBeds(unit.beds)}</td>
+                <td className="px-4 py-3 text-text-dark">{bedsLabel(unit.beds, dict)}</td>
                 <td className="px-4 py-3 text-muted">
                   {formatSqft(unit.sqftMin, unit.sqftMax)}
                 </td>
-                <td className="px-4 py-3 capitalize text-muted">{unit.propertyType}</td>
+                <td className="px-4 py-3 capitalize text-muted">{propertyTypeLabel(unit.propertyType, dict, locale)}</td>
                 <td className="px-4 py-3 font-semibold tabular-nums text-brand">
                   <LaunchPrice
                     minAed={unit.launchPriceAed}
@@ -56,7 +58,7 @@ export function ProjectUnitsTable({ units, project, locale = "en" }: ProjectUnit
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="font-semibold text-text-dark">
-                  {formatBeds(unit.beds)} · {unit.propertyType}
+                  {bedsLabel(unit.beds, dict)} · {propertyTypeLabel(unit.propertyType, dict, locale)}
                 </p>
                 <p className="mt-1 text-sm text-muted">
                   {formatSqft(unit.sqftMin, unit.sqftMax)}

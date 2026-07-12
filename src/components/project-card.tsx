@@ -15,11 +15,12 @@ import type { CompareUnitId } from "@/lib/compare";
 import type { FlatUnit } from "@/lib/catalog-core";
 import type { CurrencyCode } from "@/lib/types";
 import {
-  formatBeds,
+  bedsLabel,
   formatFromPrice,
   formatLaunchPrice,
   formatPricePerSqft,
   formatSqft,
+  propertyTypeLabel,
 } from "@/lib/format";
 import { resolveBrochureUrl } from "@/lib/brochure";
 import { unitPricePerSqft } from "@/lib/investment-metrics";
@@ -169,8 +170,8 @@ export function ProjectCard({
               {project.area.split(",").slice(0, 2).join(", ")}
             </p>
             <p className="line-clamp-2 text-sm text-white/80">
-              {formatBeds(unit.beds)} · {formatSqft(unit.sqftMin, unit.sqftMax)} ·{" "}
-              {unit.propertyType}
+              {bedsLabel(unit.beds, dict)} · {formatSqft(unit.sqftMin, unit.sqftMax)} ·{" "}
+              {propertyTypeLabel(unit.propertyType, dict, locale)}
               {ppsf ? ` · ${formatPricePerSqft(ppsf, currency)}` : ""}
             </p>
             <p className="text-xl font-bold text-white">
@@ -288,8 +289,8 @@ function ListCard({
             </div>
           </div>
           <p className="text-sm text-muted">
-            {formatBeds(unit.beds)} · {formatSqft(unit.sqftMin, unit.sqftMax)} ·{" "}
-            {unit.propertyType}
+            {bedsLabel(unit.beds, dict)} · {formatSqft(unit.sqftMin, unit.sqftMax)} ·{" "}
+            {propertyTypeLabel(unit.propertyType, dict, locale)}
           </p>
           <p className="text-lg font-semibold text-brand">
             {unit.launchPriceAed > 0 ? "from " : ""}
