@@ -1,0 +1,18 @@
+{
+  "dryRun": true,
+  "scraped": [
+    {
+      "slug": "113-residences",
+      "pfSlug": "iman-developers/113-residences",
+      "sourceUrls": [
+        "https://new-projects-media.propertyfinder.com/project/61a78e63-ebee-4648-aa25-632f5b88f308/gallery/image/tbLBZ5lsiPi-XnAMBsvChDG0VAcfhVhxTnKJNCTc0Ew=/medium.webp",
+        "https://new-projects-media.propertyfinder.com/project/61a78e63-ebee-4648-aa25-632f5b88f308/master_plan/image/Qkqi2ODD9JK9-_5rBhHucZDahlco7DqsMqypX0ZinSY=/original.webp"
+      ],
+      "imageUrl": "https://new-projects-media.propertyfinder.com/project/61a78e63-ebee-4648-aa25-632f5b88f308/gallery/image/tbLBZ5lsiPi-XnAMBsvChDG0VAcfhVhxTnKJNCTc0Ew=/medium.webp",
+      "imageGallery": [
+        "https://new-projects-media.propertyfinder.com/project/61a78e63-ebee-4648-aa25-632f5b88f308/gallery/image/tbLBZ5lsiPi-XnAMBsvChDG0VAcfhVhxTnKJNCTc0Ew=/medium.webp",
+        "https://new-projects-media.propertyfinder.com/project/61a78e63-ebee-4648-aa25-632f5b88f308/master_plan/image/Qkqi2ODD9JK9-_5rBhHucZDahlco7DqsMqypX0ZinSY=/original.webp"
+      ]
+    }
+  ]
+}
