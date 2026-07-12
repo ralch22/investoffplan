@@ -6,6 +6,7 @@ import { ContactButton } from "@/components/contact-button";
 import { DeveloperAttribution } from "@/components/developer-attribution";
 import { projectBedsLabel, projectTypeLabel } from "@/lib/developer-utils";
 import { cityLabel, formatLaunchPrice, formatPrice } from "@/lib/format";
+import { hasPaymentPlan } from "@/lib/investment-metrics";
 import type { Project } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { unoptimizedProp } from "@/lib/asset-image";
@@ -102,8 +103,10 @@ export function DeveloperProjectCard({
               {formatLaunchPrice(minPrice, maxPrice > minPrice ? maxPrice : undefined, "AED")}
             </p>
           </div>
-          {project.paymentPlan ? (
-            <p className="text-sm font-medium text-muted">{project.paymentPlan}</p>
+          {hasPaymentPlan(project.paymentPlan) ? (
+            <p className="text-sm font-medium text-muted">
+              {project.paymentPlan.trim()}
+            </p>
           ) : null}
 
           <div className="flex flex-wrap gap-2">
