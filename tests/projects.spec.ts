@@ -56,13 +56,15 @@ test.describe("InvestOffPlan projects page", () => {
   });
 
   test("map view respects active filters", async ({ page }) => {
+    // Desktop filter bar is `hidden md:block` — need md+ for Beds/Type/Price selects.
+    await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto("/projects");
     await waitForCatalog(page);
 
     // Switch the SERP layout to the Map view.
     await page.getByRole("button", { name: "Map", exact: true }).click();
 
-    const coordCount = page.getByText(/projects with coordinates/i);
+    const coordCount = page.getByTestId("map-coord-count");
     await expect(coordCount).toBeVisible();
     await expect(coordCount).toHaveText(/[1-9][\d,]*\s+projects with coordinates/i);
 
@@ -72,16 +74,38 @@ test.describe("InvestOffPlan projects page", () => {
       return m ? Number(m[1].replace(/,/g, "")) : NaN;
     };
 
-    const before = await readCount();
+    const baseline = await readCount();
+    expect(baseline).toBeGreaterThan(0);
 
-    // Narrow to a single (non-dominant) city; Dubai holds the bulk of stock, so
-    // Abu Dhabi must yield a strictly smaller map set than "All UAE".
+    // City: Dubai holds the bulk of stock, so Abu Dhabi must yield a strictly
+    // smaller map set than "All UAE".
     await page.getByRole("button", { name: /Abu Dhabi/i }).click();
+    await expect.poll(readCount, { timeout: 15_000 }).toBeLessThan(baseline);
+    const afterCity = await readCount();
+    expect(afterCity).toBeGreaterThan(0);
 
-    await expect
-      .poll(readCount, { timeout: 15_000 })
-      .toBeLessThan(before);
-    expect(await readCount()).toBeGreaterThan(0);
+    // Reset city so beds/type/price assertions start from the full map set.
+    await page.getByRole("button", { name: /All UAE/i }).click();
+    await expect.poll(readCount, { timeout: 15_000 }).toBe(baseline);
+
+    // Beds (desktop filter bar — md+). Map pins must track the same filtered
+    // unit set as grid/list without a full page reload.
+    await page.getByLabel("Beds", { exact: true }).selectOption("2");
+    await expect.poll(readCount, { timeout: 15_000 }).toBeLessThan(baseline);
+    const afterBeds = await readCount();
+    expect(afterBeds).toBeGreaterThan(0);
+
+    // Property type further narrows (or at least does not grow) the pin set.
+    await page.getByLabel("Property type", { exact: true }).selectOption("villa");
+    await expect.poll(readCount, { timeout: 15_000 }).toBeLessThanOrEqual(afterBeds);
+    const afterType = await readCount();
+    // Combined beds+type must still be a real reduction vs unfiltered baseline.
+    expect(afterType).toBeLessThan(baseline);
+
+    // Max price: stack a tight budget cap — pin count must not increase.
+    await page.getByLabel("Max price (AED)", { exact: true }).selectOption("1500000");
+    await expect.poll(readCount, { timeout: 15_000 }).toBeLessThanOrEqual(afterType);
+    expect(await readCount()).toBeLessThan(baseline);
   });
 
   test("toggles between project and unit view", async ({ page }) => {

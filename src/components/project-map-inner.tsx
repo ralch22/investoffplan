@@ -120,7 +120,13 @@ export function ProjectMapInner({
           onChange={(e) => setQuery(e.target.value)}
           className="iop-input"
         />
-        <p className="text-sm text-muted">
+        <p
+          className="text-sm text-muted"
+          data-testid="map-coord-count"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {filtered.length.toLocaleString()} projects with coordinates
         </p>
         <div className="max-h-[min(420px,50vh)] space-y-2 overflow-y-auto pe-1 lg:max-h-[520px]">
