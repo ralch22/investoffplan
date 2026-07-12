@@ -10,7 +10,7 @@ import { getHubProjectPairs } from "@/lib/project-compare";
 import { getHubDeveloperPairs } from "@/lib/developer-compare";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { localePath, type Locale } from "@/i18n/config";
 
 /** ISR — hub must not be per-request dynamic (Worker CPU → CF 1102 / 503). */
 export const revalidate = 3600;
@@ -71,7 +71,7 @@ export async function CompareHubPageContent({
             {comparisons.map((c) => (
               <Link
                 key={c.pairSlug}
-                href={`/compare/${c.pairSlug}`}
+                href={localePath(locale, `/compare/${c.pairSlug}`)}
                 className="iop-btn-press focus-ring group rounded-2xl border border-border bg-white p-4 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
               >
                 <p className="text-sm font-semibold text-text-dark group-hover:text-brand">
@@ -106,7 +106,7 @@ export async function CompareHubPageContent({
               {projectPairs.map((p) => (
                 <Link
                   key={p.pairSlug}
-                  href={`/compare-projects/${p.pairSlug}`}
+                  href={localePath(locale, `/compare-projects/${p.pairSlug}`)}
                   className="iop-btn-press focus-ring group rounded-2xl border border-border bg-white p-4 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
                 >
                   <p className="text-sm font-semibold text-text-dark group-hover:text-brand">
@@ -132,7 +132,7 @@ export async function CompareHubPageContent({
               {developerPairs.map((p) => (
                 <Link
                   key={p.pairSlug}
-                  href={`/compare-developers/${p.pairSlug}`}
+                  href={localePath(locale, `/compare-developers/${p.pairSlug}`)}
                   className="iop-btn-press focus-ring group rounded-2xl border border-border bg-white p-4 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
                 >
                   <p className="text-sm font-semibold text-text-dark group-hover:text-brand">
@@ -154,7 +154,7 @@ export async function CompareHubPageContent({
             Pick up to three unit types from any projects and line them up — price, size,
             handover, and payment plans.
           </p>
-          <PrimaryButton href="/compare/units" className="mt-6">
+          <PrimaryButton href={localePath(locale, "/compare/units")} className="mt-6">
             Open the unit comparator
           </PrimaryButton>
         </div>
