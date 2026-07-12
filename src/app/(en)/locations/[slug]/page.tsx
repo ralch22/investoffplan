@@ -15,7 +15,7 @@ import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -47,25 +47,29 @@ export default async function LocationGuidePage({ params, locale = "en" }: PageP
   if (!result) notFound();
   const { guide, ranked } = result;
   const base = getSiteUrl();
+  const abs = (href: string) => `${base}${localePath(locale, href)}`;
+  const guideH1 = guideText(guide, "h1", locale);
+  const guideIntro = guideText(guide, "intro", locale);
+  const guideLabel = guideText(guide, "label", locale);
 
   const itemListJsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: guide.title,
+    name: guideH1,
     itemListElement: ranked.map((r, i) => ({
       "@type": "ListItem",
       position: i + 1,
       name: r.metrics.name,
-      url: `${base}/communities/${r.metrics.slug}`,
+      url: abs(`/communities/${r.metrics.slug}`),
     })),
   };
 
   const webPageJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: guide.title,
-    description: guide.intro.slice(0, 300),
-    url: `${base}/locations/${slug}`,
+    name: guideH1,
+    description: guideIntro.slice(0, 300),
+    url: abs(`/locations/${slug}`),
   };
 
   const others = LOCATION_GUIDES.filter((g) => g.slug !== slug);
@@ -81,9 +85,9 @@ export default async function LocationGuidePage({ params, locale = "en" }: PageP
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             buildBreadcrumbListJsonLd([
-              { name: "Home", url: base },
-              { name: "Location guides", url: `${base}/locations` },
-              { name: guide.label },
+              { name: dict.common.home, url: abs("/") },
+              { name: dict.pages.locations.breadcrumb, url: abs("/locations") },
+              { name: guideLabel },
             ]),
           ),
         }}
@@ -92,9 +96,9 @@ export default async function LocationGuidePage({ params, locale = "en" }: PageP
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }}
       />
-      <PageHero title={guideText(guide, "h1", locale)} italicTitle subtitle={guideText(guide, "intro", locale)} />
+      <PageHero title={guideH1} italicTitle subtitle={guideIntro} />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
-        <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: dict.pages.locations.breadcrumb, href: "/locations" }, { label: guideText(guide, "label", locale) }]} />
+        <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: dict.pages.locations.breadcrumb, href: "/locations" }, { label: guideLabel }]} />
         <ol className="space-y-3">
           {ranked.map((r, i) => (
             <li key={r.metrics.slug}>
@@ -129,7 +133,7 @@ export default async function LocationGuidePage({ params, locale = "en" }: PageP
           {guideText(guide, "methodology", locale)} {dict.pages.locations.methodologyDisclaimer}
         </p>
 
-        <MarketAdviceCta context={guide.h1.toLowerCase()} locale={locale} />
+        <MarketAdviceCta context={guideH1} locale={locale} />
 
         <section className="mt-10">
           <h2 className="text-lg font-semibold text-text-dark">{dict.pages.locations.moreGuidesHeading}</h2>

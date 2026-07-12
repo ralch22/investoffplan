@@ -148,7 +148,10 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             buildBreadcrumbListJsonLd([
-              { name: dict.common.home, url: siteUrl },
+              {
+                name: dict.common.home,
+                url: `${siteUrl}${localePath(locale, "/")}`,
+              },
               {
                 name: dict.nav.projects,
                 url: `${siteUrl}${localePath(locale, "/projects")}`,

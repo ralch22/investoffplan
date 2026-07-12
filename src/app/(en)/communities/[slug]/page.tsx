@@ -139,8 +139,14 @@ export default async function CommunityDetailPage({ params, locale = "en" }: Pag
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             buildBreadcrumbListJsonLd([
-              { name: dict.common.home, url: getSiteUrl() },
-              { name: t.breadcrumbCommunities, url: `${getSiteUrl()}/communities` },
+              {
+                name: dict.common.home,
+                url: `${getSiteUrl()}${localePath(locale, "/")}`,
+              },
+              {
+                name: t.breadcrumbCommunities,
+                url: `${getSiteUrl()}${localePath(locale, "/communities")}`,
+              },
               { name: community.name },
             ]),
           ),

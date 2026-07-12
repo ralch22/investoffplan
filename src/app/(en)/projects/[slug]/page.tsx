@@ -56,7 +56,7 @@ import {
 } from "@/lib/project-json-ld";
 import { unoptimizedProp } from "@/lib/asset-image";
 import { getDictionary } from "@/i18n";
-import { interpolate, type Locale } from "@/i18n/config";
+import { interpolate, localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -249,7 +249,7 @@ export default async function ProjectDetailPage({
   const projectFaqs = buildProjectFaqs(project);
 
   const siteUrl = getSiteUrl();
-  const projectUrl = `${siteUrl}/projects/${slug}`;
+  const projectUrl = `${siteUrl}${localePath(locale, `/projects/${slug}`)}`;
   const description =
     stripHtml(project.descriptionUnique ?? "")?.slice(0, 300) ||
     enrichment?.summary ||
@@ -269,6 +269,10 @@ export default async function ProjectDetailPage({
     projectName: project.name,
     projectUrl,
     siteUrl,
+    homeName: dict.common.home,
+    projectsName: dict.nav.projects,
+    homeUrl: `${siteUrl}${localePath(locale, "/")}`,
+    projectsUrl: `${siteUrl}${localePath(locale, "/projects")}`,
   });
 
   const enrichmentAmenities = Array.isArray(enrichment?.facts?.amenities)
