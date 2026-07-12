@@ -1,4 +1,5 @@
 import type { CatalogUnit, DevListEntry, Project, UnitType } from "@/lib/types";
+import { sanitizeUnitSizes } from "@/lib/catalog-core";
 import { sanitizePfFaqs, type PfFaq } from "@/lib/sanitize-html";
 import type {
   catalogUnits,
@@ -23,7 +24,8 @@ function parseJsonArray(value: string | null | undefined): string[] | undefined 
 }
 
 export function rowToUnitType(row: ProjectUnitRow): UnitType {
-  return {
+  // Display/compute size gate (#180) — D1 PDP path bypasses createCatalogApi.
+  return sanitizeUnitSizes({
     id: row.id,
     beds: row.beds,
     sqftMin: row.sqftMin,
@@ -31,7 +33,7 @@ export function rowToUnitType(row: ProjectUnitRow): UnitType {
     launchPriceAed: row.launchPriceAed,
     launchPriceMaxAed: row.launchPriceMaxAed ?? undefined,
     propertyType: row.propertyType,
-  };
+  });
 }
 
 export function rowToProject(row: ProjectRow, units: ProjectUnitRow[]): Project {
@@ -92,6 +94,12 @@ function sanitizeRowFaqs(value: string | null): PfFaq[] | undefined {
 }
 
 export function rowToCatalogUnit(row: CatalogUnitRow): CatalogUnit {
+  const sizes = sanitizeUnitSizes({
+    beds: row.beds,
+    propertyType: row.propertyType,
+    sqftMin: row.sqftMin,
+    sqftMax: row.sqftMax ?? undefined,
+  });
   return {
     id: row.id,
     projectId: row.projectId,
@@ -106,8 +114,8 @@ export function rowToCatalogUnit(row: CatalogUnitRow): CatalogUnit {
     locationFull: row.locationFull,
     propertyType: row.propertyType,
     beds: row.beds,
-    sqftMin: row.sqftMin,
-    sqftMax: row.sqftMax ?? undefined,
+    sqftMin: sizes.sqftMin,
+    sqftMax: sizes.sqftMax,
     launchPriceAed: row.launchPriceAed,
     launchPriceMaxAed: row.launchPriceMaxAed ?? undefined,
     paymentPlan: row.paymentPlan,

@@ -112,8 +112,12 @@ export function formatPricePerSqft(
 export function formatSqft(min: number, max?: number): string {
   // 0 = size unknown (e.g. dev-fallback ingest units carry only PF-stated
   // facts) — render the app-wide "—" placeholder, never "0 sqft".
-  if (!(min > 0)) return "—";
-  if (max && max > min) return `${min.toLocaleString()} - ${max.toLocaleString()} sqft`;
+  // Absolute ceiling (40k = villa hard max in catalog-core #180) blocks any
+  // residual absurd size that skipped the type-aware gate from rendering as
+  // "1,000,000 sqft" on SERP/PDP.
+  if (!(min > 0) || min > 40_000) return "—";
+  const saneMax = max && max > min && max <= 40_000 ? max : undefined;
+  if (saneMax) return `${min.toLocaleString()} - ${saneMax.toLocaleString()} sqft`;
   return `${min.toLocaleString()} sqft`;
 }
 

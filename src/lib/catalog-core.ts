@@ -208,6 +208,113 @@ const DEVELOPER_DISPLAY_CASING: Record<string, string> = {
   ARADA: "Arada",
 };
 
+/**
+ * Unit-size sanity gate for display + compute (#180).
+ *
+ * Catalog rows can carry absurd sqft (e.g. beachfront-gates-2 with 1_000_000
+ * sqft, or a price value written into the size column). This is a **read-layer**
+ * gate only — it does not rewrite `data/catalog.json`. Out-of-band sizes are
+ * nullified to 0 so SERP/PDP formatters show "—" and AED/sqft helpers return
+ * null instead of poisoning value-sort / filters / cards.
+ *
+ * Type-aware thresholds (sqft):
+ * - Floor (all types): 150 — below this is not a habitable listing size.
+ * - apartment / studio / duplex / default: 150–6_000 (typical UAE units);
+ *   4BR apartments get 8_000, 5+ BR get 12_000 headroom for large layouts.
+ * - penthouse: 150–20_000 (super-prime duplex pents).
+ * - townhouse: 150–15_000.
+ * - villa / land: 150–40_000 (keeps real 20–35k mansions; drops 70k+ glitches
+ *   and six-digit typos).
+ *
+ * Values outside the band become 0 (unknown); a sane min with an absurd max
+ * keeps the min and drops the max.
+ */
+export const UNIT_SQFT_MIN = 150;
+/** Hard ceiling above every type band — anything larger is always absurd. */
+export const UNIT_SQFT_HARD_MAX = 40_000;
+
+export function unitSqftBand(
+  propertyType: string | undefined,
+  beds: number,
+): { min: number; max: number } {
+  const t = (propertyType ?? "").toLowerCase();
+  if (t === "villa" || t === "land") {
+    return { min: UNIT_SQFT_MIN, max: UNIT_SQFT_HARD_MAX };
+  }
+  if (t === "penthouse") {
+    return { min: UNIT_SQFT_MIN, max: 20_000 };
+  }
+  if (t === "townhouse") {
+    return { min: UNIT_SQFT_MIN, max: 15_000 };
+  }
+  // apartment / duplex / studio / unknown — beds lift the ceiling slightly
+  // so large genuine multi-BR apartments are not wiped with the 6k default.
+  if (beds >= 5) return { min: UNIT_SQFT_MIN, max: 12_000 };
+  if (beds >= 4) return { min: UNIT_SQFT_MIN, max: 8_000 };
+  return { min: UNIT_SQFT_MIN, max: 6_000 };
+}
+
+/** True when a single size figure is inside the type/beds band. */
+export function isPlausibleUnitSqft(
+  sqft: number,
+  propertyType?: string,
+  beds = 0,
+): boolean {
+  if (!Number.isFinite(sqft) || sqft <= 0) return false;
+  const { min, max } = unitSqftBand(propertyType, beds);
+  return sqft >= min && sqft <= max;
+}
+
+/**
+ * Null-out a single size (return 0) when outside the sane band.
+ * 0 is the catalog-wide "size unknown" sentinel (`formatSqft` → "—").
+ */
+export function sanitizeUnitSqft(
+  sqft: number,
+  propertyType?: string,
+  beds = 0,
+): number {
+  if (!Number.isFinite(sqft) || sqft <= 0) return 0;
+  return isPlausibleUnitSqft(sqft, propertyType, beds) ? sqft : 0;
+}
+
+export interface UnitSizeFields {
+  beds: number;
+  propertyType?: string;
+  sqftMin: number;
+  sqftMax?: number;
+}
+
+/**
+ * Sanitize min/max sizes together. Absurd max with a sane min drops only max;
+ * absurd min zeros both (range is meaningless without a floor).
+ */
+export function sanitizeUnitSizes<T extends UnitSizeFields>(
+  unit: T,
+): T & { sqftMin: number; sqftMax?: number } {
+  const type = unit.propertyType;
+  const beds = unit.beds;
+  const sqftMin = sanitizeUnitSqft(unit.sqftMin, type, beds);
+  let sqftMax: number | undefined =
+    unit.sqftMax != null && unit.sqftMax > 0
+      ? sanitizeUnitSqft(unit.sqftMax, type, beds)
+      : undefined;
+  if (!sqftMin) {
+    // No trustworthy floor — do not advertise a lone max.
+    return { ...unit, sqftMin: 0, sqftMax: undefined };
+  }
+  if (sqftMax != null && !(sqftMax > 0 && sqftMax >= sqftMin)) {
+    sqftMax = undefined;
+  } else if (sqftMax != null && !(sqftMax > 0)) {
+    sqftMax = undefined;
+  }
+  return {
+    ...unit,
+    sqftMin,
+    sqftMax: sqftMax && sqftMax > 0 ? sqftMax : undefined,
+  };
+}
+
 function normalizeProject(p: Project & { citySlug?: string }): Project {
   const slug = (p.citySlug || p.city) as Project["city"];
   const rawDev = p.developer?.replace(/\s+/g, " ").trim() ?? p.developer;
@@ -222,6 +329,7 @@ function normalizeProject(p: Project & { citySlug?: string }): Project {
   const status: Project["status"] =
     p.status === "off-plan" && hy != null && hy < 2026 ? "ready" : p.status;
   const name = stripTrailingDeveloperName(p.name, p.developer);
+  const units = (p.units ?? []).map((u) => sanitizeUnitSizes(u));
   return {
     ...p,
     name,
@@ -232,6 +340,7 @@ function normalizeProject(p: Project & { citySlug?: string }): Project {
     imageGradient: p.imageGradient ?? "from-slate-800 via-slate-600 to-sky-700",
     featuredRank: p.featuredRank ?? 999,
     pfFaqs: pfFaqs && pfFaqs.length > 0 ? pfFaqs : undefined,
+    units,
   };
 }
 
@@ -289,7 +398,10 @@ export function createCatalogApi(raw: CatalogFile): CatalogApi {
   const projects = rawProjects.map((p) =>
     normalizeProject(p as Project & { citySlug?: string }),
   );
-  const units = raw.units.filter((u) => keptProjectIds.has(u.projectId));
+  // Size gate on catalog units (SERP flatten + any api.units consumers).
+  const units = raw.units
+    .filter((u) => keptProjectIds.has(u.projectId))
+    .map((u) => sanitizeUnitSizes(u));
   const meta: CatalogMeta = {
     // Recompute from the filtered set so headline counts match what's browsable
     // (dropping placeholders/dup-slugs would otherwise leave stats overstated).
