@@ -206,7 +206,7 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
                 {[a, b].map((side) => (
                   <th key={side.slug} className="px-4 py-4 text-center">
                     <Link
-                      href={`/developers/${side.slug}`}
+                      href={localePath(locale, `/developers/${side.slug}`)}
                       className="font-display text-lg font-semibold text-text-dark hover:text-brand"
                     >
                       {side.name}
@@ -346,7 +346,7 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
           {[a, b].map((side) => (
             <Link
               key={side.slug}
-              href={`/developers/${side.slug}`}
+              href={localePath(locale, `/developers/${side.slug}`)}
               className="iop-btn-press focus-ring rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
             >
               {interpolate(dict.pages.compareDev.projectsCta, { name: side.name })}
@@ -377,7 +377,7 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
               {related.map((r) => (
                 <Link
                   key={r.pairSlug}
-                  href={`/compare-developers/${r.pairSlug}`}
+                  href={localePath(locale, `/compare-developers/${r.pairSlug}`)}
                   className="iop-btn-press focus-ring rounded-full border border-border bg-white px-4 py-1.5 text-sm font-medium text-muted transition hover:border-brand hover:text-brand"
                 >
                   {r.label}
