@@ -260,9 +260,11 @@ function ListCard({
           <span className="pointer-events-none absolute start-4 top-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark">
             {unitCountLabel(dict, locale, unitCount, unit.propertyType)}
           </span>
-          <span className="pointer-events-none absolute bottom-4 start-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
-            {paymentLabel}
-          </span>
+          {paymentLabel !== "Payment Plan" ? (
+            <span className="pointer-events-none absolute bottom-4 start-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
+              {paymentLabel}
+            </span>
+          ) : null}
         </div>
         <div className="flex flex-1 flex-col gap-3 p-5 md:p-6">
           <div className="flex items-start justify-between gap-4">

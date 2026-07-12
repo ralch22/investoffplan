@@ -58,10 +58,12 @@ export function ProjectSummaryRail({
   }
 
   const summaryRows = [
-    { label: dict.pdp.keyFacts.paymentPlan, value: paymentPlan },
+    paymentPlan?.trim()
+      ? { label: dict.pdp.keyFacts.paymentPlan, value: paymentPlan }
+      : null,
     { label: summary.delivery, value: handover },
     { label: summary.units, value: String(unitCount) },
-  ];
+  ].filter(Boolean) as { label: string; value: string }[];
 
   return (
     <>

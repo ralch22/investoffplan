@@ -71,7 +71,9 @@ export function ProjectUnitsTable({ units, project, locale = "en" }: ProjectUnit
                 />
               </p>
             </div>
-            <p className="mt-2 text-xs text-muted">{project.paymentPlan}</p>
+            {project.paymentPlan?.trim() ? (
+              <p className="mt-2 text-xs text-muted">{project.paymentPlan}</p>
+            ) : null}
           </article>
         ))}
       </div>
