@@ -119,6 +119,45 @@ test.describe("Compare cold path (promise cache)", () => {
     expect(html.toLowerCase()).not.toContain('id="__next_error__"');
   });
 
+  // Issue #205 — bare pair-index paths must not 404 (live audit D).
+  test("/compare-projects and /compare-developers indexes return 200", async ({
+    page,
+  }) => {
+    for (const path of ["/compare-projects", "/compare-developers"] as const) {
+      const response = await page.goto(path, { waitUntil: "domcontentloaded" });
+      expect(response?.status(), path).toBe(200);
+      const html = await response!.text();
+      expect(html.toLowerCase()).not.toContain('id="__next_error__"');
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible({
+        timeout: 15_000,
+      });
+      // Pair cards link into the SEO pair segment.
+      const pairHref =
+        path === "/compare-projects"
+          ? 'a[href*="/compare-projects/"][href*="-vs-"]'
+          : 'a[href*="/compare-developers/"][href*="-vs-"]';
+      await expect(page.locator(pairHref).first()).toBeVisible({
+        timeout: 15_000,
+      });
+    }
+  });
+
+  test("AR compare project/developer indexes stay in locale", async ({
+    page,
+  }) => {
+    for (const path of [
+      "/ar/compare-projects",
+      "/ar/compare-developers",
+    ] as const) {
+      const response = await page.goto(path, { waitUntil: "commit" });
+      expect(response?.status(), path).toBe(200);
+      const html = await response!.text();
+      expect(html).toContain('lang="ar"');
+      expect(html).toContain('dir="rtl"');
+      expect(html.toLowerCase()).not.toContain('id="__next_error__"');
+    }
+  });
+
   test("concurrent catalog-heavy routes all succeed (promise coalesce)", async ({
     request,
   }) => {

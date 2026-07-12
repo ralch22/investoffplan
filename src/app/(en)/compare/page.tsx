@@ -94,7 +94,7 @@ export async function CompareHubPageContent({
       </section>
 
       {projectPairs.length > 0 ? (
-        <section className="border-t border-border bg-surface-alt py-14">
+        <section id="projects" className="scroll-mt-24 border-t border-border bg-surface-alt py-14">
           <div className="mx-auto max-w-[1200px] px-5 md:px-8">
             <h2 className="font-display text-2xl font-semibold text-text-dark md:text-3xl">
               Compare projects<span className="text-brand">.</span>
@@ -115,12 +115,20 @@ export async function CompareHubPageContent({
                 </Link>
               ))}
             </div>
+            <p className="mt-6">
+              <Link
+                href={localePath(locale, "/compare-projects")}
+                className="text-sm font-medium text-brand underline-offset-2 hover:underline"
+              >
+                {t.allProjectComparisons}
+              </Link>
+            </p>
           </div>
         </section>
       ) : null}
 
       {developerPairs.length > 0 ? (
-        <section className="py-14">
+        <section id="developers" className="scroll-mt-24 py-14">
           <div className="mx-auto max-w-[1200px] px-5 md:px-8">
             <h2 className="font-display text-2xl font-semibold text-text-dark md:text-3xl">
               Compare developers<span className="text-brand">.</span>
@@ -141,6 +149,14 @@ export async function CompareHubPageContent({
                 </Link>
               ))}
             </div>
+            <p className="mt-6">
+              <Link
+                href={localePath(locale, "/compare-developers")}
+                className="text-sm font-medium text-brand underline-offset-2 hover:underline"
+              >
+                {t.allDeveloperComparisons}
+              </Link>
+            </p>
           </div>
         </section>
       ) : null}

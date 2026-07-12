@@ -35,6 +35,7 @@ export async function buildGroups(): Promise<Entry[][]> {
 
   const staticRoutes: Entry[] = [
     "", "/projects", "/developers", "/communities", "/market-report", "/compare",
+    "/compare-projects", "/compare-developers",
     "/locations", "/guides", "/faq", "/map", "/contact", "/about", "/news",
     "/favorites", "/tools", "/tools/price-map", "/tools/communities",
     "/tools/rent-vs-buy", "/tools/mortgage", "/tools/residential", "/tools/payment",
@@ -174,7 +175,9 @@ export async function buildGroups(): Promise<Entry[][]> {
   const arStaticPaths = [
     "/ar", "/ar/about", "/ar/contact", "/ar/projects", "/ar/communities",
     "/ar/market-report",
-    "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/compare", "/ar/locations", "/ar/map",
+    "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/compare",
+    "/ar/compare-projects", "/ar/compare-developers",
+    "/ar/locations", "/ar/map",
     "/ar/tools", "/ar/tools/mortgage", "/ar/tools/payment", "/ar/tools/rent-vs-buy",
     "/ar/tools/communities", "/ar/tools/price-map", "/ar/tools/residential",
     "/ar/tools/roi", "/ar/tools/investor-match",
