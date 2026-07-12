@@ -448,6 +448,22 @@ export const ar: Dict = {
       "downloadBrochure": "تحميل البروشور ←",
       "watchVideo": "شاهد الفيديو"
     },
+    "factualSummary": {
+      "intro": "{name} هو مشروع على الخارطة من تطوير {developer} في {location}.",
+      "introTyped": "{name} هو مشروع {type} على الخارطة من تطوير {developer} في {location}.",
+      "introNoDeveloper": "{name} هو مشروع على الخارطة في {location}.",
+      "introTypedNoDeveloper": "{name} هو مشروع {type} على الخارطة في {location}.",
+      "priceAndPlan": "تبدأ أسعار الإطلاق من {price}، مع خطة سداد {plan}.",
+      "priceOnly": "تبدأ أسعار الإطلاق من {price}.",
+      "planOnly": "يوفّر المشروع خطة سداد {plan}.",
+      "handover": "من المتوقّع التسليم في {handover}.",
+      "types": {
+        "apartment": "شقق",
+        "villa": "فلل",
+        "townhouse": "تاون هاوس",
+        "penthouse": "بنتهاوس"
+      }
+    },
     "units": {
       "rangeHeading": "مساحات أنواع الوحدات",
       "typePlural": "",

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getProjectBySlug } from "@/lib/catalog";
+import { getCatalogApi, getProjectBySlug } from "@/lib/catalog";
 import { getSiteUrl } from "@/lib/site-url";
 
 // Reuse the EN project detail page under /ar — chrome + RTL come from the AR
@@ -37,8 +37,26 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const project = await getProjectBySlug(slug);
   if (!project) return { title: "المشروع غير موجود", alternates };
   const areaName = project.area.split(",")[0]?.trim() || project.area;
+
+  // Mirror the EN title logic: append the developer only on a genuine
+  // (name, area, city) collision, and drop the "off-plan" frame for sold-out
+  // projects (so the 212 sold-out AR titles aren't mislabelled على الخارطة).
+  const api = await getCatalogApi();
+  const collisionKey = (p: (typeof api.projects)[number]) =>
+    `${p.name.trim().toLowerCase()}|${p.area.split(",")[0].trim().toLowerCase()}|${p.city}`;
+  const thisKey = collisionKey(project);
+  const isCollision =
+    api.projects.filter((p) => collisionKey(p) === thisKey).length > 1;
+  const nameBit = isCollision
+    ? `${project.name} من ${project.developer}`
+    : project.name;
+  const title =
+    project.status === "sold-out"
+      ? `${nameBit} — ${areaName}`
+      : `${nameBit} — عقارات على الخارطة في ${areaName}`;
+
   return {
-    title: `${project.name} — عقارات على الخارطة في ${areaName}`,
+    title,
     description: `${project.name} من ${project.developer} في ${areaName} — مخططات الطوابق والبروشور وخطط السداد والأسعار على مستوى الوحدة.`,
     alternates,
   };

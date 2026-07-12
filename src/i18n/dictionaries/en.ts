@@ -446,6 +446,22 @@ const dict = {
       "downloadBrochure": "Download brochure →",
       "watchVideo": "Watch video"
     },
+    "factualSummary": {
+      "intro": "{name} is an off-plan development by {developer} in {location}.",
+      "introTyped": "{name} is an off-plan {type} development by {developer} in {location}.",
+      "introNoDeveloper": "{name} is an off-plan development in {location}.",
+      "introTypedNoDeveloper": "{name} is an off-plan {type} development in {location}.",
+      "priceAndPlan": "Launch prices start from {price}, with a {plan} payment plan.",
+      "priceOnly": "Launch prices start from {price}.",
+      "planOnly": "The project offers a {plan} payment plan.",
+      "handover": "Handover is expected in {handover}.",
+      "types": {
+        "apartment": "apartment",
+        "villa": "villa",
+        "townhouse": "townhouse",
+        "penthouse": "penthouse"
+      }
+    },
     "units": {
       "rangeHeading": "Unit type sizes",
       "typePlural": "s",
