@@ -5,7 +5,7 @@ import { formatPrice } from "@/lib/format";
 import type { AreaInsights } from "@/lib/area-insights";
 import { unoptimizedProp } from "@/lib/asset-image";
 import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { interpolate, type Locale } from "@/i18n/config";
 
 interface ProjectLivingInAreaProps {
   insights: AreaInsights;
@@ -15,6 +15,9 @@ interface ProjectLivingInAreaProps {
 export function ProjectLivingInArea({ insights, locale = "en" }: ProjectLivingInAreaProps) {
   const dict = getDictionary(locale);
   const la = dict.pdp.livingArea;
+  const areaShort = insights.name.split(",")[0];
+  const fmtLocale = locale === "ar" ? "ar-AE" : "en-US";
+
   return (
     <section
       id="living-in-area"
@@ -25,7 +28,8 @@ export function ProjectLivingInArea({ insights, locale = "en" }: ProjectLivingIn
         id="living-in-area-heading"
         className="font-display text-2xl font-semibold text-text-dark md:text-3xl"
       >
-        Living in <em className="italic">{insights.name.split(",")[0]}</em>
+        {la.headingPrefix}{" "}
+        <em className="italic">{areaShort}</em>
       </h2>
       <p className="prose-balance mt-3 max-w-2xl text-muted">{insights.tagline}</p>
 
@@ -35,7 +39,7 @@ export function ProjectLivingInArea({ insights, locale = "en" }: ProjectLivingIn
             <div className="relative min-h-[200px] md:min-h-[260px]">
               <Image
                 src={insights.heroImage}
-                alt={insights.name.split(",")[0]}
+                alt={areaShort}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -49,7 +53,7 @@ export function ProjectLivingInArea({ insights, locale = "en" }: ProjectLivingIn
                 {insights.projectCount}
               </p>
               <p className="mt-2 text-sm font-semibold text-text-dark">
-                off-plan projects in this area
+                {la.projectsInArea}
               </p>
             </div>
           )}
@@ -57,7 +61,10 @@ export function ProjectLivingInArea({ insights, locale = "en" }: ProjectLivingIn
           <div className="p-6">
             <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <InsightStat label={la.projects} value={String(insights.projectCount)} />
-              <InsightStat label={la.unitOptions} value={insights.unitCount.toLocaleString()} />
+              <InsightStat
+                label={la.unitOptions}
+                value={insights.unitCount.toLocaleString(fmtLocale)}
+              />
               <InsightStat
                 label={la.from}
                 value={
@@ -76,14 +83,16 @@ export function ProjectLivingInArea({ insights, locale = "en" }: ProjectLivingIn
               />
             </dl>
             <p className="mt-4 text-sm text-muted">
-              {insights.cityLabel} · {insights.projectCount} active off-plan launches with
-              unit-level pricing and brochures on invest off-plan.
+              {interpolate(la.body, {
+                city: insights.cityLabel,
+                count: insights.projectCount.toLocaleString(fmtLocale),
+              })}
             </p>
             <LocaleLink
               href={`/communities/${communitySlugFor(insights.name)}`}
               className="iop-btn-press focus-ring mt-5 inline-flex rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
             >
-              Explore {insights.name.split(",")[0]} →
+              {interpolate(la.exploreCta, { name: areaShort })}
             </LocaleLink>
           </div>
         </div>

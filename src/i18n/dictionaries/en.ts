@@ -660,10 +660,14 @@ const dict = {
       "colFrom": "From"
     },
     "livingArea": {
+      "headingPrefix": "Living in",
       "projects": "Projects",
       "unitOptions": "Unit options",
       "from": "From",
-      "avgLaunch": "Avg launch"
+      "avgLaunch": "Avg launch",
+      "projectsInArea": "off-plan projects in this area",
+      "body": "{city} · {count} active off-plan launches with unit-level pricing and brochures on invest off-plan.",
+      "exploreCta": "Explore {name} →"
     }
   },
   "forms": {
