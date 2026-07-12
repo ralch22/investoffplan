@@ -70,7 +70,8 @@ export function BottomTabBar() {
     <>
       <nav
         aria-label={t.aria}
-        className="fixed inset-x-0 bottom-0 z-[var(--z-bottom-bar)] h-[var(--bottom-bar-h)] border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
+        // Sit above the cookie banner when --consent-h is published (issue #228).
+        className="fixed inset-x-0 bottom-[var(--consent-h,0px)] z-[var(--z-bottom-bar)] h-[var(--bottom-bar-h)] border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
       >
         <div className="mx-auto flex h-[3.75rem] max-w-md items-stretch">
           <LocaleLink href="/projects" aria-current={active("/projects") ? "page" : undefined} className={tabCls(active("/projects"))}>
