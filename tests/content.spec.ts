@@ -19,6 +19,18 @@ test.describe("Content routes", () => {
     expect(html).toContain("أدلّة الاستثمار");
   });
 
+  // #313 — AR news hub cards prefer titleAr (residual after #298 detail fix).
+  test("AR news hub featured card uses Arabic titleAr", async ({ page }) => {
+    const res = await page.goto("/ar/news", { waitUntil: "domcontentloaded" });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    // Newest article is golden-visa — featured card must show AR title.
+    expect(html).toContain("سؤال المليوني درهم");
+    expect(html).not.toContain(
+      "The AED 2 Million Question: How Much of the Off-Plan Market Clears the Golden Visa Bar",
+    );
+  });
+
   // #298 — AR news detail title/H1 use titleAr, not EN article.title only.
   test("AR news article H1 and title use Arabic titleAr", async ({ page }) => {
     const res = await page.goto("/ar/news/golden-visa-threshold-off-plan-catalog", {
