@@ -9,7 +9,7 @@ import { FAQ_TOPICS, getFaqTopic } from "@/content/faq";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ topic: string }>;
@@ -97,7 +97,7 @@ export default async function FaqTopicPage({ params, locale = "en" }: PageProps)
             {related.map((other) => (
               <Link
                 key={other.slug}
-                href={`/faq/${other.slug}`}
+                href={localePath(locale, `/faq/${other.slug}`)}
                 className="rounded-2xl border border-border bg-white p-4 text-sm font-semibold text-text-dark transition hover:border-brand hover:text-brand"
               >
                 {other.title}

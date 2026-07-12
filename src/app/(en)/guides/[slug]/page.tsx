@@ -11,7 +11,7 @@ import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -149,7 +149,10 @@ export default async function GuideDetailPage({ params, locale = "en" }: PagePro
         </div>
 
         <p className="mt-8 text-center text-sm text-muted">
-          <Link href="/guides" className="font-semibold text-brand hover:text-brand-dark">
+          <Link
+            href={localePath(locale, "/guides")}
+            className="font-semibold text-brand hover:text-brand-dark"
+          >
             {dict.pages.guides.backLink}
           </Link>
         </p>

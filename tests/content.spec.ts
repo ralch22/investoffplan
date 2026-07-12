@@ -176,6 +176,27 @@ test.describe("Content routes", () => {
     expect(html).not.toMatch(/>Off-Plan Basics</);
   });
 
+  // #272 — AR FAQ topic + guide detail related links must stay under /ar.
+  test("AR FAQ topic and guide detail keep related links in locale", async ({
+    page,
+  }) => {
+    const faq = await page.goto("/ar/faq/payment-plans", {
+      waitUntil: "commit",
+    });
+    expect(faq?.status()).toBe(200);
+    const faqHtml = await faq!.text();
+    expect(faqHtml).toMatch(/href="\/ar\/faq\/[a-z0-9-]+"/);
+    expect(faqHtml).not.toMatch(/href="\/faq\/[a-z0-9-]+"/);
+
+    const guide = await page.goto("/ar/guides/understanding-payment-plans", {
+      waitUntil: "commit",
+    });
+    expect(guide?.status()).toBe(200);
+    const guideHtml = await guide!.text();
+    expect(guideHtml).toContain('href="/ar/guides"');
+    expect(guideHtml).not.toMatch(/href="\/guides"/);
+  });
+
   // #253 — AR collection title + H1 must not stay English.
   test("AR collection pages use Arabic title and H1", async ({ page }) => {
     for (const { path, arH1, enH1 } of [
