@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { IBM_Plex_Sans_Arabic, Inter, PT_Serif } from "next/font/google";
 import { BrandLogo } from "@/components/brand-logo";
 import { PrimaryButton } from "@/components/ui/primary-button";
-import { localePath, type Locale } from "@/i18n/config";
+import { localePath, pathIsArabic, type Locale } from "@/i18n/config";
 import "./globals.css";
 
 /**
@@ -70,23 +70,6 @@ const COPY = {
     home: "العودة للرئيسية",
   },
 } as const;
-
-/** True when a path string is under the Arabic tree (`/ar` or `/ar/...`). */
-function pathIsArabic(pathname: string | null | undefined): boolean {
-  if (!pathname) return false;
-  // Strip query/hash and tolerate absolute URLs.
-  let path = pathname.trim();
-  try {
-    if (/^https?:\/\//i.test(path)) path = new URL(path).pathname;
-  } catch {
-    // keep raw
-  }
-  const q = path.indexOf("?");
-  if (q >= 0) path = path.slice(0, q);
-  const h = path.indexOf("#");
-  if (h >= 0) path = path.slice(0, h);
-  return path === "/ar" || path.startsWith("/ar/");
-}
 
 function localeFromHeaders(requestHeaders: Headers): Locale {
   // 1. Explicit stamp from Edge middleware (authoritative for /ar/*).
