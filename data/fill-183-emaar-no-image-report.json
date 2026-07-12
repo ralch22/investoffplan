@@ -1,0 +1,82 @@
+{
+  "at": "2026-07-12T13:18:24.935Z",
+  "dryRun": false,
+  "skipUpload": false,
+  "uploaded": 76,
+  "skipped": 0,
+  "uploadFailed": 0,
+  "scraped": [
+    {
+      "slug": "address-residences-at-dubai-hills-estate",
+      "pfSlug": "emaar-properties/address-residences-at-dubai-hills-estate",
+      "sourceCount": 11,
+      "finalImageUrl": "/cdn/projects/address-residences-at-dubai-hills-estate/gallery/000.webp",
+      "finalGalleryLen": 11,
+      "error": null
+    },
+    {
+      "slug": "avena-2",
+      "pfSlug": "emaar-properties/avena-2",
+      "sourceCount": 10,
+      "finalImageUrl": "/cdn/projects/avena-2/gallery/000.webp",
+      "finalGalleryLen": 10,
+      "error": null
+    },
+    {
+      "slug": "creek-beach-lotus",
+      "pfSlug": "emaar-properties/creek-beach-lotus",
+      "sourceCount": 7,
+      "finalImageUrl": "/cdn/projects/creek-beach-lotus/gallery/000.webp",
+      "finalGalleryLen": 7,
+      "error": null
+    },
+    {
+      "slug": "expo-golf-villas-6",
+      "pfSlug": "emaar-properties/expo-golf-villas-6",
+      "sourceCount": 9,
+      "finalImageUrl": "/cdn/projects/expo-golf-villas-6/gallery/000.webp",
+      "finalGalleryLen": 9,
+      "error": null
+    },
+    {
+      "slug": "farm-grove-2",
+      "pfSlug": "emaar-properties/farm-grove-2",
+      "sourceCount": 4,
+      "finalImageUrl": "/cdn/projects/farm-grove-2/gallery/000.webp",
+      "finalGalleryLen": 4,
+      "error": null
+    },
+    {
+      "slug": "hills-park",
+      "pfSlug": "emaar-properties/hills-park",
+      "sourceCount": 9,
+      "finalImageUrl": "/cdn/projects/hills-park/gallery/000.webp",
+      "finalGalleryLen": 9,
+      "error": null
+    },
+    {
+      "slug": "orchid-at-creek-beach",
+      "pfSlug": "emaar-properties/orchid-at-creek-beach",
+      "sourceCount": 7,
+      "finalImageUrl": "/cdn/projects/orchid-at-creek-beach/gallery/000.webp",
+      "finalGalleryLen": 7,
+      "error": null
+    },
+    {
+      "slug": "selvara-phase-3-by-emaar",
+      "pfSlug": "emaar-properties/selvara-phase-3-by-emaar",
+      "sourceCount": 5,
+      "finalImageUrl": "/cdn/projects/selvara-phase-3-by-emaar/gallery/000.webp",
+      "finalGalleryLen": 5,
+      "error": null
+    },
+    {
+      "slug": "terra-woods",
+      "pfSlug": "emaar-properties/terra-woods",
+      "sourceCount": 5,
+      "finalImageUrl": "/cdn/projects/terra-woods/gallery/000.webp",
+      "finalGalleryLen": 5,
+      "error": null
+    }
+  ]
+}
