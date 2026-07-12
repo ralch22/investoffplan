@@ -418,11 +418,11 @@ export async function queryCatalogProjects(
   items = api.filterUnits(items, filters);
   items = api.sortUnits(items, query.sort ?? "featured");
 
-  if ((query.view ?? "unit") === "project") {
+  if ((query.view ?? "project") === "project") {
     items = api.aggregateProjectView(items);
   }
 
-  const view = query.view ?? "unit";
+  const view = query.view ?? "project";
   const sort = query.sort ?? "featured";
   const collection = query.collection ?? "all";
 
