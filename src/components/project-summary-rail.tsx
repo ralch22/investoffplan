@@ -47,7 +47,7 @@ export function ProjectSummaryRail({
   const pricePerSqft = formatPricePerSqft(pricePerSqftAed, currency);
 
   const projectWhatsappHref = `https://wa.me/${whatsapp.replace(/\D/g, "")}`;
-  const advisorText = `Hi, I'd like to speak to your off-plan team about ${projectName}.`;
+  const advisorText = interpolate(summary.advisorWaMessage, { projectName });
   const advisorHref = waHref(WHATSAPP_PRIMARY, advisorText);
 
   function trackWhatsappClick(source: string) {

@@ -9,11 +9,12 @@ export async function generateMetadata({ params }: { params: Promise<{ topic: st
   const { topic } = await params;
   const faqTopic = getFaqTopic(topic);
   if (!faqTopic) return arMeta({ path: `/faq/${topic}` });
-  return {
-    ...arMeta({ path: `/faq/${topic}` }),
+  return arMeta({
+    path: `/faq/${topic}`,
     title: `${faqTopic.title} — أسئلة شائعة`,
-    description: faqTopic.description,
-  };
+    description:
+      "أسئلة وأجوبة حول العقارات على الخارطة في الإمارات العربية المتحدة — اكتشف كل ما تحتاج معرفته قبل الاستثمار في دبي وما حولها.",
+  });
 }
 
 export default async function ArFaqTopicPage({ params }: { params: Promise<{ topic: string }> }) {

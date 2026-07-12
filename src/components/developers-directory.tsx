@@ -7,6 +7,8 @@ import { DevelopersList } from "@/components/developers-list";
 import { Pagination } from "@/components/pagination";
 import { DEVELOPER_PAGE_SIZE, type DeveloperSummary } from "@/lib/types";
 import type { CitySlug } from "@/lib/types";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 interface DeveloperCityCount {
   slug: CitySlug;
@@ -23,6 +25,8 @@ export function DevelopersDirectory({
   developers,
   cityCounts,
 }: DevelopersDirectoryProps) {
+  const { dict } = useI18n();
+  const t = dict.pages.developers;
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
@@ -32,10 +36,10 @@ export function DevelopersDirectory({
 
   const cityOptions = useMemo(
     () => [
-      { slug: "all" as CitySlug, label: "All UAE", count: developers.length },
+      { slug: "all" as CitySlug, label: t.allUae, count: developers.length },
       ...cityCounts,
     ],
-    [cityCounts, developers.length],
+    [cityCounts, developers.length, t.allUae],
   );
 
   const filtered = useMemo(() => {
@@ -78,11 +82,12 @@ export function DevelopersDirectory({
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4">
         <p className="text-sm font-medium text-muted">
-          {filtered.length.toLocaleString()} developer
-          {filtered.length === 1 ? "" : "s"}
+          {filtered.length === 1
+            ? interpolate(t.countSingular, { count: filtered.length.toLocaleString() })
+            : interpolate(t.countPlural, { count: filtered.length.toLocaleString() })}
         </p>
         <label className="relative w-full max-w-sm">
-          <span className="sr-only">Search developers</span>
+          <span className="sr-only">{t.searchLabel}</span>
           <input
             type="search"
             value={query}
@@ -90,7 +95,7 @@ export function DevelopersDirectory({
               setQuery(event.target.value);
               updateParams({ q: event.target.value });
             }}
-            placeholder="Search developers"
+            placeholder={t.searchPlaceholder}
             className="focus-ring w-full rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-text-dark placeholder:text-muted-light"
           />
         </label>
@@ -107,7 +112,7 @@ export function DevelopersDirectory({
       <DevelopersList items={pageItems} />
 
       {filtered.length === 0 ? (
-        <p className="mt-8 text-center text-muted">No developers match your filters.</p>
+        <p className="mt-8 text-center text-muted">{t.emptyState}</p>
       ) : null}
 
       <Pagination

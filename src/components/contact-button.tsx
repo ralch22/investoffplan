@@ -3,6 +3,8 @@
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import { withUtm } from "@/lib/utm";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 interface ContactButtonProps {
   phone: string;
@@ -17,8 +19,9 @@ export function ContactButton({
   className,
   compact,
 }: ContactButtonProps) {
+  const { dict } = useI18n();
   const message = encodeURIComponent(
-    `Hi, I'm interested in ${projectName} on InvestOffPlan.`,
+    interpolate(dict.pdp.summary.contactWaMessage, { projectName }),
   );
   const href = withUtm(
     `https://wa.me/${phone.replace(/\D/g, "")}?text=${message}`,

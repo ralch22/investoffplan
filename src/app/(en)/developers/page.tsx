@@ -10,6 +10,10 @@ import { TopDevelopersChart } from "@/components/top-developers-chart";
 import { getDeveloperCityCounts, getDevelopers } from "@/lib/catalog";
 import { getHeroImage } from "@/lib/area-images";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import { interpolate } from "@/i18n/config";
+import type { Locale } from "@/i18n/config";
+import { localePath } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Top Real Estate Developers in UAE",
@@ -18,7 +22,14 @@ export const metadata: Metadata = {
   alternates: enMeta("/developers"),
 };
 
-export default async function DevelopersPage() {
+interface DevelopersPageProps {
+  locale?: Locale;
+}
+
+export default async function DevelopersPage({ locale = "en" }: DevelopersPageProps) {
+  const dict = getDictionary(locale);
+  const t = dict.pages.developers;
+
   const [developers, cityCounts, heroImage] = await Promise.all([
     getDevelopers(),
     getDeveloperCityCounts(),
@@ -28,8 +39,8 @@ export default async function DevelopersPage() {
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="Top Real Estate Developers in UAE"
-        subtitle={`${developers.length.toLocaleString()} developers with live off-plan stock`}
+        title={t.heroTitle}
+        subtitle={interpolate(t.heroSubtitle, { count: developers.length.toLocaleString() })}
         imageUrl={heroImage}
         align="center"
       />
@@ -49,9 +60,9 @@ export default async function DevelopersPage() {
       <section className="bg-surface-darker py-14 text-white">
         <div className="mx-auto flex max-w-[1200px] flex-col items-start justify-between gap-6 px-5 md:flex-row md:items-center md:px-8">
           <h2 className="font-display max-w-xl text-3xl font-semibold md:text-4xl">
-            Book a Consultation with an Off-Plan Expert.
+            {t.ctaHeading}
           </h2>
-          <PrimaryButton href="/contact">Book a Consultation</PrimaryButton>
+          <PrimaryButton href={localePath(locale, "/contact")}>{t.ctaButton}</PrimaryButton>
         </div>
       </section>
     </PageShell>

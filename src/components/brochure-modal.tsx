@@ -9,6 +9,8 @@ import { cn } from "@/lib/cn";
 import { submitLead } from "@/lib/leads-client";
 import { WHATSAPP_SECONDARY } from "@/lib/contact-info";
 import { withUtm } from "@/lib/utm";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 interface BrochureModalProps {
   open: boolean;
@@ -24,21 +26,28 @@ interface FormErrors {
   phone?: string;
 }
 
-function validate(name: string, phone: string): FormErrors {
+interface ValidationMessages {
+  nameRequired: string;
+  nameEnterFull: string;
+  phoneRequired: string;
+  phoneEnterValid: string;
+}
+
+function validate(name: string, phone: string, msgs: ValidationMessages): FormErrors {
   const errors: FormErrors = {};
   const trimmedName = name.trim();
   const digits = phone.replace(/\D/g, "");
 
   if (!trimmedName) {
-    errors.name = "Name is required";
+    errors.name = msgs.nameRequired;
   } else if (trimmedName.length < 2) {
-    errors.name = "Enter your full name";
+    errors.name = msgs.nameEnterFull;
   }
 
   if (!digits) {
-    errors.phone = "Phone number is required";
+    errors.phone = msgs.phoneRequired;
   } else if (digits.length < 8) {
-    errors.phone = "Enter a valid phone number";
+    errors.phone = msgs.phoneEnterValid;
   }
 
   return errors;
@@ -52,6 +61,9 @@ export function BrochureModal({
   brochureUrl,
   whatsapp,
 }: BrochureModalProps) {
+  const { dict } = useI18n();
+  const tb = dict.forms.brochure;
+  const te = dict.forms.errors;
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
@@ -90,7 +102,12 @@ export function BrochureModal({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setGuardError("");
-    const nextErrors = validate(name, phone);
+    const nextErrors = validate(name, phone, {
+      nameRequired: te.nameRequired,
+      nameEnterFull: te.fullNameShort,
+      phoneRequired: te.phoneNumberRequired,
+      phoneEnterValid: te.phoneInvalid,
+    });
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
@@ -114,7 +131,7 @@ export function BrochureModal({
       return;
     }
     if (!result.ok) {
-      setGuardError(result.error ?? "Unable to submit. Please try again.");
+      setGuardError(result.error ?? te.submitFailed);
       // The token was consumed (or stale) — reset the widget so the retry
       // submits a fresh one instead of 403ing forever.
       setTurnstileToken("");
@@ -179,19 +196,19 @@ export function BrochureModal({
       >
       <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-elevation-lg">
         <h2 id="brochure-modal-title" className="text-xl font-semibold text-text-dark">
-          Download brochure
+          {tb.title}
         </h2>
         <p className="mt-2 text-sm text-muted">
           {hasPdf
-            ? `Get the official PDF for ${projectName}`
-            : `A broker will send the brochure for ${projectName} via WhatsApp`}
+            ? interpolate(tb.pdfSubtitle, { name: projectName })
+            : interpolate(tb.whatsappSubtitle, { name: projectName })}
         </p>
 
         <form onSubmit={handleSubmit} className="relative mt-6 space-y-4" noValidate>
           <HoneypotField value={honeypot} onChange={setHoneypot} />
           <div>
             <label htmlFor="brochure-name" className="block text-sm font-medium text-text-dark">
-              Full name
+              {tb.fullNameLabel}
             </label>
             <input
               id="brochure-name"
@@ -213,7 +230,7 @@ export function BrochureModal({
 
           <div>
             <label htmlFor="brochure-phone" className="block text-sm font-medium text-text-dark">
-              Phone number
+              {tb.phoneNumberLabel}
             </label>
             <input
               id="brochure-phone"
@@ -242,10 +259,10 @@ export function BrochureModal({
             className="iop-btn-press w-full rounded-xl bg-brand py-3.5 text-base font-bold text-white transition hover:bg-brand-dark disabled:opacity-60"
           >
             {submitting
-              ? "Submitting…"
+              ? dict.common.submitting
               : hasPdf
-                ? "Download PDF brochure"
-                : "Request brochure via WhatsApp"}
+                ? tb.downloadPdf
+                : tb.requestViaWhatsapp}
           </button>
         </form>
       </div>

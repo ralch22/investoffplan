@@ -418,7 +418,9 @@ const dict = {
       "units": "Units",
       "whatsappUs": "WhatsApp us",
       "speakTeam": "Speak to our off-plan team",
-      "teamBody": "Our Dubai off-plan specialists can share availability, floor plans, and the latest payment plans for {name}. No pressure, just answers."
+      "teamBody": "Our Dubai off-plan specialists can share availability, floor plans, and the latest payment plans for {name}. No pressure, just answers.",
+      "advisorWaMessage": "Hi, I'd like to speak to your off-plan team about {projectName}.",
+      "contactWaMessage": "Hi, I'm interested in {projectName} on InvestOffPlan."
     },
     "keyFacts": {
       "heading": "Key information",
@@ -1064,6 +1066,18 @@ const dict = {
     "communities": {
       "heroTitle": "Communities",
       "heroSubtitle": "Explore Dubai's neighbourhoods — inventory, prices, and real market data"
+    },
+    "developers": {
+      "heroTitle": "Top Real Estate Developers in UAE",
+      "heroSubtitle": "{count} developers with live off-plan stock",
+      "ctaHeading": "Book a Consultation with an Off-Plan Expert.",
+      "ctaButton": "Book a Consultation",
+      "countSingular": "{count} developer",
+      "countPlural": "{count} developers",
+      "searchLabel": "Search developers",
+      "searchPlaceholder": "Search developers",
+      "emptyState": "No developers match your filters.",
+      "allUae": "All UAE"
     }
   },
   "developers": {
