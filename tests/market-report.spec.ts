@@ -32,4 +32,17 @@ test.describe("Public UAE off-plan market report", () => {
     expect(lower).toContain("application/ld+json");
     expect(html.includes("Dataset") || html.includes("Market Report")).toBe(true);
   });
+
+  // #281 — AR per-community report back-link must stay under /ar/communities.
+  test("/ar/reports/market/[slug] back-link is /ar/communities/{slug}", async ({
+    page,
+  }) => {
+    const response = await page.goto("/ar/reports/market/business-bay", {
+      waitUntil: "commit",
+    });
+    expect(response?.status()).toBe(200);
+    const html = await response!.text();
+    expect(html).toContain('href="/ar/communities/business-bay"');
+    expect(html).not.toMatch(/href="\/communities\/business-bay"/);
+  });
 });

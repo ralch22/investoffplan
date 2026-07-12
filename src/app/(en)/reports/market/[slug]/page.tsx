@@ -10,11 +10,12 @@ import {
 } from "@/lib/communities";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
 import { formatPrice } from "@/lib/format";
-import { en } from "@/i18n/dictionaries/en";
-import { interpolate } from "@/i18n/config";
+import { getDictionary } from "@/i18n";
+import { interpolate, localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  locale?: Locale;
 }
 
 const TOP_REPORT_COUNT = 30;
@@ -45,14 +46,18 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const community = await getCommunity(slug);
   if (!community) return { title: "Report not found" };
+  const s = getDictionary("en").reports;
   return {
-    title: interpolate(en.reports.reportTitle, { name: community.name }),
+    title: interpolate(s.reportTitle, { name: community.name }),
     // Utility/print surface duplicating community-page data — keep out of the index.
     robots: { index: false, follow: false },
   };
 }
 
-export default async function MarketReportPage({ params }: PageProps) {
+export default async function MarketReportPage({
+  params,
+  locale = "en",
+}: PageProps) {
   const { slug } = await params;
   const community = await getCommunity(slug);
   if (!community) notFound();
@@ -76,7 +81,7 @@ export default async function MarketReportPage({ params }: PageProps) {
   });
 
   const trend = stats.monthlyTrend;
-  const s = en.reports;
+  const s = getDictionary(locale).reports;
 
   const summaryTiles = [
     stats.medianPrice != null
@@ -101,7 +106,7 @@ export default async function MarketReportPage({ params }: PageProps) {
       {/* On-screen chrome — hidden when printing */}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link
-          href={`/communities/${slug}`}
+          href={localePath(locale, `/communities/${slug}`)}
           className="text-sm font-semibold text-brand hover:text-brand-dark"
         >
           ← {interpolate(s.backToCommunity, { name: community.name })}
