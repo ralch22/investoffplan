@@ -8,7 +8,7 @@ import { localePath } from "@/i18n/config";
 import { submitLead } from "@/lib/leads-client";
 import { TurnstileField } from "@/components/turnstile-field";
 import { WHATSAPP_PRIMARY } from "@/lib/contact-info";
-import { formatPrice } from "@/lib/format";
+import { bedsLabel, formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
 import type {
   AdvisorCard,
@@ -338,7 +338,9 @@ function AdvisorCardView({ card }: { card: AdvisorCard }) {
             ? `${t.from} ${formatPrice(card.fromPriceAed, "AED")}`
             : ""}
           {card.handover ? ` · ${card.handover}` : ""}
-          {card.bedsLabel ? ` · ${card.bedsLabel}` : ""}
+          {card.beds?.length
+            ? ` · ${card.beds.map((n) => bedsLabel(n, dict)).join("–")}`
+            : ""}
         </p>
         <Link
           href={localePath(locale, `/projects/${card.slug}`)}

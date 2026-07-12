@@ -11,7 +11,8 @@ export interface AdvisorCard {
   imageUrl?: string;
   fromPriceAed?: number;
   handover?: string;
-  bedsLabel?: string;
+  /** Distinct bedroom counts (0 = studio). Format at render with bedsLabel(dict) (#332). */
+  beds?: number[];
   paymentPlan?: string;
 }
 

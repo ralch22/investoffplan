@@ -4,7 +4,7 @@ import Image from "next/image";
 import { LocaleLink } from "@/components/locale-link";
 import { communitySlugFor } from "@/lib/community-slug";
 import type { ResidentialBuilding } from "@/lib/residential-insights";
-import { formatPrice } from "@/lib/format";
+import { bedsLabel, formatPrice } from "@/lib/format";
 import { unoptimizedProp } from "@/lib/asset-image";
 import { useI18n } from "@/i18n/locale-provider";
 
@@ -80,7 +80,9 @@ export function ResidentialInsightsTable({ buildings }: ResidentialInsightsTable
                 <td className="px-4 py-3 tabular-nums text-text-dark">
                   {b.avgPpsf ? b.avgPpsf.toLocaleString() : "—"}
                 </td>
-                <td className="px-4 py-3 text-muted">{b.bedBands.join(", ")}</td>
+                <td className="px-4 py-3 text-muted">
+                  {b.beds.map((n) => bedsLabel(n, dict)).join(", ")}
+                </td>
                 <td className="px-4 py-3 text-muted">{b.handover ?? "—"}</td>
               </tr>
             ))}
