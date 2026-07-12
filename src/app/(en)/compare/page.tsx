@@ -8,7 +8,7 @@ import { CompareUnitsLegacyRedirect } from "@/components/compare-units-legacy-re
 import { getCompareHubData } from "@/lib/compare-hub-data";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
-import { localePath, type Locale } from "@/i18n/config";
+import { interpolate, localePath, type Locale } from "@/i18n/config";
 
 /**
  * Force static — do NOT ISR-regenerate on the Worker.
@@ -78,17 +78,13 @@ export async function CompareHubPageContent({
                 </p>
                 {c.aYield != null && c.bYield != null ? (
                   <p className="mt-1 text-xs tabular-nums text-muted">
-                    Gross yield {c.aYield}% vs {c.bYield}%
+                    {interpolate(t.hubCompareYield, { a: c.aYield, b: c.bYield })}
                   </p>
                 ) : null}
               </Link>
             ))}
           </div>
-          <p className="mt-8 max-w-2xl text-xs text-muted-light">
-            All figures are anonymized aggregates from Dubai Land Department open data (2025).
-            Gross yield = median annual rent ÷ median sold price per community. No purchase-level
-            or owner data is used.
-          </p>
+          <p className="mt-8 max-w-2xl text-xs text-muted-light">{t.hubDldDisclaimer}</p>
         </div>
       </section>
 
@@ -96,10 +92,10 @@ export async function CompareHubPageContent({
         <section id="projects" className="scroll-mt-24 border-t border-border bg-surface-alt py-14">
           <div className="mx-auto max-w-[1200px] px-5 md:px-8">
             <h2 className="font-display text-2xl font-semibold text-text-dark md:text-3xl">
-              Compare projects<span className="text-brand">.</span>
+              {t.hubProjectsHeading}<span className="text-brand">.</span>
             </h2>
             <p className="mt-2 max-w-xl text-sm text-muted">
-              Head-to-head on price, handover, payment plans, and unit mix.
+              {t.hubProjectsSubtitle}
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {projectPairs.map((p) => (
@@ -130,10 +126,10 @@ export async function CompareHubPageContent({
         <section id="developers" className="scroll-mt-24 py-14">
           <div className="mx-auto max-w-[1200px] px-5 md:px-8">
             <h2 className="font-display text-2xl font-semibold text-text-dark md:text-3xl">
-              Compare developers<span className="text-brand">.</span>
+              {t.hubDevelopersHeading}<span className="text-brand">.</span>
             </h2>
             <p className="mt-2 max-w-xl text-sm text-muted">
-              Portfolio size, entry prices, communities covered, and handover pipelines.
+              {t.hubDevelopersSubtitle}
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {developerPairs.map((p) => (
