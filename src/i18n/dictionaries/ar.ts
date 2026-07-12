@@ -1722,7 +1722,15 @@ export const ar: Dict = {
     "highestYield": "أعلى عائد",
     "earliestHandover": "أقرب تسليم",
     "lowestEntry": "أدنى سعر دخول",
-    "grossPct": "{value}% إجمالي"
+    "grossPct": "{value}% إجمالي",
+    "paymentPlanAria": "خطة السداد {plan}: {stages}",
+    "paymentStages": {
+      "down": "عربون",
+      "during": "أثناء الإنشاء",
+      "duringShort": "أثناء",
+      "handover": "عند التسليم",
+      "after": "بعد التسليم"
+    }
   },
   "marketAdvice": {
     "heading": "غير متأكد من الخيار المناسب لأهدافك؟",

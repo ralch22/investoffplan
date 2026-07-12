@@ -91,4 +91,36 @@ test.describe("AR residual locale paths (#295)", () => {
     await expect(page).toHaveURL(/[?&]q=emaar/i);
     await expect(page).not.toHaveURL(/\/ar\/developers/);
   });
+
+  // #330 — PaymentPlanBar stage legend + aria must not hard-code EN on AR.
+  // UNIT_A is 105 Residences (10/35/5/50) → bar renders all four stages.
+  test("/ar/compare/units payment-plan bar stages are Arabic (#330)", async ({
+    page,
+  }) => {
+    const units = encodeURIComponent(UNIT_A);
+    await page.goto(`/ar/compare/units?units=${units}`, {
+      waitUntil: "domcontentloaded",
+    });
+    await expect(page.locator("html")).toHaveAttribute("lang", "ar");
+
+    // Wait for compare table to hydrate with unit column.
+    await expect(page.getByRole("button", { name: "إزالة" }).first()).toBeVisible({
+      timeout: 20_000,
+    });
+
+    const main = page.locator("main");
+    // Stacked bar + legend is role=img with localized aria-label.
+    const bar = main.locator('[role="img"][aria-label*="خطة السداد"]');
+    await expect(bar.first()).toBeVisible({ timeout: 15_000 });
+
+    const aria = (await bar.first().getAttribute("aria-label")) ?? "";
+    expect(aria).toMatch(/عربون|أثناء الإنشاء|عند التسليم|بعد التسليم/);
+    expect(aria).not.toMatch(/during construction|post-handover|on handover/i);
+
+    // Visible legend microcopy uses short AR labels (during → أثناء).
+    await expect(main.getByText(/\d+%\s+عربون|\d+%\s+أثناء|\d+%\s+عند التسليم|\d+%\s+بعد التسليم/).first()).toBeVisible();
+    await expect(main.getByText("during construction")).toHaveCount(0);
+    await expect(main.getByText("post-handover")).toHaveCount(0);
+    await expect(main.getByText("on handover")).toHaveCount(0);
+  });
 });
