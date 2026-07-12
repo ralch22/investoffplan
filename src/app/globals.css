@@ -44,7 +44,13 @@
   --dock-cta-h: calc(5.25rem + env(safe-area-inset-bottom, 0px));
   /* Set per-page by PageShell: which fixture owns the mobile bottom edge. */
   --bottom-dock: 0px;
-  /* CookieConsentBanner sets --consent-h on :root when visible (else 0). */
+  /*
+   * CookieConsentBanner publishes measured height to --consent-h while visible
+   * (ResizeObserver; 0 when dismissed). Consumers:
+   *   CompareBar / advisor FAB: bottom-dock + consent-h + gap
+   *   BottomTabBar: bottom: consent-h (sits on top of the banner)
+   * Do not hardcode 72px — multi-line mobile banner is ~120px at 375px (#228).
+   */
   --consent-h: 0px;
   /*
    * Gap between the dock edge and floating widgets (advisor FAB, etc.).
