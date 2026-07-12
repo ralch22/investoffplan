@@ -1,8 +1,8 @@
 import {
   formatBeds,
-  formatLaunchPrice,
   formatSqft,
 } from "@/lib/format";
+import { LaunchPrice } from "@/components/currency-price";
 import type { Project, UnitType } from "@/lib/types";
 import { getDictionary } from "@/i18n";
 import type { Locale } from "@/i18n/config";
@@ -36,11 +36,10 @@ export function ProjectUnitsTable({ units, project, locale = "en" }: ProjectUnit
                 </td>
                 <td className="px-4 py-3 capitalize text-muted">{unit.propertyType}</td>
                 <td className="px-4 py-3 font-semibold tabular-nums text-brand">
-                  {formatLaunchPrice(
-                    unit.launchPriceAed,
-                    unit.launchPriceMaxAed,
-                    "AED",
-                  )}
+                  <LaunchPrice
+                    minAed={unit.launchPriceAed}
+                    maxAed={unit.launchPriceMaxAed}
+                  />
                 </td>
               </tr>
             ))}
@@ -64,11 +63,10 @@ export function ProjectUnitsTable({ units, project, locale = "en" }: ProjectUnit
                 </p>
               </div>
               <p className="shrink-0 text-end font-semibold text-brand">
-                {formatLaunchPrice(
-                  unit.launchPriceAed,
-                  unit.launchPriceMaxAed,
-                  "AED",
-                )}
+                <LaunchPrice
+                  minAed={unit.launchPriceAed}
+                  maxAed={unit.launchPriceMaxAed}
+                />
               </p>
             </div>
             <p className="mt-2 text-xs text-muted">{project.paymentPlan}</p>

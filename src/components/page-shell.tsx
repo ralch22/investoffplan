@@ -1,21 +1,26 @@
 "use client";
 
-import { useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { AdvisorWidget } from "@/components/advisor/advisor-widget";
 import { BottomTabBar } from "@/components/nav/bottom-tab-bar";
 import { useFavoritesSync } from "@/hooks/use-favorites-sync";
+import { useCurrency } from "@/hooks/use-currency";
+import { setCurrency } from "@/lib/currency";
 import { useI18n } from "@/i18n/locale-provider";
-import type { CurrencyCode } from "@/lib/types";
 
 /** Which fixture owns the mobile bottom edge (exactly one). */
 export type MobileDock = "tabs" | "cta" | "none";
 
 interface PageShellProps {
   children: React.ReactNode;
-  currency?: CurrencyCode;
-  onCurrencyChange?: (value: CurrencyCode) => void;
+  /**
+   * Renders the header currency selector. The currency VALUE is always shared +
+   * persisted (via the currency store) regardless of this flag — this only
+   * controls whether the toggle is offered, so pages that convert prices
+   * (SERP, PDP, compare) show it while purely-AED market pages don't.
+   */
+  showCurrency?: boolean;
   headerVariant?: "light" | "transparent";
   mobileDock?: MobileDock;
 }
@@ -30,8 +35,7 @@ const DOCK_H: Record<MobileDock, string> = {
 
 export function PageShell({
   children,
-  currency: currencyProp,
-  onCurrencyChange,
+  showCurrency = false,
   headerVariant = "light",
   mobileDock = "tabs",
 }: PageShellProps) {
@@ -40,10 +44,10 @@ export function PageShell({
   useFavoritesSync();
   const { dict } = useI18n();
 
-  const [internalCurrency, setInternalCurrency] = useState<CurrencyCode>("AED");
-  const currency = currencyProp ?? internalCurrency;
-  const handleCurrency =
-    onCurrencyChange ?? ((value: CurrencyCode) => setInternalCurrency(value));
+  // Single shared, persisted currency (localStorage-backed) — one source of
+  // truth across every page, tab, and reload.
+  const currency = useCurrency();
+  const handleCurrency = showCurrency ? setCurrency : undefined;
 
   return (
     <div
