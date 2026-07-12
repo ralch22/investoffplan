@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { communitySlugFor } from "@/lib/community-slug";
 import type { ResidentialBuilding } from "@/lib/residential-insights";
 import { formatPrice } from "@/lib/format";
@@ -42,7 +42,7 @@ export function ResidentialInsightsTable({ buildings }: ResidentialInsightsTable
             {buildings.map((b) => (
               <tr key={b.slug} className="border-t border-border hover:bg-surface-alt/50">
                 <td className="px-4 py-3">
-                  <Link
+                  <LocaleLink
                     href={`/projects/${b.slug}`}
                     className="flex items-center gap-3 font-semibold text-text-dark hover:text-brand"
                   >
@@ -66,12 +66,12 @@ export function ResidentialInsightsTable({ buildings }: ResidentialInsightsTable
                         {b.developer}
                       </span>
                     </span>
-                  </Link>
+                  </LocaleLink>
                 </td>
                 <td className="px-4 py-3 text-muted">
-                  <Link href={`/communities/${communitySlugFor(b.area)}`} className="hover:text-brand">
+                  <LocaleLink href={`/communities/${communitySlugFor(b.area)}`} className="hover:text-brand">
                     {b.area}
-                  </Link>
+                  </LocaleLink>
                 </td>
                 <td className="px-4 py-3 font-semibold tabular-nums text-brand">
                   {formatPrice(b.minPriceAed, "AED", { compact: true })} –{" "}

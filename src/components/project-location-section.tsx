@@ -2,13 +2,21 @@ import { LocaleLink } from "@/components/locale-link";
 import { cityLabel } from "@/lib/format";
 import { communitySlugFor } from "@/lib/community-slug";
 import type { Project } from "@/lib/types";
+import { getDictionary, interpolate, type Locale } from "@/i18n";
 
 interface ProjectLocationSectionProps {
   project: Project;
+  locale?: Locale;
 }
 
-export function ProjectLocationSection({ project }: ProjectLocationSectionProps) {
+export function ProjectLocationSection({
+  project,
+  locale = "en",
+}: ProjectLocationSectionProps) {
+  const dict = getDictionary(locale);
+  const t = dict.pdp;
   const areaSlug = communitySlugFor(project.area);
+  const areaShort = project.area.split(",")[0];
   const googleMapsUrl = project.coordinates
     ? `https://www.google.com/maps?q=${project.coordinates.lat},${project.coordinates.lng}`
     : `https://www.google.com/maps/search/${encodeURIComponent(project.area + " Dubai UAE")}`;
@@ -22,16 +30,26 @@ export function ProjectLocationSection({ project }: ProjectLocationSectionProps)
         id="location-heading"
         className="font-display text-2xl font-semibold text-text-dark md:text-3xl"
       >
-        <em className="italic">Location</em>
+        {locale === "en" ? (
+          <em className="italic">Location</em>
+        ) : (
+          t.sections.location
+        )}
       </h2>
       <p className="mt-3 text-muted">
-        {cityLabel(project.city)}, United Arab Emirates · {project.area}
+        {interpolate(t.locationLine, {
+          city: cityLabel(project.city),
+          area: project.area,
+        })}
       </p>
 
       {osmEmbed ? (
         <div className="mt-6 overflow-hidden rounded-2xl border border-border shadow-elevation-sm">
           <iframe
-            title={`Map showing ${project.name} in ${project.area}`}
+            title={interpolate(t.mapIframeTitle, {
+              name: project.name,
+              area: project.area,
+            })}
             src={osmEmbed}
             className="h-72 w-full border-0"
             loading="lazy"
@@ -40,7 +58,7 @@ export function ProjectLocationSection({ project }: ProjectLocationSectionProps)
         </div>
       ) : (
         <div className="mt-6 flex h-48 items-center justify-center rounded-2xl border border-dashed border-border bg-surface-alt text-sm text-muted">
-          Map coordinates coming soon
+          {t.mapComingSoon}
         </div>
       )}
 
@@ -51,21 +69,21 @@ export function ProjectLocationSection({ project }: ProjectLocationSectionProps)
           rel="noopener noreferrer"
           className="iop-btn-press focus-ring rounded-full border border-brand px-5 py-2.5 text-sm font-semibold text-brand hover:bg-brand hover:text-white"
         >
-          Open in Google Maps
+          {t.openInGoogleMaps}
         </a>
         {project.coordinates ? (
           <LocaleLink
             href={`/map?project=${project.slug}`}
             className="iop-btn-press focus-ring rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
           >
-            View on project map
+            {t.viewOnProjectMap}
           </LocaleLink>
         ) : null}
         <LocaleLink
           href={`/communities/${areaSlug}`}
           className="iop-btn-press focus-ring rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-muted hover:border-brand hover:text-brand"
         >
-          Explore {project.area.split(",")[0]}
+          {interpolate(t.exploreAreaNamed, { area: areaShort })}
         </LocaleLink>
       </div>
     </section>

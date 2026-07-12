@@ -552,7 +552,7 @@ export default async function ProjectDetailPage({
 
         {areaInsights ? <ProjectLivingInArea insights={areaInsights} locale={locale} /> : null}
 
-        <ProjectLocationSection project={project} />
+        <ProjectLocationSection project={project} locale={locale} />
 
         <div id="calculator" className="mt-10 scroll-mt-24">
           <ProjectPaymentCalculator project={project} />

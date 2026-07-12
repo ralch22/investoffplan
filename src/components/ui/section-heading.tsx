@@ -1,5 +1,8 @@
-import Link from "next/link";
+"use client";
+
+import { LocaleLink } from "@/components/locale-link";
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface SectionHeadingProps {
   title: string;
@@ -14,10 +17,13 @@ export function SectionHeading({
   title,
   subtitle,
   href,
-  linkLabel = "View all",
+  linkLabel,
   align = "left",
   className,
 }: SectionHeadingProps) {
+  const { dict } = useI18n();
+  const label = linkLabel ?? dict.common.viewAll;
+
   return (
     <div
       className={cn(
@@ -35,12 +41,12 @@ export function SectionHeading({
         ) : null}
       </div>
       {href ? (
-        <Link
+        <LocaleLink
           href={href}
           className="shrink-0 text-sm font-semibold text-brand transition hover:text-brand-dark focus-ring rounded-sm"
         >
-          {linkLabel} →
-        </Link>
+          {label}
+        </LocaleLink>
       ) : null}
     </div>
   );

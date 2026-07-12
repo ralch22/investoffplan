@@ -1,13 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { SearchSuggest } from "@/components/search/search-suggest";
 import { useI18n } from "@/i18n/locale-provider";
 import { localePath } from "@/i18n/config";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
-
-const CHIPS = ["Apartments", "Villas", "Emaar", "JVC", "Under AED 1M"];
 
 /**
  * Bottom-sheet search opened from the mobile tab bar. The SearchSuggest
@@ -20,6 +18,17 @@ export function MobileSearchSheet({ open, onClose }: { open: boolean; onClose: (
   const router = useRouter();
   const { locale, dict } = useI18n();
 
+  const chips = useMemo(
+    () => [
+      { label: dict.home.quickFilters.apartments, href: "/projects?type=apartment" },
+      { label: dict.home.quickFilters.villas, href: "/projects?type=villa" },
+      { label: dict.home.quickFilters.emaar, href: "/developers/emaar-properties" },
+      { label: dict.home.quickFilters.jvc, href: "/communities/jumeirah-village-circle" },
+      { label: dict.home.quickFilters.under1m, href: "/projects?maxP=1000000" },
+    ],
+    [dict],
+  );
+
   useEffect(() => {
     const d = dialogRef.current;
     if (!d) return;
@@ -30,16 +39,13 @@ export function MobileSearchSheet({ open, onClose }: { open: boolean; onClose: (
     }
   }, [open]);
 
-  const go = (term: string) => {
+  const go = (href: string) => {
     onClose();
-    const query = term.trim();
     trackEvent(ANALYTICS_EVENTS.SEARCH_SUBMIT, {
-      query_length: query.length,
+      query_length: 0,
       source: "sheet",
     });
-    router.push(
-      localePath(locale, query ? `/projects?q=${encodeURIComponent(query)}` : "/projects"),
-    );
+    router.push(localePath(locale, href));
   };
 
   return (
@@ -61,14 +67,14 @@ export function MobileSearchSheet({ open, onClose }: { open: boolean; onClose: (
             onNavigate={onClose}
           />
           <div className="mt-3 flex flex-wrap gap-2">
-            {CHIPS.map((c) => (
+            {chips.map((c) => (
               <button
-                key={c}
+                key={c.href}
                 type="button"
-                onClick={() => go(c)}
+                onClick={() => go(c.href)}
                 className="iop-btn-press focus-ring rounded-full border border-border px-3 py-1.5 text-sm text-muted transition hover:border-brand hover:text-brand"
               >
-                {c}
+                {c.label}
               </button>
             ))}
           </div>

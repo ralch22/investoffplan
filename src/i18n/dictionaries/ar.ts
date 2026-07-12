@@ -154,6 +154,7 @@ export const ar: Dict = {
     "showLess": "عرض أقل",
     "breadcrumbAria": "مسار التنقل",
     "paginationAria": "ترقيم الصفحات",
+    "pageAria": "الصفحة {n}",
     "viewAll": "عرض الكل ←",
     "home": "الرئيسية",
     "featured": "مميّز",
@@ -171,7 +172,9 @@ export const ar: Dict = {
     "exploreCommunity": "استكشف المجتمع",
     "viewProjects": "عرض المشاريع",
     "fullscreen": "ملء الشاشة",
-    "clear": "مسح"
+    "clear": "مسح",
+    "filter": "تصفية",
+    "clearFilters": "مسح الفلاتر"
   },
   "a11y": {
     "skipToContent": "تخطَّ إلى المحتوى",
@@ -248,6 +251,15 @@ export const ar: Dict = {
     "heroSubtitle": "{unitCount} خيار وحدة في {projectCount} مشروعاً — بروشورات وسعر القدم المربعة وأداة مقارنة وخريطة تفاعلية في مكان واحد.",
     "browseAllProperties": "تصفّح جميع العقارات",
     "openMap": "افتح الخريطة",
+    "popularLabel": "الأكثر بحثاً:",
+    "whatsapp": "واتساب",
+    "quickFilters": {
+      "apartments": "شقق",
+      "villas": "فلل",
+      "emaar": "إعمار",
+      "jvc": "قرية جميرا الدائرية",
+      "under1m": "أقل من مليون درهم"
+    },
     "statsEyebrow": "بيانات حيّة من كتالوج المشاريع",
     "stats": {
       "unitOptions": "خيارات الوحدات",
@@ -453,6 +465,11 @@ export const ar: Dict = {
     "priceOnRequestUpper": "السعر عند الطلب",
     "viewOnProjectMap": "عرض على خريطة المشروع ←",
     "googleMaps": "خرائط جوجل ←",
+    "openInGoogleMaps": "افتح في خرائط جوجل",
+    "mapComingSoon": "إحداثيات الخريطة قريباً",
+    "locationLine": "{city}، الإمارات العربية المتحدة · {area}",
+    "exploreAreaNamed": "استكشف {area}",
+    "mapIframeTitle": "خريطة تُظهر {name} في {area}",
     "goldenVisa": "مؤهّل للإقامة الذهبية · إقامة 10 سنوات",
     "financingQuestion": "هل ستموّل جزءاً من الشراء؟",
     "modelMortgage": "احسب التمويل العقاري واحصل على موافقة مبدئية ←",
@@ -1052,7 +1069,12 @@ export const ar: Dict = {
     },
     "residentialPage": {
       "heroTitle": "رؤى سكنية",
-      "heroSubtitle": "بيانات أسعار الإطلاق لكل مشروع — قارن الأبراج والمجمعات في المناطق المختارة."
+      "heroSubtitle": "بيانات أسعار الإطلاق لكل مشروع — قارن الأبراج والمجمعات في المناطق المختارة.",
+      "searchLabel": "ابحث عن مشروع",
+      "searchPlaceholder": "اسم البرج أو المطوّر",
+      "areaLabel": "المنطقة",
+      "allAreas": "كل المناطق",
+      "showingCount": "عرض {count} مشروعاً بأسعار إطلاق. اتجاهات إيجار إعادة البيع تتطلّب تغذية سوق مرخّصة — نعرض معايير الإطلاق على الخارطة بدلاً من ذلك."
     },
     "communityInsightsPage": {
       "heroTitle": "رؤى المجتمعات",
@@ -1335,6 +1357,7 @@ export const ar: Dict = {
     "otherDevelopers": "مطوّرون آخرون",
     "unitOptionsLabel": "{count} خيار وحدة على invest off-plan",
     "viewAllDevelopers": "عرض جميع المطوّرين ←",
+    "noListings": "لا توجد مشاريع لهذا المطوّر حالياً. تحقق لاحقاً أو تواصل مع فريقنا.",
     "profile": {
       "heading": "ملف المطوّر",
       "subtitle": "ملف مبني على البيانات لكتالوج المطوّر على الخارطة — وليس تقييماً للجودة أو التسليم.",
@@ -1471,7 +1494,8 @@ export const ar: Dict = {
     "bestValue": "أفضل قيمة",
     "highestYield": "أعلى عائد",
     "earliestHandover": "أقرب تسليم",
-    "lowestEntry": "أدنى سعر دخول"
+    "lowestEntry": "أدنى سعر دخول",
+    "grossPct": "{value}% إجمالي"
   },
   "marketAdvice": {
     "heading": "غير متأكد من الخيار المناسب لأهدافك؟",

@@ -13,6 +13,8 @@ interface StripLabels {
   highestYield: string;
   earliestHandover: string;
   lowestEntry: string;
+  /** Template with {value} — e.g. "{value}% gross" / "{value}% إجمالي" */
+  grossPct?: string;
 }
 
 interface Chip {
@@ -66,7 +68,10 @@ export function CompareSummaryStrip({
   });
   push(winners.highestYield, labels.highestYield, (i) => {
     const y = stats[i.project.id]?.grossYieldPct;
-    return y != null ? `${y}% gross` : null;
+    if (y == null) return null;
+    return labels.grossPct
+      ? labels.grossPct.replace("{value}", String(y))
+      : `${y}%`;
   });
   push(winners.earliestHandover, labels.earliestHandover, (i) =>
     i.project.handover ?? null,
