@@ -1,13 +1,13 @@
 import { getDictionary } from "@/i18n";
 import type { Locale } from "@/i18n/config";
 import { interpolate } from "@/i18n/config";
-import { cityLabel, formatPrice } from "@/lib/format";
+import { bedsLabel, cityLabel, formatPrice } from "@/lib/format";
 import type { Project } from "@/lib/types";
 
 /**
  * Build a FACTUAL, verified-claims-only "About" paragraph for thin PDPs that
- * carry no description / descriptionUnique / enrichment summary (45 dev-fallback
- * projects, mostly Arada). Composes 1–3 sentences from ONLY stated catalog
+ * carry no description / descriptionUnique / enrichment summary (dev-fallback
+ * and other no-copy projects). Composes 1–4 sentences from ONLY stated catalog
  * fields — it NEVER invents amenities, ratings, or features. A clause is emitted
  * only when its underlying data exists, so nothing ever renders "AED 0",
  * "undefined", or an empty clause.
@@ -21,7 +21,8 @@ export function buildFactualSummary(
   project: Project,
   locale: Locale = "en",
 ): string | undefined {
-  const t = getDictionary(locale).pdp.factualSummary;
+  const dict = getDictionary(locale);
+  const t = dict.pdp.factualSummary;
 
   const name = project.name?.trim();
   const developer = project.developer?.trim();
@@ -92,6 +93,33 @@ export function buildFactualSummary(
   const handover = project.handover?.trim();
   if (handover) {
     sentences.push(interpolate(t.handover, { handover }));
+  }
+
+  // Sentence 4 — listed inventory (bedroom band + configuration count). Only
+  // units with a known beds value contribute; never invents a beds range.
+  const beds = project.units
+    .map((u) => u.beds)
+    .filter((b): b is number => typeof b === "number" && Number.isFinite(b) && b >= 0);
+  const unitCount = project.units.length;
+  if (beds.length > 0 && unitCount > 0) {
+    const minBeds = Math.min(...beds);
+    const maxBeds = Math.max(...beds);
+    if (minBeds === maxBeds) {
+      sentences.push(
+        interpolate(t.inventorySingle, {
+          beds: bedsLabel(minBeds, dict),
+          count: unitCount,
+        }),
+      );
+    } else {
+      sentences.push(
+        interpolate(t.inventoryRange, {
+          minBeds: bedsLabel(minBeds, dict),
+          maxBeds: bedsLabel(maxBeds, dict),
+          count: unitCount,
+        }),
+      );
+    }
   }
 
   const summary = sentences.join(" ").replace(/\s+/g, " ").trim();

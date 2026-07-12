@@ -511,6 +511,8 @@ export const ar: Dict = {
       "priceOnly": "تبدأ أسعار الإطلاق من {price}.",
       "planOnly": "يوفّر المشروع خطة سداد {plan}.",
       "handover": "من المتوقّع التسليم في {handover}.",
+      "inventorySingle": "تشمل خيارات الوحدات في الكتالوج تكوينات {beds} ({count} مدرجة).",
+      "inventoryRange": "تمتد خيارات الوحدات في الكتالوج من {minBeds} إلى {maxBeds} ({count} تكوينات مدرجة).",
       "types": {
         "apartment": "شقق",
         "villa": "فلل",
@@ -1088,12 +1090,23 @@ export const ar: Dict = {
       "rowCommunities": "المجتمعات المشمولة",
       "rowHandover": "جدول التسليم",
       "rowHandoverHint": "أول سنة–آخر سنة",
+      "rowPremiumShare": "حصة المشاريع المميزة",
+      "rowPremiumShareHint": "نسبة المشاريع المصنّفة مميزة في الكتالوج",
+      "kpiProjects": "المشاريع",
+      "kpiUnits": "خيارات الوحدات",
+      "kpiFromPrice": "السعر من",
+      "kpiCommunities": "المجتمعات",
       "verdictDisclaimer": "جميع الأرقام مستمدة من كتالوجنا المباشر للمشاريع على الخارطة (بيانات الإطلاق على مستوى المشروع والوحدة). لا نربط أسماء المطوّرين بسجلات معاملات دائرة الأراضي، لذا تبقى مجمّعات أسعار البيع على مستوى المجتمع فقط.",
       "whereBuilds": "أين يبني {name}",
       "projectsCta": "مشاريع {name}",
       "verdictLargerPortfolio": "{name} يمتلك المحفظة الأكبر ({count} مشروع)",
       "verdictLowerPrice": "{name} يمتلك سعر الدخول الأقل (من {price})",
-      "verdictMoreCommunities": "{name} يغطي عدداً أكبر من المجتمعات ({count})"
+      "verdictMoreCommunities": "{name} يغطي عدداً أكبر من المجتمعات ({count})",
+      "caseForEachHeading": "الحجّة لكل مطوّر",
+      "trailingFallback": "يتأخّر عن {name} في المقاييس المقاسة — وازن الجدول أعلاه مقابل أولوياتك.",
+      "whoSuitsHeading": "من يناسب كل مطوّر",
+      "specialistFallback": "كتالوج متخصص — راجع المشاريع المباشرة لمعرفة إن كان المخزون يناسبك.",
+      "relatedHeading": "مقارنات مطوّرين ذات صلة"
     },
     "map": {
       "heroTitle": "خريطة المشاريع",

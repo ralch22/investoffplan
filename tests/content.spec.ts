@@ -40,4 +40,22 @@ test.describe("Content routes", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(page.locator("article h2").first()).toBeVisible();
   });
+
+  // #191 — compare-developers decision layer (pros / who-suits / related mesh).
+  // Assert on SSR body (not live-DOM getByTestId) so Turnstile/hydration can't
+  // flake the content check — same pattern as other indexability assertions.
+  test("compare-developers pair has decision-layer content + FAQ JSON-LD", async ({
+    page,
+  }) => {
+    const response = await page.goto(
+      "/compare-developers/damac-properties-vs-emaar-properties",
+    );
+    expect(response?.status()).toBe(200);
+    const body = await response!.text();
+    expect(body).toMatch(/The case for each|الحجّة لكل مطوّر/);
+    expect(body).toMatch(/Who each suits|من يناسب كل مطوّر/);
+    expect(body).toMatch(/Related developer comparisons|مقارنات مطوّرين ذات صلة/);
+    expect(body).toMatch(/FAQPage/);
+    expect(body).toMatch(/Premium-flagged share|حصة المشاريع المميزة/);
+  });
 });
