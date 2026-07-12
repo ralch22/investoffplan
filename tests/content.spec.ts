@@ -294,4 +294,47 @@ test.describe("Content routes", () => {
     expect(html).toMatch(/href="\/ar\/projects"/);
     expect(html).toContain('href="/ar/projects"');
   });
+
+  // #268 — related FAQ / guide back links must stay in-locale on AR.
+  // Scope to <main> so header LanguageSwitcher EN mirror does not false-fail.
+  test("AR FAQ topic and guide detail links stay under /ar", async ({ page }) => {
+    const mainHtml = (html: string) => {
+      const stripped = html.replace(/<script[\s\S]*?<\/script>/gi, "");
+      const m = stripped.match(/<main\b[\s\S]*?<\/main>/i);
+      return m ? m[0] : stripped;
+    };
+    const anchors = (html: string, re: RegExp) =>
+      [...html.matchAll(re)].map((m) => m[1]);
+
+    const faq = await page.goto("/ar/faq/off-plan-basics", {
+      waitUntil: "commit",
+    });
+    expect(faq?.status()).toBe(200);
+    const faqMain = mainHtml(await faq!.text());
+    const faqAnchors = anchors(
+      faqMain,
+      /<a\b[^>]*\bhref="(\/(?:ar\/)?faq\/[^"]+)"/gi,
+    );
+    // Related topic cards must be under /ar/faq/*
+    expect(faqAnchors.filter((h) => h.startsWith("/ar/faq/")).length).toBeGreaterThan(0);
+    // No bare EN topic links in main content (related cards).
+    expect(faqAnchors.filter((h) => h.startsWith("/faq/"))).toEqual([]);
+
+    const guide = await page.goto("/ar/guides/understanding-payment-plans", {
+      waitUntil: "commit",
+    });
+    expect(guide?.status()).toBe(200);
+    const guideMain = mainHtml(await guide!.text());
+    const guideAnchors = anchors(
+      guideMain,
+      /<a\b[^>]*\bhref="(\/(?:ar\/)?guides[^"]*)"/gi,
+    );
+    // Back link to hub must be /ar/guides
+    expect(
+      guideAnchors.some((h) => h === "/ar/guides" || h.startsWith("/ar/guides?")),
+    ).toBeTruthy();
+    expect(
+      guideAnchors.filter((h) => h === "/guides" || h.startsWith("/guides?")),
+    ).toEqual([]);
+  });
 });
