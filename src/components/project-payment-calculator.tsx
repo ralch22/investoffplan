@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { PaymentCalculator } from "@/components/payment-calculator";
-import { bedsLabel, formatPrice, formatSqft, propertyTypeLabel } from "@/lib/format";
+import { bedsLabel, formatPrice, propertyTypeLabel, sqftLabel } from "@/lib/format";
 import { parsePaymentPlan } from "@/lib/investment-metrics";
 import type { Project, UnitType } from "@/lib/types";
 import { useI18n } from "@/i18n/locale-provider";
@@ -47,7 +47,7 @@ export function ProjectPaymentCalculator({
     const parts = [
       bedsLabel(unit.beds, dict),
       propertyTypeLabel(unit.propertyType, dict, locale),
-      formatSqft(unit.sqftMin, unit.sqftMax),
+      sqftLabel(unit.sqftMin, unit.sqftMax, dict),
     ].filter(Boolean);
     return `${parts.join(" · ")} — ${formatPrice(unit.launchPriceAed, "AED", { compact: true })}`;
   }

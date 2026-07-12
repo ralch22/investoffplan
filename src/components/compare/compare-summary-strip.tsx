@@ -15,6 +15,8 @@ interface StripLabels {
   lowestEntry: string;
   /** Template with {value} — e.g. "{value}% gross" / "{value}% إجمالي" */
   grossPct?: string;
+  /** Suffix after AED amount for best-value chip — EN "/sqft", AR "/قدم مربعة" */
+  perSqftSuffix?: string;
 }
 
 interface Chip {
@@ -64,7 +66,9 @@ export function CompareSummaryStrip({
 
   push(winners.lowestPpsqft, labels.bestValue, (i) => {
     const v = unitPricePerSqft(i);
-    return v ? `AED ${v.toLocaleString()}/sqft` : null;
+    if (!v) return null;
+    const suffix = labels.perSqftSuffix ?? "/sqft";
+    return `AED ${v.toLocaleString()}${suffix.startsWith("/") ? suffix : `/${suffix}`}`;
   });
   push(winners.highestYield, labels.highestYield, (i) => {
     const y = stats[i.project.id]?.grossYieldPct;

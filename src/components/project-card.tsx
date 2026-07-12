@@ -16,11 +16,10 @@ import type { FlatUnit } from "@/lib/catalog-core";
 import type { CurrencyCode } from "@/lib/types";
 import {
   bedsLabel,
-  formatFromPrice,
-  formatLaunchPrice,
-  formatPricePerSqft,
-  formatSqft,
+  fromPriceLabel,
+  pricePerSqftLabel,
   propertyTypeLabel,
+  sqftLabel,
 } from "@/lib/format";
 import { resolveBrochureUrl } from "@/lib/brochure";
 import { hasPaymentPlan, unitPricePerSqft } from "@/lib/investment-metrics";
@@ -174,12 +173,12 @@ export function ProjectCard({
               {project.area.split(",").slice(0, 2).join(", ")}
             </p>
             <p className="line-clamp-2 text-sm text-white/80">
-              {bedsLabel(unit.beds, dict)} · {formatSqft(unit.sqftMin, unit.sqftMax)} ·{" "}
+              {bedsLabel(unit.beds, dict)} · {sqftLabel(unit.sqftMin, unit.sqftMax, dict)} ·{" "}
               {propertyTypeLabel(unit.propertyType, dict, locale)}
-              {ppsf ? ` · ${formatPricePerSqft(ppsf, currency)}` : ""}
+              {ppsf ? ` · ${pricePerSqftLabel(ppsf, currency, dict)}` : ""}
             </p>
             <p className="text-xl font-bold text-white">
-              {formatFromPrice(unit.launchPriceAed, unit.launchPriceMaxAed, currency)}
+              {fromPriceLabel(unit.launchPriceAed, unit.launchPriceMaxAed, currency, dict)}
             </p>
 
             <div className="flex flex-wrap gap-2 pt-1">
@@ -296,11 +295,11 @@ function ListCard({
             </div>
           </div>
           <p className="text-sm text-muted">
-            {bedsLabel(unit.beds, dict)} · {formatSqft(unit.sqftMin, unit.sqftMax)} ·{" "}
+            {bedsLabel(unit.beds, dict)} · {sqftLabel(unit.sqftMin, unit.sqftMax, dict)} ·{" "}
             {propertyTypeLabel(unit.propertyType, dict, locale)}
           </p>
           <p className="text-lg font-semibold text-brand">
-            {formatFromPrice(unit.launchPriceAed, unit.launchPriceMaxAed, currency)}
+            {fromPriceLabel(unit.launchPriceAed, unit.launchPriceMaxAed, currency, dict)}
           </p>
           <div className="mt-auto flex flex-wrap gap-2">
             <Link

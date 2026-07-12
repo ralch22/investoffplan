@@ -4,7 +4,7 @@ import Image from "next/image";
 import { LocaleLink } from "@/components/locale-link";
 import { ContactButton } from "@/components/contact-button";
 import { DeveloperAttribution } from "@/components/developer-attribution";
-import { cityLabel, formatLaunchPrice, formatPrice } from "@/lib/format";
+import { cityLabel, formatPrice, launchPriceLabel } from "@/lib/format";
 import { hasPaymentPlan } from "@/lib/investment-metrics";
 import type { DeveloperProjectCardData } from "@/lib/types";
 import { cn } from "@/lib/cn";
@@ -91,7 +91,7 @@ export function DeveloperProjectCard({
               {dict.developers.launchPrice}
             </p>
             <p className="text-lg font-bold text-brand">
-              {formatLaunchPrice(minPrice, maxPrice, "AED")}
+              {launchPriceLabel(minPrice, maxPrice, "AED", dict)}
             </p>
           </div>
           {hasPaymentPlan(project.paymentPlan) ? (
@@ -119,7 +119,7 @@ export function DeveloperProjectCard({
                   ? interpolate(dict.common.fromPrice, {
                       price: formatPrice(minPrice, "AED"),
                     })
-                  : formatLaunchPrice(minPrice, undefined, "AED")}
+                  : launchPriceLabel(minPrice, undefined, "AED", dict)}
               </span>
             )}
           </div>

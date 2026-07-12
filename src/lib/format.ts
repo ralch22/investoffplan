@@ -87,6 +87,23 @@ export function formatLaunchPrice(
   return formatPrice(minAed, currency);
 }
 
+/**
+ * Locale-aware launch price. EN matches {@link formatLaunchPrice}; AR uses
+ * `dict.pdp.priceOnRequest` for the zero-price sentinel (#324).
+ */
+export function launchPriceLabel(
+  minAed: number,
+  maxAed: number | undefined,
+  currency: CurrencyCode,
+  dict: Dict,
+): string {
+  if (!(minAed > 0)) return dict.pdp.priceOnRequest;
+  if (maxAed && maxAed > minAed) {
+    return `${formatPrice(minAed, currency, { compact: true })} - ${formatPrice(maxAed, currency, { compact: true })}`;
+  }
+  return formatPrice(minAed, currency);
+}
+
 export function formatFromPrice(
   minAed: number,
   maxAed: number | undefined,
@@ -99,6 +116,25 @@ export function formatFromPrice(
   return `FROM ${formatPrice(minAed, currency)}`;
 }
 
+/**
+ * Locale-aware "FROM {price}" chrome. EN is byte-identical to
+ * {@link formatFromPrice}; AR uses `dict.format.fromUpper` +
+ * `dict.pdp.priceOnRequest` (#324).
+ */
+export function fromPriceLabel(
+  minAed: number,
+  maxAed: number | undefined,
+  currency: CurrencyCode,
+  dict: Dict,
+): string {
+  if (!(minAed > 0)) return dict.pdp.priceOnRequest;
+  const prefix = dict.format.fromUpper;
+  if (maxAed && maxAed > minAed) {
+    return `${prefix} ${formatPrice(minAed, currency, { compact: true })} - ${formatPrice(maxAed, currency, { compact: true })}`;
+  }
+  return `${prefix} ${formatPrice(minAed, currency)}`;
+}
+
 export function formatPricePerSqft(
   ppsfAed: number | null | undefined,
   currency: CurrencyCode,
@@ -107,6 +143,21 @@ export function formatPricePerSqft(
   // the AED→USD rate + symbol) so it never disagrees with the headline price.
   if (!ppsfAed || !(ppsfAed > 0)) return null;
   return `${formatPrice(ppsfAed, currency)}/sqft`;
+}
+
+/**
+ * Locale-aware AED/sqft label. EN matches {@link formatPricePerSqft}; AR uses
+ * the unit word from `dict.format.sqft` (e.g. قدم مربعة) (#324).
+ */
+export function pricePerSqftLabel(
+  ppsfAed: number | null | undefined,
+  currency: CurrencyCode,
+  dict: Dict,
+): string | null {
+  if (!ppsfAed || !(ppsfAed > 0)) return null;
+  const price = formatPrice(ppsfAed, currency);
+  const unit = dict.format.sqft.replace("{value}", "").trim() || "sqft";
+  return `${price}/${unit}`;
 }
 
 export function formatSqft(min: number, max?: number): string {
@@ -119,6 +170,22 @@ export function formatSqft(min: number, max?: number): string {
   const saneMax = max && max > min && max <= 40_000 ? max : undefined;
   if (saneMax) return `${min.toLocaleString()} - ${saneMax.toLocaleString()} sqft`;
   return `${min.toLocaleString()} sqft`;
+}
+
+/**
+ * Locale-aware size chrome. EN matches {@link formatSqft}; AR uses
+ * `dict.format.sqft` / `sqftRange` (#324).
+ */
+export function sqftLabel(min: number, max: number | undefined, dict: Dict): string {
+  if (!(min > 0) || min > 40_000) return "—";
+  const saneMax = max && max > min && max <= 40_000 ? max : undefined;
+  if (saneMax) {
+    return interpolate(dict.format.sqftRange, {
+      min: min.toLocaleString(),
+      max: saneMax.toLocaleString(),
+    });
+  }
+  return interpolate(dict.format.sqft, { value: min.toLocaleString() });
 }
 
 export function cityLabel(city: string): string {

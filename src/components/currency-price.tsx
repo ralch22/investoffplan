@@ -2,9 +2,9 @@
 
 import { useCurrency } from "@/hooks/use-currency";
 import {
-  formatLaunchPrice,
   formatPrice,
-  formatPricePerSqft,
+  launchPriceLabel,
+  pricePerSqftLabel,
 } from "@/lib/format";
 import { useI18n } from "@/i18n/locale-provider";
 
@@ -36,11 +36,13 @@ export function LaunchPrice({
   maxAed?: number;
 }) {
   const currency = useCurrency();
-  return <>{formatLaunchPrice(minAed, maxAed, currency)}</>;
+  const { dict } = useI18n();
+  return <>{launchPriceLabel(minAed, maxAed, currency, dict)}</>;
 }
 
 export function PricePerSqft({ aed }: { aed: number | null | undefined }) {
   const currency = useCurrency();
-  const label = formatPricePerSqft(aed, currency);
+  const { dict } = useI18n();
+  const label = pricePerSqftLabel(aed, currency, dict);
   return label ? <>{label}</> : null;
 }
