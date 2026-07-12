@@ -42,7 +42,7 @@ export default async function ArabicAboutPage() {
         subtitle="تعرّف على فريق invest off-plan."
         imageUrl={heroImage}
       >
-        <PrimaryButton href="/projects">ابدأ الآن</PrimaryButton>
+        <PrimaryButton href="/ar/projects">ابدأ الآن</PrimaryButton>
       </PageHero>
 
       <section className="mx-auto max-w-[1200px] px-5 py-16 md:px-8">
