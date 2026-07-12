@@ -58,6 +58,11 @@ async function main() {
     run(`npx tsx scripts/scrape-pf-brochures.ts${limitFlag}`);
   }
 
+  // PF scrape re-writes bare colliding slugs for known twins. Pin + rewrite
+  // data/catalog.json BEFORE public slices / D1 upsert so seed source matches
+  // runtime (issue #196). Idempotent; does not touch D1 itself.
+  run("npx tsx scripts/apply-slug-disambiguation-to-catalog.ts");
+
   run("node scripts/sync-catalog-public.mjs");
 
   if (!skipDb) {

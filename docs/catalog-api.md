@@ -11,6 +11,7 @@ npm run db:seed:local         # full wipe + import data/catalog.json → local D
 npm run db:seed:remote        # export local D1 → remote D1 (requires seed:local first)
 npm run db:upsert:local       # merge catalog.json into local D1 (preserves brochures)
 npm run db:upsert:remote      # merge catalog.json into remote D1
+npm run catalog:disambiguate-slugs  # rewrite twin slugs in catalog.json (no D1 wipe)
 npm run ingest:catalog        # scrape PF + brochures + sync + upsert (add --remote)
 npm run ingest:catalog:smoke  # 2-page scrape smoke test + remote upsert
 ```
@@ -41,8 +42,9 @@ The GitHub Actions workflow (`.github/workflows/catalog-ingest.yml`) always pass
 The pipeline runs:
 1. `scrape-pf-catalog.ts` — Property Finder unit-view ingest
 2. `scrape-pf-brochures.ts --resume` — enrich brochures/metadata (skips existing PDFs)
-3. `sync-catalog-public.mjs` — refresh static JSON slices (fallback CDN)
-4. `upsert-catalog-to-d1.ts --remote` — merge into D1 without full wipe
+3. `apply-slug-disambiguation-to-catalog.ts` — pin/rewrite twin project slugs in `data/catalog.json` (seed source = D1)
+4. `sync-catalog-public.mjs` — refresh static JSON slices (fallback CDN)
+5. `upsert-catalog-to-d1.ts --remote` — merge into D1 without full wipe
 
 Successful scheduled runs commit `data/catalog.json` + `public/data/*` back to the repo.
 
@@ -260,8 +262,55 @@ npm run ingest:catalog:smoke # 2-page scrape smoke test + remote upsert (safe ca
 Pipeline stages (`scripts/catalog-ingest-pipeline.ts`; `--remote` propagates to the final upsert only):
 1. `scrape-pf-catalog.ts` — Property Finder unit-view ingest (`--pages 2` under `--smoke`).
 2. `scrape-pf-brochures.ts --resume` — enrich brochures/metadata (skips existing PDFs).
-3. `sync-catalog-public.mjs` — refresh static JSON fallback slices.
-4. `upsert-catalog-to-d1.ts [--remote]` — merge into D1 without a wipe.
+3. `apply-slug-disambiguation-to-catalog.ts` — rewrite twin slugs in seed JSON (idempotent).
+4. `sync-catalog-public.mjs` — refresh static JSON fallback slices.
+5. `upsert-catalog-to-d1.ts [--remote]` — merge into D1 without a wipe.
+
+### 3b. Re-sync seed source after duplicate-slug recovery (no prod wipe)
+
+**Problem:** Runtime D1 can already hold disambiguated twin slugs (via seed/upsert
+`resolveProjectSlugs`) while `data/catalog.json` still has the pre-recovery
+collision (`arthouse-residences` ×2, `emerge-residences` ×2, `nobu-residences` ×2).
+Build-time static slices (`public/data/catalog-map.json`, lite) then disagree with D1.
+
+**Do not** fix this with `db:seed:remote` — that DELETEs every catalog table and
+can wipe enrichments (`description_unique`, `floor_plans`, brochures, etc.).
+
+**Safe procedure (seed file only, no D1 write required when prod is already correct):**
+
+```bash
+# 1. Preview renames (no write)
+npx tsx scripts/apply-slug-disambiguation-to-catalog.ts --dry-run
+
+# 2. Rewrite data/catalog.json project + unit slugs (idempotent)
+npm run catalog:disambiguate-slugs
+
+# 3. Refresh public static slices from the fixed seed
+node scripts/sync-catalog-public.mjs
+
+# 4. Optional — only if local/preview D1 drifted BEHIND the seed.
+#    Prefer upsert (merge) over seed (wipe). Skip when production D1 already
+#    matches the pinned renames in src/lib/project-slug-renames.ts.
+npm run db:upsert:local
+# npm run db:upsert:remote   # only when deliberately refreshing remote from seed
+```
+
+**Verify:**
+
+```bash
+# Seed has unique project slugs
+node -e 'const c=require("./data/catalog.json"); const m={}; for (const p of c.projects) m[p.slug]=(m[p.slug]||0)+1; console.log(Object.entries(m).filter(([,n])=>n>1));'
+
+# Expected twins present with distinct slugs
+node -e 'const c=require("./data/catalog.json"); console.log(c.projects.filter(p=>/arthouse-residences|emerge-residences|nobu-residences/.test(p.slug)).map(p=>({slug:p.slug,dev:p.developer})));'
+
+# Production D1 (read-only) already correct after #202 — do not reseed:
+# npx wrangler d1 execute investoffplan-catalog --remote --config=wrangler.production.jsonc \
+#   --command "SELECT slug, developer FROM projects WHERE slug LIKE '%arthouse-residences%' OR slug LIKE '%emerge-residences%' OR slug LIKE '%nobu-residences%' ORDER BY slug;"
+```
+
+Pinned renames live in `src/lib/project-slug-renames.ts` (`KNOWN_PROJECT_SLUG_RENAMES`).
+Weekly ingest runs the disambiguation step automatically so scrape cannot reintroduce bare collisions into the committed seed.
 
 **Automation:** `.github/workflows/catalog-ingest.yml` runs Mondays 04:00 UTC (and manual dispatch), always `--remote`, and commits refreshed `data/catalog.json` + `public/data/*` back to the repo. See [Automated ingest](#automated-ingest-github-actions).
 
