@@ -29,7 +29,7 @@ export function CompactMediaGallery({
   alt,
   className,
   fallbackClassName,
-  sizes = "(max-width: 768px) 100vw, 400px",
+  sizes = "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 800px",
   priority = false,
   projectHref,
   soldOutGrayscale = false,

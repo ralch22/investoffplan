@@ -14,9 +14,12 @@ import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
 import type { Project } from "@/lib/types";
 import type { FlatUnit } from "@/lib/catalog-core";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  locale?: Locale;
 }
 
 // Unknown slugs are real 404s — content is defined at build time by COLLECTION_PAGES.
@@ -46,7 +49,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 const MAX_PROJECTS = 12;
 
-export default async function CollectionPageRoute({ params }: PageProps) {
+export default async function CollectionsSlugPage({ params, locale = "en" }: PageProps) {
+  const dict = getDictionary(locale);
   const { slug } = await params;
   const page = getCollectionPage(slug);
   if (!page) notFound();
@@ -128,8 +132,8 @@ export default async function CollectionPageRoute({ params }: PageProps) {
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Projects", href: "/projects" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.projects, href: "/projects" },
             { label: page.h1 },
           ]}
         />

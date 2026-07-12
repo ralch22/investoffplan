@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { arMeta } from "@/lib/ar-meta";
 import { getCollectionPage } from "@/lib/collections";
+import CollectionsSlugPage, { generateStaticParams } from "@/app/(en)/collections/[slug]/page";
 
-export { default, generateStaticParams } from "@/app/(en)/collections/[slug]/page";
+export { generateStaticParams };
+export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -13,4 +15,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: page.title,
     description: page.description,
   };
+}
+
+export default async function ArCollectionsSlugPage({ params }: { params: Promise<{ slug: string }> }) {
+  return <CollectionsSlugPage params={params} locale="ar" />;
 }

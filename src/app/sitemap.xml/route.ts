@@ -1,10 +1,12 @@
 // Root sitemap INDEX. Next's generateSitemaps() (src/app/sitemap.ts) emits only
 // the child sitemaps at /sitemap/[id].xml — it does NOT create the root
 // /sitemap.xml index, so robots.txt and the GSC submission would 404 without
-// this route. Child count must match the GROUPS array in src/app/sitemap.ts.
+// this route. CHILD_COUNT is derived from SITEMAP_GROUP_COUNT in sitemap-groups.ts
+// so the two stay in sync automatically.
 export const dynamic = "force-static";
 
-const CHILD_COUNT = 6;
+import { SITEMAP_GROUP_COUNT } from "@/lib/sitemap-groups";
+const CHILD_COUNT = SITEMAP_GROUP_COUNT;
 
 let base: string =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://investoffplan.com";

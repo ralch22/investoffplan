@@ -227,3 +227,7 @@ export async function buildGroups(): Promise<Entry[][]> {
   return GROUPS;
 }
 
+/** Number of child sitemap groups. Consumed by the sitemap index route so it
+ * never goes out of sync with the GROUPS array above. */
+export const SITEMAP_GROUP_COUNT = 6;
+

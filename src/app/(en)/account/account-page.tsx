@@ -32,7 +32,7 @@ export function AccountPage({ reportLinks = [] }: AccountPageProps) {
     <PageShell>
       <main className="mx-auto max-w-[800px] px-5 py-12 md:px-8">
         <Breadcrumbs
-          items={[{ label: "Home", href: "/" }, { label: dict.auth.accountTitle }]}
+          items={[{ label: dict.common.home, href: "/" }, { label: dict.auth.accountTitle }]}
         />
         <h1 className="mt-6 font-display text-3xl font-semibold text-text-dark md:text-4xl">
           {dict.auth.accountTitle}

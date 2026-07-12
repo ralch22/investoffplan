@@ -181,10 +181,12 @@ export function buildDeveloperJsonLd(opts: {
     "@type": "RealEstateAgent",
     name: developer.name,
     url: developerUrl,
-    image: absoluteAsset(siteUrl, developer.logoUrl) ??
-      absoluteAsset(siteUrl, "/brand/icon-red.png"),
-    logo: absoluteAsset(siteUrl, developer.logoUrl) ??
-      absoluteAsset(siteUrl, "/brand/icon-red.png"),
+    ...(developer.logoUrl
+      ? {
+          image: absoluteAsset(siteUrl, developer.logoUrl),
+          logo: absoluteAsset(siteUrl, developer.logoUrl),
+        }
+      : {}),
     foundingDate: developer.foundedYear
       ? String(developer.foundedYear)
       : undefined,

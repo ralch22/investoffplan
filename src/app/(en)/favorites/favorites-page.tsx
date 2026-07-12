@@ -70,7 +70,7 @@ export function FavoritesPage() {
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
+            { label: dict.common.home, href: "/" },
             { label: dict.nav.favorites },
           ]}
         />
