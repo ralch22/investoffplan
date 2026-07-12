@@ -7,6 +7,7 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import { submitLead } from "@/lib/leads-client";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface FormState {
   name: string;
@@ -21,28 +22,35 @@ interface FormErrors {
   email?: string;
 }
 
-const BUDGET_BANDS = [
-  "Under AED 1M",
-  "AED 1M – 2M",
-  "AED 2M – 5M",
-  "AED 5M+",
-];
+interface ValidateMessages {
+  nameRequired: string;
+  phoneRequired: string;
+  phoneInvalid: string;
+  emailRequired: string;
+  emailInvalid: string;
+}
 
-function validate(values: FormState): FormErrors {
+function validate(values: FormState, msg: ValidateMessages): FormErrors {
   const errors: FormErrors = {};
-  if (!values.name.trim()) errors.name = "Name is required";
+  if (!values.name.trim()) errors.name = msg.nameRequired;
   const digits = values.phone.replace(/\D/g, "");
-  if (!digits) errors.phone = "Phone is required";
-  else if (digits.length < 8) errors.phone = "Enter a valid phone number";
+  if (!digits) errors.phone = msg.phoneRequired;
+  else if (digits.length < 8) errors.phone = msg.phoneInvalid;
   const email = values.email.trim();
-  if (!email) errors.email = "Email is required";
+  if (!email) errors.email = msg.emailRequired;
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errors.email = "Enter a valid email";
+    errors.email = msg.emailInvalid;
   }
   return errors;
 }
 
 export function MortgagePreapprovalForm() {
+  const { dict } = useI18n();
+  const f = dict.forms.preapproval;
+  const err = dict.forms.errors;
+
+  const BUDGET_BANDS = [f.budgetUnder1m, f.budget1to2m, f.budget2to5m, f.budget5mPlus];
+
   const [values, setValues] = useState<FormState>({
     name: "",
     phone: "",
@@ -65,7 +73,13 @@ export function MortgagePreapprovalForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setGuardError("");
-    const nextErrors = validate(values);
+    const nextErrors = validate(values, {
+      nameRequired: err.nameRequired,
+      phoneRequired: err.phoneRequired,
+      phoneInvalid: err.phoneInvalid,
+      emailRequired: err.emailRequired,
+      emailInvalid: err.emailInvalid,
+    });
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
@@ -86,7 +100,7 @@ export function MortgagePreapprovalForm() {
       return;
     }
     if (!result.ok) {
-      setGuardError(result.error ?? "Unable to submit. Please try again.");
+      setGuardError(result.error ?? err.submitFailed);
       // The token was consumed (or stale) — reset the widget so the retry
       // submits a fresh one instead of 403ing forever.
       setTurnstileToken("");
@@ -101,13 +115,8 @@ export function MortgagePreapprovalForm() {
   if (submitted) {
     return (
       <div className="rounded-2xl border border-border bg-surface-alt p-6 text-center">
-        <p className="font-semibold text-text-dark">
-          Pre-approval request received.
-        </p>
-        <p className="mt-2 text-sm text-muted">
-          A mortgage specialist will contact you to confirm eligibility and current
-          rates — no fees, no obligation.
-        </p>
+        <p className="font-semibold text-text-dark">{f.successTitle}</p>
+        <p className="mt-2 text-sm text-muted">{f.successBody}</p>
       </div>
     );
   }
@@ -119,8 +128,8 @@ export function MortgagePreapprovalForm() {
         <div>
           <input
             type="text"
-            placeholder="Full name"
-            aria-label="Full name"
+            placeholder={f.namePlaceholder}
+            aria-label={f.namePlaceholder}
             autoComplete="name"
             value={values.name}
             onChange={(e) => updateField("name", e.target.value)}
@@ -132,8 +141,8 @@ export function MortgagePreapprovalForm() {
         <div>
           <input
             type="tel"
-            placeholder="Phone (with country code)"
-            aria-label="Phone (with country code)"
+            placeholder={f.phonePlaceholder}
+            aria-label={f.phonePlaceholder}
             autoComplete="tel"
             value={values.phone}
             onChange={(e) => updateField("phone", e.target.value)}
@@ -146,8 +155,8 @@ export function MortgagePreapprovalForm() {
       <div>
         <input
           type="email"
-          placeholder="Email address"
-          aria-label="Email address"
+          placeholder={f.emailPlaceholder}
+          aria-label={f.emailPlaceholder}
           autoComplete="email"
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
@@ -157,7 +166,7 @@ export function MortgagePreapprovalForm() {
         {errors.email ? <p className="iop-field-error">{errors.email}</p> : null}
       </div>
       <label className="block text-sm font-semibold text-text-dark">
-        Purchase budget
+        {f.budgetLabel}
         <select
           value={values.budget}
           onChange={(e) => updateField("budget", e.target.value)}
@@ -173,11 +182,9 @@ export function MortgagePreapprovalForm() {
       <TurnstileField onToken={setTurnstileToken} action="mortgage-preapproval" resetSignal={turnstileReset} />
       {guardError ? <p className="iop-field-error">{guardError}</p> : null}
       <PrimaryButton type="submit" disabled={submitting} className="w-full">
-        {submitting ? "Submitting…" : "Get pre-approval"}
+        {submitting ? dict.common.submitting : f.cta}
       </PrimaryButton>
-      <p className="text-center text-xs text-muted">
-        Zero fees. We connect you with licensed UAE mortgage advisers.
-      </p>
+      <p className="text-center text-xs text-muted">{f.disclaimer}</p>
     </form>
   );
 }
