@@ -2,7 +2,7 @@ import { PageShell } from "@/components/page-shell";
 
 export default function ArabicProjectDetailLoading() {
   return (
-    <PageShell headerVariant="transparent" mobileDock="cta">
+    <PageShell headerVariant="transparent" mobileDock="cta" showAdvisor={false}>
       <section className="relative overflow-hidden bg-surface-dark text-white">
         <div className="absolute inset-0 bg-hero-overlay" />
         <div className="relative mx-auto max-w-[1200px] px-5 pb-16 pt-28 md:px-8 md:pb-24 md:pt-36">

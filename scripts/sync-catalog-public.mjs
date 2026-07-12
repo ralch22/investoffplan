@@ -12,10 +12,24 @@ mkdirSync(outDir, { recursive: true });
 
 const catalog = JSON.parse(readFileSync(src, "utf8"));
 
+// Match createCatalogApi / D1 seed: drop true-duplicate project ids (and their
+// units) so public meta matches browsable counts and /api/health (#225).
+const keptProjectIds = new Set();
+for (const p of catalog.projects ?? []) {
+  if (!keptProjectIds.has(p.id)) keptProjectIds.add(p.id);
+}
+const keptUnitIds = new Set();
+let unitCount = 0;
+for (const u of catalog.units ?? []) {
+  if (!keptProjectIds.has(u.projectId)) continue;
+  if (keptUnitIds.has(u.id)) continue;
+  keptUnitIds.add(u.id);
+  unitCount += 1;
+}
 const meta = {
   version: catalog.version,
-  unitCount: catalog.unitCount,
-  projectCount: catalog.projectCount,
+  unitCount,
+  projectCount: keptProjectIds.size,
   scrapedAt: catalog.scrapedAt,
 };
 
@@ -106,8 +120,8 @@ function slimUnit(u) {
 
 const liteCatalog = {
   version: catalog.version,
-  unitCount: catalog.unitCount,
-  projectCount: catalog.projectCount,
+  unitCount: meta.unitCount,
+  projectCount: meta.projectCount,
   scrapedAt: catalog.scrapedAt,
   cityCounts: catalog.cityCounts,
   developerSerpLinks: catalog.developerSerpLinks,
