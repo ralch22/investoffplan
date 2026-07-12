@@ -43,17 +43,17 @@ export default async function NewsPage({
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="Latest News"
+        title={dict.news.heroTitle}
         italicTitle
-        subtitle="Stay Up-to-Date on The Latest Off-Plan News"
+        subtitle={dict.news.heroSubtitle}
         imageUrl={heroImage}
       />
 
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "News" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.news },
           ]}
         />
 

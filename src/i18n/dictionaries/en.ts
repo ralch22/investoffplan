@@ -163,7 +163,13 @@ const dict = {
     "skipToContent": "Skip to content"
   },
   "news": {
-    "readMore": "Read More"
+    "readMore": "Read More",
+    "heroTitle": "Latest News",
+    "heroSubtitle": "Stay Up-to-Date on The Latest Off-Plan News",
+    "faqHeading": "Frequently asked questions",
+    "ctaBody": "Explore live off-plan inventory across the UAE.",
+    "ctaButton": "Browse Projects",
+    "relatedHeading": "More from the newsroom"
   },
   "favorites": {
     "titlePrefix": "My",
@@ -947,6 +953,31 @@ const dict = {
       "colUnitTypes": "Unit types",
       "colHandover": "Handover"
     }
+  },
+  "communityDetail": {
+    "statOffPlanProjects": "Off-plan projects",
+    "statUnitOptions": "Unit options",
+    "statLaunchPricesFrom": "Launch prices from",
+    "statAvgPpsf": "Avg. launch AED/sqft",
+    "statOnRequest": "On request",
+    "handoverPipeline": "Handover pipeline:",
+    "livingIn": "Living in {name}",
+    "currentProjects": "Current Projects",
+    "nearbyCommunities": "Nearby communities",
+    "similarCommunities": "Similar Communities",
+    "nameFaq": "{name} FAQ",
+    "viewAll": "View all",
+    "seeAllCommunities": "See all communities",
+    "breadcrumbCommunities": "Communities",
+    "noProjects": "No projects listed in this community yet.",
+    "editorialLifestyle": "Lifestyle",
+    "editorialTransport": "Transport & commute",
+    "editorialSchools": "Schools & healthcare",
+    "editorialWhoItSuits": "Who it suits",
+    "projectSingular": "project",
+    "projectPlural": "projects",
+    "unitOptionsIn": "unit options in {city}",
+    "compareWith": "Compare {name} with:"
   },
   "pages": {
     "compare": {

@@ -28,6 +28,9 @@ interface PageProps {
   params: Promise<{ pair: string }>;
 }
 
+// Pairs are derived at build time from community slugs — unknown pairs are 404.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const pairs = await getComparablePairSlugs();
   return pairs.map((pair) => ({ pair }));

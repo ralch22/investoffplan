@@ -165,7 +165,13 @@ export const ar: Dict = {
     "skipToContent": "تخطَّ إلى المحتوى"
   },
   "news": {
-    "readMore": "اقرأ المزيد"
+    "readMore": "اقرأ المزيد",
+    "heroTitle": "آخر الأخبار",
+    "heroSubtitle": "ابقَ على اطلاع بأحدث أخبار العقارات على الخارطة",
+    "faqHeading": "الأسئلة الشائعة",
+    "ctaBody": "استعرض المشاريع العقارية المتاحة للبيع في الإمارات",
+    "ctaButton": "تصفّح المشاريع",
+    "relatedHeading": "المزيد من غرفة الأخبار"
   },
   "favorites": {
     "titlePrefix": "قائمتي",
@@ -949,6 +955,31 @@ export const ar: Dict = {
       "colUnitTypes": "أنواع الوحدات",
       "colHandover": "التسليم"
     }
+  },
+  "communityDetail": {
+    "statOffPlanProjects": "مشاريع على الخارطة",
+    "statUnitOptions": "خيارات الوحدات",
+    "statLaunchPricesFrom": "أسعار الإطلاق تبدأ من",
+    "statAvgPpsf": "متوسط سعر الإطلاق درهم/قدم²",
+    "statOnRequest": "عند الطلب",
+    "handoverPipeline": "جدول التسليم:",
+    "livingIn": "العيش في {name}",
+    "currentProjects": "المشاريع الحالية",
+    "nearbyCommunities": "المجتمعات القريبة",
+    "similarCommunities": "مجتمعات مماثلة",
+    "nameFaq": "أسئلة متكررة عن {name}",
+    "viewAll": "عرض الكل",
+    "seeAllCommunities": "عرض جميع المجتمعات",
+    "breadcrumbCommunities": "المجتمعات السكنية",
+    "noProjects": "لا توجد مشاريع مدرجة في هذه المنطقة حتى الآن.",
+    "editorialLifestyle": "نمط الحياة",
+    "editorialTransport": "المواصلات والتنقل",
+    "editorialSchools": "المدارس والرعاية الصحية",
+    "editorialWhoItSuits": "من يناسبه",
+    "projectSingular": "مشروع",
+    "projectPlural": "مشاريع",
+    "unitOptionsIn": "خيارات وحدات في {city}",
+    "compareWith": "قارن {name} مع:"
   },
   "pages": {
     "compare": {

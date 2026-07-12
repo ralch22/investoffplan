@@ -24,9 +24,13 @@ import { getAreaEditorial } from "@/content/areas";
 import { areaTagline } from "@/lib/figma-copy";
 import { formatPrice } from "@/lib/format";
 import { getSiteUrl } from "@/lib/site-url";
+import { getDictionary, interpolate } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  /** Set to "ar" by the /ar mirror so all UI labels localize. */
+  locale?: Locale;
 }
 
 export async function generateStaticParams() {
@@ -94,7 +98,7 @@ function computeCommunityStats(
   };
 }
 
-export default async function CommunityDetailPage({ params }: PageProps) {
+export default async function CommunityDetailPage({ params, locale = "en" }: PageProps) {
   const { slug } = await params;
   const community = await getCommunity(slug);
   if (!community) notFound();
@@ -113,6 +117,9 @@ export default async function CommunityDetailPage({ params }: PageProps) {
 
   const communitySlugs = new Set(communities.map((c) => c.slug));
 
+  const dict = getDictionary(locale);
+  const t = dict.communityDetail;
+
   return (
     <PageShell headerVariant="transparent">
       {editorial?.faq && editorial.faq.length > 0 ? (
@@ -128,8 +135,8 @@ export default async function CommunityDetailPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             buildBreadcrumbListJsonLd([
-              { name: "Home", url: getSiteUrl() },
-              { name: "Communities", url: `${getSiteUrl()}/communities` },
+              { name: dict.common.home, url: getSiteUrl() },
+              { name: t.breadcrumbCommunities, url: `${getSiteUrl()}/communities` },
               { name: community.name },
             ]),
           ),
@@ -143,24 +150,24 @@ export default async function CommunityDetailPage({ params }: PageProps) {
       />
 
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
-        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Communities", href: "/communities" }, { label: community.name }]} />
+        <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: t.breadcrumbCommunities, href: "/communities" }, { label: community.name }]} />
         {/* Stats band */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard label="Off-plan projects" value={String(community.projectCount)} />
-          <StatCard label="Unit options" value={community.unitCount.toLocaleString()} />
+          <StatCard label={t.statOffPlanProjects} value={String(community.projectCount)} />
+          <StatCard label={t.statUnitOptions} value={community.unitCount.toLocaleString()} />
           <StatCard
-            label="Launch prices from"
-            value={stats.minPrice > 0 ? formatPrice(stats.minPrice, "AED") : "On request"}
+            label={t.statLaunchPricesFrom}
+            value={stats.minPrice > 0 ? formatPrice(stats.minPrice, "AED") : t.statOnRequest}
           />
           <StatCard
-            label="Avg. launch AED/sqft"
+            label={t.statAvgPpsf}
             value={stats.avgPpsf ? `AED ${stats.avgPpsf.toLocaleString()}` : "—"}
           />
         </div>
 
         {stats.handoverYears.length > 0 ? (
           <p className="mt-4 text-sm text-muted">
-            Handover pipeline:{" "}
+            {t.handoverPipeline}{" "}
             {stats.handoverYears
               .map((entry) => `${entry.year} (${entry.count})`)
               .join(" · ")}
@@ -185,7 +192,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
         {comparisons.length > 0 ? (
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <span className="text-sm font-semibold text-text-dark">
-              Compare {community.name} with:
+              {interpolate(t.compareWith, { name: community.name })}
             </span>
             {comparisons.map((c) => (
               <LocaleLink
@@ -210,7 +217,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
         {editorial ? (
           <section className="mt-10 max-w-3xl">
             <h2 className="font-display text-3xl font-semibold text-text-dark">
-              Living in {community.name}
+              {interpolate(t.livingIn, { name: community.name })}
               <span className="text-brand">.</span>
             </h2>
             <div className="mt-4 space-y-4">
@@ -226,22 +233,22 @@ export default async function CommunityDetailPage({ params }: PageProps) {
         {/* Projects */}
         <div className="mt-12 flex items-center justify-between gap-4">
           <h2 className="font-display text-3xl font-semibold text-text-dark">
-            Current Projects<span className="text-brand">.</span>
+            {t.currentProjects}<span className="text-brand">.</span>
           </h2>
           <LocaleLink
             href={`/projects?q=${encodeURIComponent(community.name)}`}
             className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white"
           >
-            View all
+            {t.viewAll}
           </LocaleLink>
         </div>
         <p className="mt-2 text-sm text-muted">
-          {community.projectCount} {community.projectCount === 1 ? "project" : "projects"} ·{" "}
-          {community.unitCount.toLocaleString()} unit options in {community.cityLabel}
+          {community.projectCount} {community.projectCount === 1 ? t.projectSingular : t.projectPlural} ·{" "}
+          {community.unitCount.toLocaleString()} {interpolate(t.unitOptionsIn, { city: community.cityLabel })}
         </p>
 
         {projects.length === 0 ? (
-          <p className="mt-8 text-muted">No projects listed in this community yet.</p>
+          <p className="mt-8 text-muted">{t.noProjects}</p>
         ) : (
           <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {projects.slice(0, 6).map((project, index) => (
@@ -254,21 +261,21 @@ export default async function CommunityDetailPage({ params }: PageProps) {
         {editorial ? (
           <>
             <section className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
-              <EditorialCard title="Lifestyle" paragraphs={editorial.lifestyle} />
+              <EditorialCard title={t.editorialLifestyle} paragraphs={editorial.lifestyle} />
               <EditorialCard
-                title="Transport & commute"
+                title={t.editorialTransport}
                 paragraphs={editorial.transport}
               />
               <EditorialCard
-                title="Schools & healthcare"
+                title={t.editorialSchools}
                 paragraphs={editorial.schools}
               />
-              <EditorialCard title="Who it suits" paragraphs={editorial.whoItSuits} />
+              <EditorialCard title={t.editorialWhoItSuits} paragraphs={editorial.whoItSuits} />
             </section>
 
             {editorial.nearbyAreas.length > 0 ? (
               <section className="mt-10">
-                <h3 className="text-lg font-semibold text-text-dark">Nearby communities</h3>
+                <h3 className="text-lg font-semibold text-text-dark">{t.nearbyCommunities}</h3>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {editorial.nearbyAreas.map((name) => {
                     const targetSlug = communitySlugFor(name);
@@ -296,7 +303,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
             {editorial.faq && editorial.faq.length > 0 ? (
               <section className="mt-12 max-w-3xl">
                 <h2 className="font-display text-2xl font-semibold text-text-dark">
-                  {community.name} FAQ
+                  {interpolate(t.nameFaq, { name: community.name })}
                 </h2>
                 <div className="mt-5">
                   <FaqAccordion faqs={editorial.faq} />
@@ -312,13 +319,13 @@ export default async function CommunityDetailPage({ params }: PageProps) {
           <div className="mx-auto max-w-[1200px] px-5 md:px-8">
             <div className="flex items-center justify-between gap-4">
               <h2 className="font-display text-3xl font-semibold">
-                Similar Communities<span className="text-brand">.</span>
+                {t.similarCommunities}<span className="text-brand">.</span>
               </h2>
               <LocaleLink
                 href="/communities"
                 className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white"
               >
-                See all communities
+                {t.seeAllCommunities}
               </LocaleLink>
             </div>
             <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -330,7 +337,7 @@ export default async function CommunityDetailPage({ params }: PageProps) {
                 >
                   <p className="font-semibold">{item.name}</p>
                   <p className="mt-2 text-sm text-white/70">
-                    {item.projectCount} {item.projectCount === 1 ? "project" : "projects"}
+                    {item.projectCount} {item.projectCount === 1 ? t.projectSingular : t.projectPlural}
                   </p>
                 </LocaleLink>
               ))}

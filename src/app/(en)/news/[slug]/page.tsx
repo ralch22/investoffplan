@@ -11,6 +11,7 @@ import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
 import { localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
@@ -58,6 +59,7 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
   const { slug } = await params;
   const article = getNewsArticle(slug);
   if (!article) notFound();
+  const dict = getDictionary(locale);
 
   const siteUrl = getSiteUrl();
   const jsonLd = {
@@ -127,8 +129,8 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
       <main className="mx-auto max-w-[800px] px-5 py-12 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "News", href: "/news" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.news, href: "/news" },
             { label: article.title },
           ]}
         />
@@ -140,7 +142,7 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
         {article.faq && article.faq.length > 0 ? (
           <section className="mt-12">
             <h2 className="font-display text-2xl font-semibold text-text-dark">
-              Frequently asked questions
+              {dict.news.faqHeading}
             </h2>
             <div className="mt-5">
               <FaqAccordion faqs={article.faq} />
@@ -150,20 +152,20 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
 
         <div className="mt-12 rounded-2xl bg-brand p-8 text-center text-white">
           <p className="text-xl font-semibold">
-            Explore live off-plan inventory across the UAE.
+            {dict.news.ctaBody}
           </p>
           <PrimaryButton
             href="/projects"
             className="mt-4 bg-white text-brand hover:bg-white/90"
           >
-            Browse Projects
+            {dict.news.ctaButton}
           </PrimaryButton>
         </div>
 
         {related.length > 0 ? (
           <section className="mt-12">
             <h2 className="font-display text-2xl font-semibold text-text-dark">
-              More from the newsroom
+              {dict.news.relatedHeading}
             </h2>
             <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
               {related.map((other) => (

@@ -3,6 +3,7 @@ import { getSiteUrl } from "@/lib/site-url";
 
 // AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
 export { default, generateStaticParams } from "@/app/(en)/compare/[pair]/page";
+export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Promise<{ pair: string }> }): Promise<Metadata> {
   const { pair } = await params;
