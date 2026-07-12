@@ -33,7 +33,7 @@ const UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36";
 const PAGE_DELAY_MS = 1200;
 const PER_PAGE = 24;
-const MAX_PAGES_PER_DEV = 6; // safety: 6×24 = 144 projects per developer
+const MAX_PAGES_PER_DEV = 12; // safety: 12×24 = 288 projects per developer (was 6/144, which truncated Damac 169 / Azizi 112)
 
 interface FallbackProject {
   id: string;

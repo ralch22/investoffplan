@@ -130,7 +130,7 @@ interface PfDetailResult {
   amenities?: Array<{ name: string }>;
   masterPlan?: { url?: string; image?: string };
   videoUrl?: string;
-  images?: Array<{ medium?: string; large?: string; small?: string }>;
+  images?: Array<{ source?: string; medium?: string; large?: string; small?: string }>;
   developer: { name: string; logoUrl?: string; slug?: string };
   location: {
     fullName: string;
@@ -263,9 +263,14 @@ function detailToProject(detail: PfDetailResult): CatalogProject {
   const pay = formatPaymentPlanFromPhases(detail.paymentPlans);
   const handover = formatHandover(detail.deliveryDate);
   const status = mapStockStatus(detail.stockAvailability, detail.salesPhase);
-  const imageUrl = detail.images?.[0]?.medium || detail.images?.[0]?.small;
+  // PF returns gallery images as `{ source }` objects (not medium/small) — read
+  // source first so heroes are captured (else every scraped project is imageless).
+  const imageUrl =
+    detail.images?.[0]?.source ||
+    detail.images?.[0]?.medium ||
+    detail.images?.[0]?.small;
   const imageGallery = detail.images
-    ?.map((img) => img.medium || img.large || img.small)
+    ?.map((img) => img.source || img.medium || img.large || img.small)
     .filter(Boolean) as string[] | undefined;
   const coords = detail.location.coordinates;
   const coordinates = coords
@@ -490,8 +495,18 @@ async function main() {
   }
 
   const catalog = JSON.parse(readFileSync(CATALOG, "utf8")) as CatalogFile;
+  // --all-devlist covers ALL 30 developers PF exposes in developerSerpLinks
+  // (not just the 12 with numProjectsOnline in devList) — the extra 18 hold the
+  // bulk of the missing inventory. Slug = last path segment of
+  // "/en/new-projects/dev/<slug>".
   const devSlugs = allDevlist
-    ? (catalog.devList ?? []).map((dev) => dev.slug)
+    ? [
+        ...new Set(
+          (catalog.developerSerpLinks ?? [])
+            .map((l) => l.path.split("/").filter(Boolean).pop())
+            .filter((s): s is string => Boolean(s)),
+        ),
+      ]
     : [slug!];
 
   console.log(
@@ -514,6 +529,17 @@ async function main() {
       });
       totalProjects += result.addedProjects;
       totalUnits += result.addedUnits;
+      // Incremental save after each developer: a 30-dev run is ~1h of scraping;
+      // a crash/rate-limit partway must not lose prior developers. Re-running
+      // resumes naturally (existing pfSlugs are skipped).
+      if (!dryRun && result.addedProjects > 0) {
+        catalog.projectCount = catalog.projects.length;
+        catalog.unitCount = catalog.units.length;
+        writeFileSync(CATALOG, `${JSON.stringify(catalog, null, 2)}\n`, "utf8");
+        console.log(
+          `[dev-portfolio] saved after ${devSlug} → ${catalog.projectCount} projects`,
+        );
+      }
     }
   } finally {
     await browser.close();
