@@ -18,6 +18,9 @@ interface PageProps {
   locale?: Locale;
 }
 
+// In-repo guide set is finite — unknown slugs must 404 (issue #241).
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return GUIDE_CARDS.filter((g) => g.href.startsWith("/guides/")).map((g) => ({
     slug: g.slug,

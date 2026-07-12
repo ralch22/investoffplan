@@ -20,6 +20,9 @@ interface PageProps {
   locale?: Locale;
 }
 
+// In-repo news set is finite — unknown slugs must 404 (issue #241).
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return getNewsArticles().map((article) => ({ slug: article.slug }));
 }
