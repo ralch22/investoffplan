@@ -153,7 +153,12 @@ export function BrochureModal({
       window.open(pdfUrl, "_blank", "noopener,noreferrer");
     } else {
       const whatsappNumber = whatsapp ? whatsapp.replace(/\D/g, "") : WHATSAPP_SECONDARY;
-      const text = `Hi, I just requested the brochure for ${projectName} on invest off-plan. My name is ${name.trim()}. Phone: ${phone.trim()}. Please send it to me!`;
+      // Locale-aware outbound prefill (#333) — EN template kept byte-identical via dict.
+      const text = interpolate(tb.whatsappPrefill, {
+        project: projectName,
+        name: name.trim(),
+        phone: phone.trim(),
+      });
       // Analytics hook + consistent UTM for WhatsApp brochure fallback CTA (GA4 ready)
       const waUrl = withUtm(
         `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`,

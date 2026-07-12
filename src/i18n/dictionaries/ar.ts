@@ -766,6 +766,7 @@ export const ar: Dict = {
       "phoneNumberLabel": "رقم الهاتف",
       "downloadPdf": "تحميل البروشور PDF",
       "requestViaWhatsapp": "اطلب البروشور عبر واتساب",
+      "whatsappPrefill": "مرحباً، طلبت للتو بروشور {project} على invest off-plan. اسمي {name}. الهاتف: {phone}. يرجى إرساله إليّ!",
       "closeAria": "إغلاق"
     },
     "preapproval": {
