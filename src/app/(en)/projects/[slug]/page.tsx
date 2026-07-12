@@ -83,7 +83,8 @@ function stripHtml(html?: string): string | undefined {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
-  if (!project) return { title: "Project not found" };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!project) notFound();
 
   const minPriceMeta = Math.min(...project.units.map((u) => u.launchPriceAed).filter((v) => v > 0));
   // Clean composition: PF names often end "By {developer}" (doubling), the

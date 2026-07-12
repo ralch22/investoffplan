@@ -172,7 +172,10 @@ export function SiteNav({ solid, onOpenChange }: SiteNavProps) {
                   : open === "tools" ? dict.nav.groups.tools
                     : dict.nav.groups.insights
               }
-              className="mega-in focus:outline-none fixed inset-x-0 top-[var(--header-h)] z-[var(--z-header)] hidden border-b border-border bg-surface/98 shadow-elevation-lg backdrop-blur-xl lg:block"
+              // Panel only mounts when open, and SiteNav itself is `hidden lg:flex`
+              // — do not use `hidden lg:block` here: that combo flakes Playwright
+              // visibility on CI (#325/#329) even at desktop viewport.
+              className="mega-in focus:outline-none fixed inset-x-0 top-[var(--header-h)] z-[var(--z-header)] block border-b border-border bg-surface/98 shadow-elevation-lg backdrop-blur-xl"
               onPointerEnter={cancelClose}
               onPointerLeave={scheduleClose}
               onKeyDown={onKeyDown}

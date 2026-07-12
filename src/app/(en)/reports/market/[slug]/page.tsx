@@ -45,7 +45,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const community = await getCommunity(slug);
-  if (!community) return { title: "Report not found" };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!community) notFound();
   return {
     title: interpolate(getDictionary("en").reports.reportTitle, { name: community.name }),
     // Utility/print surface duplicating community-page data — keep out of the index.

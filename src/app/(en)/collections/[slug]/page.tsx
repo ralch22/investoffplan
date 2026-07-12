@@ -47,7 +47,8 @@ function collectionChrome(locale: Locale, slug: string): CollectionChrome | null
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const chrome = collectionChrome("en", slug);
-  if (!chrome) return { title: "Collection not found" };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!chrome) notFound();
   const siteUrl = getSiteUrl();
   return {
     title: chrome.title,

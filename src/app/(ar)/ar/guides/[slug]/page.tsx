@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { getSiteUrl } from "@/lib/site-url";
 import GuideDetailPage, {
   generateStaticParams,
@@ -25,7 +26,8 @@ export async function generateMetadata({
     },
   };
   const chrome = guideChrome("ar", slug);
-  if (!chrome) return { title: "الدليل غير موجود", alternates };
+  // Soft metadata titles with HTTP 200 are banned (#241 / #322).
+  if (!chrome) notFound();
   return {
     title: `${chrome.title} | دليل الشراء على الخارطة`,
     description: chrome.description,
