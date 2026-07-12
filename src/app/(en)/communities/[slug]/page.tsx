@@ -33,6 +33,10 @@ interface PageProps {
   locale?: Locale;
 }
 
+// Catalog communities are fully known at build time — unknown slugs must 404
+// (without this, OpenNext soft-404s HTTP 200 "Community not found"). Issue #241.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const communities = await getCommunities();
   return communities.map((community) => ({ slug: community.slug }));

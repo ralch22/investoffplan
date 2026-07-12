@@ -59,7 +59,7 @@ test.describe("Content routes", () => {
     expect(body).toMatch(/Premium-flagged share|حصة المشاريع المميزة/);
   });
 
-  // Soft SEO residual — hub indexes + title/meta hygiene + favorites noindex.
+  // Soft SEO residual (#230) — hub indexes + title/meta hygiene + favorites noindex.
   test("compare hub indexes render and favorites is noindex", async ({ page }) => {
     for (const path of ["/compare-projects", "/compare-developers"]) {
       const res = await page.goto(path);
@@ -85,5 +85,27 @@ test.describe("Content routes", () => {
     );
     // Cap SERP budget (allow slight overshoot only if names are extreme).
     expect((titleMatch?.[1] ?? "").length).toBeLessThanOrEqual(70);
+  });
+
+  // #241 — EN soft-404s: unknown detail slugs must be real HTTP 404s (not 200
+  // "… not found" shells). Matches projects/AR which already set dynamicParams=false.
+  test("unknown EN community/developer/news/guide slugs return 404", async ({
+    page,
+  }) => {
+    for (const path of [
+      "/communities/definitely-not-a-real-community-xyz",
+      "/developers/definitely-not-a-real-developer-xyz",
+      "/news/definitely-not-a-real-article-xyz",
+      "/guides/definitely-not-a-real-guide-xyz",
+    ]) {
+      const response = await page.goto(path, { waitUntil: "commit" });
+      expect(response?.status(), path).toBe(404);
+      const body = await response!.text();
+      expect(body).toContain("Page not found");
+      // Soft-404 titles must not win.
+      expect(body).not.toMatch(
+        /<title>(Community|Developer|Article|Guide) not found/i,
+      );
+    }
   });
 });

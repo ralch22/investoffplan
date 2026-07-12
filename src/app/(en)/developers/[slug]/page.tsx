@@ -36,6 +36,10 @@ import { DEVELOPER_ITEMLIST_LIMIT } from "@/lib/types";
 // rendering and cost 3-5s cold TTFB on every Worker isolate.
 export const revalidate = 3600;
 
+// Developers are fully known at build time — unknown slugs must 404
+// (without this, OpenNext soft-404s HTTP 200 "Developer not found"). Issue #241.
+export const dynamicParams = false;
+
 interface PageProps {
   params: Promise<{ slug: string }>;
   /** Set to "ar" by the /ar mirror so links and page chrome localize. */
