@@ -1,3 +1,6 @@
+import type { Dict } from "@/i18n";
+import { bedsLabel, propertyTypeLabel } from "@/lib/format";
+import { interpolate, type Locale } from "@/i18n/config";
 import { developerBlurb } from "./figma-copy";
 import type { DeveloperProjectCardData, Project, SortOption } from "./types";
 
