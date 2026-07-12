@@ -66,9 +66,16 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
     headline: article.title,
     description: article.description,
     datePublished: article.publishedAt,
+    dateModified: article.publishedAt,
+    image: { "@type": "ImageObject", url: `${siteUrl}/brand/icon-red.png`, width: 512, height: 512 },
     mainEntityOfPage: `${siteUrl}/news/${article.slug}`,
-    author: { "@type": "Organization", name: "invest off-plan" },
-    publisher: { "@type": "Organization", name: "invest off-plan", url: siteUrl },
+    author: { "@type": "Organization", name: "invest off-plan", url: siteUrl },
+    publisher: {
+      "@type": "Organization",
+      name: "invest off-plan",
+      url: siteUrl,
+      logo: { "@type": "ImageObject", url: `${siteUrl}/brand/icon-red.png`, width: 512, height: 512 },
+    },
   };
 
   const related = getNewsArticles()

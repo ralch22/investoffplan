@@ -55,6 +55,14 @@ export default async function LocationGuidePage({ params }: PageProps) {
     })),
   };
 
+  const webPageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: guide.title,
+    description: guide.intro.slice(0, 300),
+    url: `${base}/locations/${slug}`,
+  };
+
   const others = LOCATION_GUIDES.filter((g) => g.slug !== slug);
 
   return (
@@ -74,6 +82,10 @@ export default async function LocationGuidePage({ params }: PageProps) {
             ]),
           ),
         }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }}
       />
       <PageHero title={guide.h1} italicTitle subtitle={guide.intro} />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
