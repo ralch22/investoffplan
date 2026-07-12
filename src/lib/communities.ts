@@ -1,7 +1,7 @@
 import { getAreas, getCatalogApi } from "@/lib/catalog";
 import type { AreaSummary } from "@/lib/catalog";
 import { areaKey } from "@/lib/dld";
-import { slugify } from "@/lib/slugify";
+import { canonicalCommunitySlugForNickname } from "@/lib/community-nickname-aliases";
 
 /**
  * Catalog "areas" are project-suffixed PF breadcrumbs ("Jumeirah Village
@@ -72,18 +72,27 @@ export async function getCommunity(slug: string): Promise<CommunitySummary | nul
 }
 
 /**
- * Community that a raw area-variant slug belongs to — for 308-redirecting old
- * `/areas/{variant}` URLs to their canonical community page.
+ * Community that a raw area-variant slug (or short nickname) belongs to —
+ * for 308-redirecting old `/areas/{variant}` URLs to their canonical community.
+ *
+ * Resolution order:
+ * 1. Canonical community slug
+ * 2. Catalog breadcrumb area-variant slug
+ * 3. Marketing nickname (jvc → jumeirah-village-circle, etc.) —
+ *    see `community-nickname-aliases.ts` (also mirrored in next.config redirects)
  */
 export async function communityForVariantSlug(
   variantSlug: string,
 ): Promise<CommunitySummary | null> {
   const communities = await getCommunities();
-  return (
+  const direct =
     communities.find((c) => c.slug === variantSlug) ??
-    communities.find((c) => c.variantSlugs.includes(variantSlug)) ??
-    null
-  );
+    communities.find((c) => c.variantSlugs.includes(variantSlug));
+  if (direct) return direct;
+
+  const nickCanonical = canonicalCommunitySlugForNickname(variantSlug);
+  if (!nickCanonical) return null;
+  return communities.find((c) => c.slug === nickCanonical) ?? null;
 }
 
 /** All projects belonging to a community (any breadcrumb variant of it). */

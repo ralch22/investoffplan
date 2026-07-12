@@ -37,7 +37,7 @@
 
 | ID | Finding | Evidence | Notes |
 |----|---------|----------|-------|
-| **C** | Short community aliases not redirected | `/areas` → 308 `/communities` ✓; `/areas/jumeirah-village-circle` → 308 ✓; **`/areas/jvc` → 404** | Only breadcrumb *variant* slugs redirect. Common nicknames (`jvc`, `jbr`, `jlt`) missing. |
+| **C** | Short community aliases not redirected | `/areas` → 308 `/communities` ✓; `/areas/jumeirah-village-circle` → 308 ✓; **`/areas/jvc` → 404** | Fixed in #204: `COMMUNITY_NICKNAME_ALIASES` → 308 EN+AR (`/areas` + `/communities`). |
 | **D** | No hub index for project/developer compare | `/compare-projects` and `/compare-developers` → **404** (pair URLs 200) | Hub content lives on `/compare` only; bare paths 404 for users who strip the pair. |
 | **E** | Developer PDP payload size | `/developers/emaar-properties` ≈ **3.5 MB** HTML | Likely full project grid SSR; cold TTFB risk (related to prior developer-cache work, residual). |
 
