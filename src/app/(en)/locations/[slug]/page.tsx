@@ -18,6 +18,9 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+// Unknown slugs are real 404s — content is defined at build time by LOCATION_GUIDES.
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return LOCATION_GUIDES.map((g) => ({ slug: g.slug }));
 }

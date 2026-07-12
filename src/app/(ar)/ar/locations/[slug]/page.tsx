@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
-import { getSiteUrl } from "@/lib/site-url";
+import { arMeta } from "@/lib/ar-meta";
+import { getLocationGuide } from "@/lib/location-guides";
 
-// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
 export { default, generateStaticParams } from "@/app/(en)/locations/[slug]/page";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const base = getSiteUrl();
-  const path = `/locations/${slug}`;
-  return { alternates: { canonical: `${base}/ar${path}`, languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` } } };
+  const guide = getLocationGuide(slug);
+  if (!guide) return arMeta({ path: `/locations/${slug}` });
+  return {
+    ...arMeta({ path: `/locations/${slug}` }),
+    title: guide.title,
+    description: guide.intro.slice(0, 160),
+  };
 }

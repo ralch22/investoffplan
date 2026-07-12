@@ -19,6 +19,9 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+// Unknown slugs are real 404s — content is defined at build time by COLLECTION_PAGES.
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return COLLECTION_PAGES.map((page) => ({ slug: page.slug }));
 }
