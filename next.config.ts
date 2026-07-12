@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+import { PROJECT_SLUG_REDIRECTS } from "./src/lib/project-slug-renames";
 
 // Top developers 404 on their short brand slug (e.g. /developers/emaar) when the
 // canonical detail route is the full slug. Permanent-redirect the aliases so the
@@ -29,6 +30,23 @@ const nextConfig: NextConfig = {
       { source: `/developers/${alias}`, destination: `/developers/${canonical}`, permanent: true },
       { source: `/ar/developers/${alias}`, destination: `/ar/developers/${canonical}`, permanent: true },
     ]);
+    // Known twin alias forms → permanent canonical PDPs (arthouse / emerge).
+    // Bare winner slugs are NOT redirected (no bait-and-switch). See
+    // src/lib/project-slug-renames.ts.
+    const projectSlugAliases = Object.entries(PROJECT_SLUG_REDIRECTS).flatMap(
+      ([alias, canonical]) => [
+        {
+          source: `/projects/${alias}`,
+          destination: `/projects/${canonical}`,
+          permanent: true,
+        },
+        {
+          source: `/ar/projects/${alias}`,
+          destination: `/ar/projects/${canonical}`,
+          permanent: true,
+        },
+      ],
+    );
     // Bare index paths with no page (only /collections/[slug] and
     // /reports/market/[slug] exist) 404 — send them to the nearest hub instead.
     const indexRedirects = [
@@ -38,7 +56,7 @@ const nextConfig: NextConfig = {
       { source: "/reports/market", destination: "/market-report", permanent: false },
       { source: "/ar/reports", destination: "/ar/market-report", permanent: false },
     ];
-    return [...devAliases, ...indexRedirects];
+    return [...devAliases, ...projectSlugAliases, ...indexRedirects];
   },
   // Removes the `x-powered-by: Next.js` fingerprint from every response.
   poweredByHeader: false,

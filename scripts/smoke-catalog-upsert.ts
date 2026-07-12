@@ -91,8 +91,10 @@ function makeCatalogUnit(
 }
 
 /**
- * Fixture with intentional duplicates:
- *  - project "p-1-dup" reuses slug "aaa" (duplicate slug → skipped)
+ * Fixture with intentional collisions:
+ *  - project "p-1-twin" reuses slug "aaa" with a DIFFERENT id → disambiguated
+ *    (kept as aaa-emaar / developer token), not dropped
+ *  - project "p-1" appears twice with the SAME id → true duplicate, second skipped
  *  - project "p-2" contains unit "u-1" already seen under "p-1" (duplicate unit id → skipped)
  *  - catalog unit "cu-1" appears twice (duplicate catalog unit id → skipped)
  *  - catalog unit "cu-orphan" points at a non-existent project (filtered out, not counted)
@@ -100,21 +102,27 @@ function makeCatalogUnit(
 function buildFixture(): CatalogFile {
   const p1 = makeProject("p-1", "aaa", [makeUnit("u-1"), makeUnit("u-2")]);
   const p2 = makeProject("p-2", "bbb", [makeUnit("u-3"), makeUnit("u-1")]);
-  const p1Dup = makeProject("p-1-dup", "aaa", [makeUnit("u-9")]);
+  // Different-id twin of p-1 (same scraped slug) — must be kept with a new slug.
+  const p1Twin = makeProject("p-1-twin", "aaa", [makeUnit("u-9")], {
+    developer: "Emaar",
+  });
+  // True same-id duplicate of p-1 — must be skipped.
+  const p1SameId = makeProject("p-1", "aaa", [makeUnit("u-10")]);
 
   return {
     version: 2,
     unitCount: 3,
-    projectCount: 2,
+    projectCount: 3,
     scrapedAt: "2026-07-08T00:00:00.000Z",
     cityCounts: [{ slug: "dubai", label: "Dubai", count: 2 }],
     developerSerpLinks: [{ title: "Emaar", path: "/developers/emaar" }],
     devList: [{ id: "emaar", name: "Emaar", slug: "emaar" }],
-    projects: [p1, p2, p1Dup],
+    projects: [p1, p2, p1Twin, p1SameId],
     units: [
       makeCatalogUnit("cu-1", "p-1", "aaa"),
       makeCatalogUnit("cu-2", "p-1", "aaa"),
       makeCatalogUnit("cu-3", "p-2", "bbb"),
+      makeCatalogUnit("cu-twin", "p-1-twin", "aaa"), // rewritten to disambiguated slug
       makeCatalogUnit("cu-1", "p-1", "aaa"), // duplicate catalog unit id
       makeCatalogUnit("cu-orphan", "p-does-not-exist", "zzz"), // orphaned → filtered
     ],
@@ -163,26 +171,57 @@ async function main() {
 
     const fixture = buildFixture();
 
-    // --- First upsert: duplicates must be skipped ---
+    // --- First upsert: twins kept (disambiguated), true same-id dups skipped ---
     const stats1 = await upsertCatalogFile(db, d1, fixture);
-    assert.equal(stats1.projects, 2, "expected 2 projects (duplicate slug skipped)");
+    assert.equal(
+      stats1.projects,
+      3,
+      "expected 3 projects (p-1, p-2, p-1-twin; same-id p-1 duplicate dropped)",
+    );
     assert.equal(
       stats1.skippedDuplicateSlugs,
       1,
-      "expected 1 skipped duplicate slug",
+      "expected 1 skipped same-id duplicate (not the different-id twin)",
     );
-    assert.equal(stats1.projectUnits, 3, "expected 3 project units (u-1 dup skipped)");
-    assert.equal(stats1.catalogUnits, 3, "expected 3 catalog units (cu-1 dup skipped, orphan filtered)");
+    // p-1 units u-1,u-2 + p-2 unit u-3 (u-1 dup skipped) + p-1-twin unit u-9
+    assert.equal(stats1.projectUnits, 4, "expected 4 project units (u-1 dup skipped)");
+    assert.equal(
+      stats1.catalogUnits,
+      4,
+      "expected 4 catalog units (cu-1..3 + cu-twin; cu-1 dup skipped, orphan filtered)",
+    );
     assert.equal(
       stats1.skippedDuplicateUnitIds,
       2,
       "expected 2 skipped duplicate unit ids (u-1 + cu-1)",
     );
 
+    // Twin must land under a distinct slug, not the winner's bare slug.
+    const twinRow = await d1
+      .prepare(`SELECT slug FROM projects WHERE id = ?`)
+      .bind("p-1-twin")
+      .first<{ slug: string }>();
+    assert.ok(twinRow, "p-1-twin must be inserted");
+    assert.notEqual(twinRow.slug, "aaa", "twin must not keep the colliding slug");
+    assert.match(
+      twinRow.slug,
+      /^aaa-/,
+      `twin slug should be disambiguated (got ${twinRow.slug})`,
+    );
+    const twinUnit = await d1
+      .prepare(`SELECT project_slug FROM catalog_units WHERE id = ?`)
+      .bind("cu-twin")
+      .first<{ project_slug: string }>();
+    assert.equal(
+      twinUnit?.project_slug,
+      twinRow.slug,
+      "catalog unit project_slug must follow disambiguated project slug",
+    );
+
     const counts1 = await countRows(d1);
-    assert.equal(counts1.projects, 2, "db should hold 2 project rows");
-    assert.equal(counts1.project_units, 3, "db should hold 3 project_unit rows");
-    assert.equal(counts1.catalog_units, 3, "db should hold 3 catalog_unit rows");
+    assert.equal(counts1.projects, 3, "db should hold 3 project rows (winner + twin + p-2)");
+    assert.equal(counts1.project_units, 4, "db should hold 4 project_unit rows");
+    assert.equal(counts1.catalog_units, 4, "db should hold 4 catalog_unit rows");
 
     // --- Second upsert of identical data: must be idempotent ---
     const stats2 = await upsertCatalogFile(db, d1, fixture);
@@ -245,7 +284,7 @@ async function main() {
     );
 
     console.log(
-      "[smoke:catalog-upsert] PASS — duplicates skipped, upsert idempotent, updates applied in place, first_seen_at survives",
+      "[smoke:catalog-upsert] PASS — twins disambiguated, same-id dups skipped, upsert idempotent, updates applied in place, first_seen_at survives",
     );
   } finally {
     await mf.dispose();
