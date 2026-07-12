@@ -45,8 +45,8 @@ export async function CompareDevelopersIndexContent({
       <div className="mx-auto max-w-[1200px] px-5 pt-6 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Compare", href: "/compare" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.tabs.compare, href: "/compare" },
             { label: t.breadcrumb },
           ]}
         />

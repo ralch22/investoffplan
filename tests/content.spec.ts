@@ -232,4 +232,16 @@ test.describe("Content routes", () => {
     expect(html).not.toMatch(/<title>Understanding Payment Plans/i);
     expect(html).not.toMatch(/>Understanding Payment Plans</);
   });
+  // #263 — AR compare hubs: breadcrumbs use dict labels (not raw EN Home/Compare).
+  test("AR compare-projects breadcrumbs are Arabic", async ({ page }) => {
+    const res = await page.goto("/ar/compare-projects", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    // Breadcrumb nav should not keep hardcoded EN Home as the link text.
+    expect(html).not.toMatch(/aria-label="[^"]*"[^>]*>[\s\S]*?>Home</i);
+    expect(html).toMatch(/الرئيسية/);
+  });
+
 });
