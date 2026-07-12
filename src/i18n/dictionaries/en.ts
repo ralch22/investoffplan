@@ -559,6 +559,26 @@ const dict = {
     "unitTypes": "Unit types",
     "compareWith": "Compare {name} with:",
     "faqHeading": "{name} FAQ",
+    "generatedFaqs": {
+      "priceQ": [
+        "What do apartments at {name} cost?",
+        "What are launch prices at {name}?",
+        "How much does a unit in {name} cost?"
+      ],
+      "priceA": "Launch prices at {name} start from AED {price}{bedsClause}. Unit-level pricing for every available layout is listed in the unit table above, refreshed weekly from live inventory.",
+      "bedsClause": " for {beds} residences",
+      "handoverQ": "When will {name} be completed?",
+      "handoverA": "{name} by {developer} has a published handover target of {handover}. Off-plan completion dates can move — the timeline section above reflects the developer's latest stated schedule.",
+      "paymentQ": "What payment plan is offered at {name}?",
+      "paymentA": "The published structure is {plan}{postHandover}. Use the payment calculator on this page to model the instalments against your budget.",
+      "paymentPostHandover": ", which includes a post-handover component — part of the price is paid after you receive the keys",
+      "goldenQ": "Does buying in {name} qualify for a UAE Golden Visa?",
+      "goldenAAbove": "Entry pricing at {name} is at or above the AED 2M property threshold commonly used for 10-year Golden Visa eligibility. Confirm current criteria and documentation with the relevant authority before structuring a purchase around the visa.",
+      "goldenABelow": "Units from AED {price} sit below the AED 2M Golden Visa threshold, but higher-priced layouts in the project may qualify. Eligibility rules evolve — verify current criteria before committing.",
+      "developerQ": "Who is the developer behind {name}?",
+      "developerA": "{name} is developed by {developer} in {area}, {city}. See the developer page for their full off-plan portfolio and track record on this platform.",
+      "bedsRange": "{min} to {max}"
+    },
     "moreInCity": "More in {city}",
     "cta": {
       "watchVideo": "Watch video",
