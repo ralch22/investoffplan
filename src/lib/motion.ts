@@ -12,17 +12,25 @@ export const cardSpring: Transition = {
 };
 
 /**
- * Unified scroll-reveal for every project card. Cards fade + rise into view
- * once, staggered by their index so a grid animates in sequence instead of
- * firing all at once. The `y` offset is a transform (no layout shift → no CLS),
- * and MotionConfig reducedMotion="user" neutralises it for reduced-motion users.
+ * Unified scroll-reveal for every project card.
+ *
+ * IMPORTANT: `initial.opacity` must stay 1 (or omit opacity). Framer Motion
+ * serialises `initial` into SSR HTML — `opacity: 0` left the SERP looking blank
+ * whenever hydrate was slow, blocked, or `whileInView` never fired (investoffplan.com/projects
+ * incident, 2026-07-13). Only the translateY is animated so cards are always readable.
+ *
+ * MotionConfig reducedMotion="user" still neutralises motion for a11y users.
  */
 export function cardEntrance(index = 0) {
   return {
-    initial: { opacity: 0, y: 24 },
+    initial: { opacity: 1, y: 16 },
     whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-50px" },
-    transition: { duration: 0.5, delay: index * 0.06, ease: "easeOut" },
+    viewport: { once: true, amount: 0.12 },
+    transition: {
+      duration: 0.45,
+      delay: Math.min(index, 10) * 0.05,
+      ease: "easeOut",
+    },
   } as const;
 }
 
