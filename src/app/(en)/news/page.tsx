@@ -3,7 +3,11 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { getNewsArticles } from "@/content/articles";
+import {
+  articleDescription,
+  articleTitle,
+  getNewsArticles,
+} from "@/content/articles";
 import { getHeroImage } from "@/lib/area-images";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
@@ -72,11 +76,11 @@ export default async function NewsPage({
               </p>
               <h2 className="mt-2 text-2xl font-semibold md:text-3xl">
                 <Link href={lp(`/news/${featured.slug}`)} className="hover:text-brand">
-                  {featured.title}
+                  {articleTitle(featured, locale)}
                 </Link>
               </h2>
               <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/85">
-                {featured.description}
+                {articleDescription(featured, locale)}
               </p>
               <Link
                 href={lp(`/news/${featured.slug}`)}
@@ -102,7 +106,7 @@ export default async function NewsPage({
                 </p>
                 <h3 className="mt-1 text-lg font-semibold leading-snug">
                   <Link href={lp(`/news/${article.slug}`)} className="hover:text-brand">
-                    {article.title}
+                    {articleTitle(article, locale)}
                   </Link>
                 </h3>
                 <Link
