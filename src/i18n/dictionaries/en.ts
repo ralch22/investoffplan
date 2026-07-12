@@ -1224,7 +1224,10 @@ const dict = {
       "hubHeading": "Compare communities",
       "hubSubtitle": "Side-by-side on real 2025 sold prices, price per sqft, and gross rental yields.",
       "allProjectComparisons": "All project comparisons →",
-      "allDeveloperComparisons": "All developer comparisons →"
+      "allDeveloperComparisons": "All developer comparisons →",
+      "unitsHeading": "Compare units",
+      "unitsSubtitle": "Pick up to three unit types from any projects and line them up — price, size, handover, and payment plans.",
+      "unitsCta": "Open the unit comparator"
     },
     "compareProjectsIndex": {
       "heroTitle": "Compare projects",

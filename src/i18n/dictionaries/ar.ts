@@ -1226,7 +1226,10 @@ export const ar: Dict = {
       "hubHeading": "قارن المجتمعات",
       "hubSubtitle": "مقارنة جنبًا إلى جنب بناءً على أسعار البيع الفعلية لعام 2025، سعر القدم المربعة، والعوائد الإيجارية الإجمالية.",
       "allProjectComparisons": "كل مقارنات المشاريع ←",
-      "allDeveloperComparisons": "كل مقارنات المطوّرين ←"
+      "allDeveloperComparisons": "كل مقارنات المطوّرين ←",
+      "unitsHeading": "قارن الوحدات",
+      "unitsSubtitle": "اختر حتى ثلاثة أنواع وحدات من أي مشاريع وقارنها جنباً إلى جنب — السعر، المساحة، التسليم، وخطط السداد.",
+      "unitsCta": "افتح مقارنة الوحدات"
     },
     "compareProjectsIndex": {
       "heroTitle": "قارن المشاريع",

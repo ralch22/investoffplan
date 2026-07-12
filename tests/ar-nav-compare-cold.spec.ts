@@ -118,6 +118,11 @@ test.describe("Compare cold path (promise cache)", () => {
     expect(html).toContain('lang="ar"');
     expect(html).toContain('dir="rtl"');
     expect(html.toLowerCase()).not.toContain('id="__next_error__"');
+    // #248 — unit-comparator band must not hardcode EN chrome on AR hub.
+    expect(html).not.toContain("Compare units");
+    expect(html).not.toContain("Open the unit comparator");
+    expect(html).toContain("قارن الوحدات");
+    expect(html).toContain("افتح مقارنة الوحدات");
   });
 
   // Issue #205 — bare pair-index paths must not 404 (live audit D).

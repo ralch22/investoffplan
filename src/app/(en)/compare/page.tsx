@@ -163,14 +163,12 @@ export async function CompareHubPageContent({
       <section className="bg-surface-darker py-16 text-white">
         <div className="mx-auto max-w-[1200px] px-5 md:px-8">
           <h2 className="font-display text-3xl font-semibold md:text-4xl">
-            Compare units<span className="text-brand">.</span>
+            {t.unitsHeading}
+            <span className="text-brand">.</span>
           </h2>
-          <p className="mt-3 max-w-xl text-white/80">
-            Pick up to three unit types from any projects and line them up — price, size,
-            handover, and payment plans.
-          </p>
+          <p className="mt-3 max-w-xl text-white/80">{t.unitsSubtitle}</p>
           <PrimaryButton href={localePath(locale, "/compare/units")} className="mt-6">
-            Open the unit comparator
+            {t.unitsCta}
           </PrimaryButton>
         </div>
       </section>
