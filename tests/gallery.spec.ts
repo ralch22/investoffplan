@@ -38,8 +38,10 @@ test.describe("Project gallery", () => {
     const next = card.getByRole("button", { name: "Next photo" });
     if (await next.isVisible()) {
       await next.click();
-      // Counter is plain text (not aria-live — cookie banner owns that role).
-      await expect(card.getByText(/^2\s*\/\s*\d+$/)).toBeVisible();
+      // Card overlay counter (not lightbox — both can match "2 / N" under the article).
+      await expect(
+        card.locator("div.absolute.bottom-2").filter({ hasText: /^\d+\s*\/\s*\d+$/ }),
+      ).toHaveText(/^2\s*\/\s*\d+$/);
     }
 
     await card.getByRole("button", { name: /photos fullscreen/i }).click();
