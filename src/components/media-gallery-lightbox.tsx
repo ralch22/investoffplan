@@ -34,11 +34,18 @@ export function MediaGalleryLightbox({
   const count = images.length;
   const currentSrc = images[active];
 
+  // Mount only while open. A closed lightbox used to still SSR/hydrate a
+  // next/image with priority on every card (SERP PAGE_SIZE=24 → 24 preloads
+  // racing the real LCP hero). Unmounting removes those preloads from the
+  // critical path on home, /projects, and PDP.
   useEffect(() => {
+    if (!open) return;
     const dialog = dialogRef.current;
     if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
-    else if (!open && dialog.open) dialog.close();
+    if (!dialog.open) dialog.showModal();
+    return () => {
+      if (dialog.open) dialog.close();
+    };
   }, [open]);
 
   useEffect(() => {
@@ -70,7 +77,7 @@ export function MediaGalleryLightbox({
     touchStartX.current = null;
   }
 
-  if (!count || !currentSrc) return null;
+  if (!open || !count || !currentSrc) return null;
 
   return (
     <dialog
@@ -121,6 +128,7 @@ export function MediaGalleryLightbox({
               fill
               className="object-contain"
               sizes="100vw"
+              // Safe: tree only mounts while the user has opened the lightbox.
               priority
               {...unoptimizedProp(currentSrc)}
             />
