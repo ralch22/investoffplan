@@ -9,6 +9,9 @@
   --surface-darker: #121312;
   --border: #e5e5e5;
   --border-strong: #d4d4d4;
+  /* Form control borders need ≥3:1 vs white (WCAG 1.4.11). #949494 ≈ 3.0:1. */
+  --input-border: #949494;
+  --input-border-strong: #737373;
   --brand: #e60000;
   --brand-dark: #cc0000;
   --brand-light: #ff3333;
@@ -181,7 +184,7 @@ h3 {
   height: 3rem;
   width: 100%;
   border-radius: var(--radius-lg);
-  border: 1px solid var(--border);
+  border: 1px solid var(--input-border);
   background: var(--surface);
   padding-inline: 1rem;
   font-size: 0.875rem;
@@ -206,7 +209,7 @@ h3 {
 }
 
 .iop-input:hover {
-  border-color: var(--border-strong);
+  border-color: var(--input-border-strong);
 }
 
 .iop-input:focus {
@@ -291,7 +294,7 @@ h3 {
 
 .skip-link {
   position: absolute;
-  left: 1rem;
+  inset-inline-start: 1rem;
   top: -100%;
   z-index: var(--z-modal);
   border-radius: var(--radius-full);
@@ -306,6 +309,12 @@ h3 {
 .skip-link:focus {
   top: 1rem;
   outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* Dark surfaces (lightbox, transparent header controls): white focus ring. */
+.focus-ring-light:focus-visible {
+  outline: 2px solid #fff;
   outline-offset: 2px;
 }
 

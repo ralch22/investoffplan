@@ -417,7 +417,8 @@ export default async function ProjectDetailPage({
         </div>
       </section>
 
-      <main className="mx-auto max-w-[1200px] px-5 py-8 pb-28 md:px-8 md:pb-8">
+      {/* PageShell owns the single <main> landmark — avoid nested mains (WCAG 1.3.1). */}
+      <section className="mx-auto max-w-[1200px] px-5 py-8 pb-28 md:px-8 md:pb-8">
         <Breadcrumbs
           items={[
             { label: dict.common.home, href: "/" },
@@ -648,7 +649,7 @@ export default async function ProjectDetailPage({
             />
           </aside>
         </div>
-      </main>
+      </section>
     </PageShell>
   );
 }

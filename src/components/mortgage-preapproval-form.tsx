@@ -114,7 +114,7 @@ export function MortgagePreapprovalForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-2xl border border-border bg-surface-alt p-6 text-center">
+      <div role="status" className="rounded-2xl border border-border bg-surface-alt p-6 text-center">
         <p className="font-semibold text-text-dark">{f.successTitle}</p>
         <p className="mt-2 text-sm text-muted">{f.successBody}</p>
       </div>
@@ -126,48 +126,73 @@ export function MortgagePreapprovalForm() {
       <HoneypotField value={honeypot} onChange={setHoneypot} />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
+          <label htmlFor="preapproval-name" className="mb-1.5 block text-sm font-medium text-text-dark">
+            {f.namePlaceholder}
+          </label>
           <input
+            id="preapproval-name"
             type="text"
             placeholder={f.namePlaceholder}
-            aria-label={f.namePlaceholder}
             autoComplete="name"
             value={values.name}
             onChange={(e) => updateField("name", e.target.value)}
             aria-invalid={Boolean(errors.name)}
+            aria-describedby={errors.name ? "preapproval-name-error" : undefined}
             className={cn("iop-input", errors.name && "iop-input-error")}
           />
-          {errors.name ? <p className="iop-field-error">{errors.name}</p> : null}
+          {errors.name ? (
+            <p id="preapproval-name-error" role="alert" className="iop-field-error">
+              {errors.name}
+            </p>
+          ) : null}
         </div>
         <div>
+          <label htmlFor="preapproval-phone" className="mb-1.5 block text-sm font-medium text-text-dark">
+            {f.phonePlaceholder}
+          </label>
           <input
+            id="preapproval-phone"
             type="tel"
             placeholder={f.phonePlaceholder}
-            aria-label={f.phonePlaceholder}
             autoComplete="tel"
             value={values.phone}
             onChange={(e) => updateField("phone", e.target.value)}
             aria-invalid={Boolean(errors.phone)}
+            aria-describedby={errors.phone ? "preapproval-phone-error" : undefined}
             className={cn("iop-input", errors.phone && "iop-input-error")}
           />
-          {errors.phone ? <p className="iop-field-error">{errors.phone}</p> : null}
+          {errors.phone ? (
+            <p id="preapproval-phone-error" role="alert" className="iop-field-error">
+              {errors.phone}
+            </p>
+          ) : null}
         </div>
       </div>
       <div>
+        <label htmlFor="preapproval-email" className="mb-1.5 block text-sm font-medium text-text-dark">
+          {f.emailPlaceholder}
+        </label>
         <input
+          id="preapproval-email"
           type="email"
           placeholder={f.emailPlaceholder}
-          aria-label={f.emailPlaceholder}
           autoComplete="email"
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
           aria-invalid={Boolean(errors.email)}
+          aria-describedby={errors.email ? "preapproval-email-error" : undefined}
           className={cn("iop-input", errors.email && "iop-input-error")}
         />
-        {errors.email ? <p className="iop-field-error">{errors.email}</p> : null}
+        {errors.email ? (
+          <p id="preapproval-email-error" role="alert" className="iop-field-error">
+            {errors.email}
+          </p>
+        ) : null}
       </div>
-      <label className="block text-sm font-semibold text-text-dark">
+      <label htmlFor="preapproval-budget" className="block text-sm font-semibold text-text-dark">
         {f.budgetLabel}
         <select
+          id="preapproval-budget"
           value={values.budget}
           onChange={(e) => updateField("budget", e.target.value)}
           className="iop-input mt-1"
@@ -180,7 +205,11 @@ export function MortgagePreapprovalForm() {
         </select>
       </label>
       <TurnstileField onToken={setTurnstileToken} action="mortgage-preapproval" resetSignal={turnstileReset} />
-      {guardError ? <p className="iop-field-error">{guardError}</p> : null}
+      {guardError ? (
+        <p role="alert" className="iop-field-error">
+          {guardError}
+        </p>
+      ) : null}
       <PrimaryButton type="submit" disabled={submitting} className="w-full">
         {submitting ? dict.common.submitting : f.cta}
       </PrimaryButton>

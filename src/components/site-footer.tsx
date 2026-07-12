@@ -123,7 +123,20 @@ export function SiteFooter() {
                 instagram.com / linkedin.com homepages (placeholders). Re-add
                 only with real brand profile URLs. */}
             <div className="flex flex-wrap gap-5">
-              <span dir="ltr">{interpolate(dict.footer.contact.telephone, { phone: "+971 44 321 620" })}</span>
+              <span>
+                {(() => {
+                  // Only the number is LTR so Arabic "الهاتف:" stays in document order (WCAG 3.1.2 / U5).
+                  const [before = "", after = ""] =
+                    dict.footer.contact.telephone.split("{phone}");
+                  return (
+                    <>
+                      {before}
+                      <span dir="ltr">+971 44 321 620</span>
+                      {after}
+                    </>
+                  );
+                })()}
+              </span>
               <span>{interpolate(dict.footer.contact.email, { email: "info@investoffplan.com" })}</span>
               <span>{dict.footer.contact.address}</span>
               {/* Renders nothing until real ORN/DED numbers land in src/content/trust.ts */}

@@ -88,12 +88,20 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
     "h-12 w-full rounded-full border px-5 text-sm outline-none transition",
     dark
       ? "border-white/20 bg-white/10 text-white placeholder:text-white/50 focus:border-white/50 focus:ring-2 focus:ring-white/20"
-      : "border-border bg-white text-text-dark placeholder:text-muted focus:border-brand focus:ring-2 focus:ring-brand/20",
+      : // input-border (#949494) meets WCAG 1.4.11 ≥3:1 against white (audit P6).
+        "border-[var(--input-border)] bg-white text-text-dark placeholder:text-muted focus:border-brand focus:ring-2 focus:ring-brand/20",
   );
 
   if (submitted) {
     return (
-      <div className={cn("mt-5 rounded-xl p-4 text-center text-sm", dark ? "bg-white/10 text-white/90" : "bg-brand/10 text-brand")}>
+      <div
+        role="status"
+        className={cn(
+          "mt-5 rounded-xl p-4 text-center text-sm",
+          // brand-dark on brand/10 clears 4.5:1; plain brand on 12% red fill fails (audit P3).
+          dark ? "bg-white/10 text-white/90" : "bg-brand/10 text-brand-dark",
+        )}
+      >
         {t.successPrefix}{" "}
         <span className="font-semibold">{values.email.trim()}</span>
         {t.successSuffix}
@@ -112,6 +120,7 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
       <div className="grid grid-cols-2 gap-3">
         <div>
           <input
+            id="newsletter-name"
             type="text"
             placeholder={t.namePlaceholder}
             aria-label={t.nameLabel}
@@ -119,11 +128,17 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
             value={values.name}
             onChange={(e) => updateField("name", e.target.value)}
             aria-invalid={Boolean(errors.name)}
-            className={cn(inputCls, errors.name && "border-red-400")}
+            aria-describedby={errors.name ? "newsletter-name-error" : undefined}
+            className={cn(inputCls, errors.name && "border-brand")}
           />
-          {errors.name ? <p role="alert" className="iop-field-error px-2">{errors.name}</p> : null}
+          {errors.name ? (
+            <p id="newsletter-name-error" role="alert" className="iop-field-error px-2">
+              {errors.name}
+            </p>
+          ) : null}
         </div>
         <input
+          id="newsletter-phone"
           type="tel"
           placeholder={t.phonePlaceholder}
           aria-label={t.phoneLabel}
@@ -135,6 +150,7 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
       </div>
       <div>
         <input
+          id="newsletter-email"
           type="email"
           placeholder={t.emailPlaceholder}
           aria-label={t.emailLabel}
@@ -142,9 +158,14 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
           aria-invalid={Boolean(errors.email)}
-          className={cn(inputCls, errors.email && "border-red-400")}
+          aria-describedby={errors.email ? "newsletter-email-error" : undefined}
+          className={cn(inputCls, errors.email && "border-brand")}
         />
-        {errors.email ? <p role="alert" className="iop-field-error px-2">{errors.email}</p> : null}
+        {errors.email ? (
+          <p id="newsletter-email-error" role="alert" className="iop-field-error px-2">
+            {errors.email}
+          </p>
+        ) : null}
       </div>
       <label className={cn("flex cursor-pointer items-center gap-2 text-xs", dark ? "text-white/70" : "text-muted")}>
         <input
@@ -157,7 +178,10 @@ export function NewsletterForm({ dark = false }: NewsletterFormProps) {
       </label>
       <TurnstileField onToken={setTurnstileToken} action="newsletter" resetSignal={turnstileReset} />
       {guardError ? (
-        <p className={cn("px-2 text-xs font-medium", dark ? "text-red-300" : "text-red-600")}>
+        <p
+          role="alert"
+          className={cn("px-2 text-xs font-medium", dark ? "text-red-300" : "iop-field-error")}
+        >
           {guardError}
         </p>
       ) : null}

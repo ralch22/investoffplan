@@ -83,14 +83,18 @@ export function MediaGalleryLightbox({
         <div className="flex items-center justify-between gap-4 px-4 py-3 text-white md:px-6">
           <p className="text-sm font-medium">
             <span className="font-semibold">{alt}</span>
-            <span className="ms-2 tabular-nums text-white/70">
+            <span
+              className="ms-2 tabular-nums text-white/70"
+              aria-live="polite"
+              aria-atomic="true"
+            >
               {active + 1} / {count}
             </span>
           </p>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20"
+            className="focus-ring-light inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20"
             aria-label="Close gallery"
           >
             <CloseIcon />
@@ -120,7 +124,7 @@ export function MediaGalleryLightbox({
               <button
                 type="button"
                 onClick={onPrev}
-                className="absolute start-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 md:start-6"
+                className="focus-ring-light absolute start-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 md:start-6"
                 aria-label="Previous photo"
               >
                 <ChevronIcon direction="left" />
@@ -128,7 +132,7 @@ export function MediaGalleryLightbox({
               <button
                 type="button"
                 onClick={onNext}
-                className="absolute end-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 md:end-6"
+                className="focus-ring-light absolute end-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 md:end-6"
                 aria-label="Next photo"
               >
                 <ChevronIcon direction="right" />
@@ -145,15 +149,16 @@ export function MediaGalleryLightbox({
                   key={`lb-thumb-${i}-${src}`}
                   type="button"
                   aria-label={`Show image ${i + 1} of ${count}`}
+                  aria-current={i === active ? "true" : undefined}
                   onClick={() => onSelect(i)}
                   className={cn(
-                    "relative h-14 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition",
+                    "focus-ring-light relative h-14 w-20 shrink-0 overflow-hidden rounded-lg border-2 transition",
                     i === active
                       ? "border-white"
                       : "border-transparent opacity-60 hover:opacity-100",
                   )}
                 >
-                  <Image src={src} alt={`${alt} — photo ${i + 1}`} fill className="object-cover" sizes="80px" {...unoptimizedProp(src)} />
+                  <Image src={src} alt="" fill className="object-cover" sizes="80px" {...unoptimizedProp(src)} />
                 </button>
               ))}
             </div>

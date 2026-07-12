@@ -83,9 +83,22 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
     else if (!open && dialog.open) dialog.close();
   }, [open]);
 
+  // Escape fires native `cancel`; sync to React so the open-effect doesn't re-open.
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const handleCancel = (e: Event) => {
+      e.preventDefault();
+      onClose();
+    };
+    dialog.addEventListener("cancel", handleCancel);
+    return () => dialog.removeEventListener("cancel", handleCancel);
+  }, [onClose]);
+
   return (
     <dialog
       ref={dialogRef}
+      aria-label={dict.a11y.mobileNav}
       onClose={onClose}
       onClick={(e) => {
         if (e.target === dialogRef.current) onClose();
@@ -93,7 +106,10 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
       className="fixed inset-0 z-[var(--z-overlay)] m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-surface-darker/60 backdrop:backdrop-blur-sm lg:hidden"
     >
       {open ? (
-        <nav className="drawer-in absolute end-0 top-0 flex h-full w-[min(100%,20rem)] flex-col bg-surface shadow-elevation-lg">
+        <nav
+          aria-label={dict.a11y.mobileNav}
+          className="drawer-in absolute end-0 top-0 flex h-full w-[min(100%,20rem)] flex-col bg-surface shadow-elevation-lg"
+        >
           <div className="flex items-center justify-between border-b border-border px-5 py-4">
             <BrandLogo variant="horizontal-dark" className="h-7 w-auto" />
             <button
