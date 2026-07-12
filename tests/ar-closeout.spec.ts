@@ -26,6 +26,36 @@ test.describe("AR close-out", () => {
     expect(html).toContain("شقق");
   });
 
+  // Residual AR content-leak (#233): home hero chips + WhatsApp via dictionaries.
+  test("/ar hero residual chrome is Arabic (popular, chips, WhatsApp)", async ({
+    page,
+  }) => {
+    const response = await page.goto("/ar", { waitUntil: "commit" });
+    expect(response?.status()).toBe(200);
+    const html = await response!.text();
+    expect(html).toContain("الأكثر بحثاً:");
+    expect(html).toContain("فلل");
+    expect(html).toContain("أقل من مليون درهم");
+    expect(html).toContain("واتساب");
+    // EN residual defaults must not win on /ar.
+    expect(html).not.toContain(">Popular:<");
+    expect(html).not.toContain(">WhatsApp<");
+    expect(html).not.toContain(">Under AED 1M<");
+  });
+
+  // Residual: residential tools form labels from dict (not hard-coded EN).
+  test("/ar/tools/residential residual form chrome is Arabic", async ({ page }) => {
+    const response = await page.goto("/ar/tools/residential", {
+      waitUntil: "commit",
+    });
+    expect(response?.status()).toBe(200);
+    const html = await response!.text();
+    expect(html).toContain("ابحث عن مشروع");
+    expect(html).toContain("كل المناطق");
+    expect(html).not.toContain(">All areas<");
+    expect(html).not.toContain(">Search project<");
+  });
+
   test("/ar/tools/roi returns 200", async ({ page }) => {
     const response = await page.goto("/ar/tools/roi", { waitUntil: "commit" });
     expect(response?.status()).toBe(200);

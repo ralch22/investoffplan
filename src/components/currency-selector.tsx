@@ -2,6 +2,7 @@
 
 import type { CurrencyCode } from "@/lib/types";
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface CurrencySelectorProps {
   value: CurrencyCode;
@@ -16,6 +17,7 @@ export function CurrencySelector({
   onChange,
   className,
 }: CurrencySelectorProps) {
+  const { dict } = useI18n();
   return (
     <div
       className={cn(
@@ -23,7 +25,7 @@ export function CurrencySelector({
         className,
       )}
       role="group"
-      aria-label="Currency"
+      aria-label={dict.nav.drawer.currency}
     >
       {OPTIONS.map((code) => (
         <button
