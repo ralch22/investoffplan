@@ -187,7 +187,7 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
                       <td className="px-3 py-2.5 text-end">
                         {row.hasReport && row.slug ? (
                           <Link
-                            href={`/reports/market/${row.slug}`}
+                            href={lp(`/reports/market/${row.slug}`)}
                             className="text-xs font-semibold text-brand hover:text-brand-dark"
                           >
                             {t.viewReport}
@@ -362,7 +362,7 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
               {data.reportLinks.map((r) => (
                 <Link
                   key={r.slug}
-                  href={`/reports/market/${r.slug}`}
+                  href={lp(`/reports/market/${r.slug}`)}
                   className="iop-btn-press focus-ring rounded-full border border-border bg-white px-4 py-1.5 text-sm font-medium text-text-dark transition hover:border-brand hover:text-brand"
                 >
                   {r.name}

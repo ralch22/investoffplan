@@ -130,4 +130,26 @@ test.describe("Content routes", () => {
     expect(body).toMatch(/Dubai Marina/i);
     expect(body).toMatch(/Jumeirah Village Circle/i);
   });
+
+  // #245 — AR market-report hub must keep community print reports in /ar.
+  test("AR market-report hub links stay on /ar/reports/market/*", async ({
+    page,
+  }) => {
+    const res = await page.goto("/ar/market-report", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    expect(html).toMatch(/href="\/ar\/reports\/market\/[a-z0-9-]+"/);
+    // Must not bounce Arabic users onto bare EN report paths.
+    expect(html).not.toMatch(/href="\/reports\/market\/[a-z0-9-]+"/);
+
+    const arReport = html.match(/href="(\/ar\/reports\/market\/[a-z0-9-]+)"/)?.[1];
+    expect(arReport).toBeTruthy();
+    const reportRes = await page.goto(arReport!, {
+      waitUntil: "domcontentloaded",
+    });
+    expect(reportRes?.ok()).toBeTruthy();
+    expect(page.url()).toContain("/ar/reports/market/");
+  });
 });
