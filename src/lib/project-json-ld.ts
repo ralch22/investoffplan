@@ -155,7 +155,6 @@ export function buildProjectBreadcrumbJsonLd(opts: {
         "@type": "ListItem",
         position: 3,
         name: opts.projectName,
-        item: opts.projectUrl,
       },
     ],
   };

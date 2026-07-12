@@ -23,6 +23,22 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
     Projects: dict.nav.projects,
     Developers: dict.nav.developers,
     Communities: dict.nav.areas,
+    "Data toolkit": dict.nav.dataToolkit,
+    FAQ: dict.nav.faq,
+    Guides: dict.nav.guides,
+    News: dict.nav.news,
+    Favorites: dict.nav.favorites,
+    Compare: dict.nav.tabs.compare,
+    "Location guides": dict.nav.mega.locationGuides,
+    "Investor Match": dict.tools.investorMatch.breadcrumb,
+    Mortgage: dict.nav.mortgage,
+    "Price map": dict.nav.priceMap,
+    "Rent vs buy": dict.nav.rentVsBuy,
+    "ROI estimator": dict.nav.roiEstimator,
+    "Residential insights": dict.nav.residentialInsights,
+    "Community insights": dict.nav.communityInsights,
+    "Cookie policy": dict.nav.cookiePolicy,
+    "Privacy policy": dict.nav.privacyPolicy,
   };
   const label = (item: BreadcrumbItem) =>
     STATIC_LABELS[item.label] ?? item.label;

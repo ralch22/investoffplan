@@ -16,7 +16,8 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     return new Response("Not Found", { status: 404 });
   }
 
-  const minPrice = Math.min(...project.units.map((u) => u.launchPriceAed));
+  const pricedUnits = project.units.filter((u) => u.launchPriceAed > 0);
+  const minPrice = pricedUnits.length ? Math.min(...pricedUnits.map((u) => u.launchPriceAed)) : 0;
   const baseUrl = getSiteUrl();
   const backgroundImage = project.imageUrl 
     ? (project.imageUrl.startsWith("http") ? project.imageUrl : `${baseUrl}${project.imageUrl.startsWith("/") ? "" : "/"}${project.imageUrl}`)
@@ -107,8 +108,12 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           
           <div style={{ display: "flex", alignItems: "center", fontSize: "32px", color: "#ddd" }}>
             <span>{project.area}</span>
-            <span style={{ margin: "0 16px", color: "#E60000" }}>•</span>
-            <span>From {formatPrice(minPrice, "AED")}</span>
+            {minPrice > 0 && (
+              <>
+                <span style={{ margin: "0 16px", color: "#E60000" }}>•</span>
+                <span>From {formatPrice(minPrice, "AED")}</span>
+              </>
+            )}
             {project.paymentPlan && (
               <>
                 <span style={{ margin: "0 16px", color: "#E60000" }}>•</span>

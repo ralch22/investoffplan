@@ -80,7 +80,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const project = await getProjectBySlug(slug);
   if (!project) return { title: "Project not found" };
 
-  const enrichment = getEnrichment(slug);
   const minPriceMeta = Math.min(...project.units.map((u) => u.launchPriceAed).filter((v) => v > 0));
   // Clean composition: PF names often end "By {developer}" (doubling), the
   // raw area string contains the project name, and project.city is the
@@ -98,13 +97,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     .filter(Boolean)
     .join(" — ")
     .slice(0, 158);
-
-  const imageUrl = project.imageUrl ?? project.imageGallery?.[0];
-  const absoluteImage = imageUrl
-    ? imageUrl.startsWith("http")
-      ? imageUrl
-      : `${getSiteUrl()}${imageUrl.startsWith("/") ? "" : "/"}${imageUrl}`
-    : `${getSiteUrl()}/brand/icon-red.png`;
 
   // Keyword-rich title: project name (strong navigational demand) + "off-plan"
   // (category) + community/city (location). Front-loaded so it survives SERP
@@ -164,6 +156,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     alternates: {
       canonical: `${getSiteUrl()}/projects/${slug}`,
       languages: {
+        "x-default": `${getSiteUrl()}/projects/${slug}`,
         en: `${getSiteUrl()}/projects/${slug}`,
         ar: `${getSiteUrl()}/ar/projects/${slug}`,
       },
@@ -173,20 +166,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       type: "website",
       url: `${getSiteUrl()}/projects/${slug}`,
-      images: [
-        {
-          url: absoluteImage,
-          width: 1200,
-          height: 630,
-          alt: project.name,
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: seoTitle,
       description,
-      images: [absoluteImage],
     },
   };
 }
@@ -254,9 +238,9 @@ export default async function ProjectDetailPage({
   const siteUrl = getSiteUrl();
   const projectUrl = `${siteUrl}/projects/${slug}`;
   const description =
-    stripHtml(project.descriptionUnique ?? "")?.slice(0, 300) ??
-    enrichment?.summary ??
-    stripHtml(project.description)?.slice(0, 300) ??
+    stripHtml(project.descriptionUnique ?? "")?.slice(0, 300) ||
+    enrichment?.summary ||
+    stripHtml(project.description)?.slice(0, 300) ||
     `${project.name} by ${project.developer} in ${project.area}.`;
 
   const jsonLd = buildProjectJsonLd({
