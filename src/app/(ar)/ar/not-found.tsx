@@ -24,7 +24,7 @@ export default function ArabicNotFound() {
           المخزون الكامل بدلاً من ذلك.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <PrimaryButton href="/projects">تصفّح المشاريع</PrimaryButton>
+          <PrimaryButton href="/ar/projects">تصفّح المشاريع</PrimaryButton>
           <LocaleLink
             href="/"
             className="iop-btn-press focus-ring inline-flex items-center rounded-full border border-border px-6 py-3 text-sm font-semibold text-muted hover:border-brand hover:text-brand"
