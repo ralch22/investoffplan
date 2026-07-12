@@ -162,4 +162,17 @@ test.describe("Content routes", () => {
     expect(reportRes?.ok()).toBeTruthy();
     expect(page.url()).toContain("/ar/reports/market/");
   });
+
+  // #252 — AR FAQ hub hero + topic cards must not stay English.
+  test("AR FAQ hub H1 and topic cards are Arabic", async ({ page }) => {
+    const res = await page.goto("/ar/faq", { waitUntil: "domcontentloaded" });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    // SSR body — avoid live-DOM flakes from Turnstile/hydration.
+    expect(html).toMatch(/الأسئلة الشائعة/);
+    expect(html).not.toMatch(/Frequently Asked Questions/);
+    expect(html).not.toMatch(/Straight answers on buying off-plan/);
+    expect(html).toMatch(/أساسيات العقارات على الخارطة/);
+    expect(html).not.toMatch(/>Off-Plan Basics</);
+  });
 });
