@@ -38,13 +38,13 @@ export function HomeFeaturedGrid({ latest, featured }: HomeFeaturedGridProps) {
               {dict.home.seeAll}
             </LocaleLink>
           </div>
+          {/* No priorityImage here — homepage LCP is only the full-bleed hero (#187). */}
           <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {latest.map((project, index) => (
               <ShowcaseProjectCard
                 index={index}
                 key={project.id}
                 project={project}
-                priorityImage={index === 0}
               />
             ))}
           </div>
@@ -71,7 +71,7 @@ export function HomeFeaturedGrid({ latest, featured }: HomeFeaturedGridProps) {
                 {dict.common.viewAll}
               </LocaleLink>
             </div>
-            {/* 1 hero + 4 support — a bento rhythm break, not two full-width slabs */}
+            {/* 1 hero + 4 support — layout only; no fetchpriority=high under the page hero */}
             <div className="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-3">
               <div className="lg:col-span-2">
                 <ShowcaseProjectCard
@@ -79,7 +79,6 @@ export function HomeFeaturedGrid({ latest, featured }: HomeFeaturedGridProps) {
                   featured
                   dark
                   index={0}
-                  priorityImage
                 />
               </div>
               {featured.slice(1, 5).map((project, i) => (

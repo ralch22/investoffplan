@@ -17,8 +17,13 @@ import { localePath, interpolate } from "@/i18n/config";
 
 interface ShowcaseProjectCardProps {
   project: Project;
+  /** Larger bento tile (layout only — does not affect image network priority). */
   featured?: boolean;
   dark?: boolean;
+  /**
+   * Opt-in LCP/preload for this card image. Keep false on the homepage so the
+   * full-bleed hero stays the sole fetchpriority=high candidate (#187).
+   */
   priorityImage?: boolean;
   index?: number;
 }
@@ -58,9 +63,15 @@ export function ShowcaseProjectCard({
             src={project.imageUrl}
             alt={project.name}
             fill
-            priority={priorityImage || featured}
-            fetchPriority={priorityImage || featured ? "high" : "auto"}
-            sizes={featured ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"}
+            // Network priority is independent of the visual `featured` layout
+            // so bento/hero styling never spawns extra fetchpriority=high races.
+            priority={priorityImage}
+            fetchPriority={priorityImage ? "high" : "auto"}
+            sizes={
+              featured
+                ? "(max-width: 1024px) 100vw, 66vw"
+                : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            }
             className="object-cover transition duration-500 group-hover:scale-[1.02]"
             {...unoptimizedProp(project.imageUrl)}
           />
