@@ -8,5 +8,5 @@ export async function generateMetadata({ params }: { params: Promise<{ topic: st
   const { topic } = await params;
   const base = getSiteUrl();
   const path = `/faq/${topic}`;
-  return { alternates: { canonical: `${base}/ar${path}`, languages: { en: `${base}${path}`, ar: `${base}/ar${path}` } } };
+  return { alternates: { canonical: `${base}/ar${path}`, languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` } } };
 }

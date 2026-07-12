@@ -24,7 +24,7 @@ export async function generateMetadata({
   const path = `/developers/${slug}`;
   const alternates = {
     canonical: `${base}/ar${path}`,
-    languages: { en: `${base}${path}`, ar: `${base}/ar${path}` },
+    languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` },
   };
   const developer = await getDeveloper(slug);
   if (!developer) return { title: "المطوّر غير موجود", alternates };

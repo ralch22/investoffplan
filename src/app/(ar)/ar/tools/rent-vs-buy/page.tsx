@@ -6,5 +6,5 @@ export { default } from "@/app/(en)/tools/rent-vs-buy/page";
 
 export const metadata: Metadata = (() => {
   const base = getSiteUrl();
-  return { alternates: { canonical: `${base}/ar/tools/rent-vs-buy`, languages: { en: `${base}/tools/rent-vs-buy`, ar: `${base}/ar/tools/rent-vs-buy` } } };
+  return { alternates: { canonical: `${base}/ar/tools/rent-vs-buy`, languages: { "x-default": `${base}/tools/rent-vs-buy`, en: `${base}/tools/rent-vs-buy`, ar: `${base}/ar/tools/rent-vs-buy` } } };
 })();

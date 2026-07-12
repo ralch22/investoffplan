@@ -187,10 +187,10 @@ export default async function DeveloperDetailPage({
         <div className="mx-auto max-w-[1200px] px-5 md:px-8">
           <div className="flex items-center justify-between gap-4">
             <h2 className="font-display text-2xl font-semibold text-text-dark md:text-3xl">
-              Other Developers
+              {dict.developers.otherDevelopers}
             </h2>
             <Link href={localePath(locale, "/developers")} className="text-sm font-semibold text-brand">
-              View all developers →
+              {dict.developers.viewAllDevelopers}
             </Link>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">

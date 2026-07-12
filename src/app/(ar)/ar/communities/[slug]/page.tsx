@@ -17,7 +17,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const path = `/communities/${slug}`;
   const alternates = {
     canonical: `${base}/ar${path}`,
-    languages: { en: `${base}${path}`, ar: `${base}/ar${path}` },
+    languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` },
   };
   const community = await getCommunity(slug);
   if (!community) return { title: "المجتمع غير موجود", alternates };

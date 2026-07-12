@@ -25,7 +25,7 @@ export async function generateMetadata({
   const path = `/news/${slug}`;
   const alternates = {
     canonical: `${base}/ar${path}`,
-    languages: { en: `${base}${path}`, ar: `${base}/ar${path}` },
+    languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` },
   };
   const article = getNewsArticle(slug);
   if (!article) return { title: "المقال غير موجود", alternates };

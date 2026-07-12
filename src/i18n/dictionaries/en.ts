@@ -844,6 +844,56 @@ const dict = {
         "cta": "Find my match →"
       },
       "serpCta": "Not sure where to start? Try the Investor Match quiz →"
+    },
+    "mortgagePage": {
+      "heroTitle": "Mortgage calculator",
+      "heroSubtitle": "Repayments, fees, and stress-tested affordability — then get pre-approved."
+    },
+    "roiPage": {
+      "heroTitle": "ROI & yield estimator",
+      "heroSubtitle": "Model off-plan rental yield, appreciation, and total return — prefilled with 2025 DLD market data."
+    },
+    "hubPage": {
+      "heroTitle": "Know your next move",
+      "heroSubtitle": "Five data tools for smarter off-plan decisions — parity with Property Finder DataGuru, tuned for launch inventory."
+    },
+    "priceMapPage": {
+      "heroTitle": "Price map",
+      "heroSubtitle": "See which communities fit your budget — launch prices across the UAE."
+    },
+    "rentVsBuyPage": {
+      "heroTitle": "Rent vs buy calculator",
+      "heroSubtitle": "See how renting or buying impacts your finances — monthly payments and long-term position."
+    },
+    "residentialPage": {
+      "heroTitle": "Residential insights",
+      "heroSubtitle": "Launch-price data per project — compare towers and compounds in your shortlisted areas."
+    },
+    "communityInsightsPage": {
+      "heroTitle": "Community insights",
+      "heroSubtitle": "Find communities that match your lifestyle — then browse off-plan projects in each area."
+    },
+    "paymentPage": {
+      "heroTitle": "Off-plan payment calculator",
+      "heroSubtitle": "Break down down-payment and construction installments — built into every project detail."
+    }
+  },
+  "pages": {
+    "compare": {
+      "heroTitle": "Compare",
+      "heroSubtitle": "Communities, projects, and units side by side — real Dubai Land Department 2025 transactions behind every number."
+    },
+    "map": {
+      "heroTitle": "Project map",
+      "heroSubtitle": "{count} map-ready projects across the UAE"
+    },
+    "locations": {
+      "heroTitle": "Location guides",
+      "heroSubtitle": "Where to buy in Dubai, answered with data — communities ranked on real Dubai Land Department 2025 transactions and our live off-plan catalog."
+    },
+    "communities": {
+      "heroTitle": "Communities",
+      "heroSubtitle": "Explore Dubai's neighbourhoods — inventory, prices, and real market data"
     }
   },
   "developers": {
@@ -856,6 +906,8 @@ const dict = {
     "contactBody": "Speak with our team about {name} launches, brochures, and payment plans.",
     "email": "Email",
     "projectsByHeading": "New & Off-Plan Projects by {name}",
+    "otherDevelopers": "Other Developers",
+    "viewAllDevelopers": "View all developers →",
     "profile": {
       "heading": "Developer profile",
       "subtitle": "A data-derived profile of this developer's off-plan catalog — not a quality or delivery rating.",
@@ -965,6 +1017,30 @@ const dict = {
     "sourceLabel": "Source",
     "unitsSuffix": "units",
     "salesSuffix": "sales"
+  },
+  "compare": {
+    "heroTitleLead": "Compare",
+    "heroTitleEm": "Projects.",
+    "heroSubtitle": "Side-by-side unit intelligence — price, handover, brochures, and payment plans.",
+    "loadingData": "Loading compare data…",
+    "emptyTitle": "Nothing to compare yet",
+    "emptyBody": "Select up to 3 units on the projects page.",
+    "addProperty": "Add property",
+    "done": "Done",
+    "attribute": "Attribute",
+    "gallery": "Gallery",
+    "remove": "Remove",
+    "viewProperty": "View Property",
+    "startingPrice": "Starting price",
+    "squareFootage": "Square footage",
+    "aedPerSqft": "AED / sqft",
+    "grossYield": "Gross yield",
+    "grossYieldHint": "community-level · DLD 2025",
+    "estMonthlyPayment": "Est. monthly payment",
+    "estMonthlyPaymentHint": "80% loan · 4.25% · 25y",
+    "pdfReady": "PDF ready",
+    "bedrooms": "Bedrooms",
+    "moreAmenities": "+{count} more"
   }
 } as const;
 

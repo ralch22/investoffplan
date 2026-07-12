@@ -11,6 +11,7 @@ import { COLLECTION_PAGES, getCollectionPage } from "@/lib/collections";
 import { getHeroImage } from "@/lib/area-images";
 import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
 import type { Project } from "@/lib/types";
 import type { FlatUnit } from "@/lib/catalog-core";
 
@@ -26,10 +27,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const page = getCollectionPage(slug);
   if (!page) return { title: "Collection not found" };
+  const siteUrl = getSiteUrl();
   return {
     title: page.title,
     description: page.description,
-    alternates: { canonical: `${getSiteUrl()}/collections/${slug}` },
+    alternates: enMeta(`/collections/${slug}`),
+    openGraph: {
+      title: page.title,
+      description: page.description,
+      url: `${siteUrl}/collections/${slug}`,
+    },
+    twitter: { card: "summary_large_image", title: page.title, description: page.description },
   };
 }
 

@@ -160,10 +160,7 @@ export async function POST(request: Request) {
     const consentCookie = request.headers.get("cookie") ?? "";
     if (!consentCookie.includes("iop_consent=granted")) return;
     // Extract client id if provided by client (from _ga cookie); server falls back inside.
-    const clientIdFromBody =
-      typeof (body as LeadBody).gaClientId === "string"
-        ? (body as LeadBody).gaClientId
-        : undefined;
+    const clientIdFromBody = clean(body.gaClientId as string | undefined, 50);
     await sendGa4GenerateLead({
       formType,
       projectSlug: lead.projectSlug ?? undefined,

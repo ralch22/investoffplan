@@ -3,6 +3,8 @@ import { PageShell } from "@/components/page-shell";
 import { PaymentToolPicker } from "@/components/payment-tool-picker";
 import { getCatalogApi } from "@/lib/catalog";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Off-Plan Payment Plan Calculator — Dubai",
@@ -11,7 +13,9 @@ export const metadata: Metadata = {
   alternates: enMeta("/tools/payment"),
 };
 
-export default async function PaymentToolPage() {
+export async function PaymentPageContent({ locale = "en" }: { locale?: Locale }) {
+  const dict = getDictionary(locale);
+  const t = dict.tools.paymentPage;
   const api = await getCatalogApi();
   const samples = api.projects
     .filter((p) => p.paymentPlan && p.units.length)
@@ -23,11 +27,10 @@ export default async function PaymentToolPage() {
         <div className="absolute inset-0 bg-hero-overlay" />
         <div className="relative mx-auto max-w-[1200px] px-5 pb-14 pt-24 md:px-8 md:pb-16 md:pt-32">
           <h1 className="font-display text-3xl font-semibold md:text-5xl">
-            Off-plan payment calculator
+            {t.heroTitle}
           </h1>
           <p className="mt-3 max-w-xl text-white/90">
-            Break down down-payment and construction installments — built into every
-            project detail, not buried like on opr.ae.
+            {t.heroSubtitle}
           </p>
         </div>
       </section>
@@ -37,4 +40,8 @@ export default async function PaymentToolPage() {
       </main>
     </PageShell>
   );
+}
+
+export default async function PaymentToolPage() {
+  return <PaymentPageContent />;
 }

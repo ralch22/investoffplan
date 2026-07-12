@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${getSiteUrl()}/ar/contact`,
     languages: {
+      "x-default": `${getSiteUrl()}/contact`,
       en: `${getSiteUrl()}/contact`,
       ar: `${getSiteUrl()}/ar/contact`,
     },

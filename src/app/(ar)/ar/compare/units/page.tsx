@@ -6,5 +6,5 @@ export { default } from "@/app/(en)/compare/units/page";
 
 export const metadata: Metadata = (() => {
   const base = getSiteUrl();
-  return { alternates: { canonical: `${base}/ar/compare/units`, languages: { en: `${base}/compare/units`, ar: `${base}/ar/compare/units` } } };
+  return { alternates: { canonical: `${base}/ar/compare/units`, languages: { "x-default": `${base}/compare/units`, en: `${base}/compare/units`, ar: `${base}/ar/compare/units` } } };
 })();

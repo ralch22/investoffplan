@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     "تصفّح آلاف الوحدات على الخارطة مع بروشورات وخطط سداد وأدوات مقارنة وبيانات سوق حيّة من دائرة الأراضي والأملاك في دبي والإمارات.",
   alternates: {
     canonical: `${getSiteUrl()}/ar`,
-    languages: { en: getSiteUrl() || "/", ar: `${getSiteUrl()}/ar` },
+    languages: { "x-default": getSiteUrl() || "/", en: getSiteUrl() || "/", ar: `${getSiteUrl()}/ar` },
   },
 };
 

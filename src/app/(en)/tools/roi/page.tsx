@@ -7,6 +7,8 @@ import { getAreas } from "@/lib/catalog";
 import { getAreaStats } from "@/lib/dld-area-stats";
 import { getHeroImage } from "@/lib/area-images";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Off-Plan ROI & Rental Yield Estimator — Dubai",
@@ -40,7 +42,9 @@ async function getRoiCommunities(): Promise<RoiCommunity[]> {
   return covered.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export default async function RoiToolPage() {
+export async function RoiPageContent({ locale = "en" }: { locale?: Locale }) {
+  const dict = getDictionary(locale);
+  const t = dict.tools.roiPage;
   const [heroImage, communities] = await Promise.all([
     getHeroImage(),
     getRoiCommunities(),
@@ -49,17 +53,17 @@ export default async function RoiToolPage() {
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="ROI & yield estimator"
-        subtitle="Model off-plan rental yield, appreciation, and total return — prefilled with 2025 DLD market data."
+        title={t.heroTitle}
+        subtitle={t.heroSubtitle}
         imageUrl={heroImage}
       />
 
       <main className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Data toolkit", href: "/tools" },
-            { label: "ROI estimator" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.dataToolkit, href: "/tools" },
+            { label: dict.nav.roiEstimator },
           ]}
         />
         <div className="mt-8">
@@ -68,4 +72,8 @@ export default async function RoiToolPage() {
       </main>
     </PageShell>
   );
+}
+
+export default async function RoiToolPage() {
+  return <RoiPageContent />;
 }

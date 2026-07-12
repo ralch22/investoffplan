@@ -4,6 +4,8 @@ import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { LOCATION_GUIDES } from "@/lib/location-guides";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Location Guides — Communities Ranked on Real Data",
@@ -12,13 +14,16 @@ export const metadata: Metadata = {
   alternates: enMeta("/locations"),
 };
 
-export default function LocationGuidesPage() {
+export function LocationsPageContent({ locale = "en" }: { locale?: Locale }) {
+  const dict = getDictionary(locale);
+  const t = dict.pages.locations;
+
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="Location guides"
+        title={t.heroTitle}
         italicTitle
-        subtitle="Where to buy in Dubai, answered with data — communities ranked on real Dubai Land Department 2025 transactions and our live off-plan catalog."
+        subtitle={t.heroSubtitle}
       />
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -49,4 +54,8 @@ export default function LocationGuidesPage() {
       </main>
     </PageShell>
   );
+}
+
+export default function LocationGuidesPage() {
+  return <LocationsPageContent />;
 }

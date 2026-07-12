@@ -5,6 +5,8 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { InvestorMatchQuiz } from "@/components/investor-match-quiz";
 import { getHeroImage } from "@/lib/area-images";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Investor Match — Find Your Off-Plan Fit",
@@ -13,23 +15,25 @@ export const metadata: Metadata = {
   alternates: enMeta("/tools/investor-match"),
 };
 
-export default async function InvestorMatchPage() {
+export async function InvestorMatchPageContent({ locale = "en" }: { locale?: Locale }) {
+  const dict = getDictionary(locale);
+  const t = dict.tools.investorMatch;
   const heroImage = await getHeroImage();
 
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="Investor Match"
-        subtitle="Six quick questions. A ranked shortlist of off-plan projects matched to your brief."
+        title={t.heroTitle}
+        subtitle={t.heroSubtitle}
         imageUrl={heroImage}
       />
 
       <main className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Data toolkit", href: "/tools" },
-            { label: "Investor Match" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.dataToolkit, href: "/tools" },
+            { label: t.breadcrumb },
           ]}
         />
         <div className="mt-10">
@@ -38,4 +42,8 @@ export default async function InvestorMatchPage() {
       </main>
     </PageShell>
   );
+}
+
+export default async function InvestorMatchPage() {
+  return <InvestorMatchPageContent />;
 }

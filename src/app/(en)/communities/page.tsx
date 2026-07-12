@@ -10,6 +10,8 @@ import { areaTagline } from "@/lib/figma-copy";
 import { getHeroImage } from "@/lib/area-images";
 import { unoptimizedProp } from "@/lib/asset-image";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Communities — Off-Plan Projects by Neighbourhood",
@@ -18,7 +20,9 @@ export const metadata: Metadata = {
   alternates: enMeta("/communities"),
 };
 
-export default async function CommunitiesPage() {
+export async function CommunitiesPageContent({ locale = "en" }: { locale?: Locale }) {
+  const dict = getDictionary(locale);
+  const t = dict.pages.communities;
   const communities = await getCommunities();
   const featured = communities.slice(0, 12);
   const comparisons = (await getComparisonList()).slice(0, 9);
@@ -33,8 +37,8 @@ export default async function CommunitiesPage() {
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="Communities"
-        subtitle="Explore Dubai's neighbourhoods — inventory, prices, and real market data"
+        title={t.heroTitle}
+        subtitle={t.heroSubtitle}
         imageUrl={heroImage}
       />
 
@@ -161,4 +165,8 @@ export default async function CommunitiesPage() {
       </section>
     </PageShell>
   );
+}
+
+export default async function CommunitiesPage() {
+  return <CommunitiesPageContent />;
 }

@@ -57,84 +57,6 @@ interface CompareRow {
   better?: "higher" | "lower";
 }
 
-// ROWS without locale-sensitive fields — merged with dynamic rows in component.
-const BASE_ROWS: CompareRow[] = [
-  // "Property type" and "Bedrooms" rows are injected per-render (locale-aware).
-  {
-    label: "Starting price",
-    render: (item, currency) => formatPrice(item.unit.launchPriceAed, currency),
-    num: (item) => (item.unit.launchPriceAed > 0 ? item.unit.launchPriceAed : null),
-    better: "lower",
-  },
-  {
-    label: "Payment plan",
-    render: (item) => (
-      <>
-        <span>{item.project.paymentPlan}</span>
-        <PaymentPlanBar plan={item.project.paymentPlan} />
-      </>
-    ),
-  },
-  { label: "Handover", render: (item) => item.project.handover ?? "TBC" },
-  // "Bedrooms" row injected per-render below (locale-aware).
-  {
-    label: "Square footage",
-    render: (item) => formatSqft(item.unit.sqftMin, item.unit.sqftMax),
-    num: (item) => (item.unit.sqftMin > 0 ? item.unit.sqftMin : null),
-    better: "higher",
-  },
-  {
-    label: "Location",
-    render: (item) => `${cityLabel(item.project.city)}, ${item.project.area}`,
-  },
-  {
-    label: "AED / sqft",
-    render: (item) => {
-      const v = unitPricePerSqft(item);
-      return v ? `AED ${v.toLocaleString()}` : "—";
-    },
-    num: (item) => unitPricePerSqft(item),
-    better: "lower",
-  },
-  {
-    label: "Gross yield",
-    hint: "community-level · DLD 2025",
-    render: (_item, _currency, stats) =>
-      stats?.grossYieldPct != null ? `${stats.grossYieldPct}%` : "—",
-    num: (_item, stats) => stats?.grossYieldPct ?? null,
-    better: "higher",
-  },
-  {
-    label: "Est. monthly payment",
-    hint: "80% loan · 4.25% · 25y",
-    render: (item, currency) => {
-      const monthly = compareMonthlyPaymentAed(item);
-      return monthly != null ? `${formatPrice(monthly, currency)}/mo` : "—";
-    },
-    num: (item) => compareMonthlyPaymentAed(item),
-    better: "lower",
-  },
-  {
-    label: "Brochure",
-    render: (item) => (resolveBrochureUrl(item.project) ? "PDF ready" : "On request"),
-  },
-  {
-    label: "Amenities",
-    render: (item) => {
-      const ams = item.project.amenities;
-      if (!ams || ams.length === 0) return "—";
-      return (
-        <ul className="list-inside list-disc space-y-1 text-sm text-muted">
-          {ams.slice(0, 5).map((a, i) => (
-            <li key={i}>{a}</li>
-          ))}
-          {ams.length > 5 && <li>+{ams.length - 5} more</li>}
-        </ul>
-      );
-    },
-  },
-];
-
 const MAX_SLOTS = 3;
 
 const isApiMode = process.env.NEXT_PUBLIC_CATALOG_API === "1";
@@ -151,12 +73,100 @@ export function ComparePage({
   const { api, loading } = useCatalog();
   const currency = useCurrency();
   const { dict, locale } = useI18n();
+
+  // BASE_ROWS defined here (inside the component) so dict is accessible.
+  const BASE_ROWS: CompareRow[] = [
+    // "Property type" and "Bedrooms" rows are injected per-render (locale-aware).
+    {
+      label: dict.compare.startingPrice,
+      render: (item, currency) => formatPrice(item.unit.launchPriceAed, currency),
+      num: (item) => (item.unit.launchPriceAed > 0 ? item.unit.launchPriceAed : null),
+      better: "lower",
+    },
+    {
+      label: dict.pdp.keyFacts.paymentPlan,
+      render: (item) => (
+        <>
+          <span>{item.project.paymentPlan}</span>
+          <PaymentPlanBar plan={item.project.paymentPlan} />
+        </>
+      ),
+    },
+    {
+      label: dict.pdp.timeline.handover,
+      render: (item) => item.project.handover ?? dict.pdp.timeline.tba,
+    },
+    // "Bedrooms" row injected per-render below (locale-aware).
+    {
+      label: dict.compare.squareFootage,
+      render: (item) => formatSqft(item.unit.sqftMin, item.unit.sqftMax),
+      num: (item) => (item.unit.sqftMin > 0 ? item.unit.sqftMin : null),
+      better: "higher",
+    },
+    {
+      label: dict.pdp.keyFacts.location,
+      render: (item) => `${cityLabel(item.project.city)}, ${item.project.area}`,
+    },
+    {
+      label: dict.compare.aedPerSqft,
+      render: (item) => {
+        const v = unitPricePerSqft(item);
+        return v ? `AED ${v.toLocaleString()}` : "—";
+      },
+      num: (item) => unitPricePerSqft(item),
+      better: "lower",
+    },
+    {
+      label: dict.compare.grossYield,
+      hint: dict.compare.grossYieldHint,
+      render: (_item, _currency, stats) =>
+        stats?.grossYieldPct != null ? `${stats.grossYieldPct}%` : "—",
+      num: (_item, stats) => stats?.grossYieldPct ?? null,
+      better: "higher",
+    },
+    {
+      label: dict.compare.estMonthlyPayment,
+      hint: dict.compare.estMonthlyPaymentHint,
+      render: (item, currency) => {
+        const monthly = compareMonthlyPaymentAed(item);
+        return monthly != null ? `${formatPrice(monthly, currency)}/mo` : "—";
+      },
+      num: (item) => compareMonthlyPaymentAed(item),
+      better: "lower",
+    },
+    {
+      label: dict.common.brochure,
+      render: (item) =>
+        resolveBrochureUrl(item.project)
+          ? dict.compare.pdfReady
+          : dict.pdp.keyFacts.onRequest,
+    },
+    {
+      label: dict.pdp.about.amenities,
+      render: (item) => {
+        const ams = item.project.amenities;
+        if (!ams || ams.length === 0) return "—";
+        return (
+          <ul className="list-inside list-disc space-y-1 text-sm text-muted">
+            {ams.slice(0, 5).map((a, i) => (
+              <li key={i}>{a}</li>
+            ))}
+            {ams.length > 5 && (
+              <li>{dict.compare.moreAmenities.replace("{count}", String(ams.length - 5))}</li>
+            )}
+          </ul>
+        );
+      },
+    },
+  ];
+
   const ROWS: CompareRow[] = [
-    { label: "Property type", render: (item) => propertyTypeLabel(item.unit.propertyType, dict, locale) },
+    { label: dict.serp.filters.propertyType, render: (item) => propertyTypeLabel(item.unit.propertyType, dict, locale) },
     ...BASE_ROWS.slice(0, 3),
-    { label: "Bedrooms", render: (item) => bedsLabel(item.unit.beds, dict) },
+    { label: dict.compare.bedrooms, render: (item) => bedsLabel(item.unit.beds, dict) },
     ...BASE_ROWS.slice(3),
   ];
+
   const router = useRouter();
   const [compareIds, setCompareIds] = useState<CompareUnitId[]>(initialIds);
   const items = useMemo(() => {
@@ -204,10 +214,10 @@ export function ComparePage({
         <div className="absolute inset-0 bg-hero-overlay" />
         <div className="relative mx-auto max-w-[1200px] px-5 py-20 text-center md:px-8 md:py-28">
           <h1 className="font-display text-4xl font-semibold md:text-5xl">
-            Compare <em className="italic">Projects.</em>
+            {dict.compare.heroTitleLead} <em className="italic">{dict.compare.heroTitleEm}</em>
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-white/85">
-            Side-by-side unit intelligence — price, handover, brochures, and payment plans.
+            {dict.compare.heroSubtitle}
           </p>
         </div>
       </section>
@@ -215,33 +225,33 @@ export function ComparePage({
       <main className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Compare" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.common.compare },
           ]}
         />
         {loading && compareIds.length > 0 && items.length === 0 ? (
           <div className="mt-8 rounded-2xl border border-border bg-surface-alt p-10 text-center">
-            <p className="text-sm text-muted">Loading compare data…</p>
+            <p className="text-sm text-muted">{dict.compare.loadingData}</p>
           </div>
         ) : items.length === 0 ? (
           <div className="mt-8 rounded-2xl border border-dashed border-border bg-surface-alt p-10 text-center">
-            <p className="text-lg font-medium text-text-dark">Nothing to compare yet</p>
+            <p className="text-lg font-medium text-text-dark">{dict.compare.emptyTitle}</p>
             <p className="mt-2 text-sm text-muted">
-              Select up to 3 units on the projects page.
+              {dict.compare.emptyBody}
             </p>
             <PrimaryButton href="/projects" className="mt-6">
-              Add property
+              {dict.compare.addProperty}
             </PrimaryButton>
           </div>
         ) : (
           <>
             <div className="mb-6 mt-8 flex flex-wrap items-center justify-between gap-3">
-              <PrimaryButton href="/projects">Add property</PrimaryButton>
+              <PrimaryButton href="/projects">{dict.compare.addProperty}</PrimaryButton>
               <Link
                 href="/projects"
                 className="text-sm font-semibold text-brand hover:text-brand-dark"
               >
-                Done
+                {dict.compare.done}
               </Link>
             </div>
 
@@ -265,7 +275,7 @@ export function ComparePage({
                         STICKY_LABEL_CLASS,
                       )}
                     >
-                      Attribute
+                      {dict.compare.attribute}
                     </th>
                     <AnimatePresence mode="popLayout">
                       {items.map((item) => {
@@ -298,13 +308,13 @@ export function ComparePage({
                               onClick={() => removeUnit(unitId)}
                               className="iop-btn-press mt-3 text-xs font-semibold text-brand hover:text-brand-dark"
                             >
-                              Remove
+                              {dict.compare.remove}
                             </button>
                             <Link
                               href={`/projects/${item.project.slug}`}
                               className="mt-2 flex w-full items-center justify-between rounded-full bg-brand px-4 py-2 text-xs font-semibold text-white transition hover:bg-brand-dark"
                             >
-                              View Property
+                              {dict.compare.viewProperty}
                               <svg viewBox="0 0 20 20" className="h-3 w-3 fill-none stroke-current stroke-2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M4 10h12M10 4l6 6-6 6" /></svg>
                             </Link>
                           </motion.th>
@@ -321,7 +331,7 @@ export function ComparePage({
                             href="/projects"
                             className="px-4 py-2 text-xs"
                           >
-                            Add property
+                            {dict.compare.addProperty}
                           </PrimaryButton>
                         </div>
                       </th>
@@ -334,7 +344,7 @@ export function ComparePage({
                       scope="row"
                       className={cn("p-4 text-start font-medium text-muted", STICKY_LABEL_CLASS)}
                     >
-                      Gallery
+                      {dict.compare.gallery}
                     </th>
                     <AnimatePresence mode="popLayout">
                       {items.map((item) => {

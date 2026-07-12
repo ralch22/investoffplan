@@ -8,6 +8,8 @@ import { DATAGURU_TOOLS } from "@/lib/dataguru";
 import { getHeroImage } from "@/lib/area-images";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Property Data Toolkit — Free Investor Tools",
@@ -16,15 +18,17 @@ export const metadata: Metadata = {
   alternates: enMeta("/tools"),
 };
 
-export default async function ToolsHubPage() {
+export async function ToolsHubPageContent({ locale = "en" }: { locale?: Locale }) {
+  const dict = getDictionary(locale);
+  const t = dict.tools.hubPage;
   const heroImage = await getHeroImage();
   const analytics = await getCatalogAnalytics();
 
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="Know your next move"
-        subtitle="Five data tools for smarter off-plan decisions — parity with Property Finder DataGuru, tuned for launch inventory."
+        title={t.heroTitle}
+        subtitle={t.heroSubtitle}
         imageUrl={heroImage}
       />
 
@@ -76,4 +80,8 @@ export default async function ToolsHubPage() {
       </main>
     </PageShell>
   );
+}
+
+export default async function ToolsHubPage() {
+  return <ToolsHubPageContent />;
 }

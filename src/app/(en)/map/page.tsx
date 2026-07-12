@@ -8,6 +8,8 @@ import { getCatalogApi } from "@/lib/catalog";
 import { getHeroImage } from "@/lib/area-images";
 import { getMapProjectsFromList } from "@/lib/map-data";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary, interpolate } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Off-Plan Projects Map — Browse by Location",
@@ -29,9 +31,17 @@ interface MapPageProps {
   searchParams: Promise<{ project?: string }>;
 }
 
-export default async function MapPage({ searchParams }: MapPageProps) {
+export async function MapPageContent({
+  locale = "en",
+  searchParams,
+}: {
+  locale?: Locale;
+  searchParams?: Promise<{ project?: string }>;
+}) {
+  const dict = getDictionary(locale);
+  const t = dict.pages.map;
   const stats = await getCatalogAnalytics();
-  const { project: projectSlug } = await searchParams;
+  const { project: projectSlug } = (await searchParams) ?? {};
   const api = await getCatalogApi();
   const mapProjects = getMapProjectsFromList(api.projects);
   const initialSelected = projectSlug
@@ -42,8 +52,8 @@ export default async function MapPage({ searchParams }: MapPageProps) {
   return (
     <PageShell headerVariant="transparent" mobileDock="none">
       <PageHero
-        title="Project map"
-        subtitle={`${stats.withCoords.toLocaleString()} map-ready projects across the UAE`}
+        title={t.heroTitle}
+        subtitle={interpolate(t.heroSubtitle, { count: stats.withCoords.toLocaleString() })}
         imageUrl={heroImage}
       />
 
@@ -68,4 +78,8 @@ export default async function MapPage({ searchParams }: MapPageProps) {
       </section>
     </PageShell>
   );
+}
+
+export default async function MapPage({ searchParams }: MapPageProps) {
+  return <MapPageContent searchParams={searchParams} />;
 }

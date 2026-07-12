@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     "Off-plan properties for sale in Dubai & the UAE — unit-level prices, floor plans, payment plans, developer brochures, compare tools, and live DLD market data.",
   alternates: {
     canonical: getSiteUrl(),
-    languages: { en: getSiteUrl() || "/", ar: `${getSiteUrl()}/ar` },
+    languages: { "x-default": getSiteUrl() || "/", en: getSiteUrl() || "/", ar: `${getSiteUrl()}/ar` },
   },
 };
 

@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: `${getSiteUrl()}/ar/projects`,
     languages: {
+      "x-default": `${getSiteUrl()}/projects`,
       en: `${getSiteUrl()}/projects`,
       ar: `${getSiteUrl()}/ar/projects`,
     },

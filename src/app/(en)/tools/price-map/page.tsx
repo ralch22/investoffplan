@@ -8,6 +8,8 @@ import { getHeroImage } from "@/lib/area-images";
 import type { PropertyType } from "@/lib/types";
 import { PriceMapClient } from "./price-map-client";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Property Price Map — Launch Prices by Community",
@@ -24,8 +26,16 @@ interface PageProps {
   searchParams: Promise<{ beds?: string; type?: string; city?: string }>;
 }
 
-export default async function PriceMapPage({ searchParams }: PageProps) {
-  const params = await searchParams;
+export async function PriceMapPageContent({
+  locale = "en",
+  searchParams,
+}: {
+  locale?: Locale;
+  searchParams?: Promise<{ beds?: string; type?: string; city?: string }>;
+}) {
+  const dict = getDictionary(locale);
+  const t = dict.tools.priceMapPage;
+  const params = (await searchParams) ?? {};
   const beds = params.beds != null && params.beds !== "" ? Number(params.beds) : null;
   const propertyType = (params.type ?? "") as PropertyType | "";
   const heroImage = await getHeroImage();
@@ -44,17 +54,17 @@ export default async function PriceMapPage({ searchParams }: PageProps) {
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="Price map"
-        subtitle="See which communities fit your budget — launch prices across the UAE."
+        title={t.heroTitle}
+        subtitle={t.heroSubtitle}
         imageUrl={heroImage}
       />
 
       <main className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Data toolkit", href: "/tools" },
-            { label: "Price map" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.dataToolkit, href: "/tools" },
+            { label: dict.nav.priceMap },
           ]}
         />
         <p className="mt-6 text-sm text-muted">
@@ -69,4 +79,8 @@ export default async function PriceMapPage({ searchParams }: PageProps) {
       </main>
     </PageShell>
   );
+}
+
+export default async function PriceMapPage({ searchParams }: PageProps) {
+  return <PriceMapPageContent searchParams={searchParams} />;
 }

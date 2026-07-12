@@ -32,7 +32,7 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
   const path = `/projects/${slug}`;
   const alternates = {
     canonical: `${base}/ar${path}`,
-    languages: { en: `${base}${path}`, ar: `${base}/ar${path}` },
+    languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` },
   };
   const project = await getProjectBySlug(slug);
   if (!project) return { title: "المشروع غير موجود", alternates };

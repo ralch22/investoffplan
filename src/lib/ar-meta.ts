@@ -25,7 +25,7 @@ export function arMeta({
     ...(description ? { description } : {}),
     alternates: {
       canonical: url,
-      languages: { en: `${base}${path}`, ar: url },
+      languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: url },
     },
   };
 }
@@ -40,6 +40,6 @@ export function enMeta(path: string): NonNullable<import("next").Metadata["alter
   const base = getSiteUrl();
   return {
     canonical: `${base}${path}`,
-    languages: { en: `${base}${path}`, ar: `${base}/ar${path}` },
+    languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` },
   };
 }

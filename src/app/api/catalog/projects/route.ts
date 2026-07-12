@@ -55,14 +55,14 @@ export async function GET(request: Request) {
 
   return withCatalogDb(async (db) => {
     const result = await queryCatalogProjects(db, {
-      page: parseIntParam(searchParams.get("page"), 1),
+      page: Math.min(parseIntParam(searchParams.get("page"), 1), 500),
       pageSize: parseIntParam(searchParams.get("pageSize"), 24),
       cursor: searchParams.get("cursor") ?? undefined,
       view: (searchParams.get("view") as ViewMode | null) ?? "project",
       sort: (searchParams.get("sort") as SortOption | null) ?? "featured",
       collection: (searchParams.get("collection") as CollectionFilter | null) ?? "all",
       filters: {
-        query: searchParams.get("q") ?? "",
+        query: (searchParams.get("q") ?? "").slice(0, 500),
         city: (searchParams.get("city") as CitySlug | null) ?? "all",
         propertyType: (searchParams.get("propertyType") as PropertyType | "all" | null) ?? "all",
         beds: parseBeds(searchParams.get("beds")),

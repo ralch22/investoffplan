@@ -10,6 +10,6 @@ export const metadata: Metadata = (() => {
     title: "قارن مشاريع العقارات على الخارطة",
     description:
       "قارن حتى ثلاث وحدات على الخارطة جنباً إلى جنب — الأسعار، مواعيد التسليم، خطط السداد، والبروشورات.",
-    alternates: { canonical: `${base}/ar/compare`, languages: { en: `${base}/compare`, ar: `${base}/ar/compare` } },
+    alternates: { canonical: `${base}/ar/compare`, languages: { "x-default": `${base}/compare`, en: `${base}/compare`, ar: `${base}/ar/compare` } },
   };
 })();

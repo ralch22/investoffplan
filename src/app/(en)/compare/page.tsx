@@ -10,6 +10,8 @@ import { getComparableProjectSlugs } from "@/lib/project-compare";
 import { getComparableDeveloperSlugs } from "@/lib/developer-compare";
 import { getCatalogApi, getDevelopers } from "@/lib/catalog";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Compare Dubai Communities & Off-Plan Projects",
@@ -22,9 +24,18 @@ interface PageProps {
   searchParams: Promise<{ units?: string }>;
 }
 
-export default async function CompareHubPage({ searchParams }: PageProps) {
+export async function CompareHubPageContent({
+  locale = "en",
+  searchParams,
+}: {
+  locale?: Locale;
+  searchParams?: Promise<{ units?: string }>;
+}) {
+  const dict = getDictionary(locale);
+  const t = dict.pages.compare;
+
   // Legacy deep links: /compare?units=a,b,c was the unit-compare tool.
-  const { units } = await searchParams;
+  const { units } = (await searchParams) ?? {};
   if (units) redirect(`/compare/units?units=${encodeURIComponent(units)}`);
 
   const [topYields, comparisons, projectPairSlugs, developerPairSlugs, developers, api] =
@@ -62,9 +73,9 @@ export default async function CompareHubPage({ searchParams }: PageProps) {
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="Compare"
+        title={t.heroTitle}
         italicTitle
-        subtitle="Communities, projects, and units side by side — real Dubai Land Department 2025 transactions behind every number."
+        subtitle={t.heroSubtitle}
       />
 
       <HomeYields areas={topYields} />
@@ -172,4 +183,8 @@ export default async function CompareHubPage({ searchParams }: PageProps) {
       </section>
     </PageShell>
   );
+}
+
+export default async function CompareHubPage({ searchParams }: PageProps) {
+  return <CompareHubPageContent searchParams={searchParams} />;
 }

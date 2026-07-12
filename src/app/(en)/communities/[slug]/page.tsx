@@ -50,6 +50,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     alternates: {
       canonical: `${getSiteUrl()}/communities/${slug}`,
       languages: {
+        "x-default": `${getSiteUrl()}/communities/${slug}`,
         en: `${getSiteUrl()}/communities/${slug}`,
         ar: `${getSiteUrl()}/ar/communities/${slug}`,
       },

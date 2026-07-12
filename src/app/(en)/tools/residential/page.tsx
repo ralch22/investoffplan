@@ -8,6 +8,8 @@ import { getResidentialBuildings } from "@/lib/residential-insights";
 import { getAreas } from "@/lib/catalog";
 import { getHeroImage } from "@/lib/area-images";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Residential Insights — Launch Prices & AED/sqft",
@@ -20,8 +22,16 @@ interface PageProps {
   searchParams: Promise<{ area?: string; q?: string; city?: string }>;
 }
 
-export default async function ResidentialInsightsPage({ searchParams }: PageProps) {
-  const params = await searchParams;
+export async function ResidentialPageContent({
+  locale = "en",
+  searchParams,
+}: {
+  locale?: Locale;
+  searchParams?: Promise<{ area?: string; q?: string; city?: string }>;
+}) {
+  const dict = getDictionary(locale);
+  const t = dict.tools.residentialPage;
+  const params = (await searchParams) ?? {};
   const heroImage = await getHeroImage();
   const areas = await getAreas();
   const buildings = await getResidentialBuildings({
@@ -34,17 +44,17 @@ export default async function ResidentialInsightsPage({ searchParams }: PageProp
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="Residential insights"
-        subtitle="Launch-price data per project — compare towers and compounds in your shortlisted areas."
+        title={t.heroTitle}
+        subtitle={t.heroSubtitle}
         imageUrl={heroImage}
       />
 
       <main className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Data toolkit", href: "/tools" },
-            { label: "Residential insights" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.dataToolkit, href: "/tools" },
+            { label: dict.nav.residentialInsights },
           ]}
         />
 
@@ -93,4 +103,8 @@ export default async function ResidentialInsightsPage({ searchParams }: PageProp
       </main>
     </PageShell>
   );
+}
+
+export default async function ResidentialInsightsPage({ searchParams }: PageProps) {
+  return <ResidentialPageContent searchParams={searchParams} />;
 }

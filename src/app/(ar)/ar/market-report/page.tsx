@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description,
     alternates: {
       canonical: url,
-      languages: { en: `${base}/market-report`, ar: url },
+      languages: { "x-default": `${base}/market-report`, en: `${base}/market-report`, ar: url },
     },
     openGraph: {
       type: "article",

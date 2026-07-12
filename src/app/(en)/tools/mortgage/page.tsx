@@ -6,6 +6,8 @@ import { MortgageCalculator } from "@/components/mortgage-calculator";
 import { MortgagePreapprovalForm } from "@/components/mortgage-preapproval-form";
 import { getHeroImage } from "@/lib/area-images";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "UAE Mortgage Calculator & Pre-Approval",
@@ -14,23 +16,25 @@ export const metadata: Metadata = {
   alternates: enMeta("/tools/mortgage"),
 };
 
-export default async function MortgagePage() {
+export async function MortgagePageContent({ locale = "en" }: { locale?: Locale }) {
+  const dict = getDictionary(locale);
   const heroImage = await getHeroImage();
+  const t = dict.tools.mortgagePage;
 
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="Mortgage calculator"
-        subtitle="Repayments, fees, and stress-tested affordability — then get pre-approved."
+        title={t.heroTitle}
+        subtitle={t.heroSubtitle}
         imageUrl={heroImage}
       />
 
       <main className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Data toolkit", href: "/tools" },
-            { label: "Mortgage" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.dataToolkit, href: "/tools" },
+            { label: dict.nav.mortgage },
           ]}
         />
         <div className="mt-8">
@@ -63,4 +67,8 @@ export default async function MortgagePage() {
       </main>
     </PageShell>
   );
+}
+
+export default async function MortgagePage() {
+  return <MortgagePageContent />;
 }
