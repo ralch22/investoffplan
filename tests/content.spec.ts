@@ -285,4 +285,13 @@ test.describe("Content routes", () => {
       /<title>Best Communities for Families in Dubai \(Off-Plan\)/i,
     );
   });
+
+  // #260 — AR about CTA must stay on /ar/projects.
+  test("AR about Get-started CTA stays on /ar/projects", async ({ page }) => {
+    const res = await page.goto("/ar/about", { waitUntil: "domcontentloaded" });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    expect(html).toMatch(/href="\/ar\/projects"/);
+    expect(html).toContain('href="/ar/projects"');
+  });
 });
