@@ -45,7 +45,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const community = await getCommunity(slug);
-  if (!community) return { title: "Community not found" };
+  // Soft metadata titles ("Community not found") with HTTP 200 are banned (#241 /
+  // #305 content.spec). Prefer a real notFound() even if dynamicParams is skipped.
+  if (!community) notFound();
   const editorial = getAreaEditorial(slug);
   return {
     title: `Off-Plan Projects in ${community.name}, ${community.cityLabel}`,
