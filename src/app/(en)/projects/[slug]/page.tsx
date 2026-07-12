@@ -42,7 +42,7 @@ import {
 } from "@/lib/format";
 import { stripTrailingDeveloper } from "@/lib/developer-utils";
 import { buildFactualSummary } from "@/lib/project-factual-summary";
-import { unitPricePerSqft } from "@/lib/investment-metrics";
+import { hasPaymentPlan, unitPricePerSqft } from "@/lib/investment-metrics";
 import { getSiteUrl } from "@/lib/site-url";
 import {
   buildProjectBreadcrumbJsonLd,
@@ -91,7 +91,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     `${metaName} by ${project.developer} in ${metaArea}, ${cityLabel(project.city)}`,
     Number.isFinite(minPriceMeta) ? `from AED ${minPriceMeta.toLocaleString("en-US")}` : "",
     project.handover ? `handover ${project.handover}` : "",
-    project.paymentPlan ? `${project.paymentPlan} payment plan` : "",
+    hasPaymentPlan(project.paymentPlan)
+      ? `${project.paymentPlan.trim()} payment plan`
+      : "",
     "floor plans + brochure.",
   ]
     .filter(Boolean)
@@ -373,8 +375,8 @@ export default async function ProjectDetailPage({
               },
               {
                 label: dict.pdp.hero.statPayment,
-                value: project.paymentPlan,
-                show: Boolean(project.paymentPlan?.trim()),
+                value: project.paymentPlan.trim(),
+                show: hasPaymentPlan(project.paymentPlan),
               },
               {
                 label: dict.pdp.hero.statUnits,

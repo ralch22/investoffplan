@@ -23,7 +23,7 @@ import {
   propertyTypeLabel,
 } from "@/lib/format";
 import { resolveBrochureUrl } from "@/lib/brochure";
-import { unitPricePerSqft } from "@/lib/investment-metrics";
+import { hasPaymentPlan, unitPricePerSqft } from "@/lib/investment-metrics";
 import { getProjectGalleryImages } from "@/lib/project-gallery-images";
 import { cardEntrance, cardHoverLift } from "@/lib/motion";
 import { cn } from "@/lib/cn";
@@ -91,7 +91,8 @@ export function ProjectCard({
   const isSoldOut = (catalog?.status ?? project.status) === "sold-out";
   const brochureUrl = resolveBrochureUrl(project);
   const ppsf = unitPricePerSqft({ project, unit, catalog });
-  const paymentLabel = catalog?.paymentPlan || project.paymentPlan || "Payment Plan";
+  const rawPlan = catalog?.paymentPlan || project.paymentPlan;
+  const paymentLabel = hasPaymentPlan(rawPlan) ? rawPlan.trim() : null;
   const isPlaced = placed || Boolean(item.placed);
   const statusLabel = isSoldOut
     ? dict.common.soldOut
@@ -135,7 +136,7 @@ export function ProjectCard({
             sizes={featured ? "(max-width: 1024px) 100vw, 1200px" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"}
             className="rounded-none"
           />
-          {paymentLabel !== "Payment Plan" ? <PaymentRibbon label={paymentLabel} /> : null}
+          {paymentLabel ? <PaymentRibbon label={paymentLabel} /> : null}
         </div>
 
         <div className="relative flex flex-1 flex-col p-5">
@@ -237,7 +238,8 @@ function ListCard({
   const compareId = `${project.id}:${unit.id}` as CompareUnitId;
   const galleryImages = getProjectGalleryImages(project, catalog);
   const handover = catalog?.handover ?? project.handover;
-  const paymentLabel = catalog?.paymentPlan || project.paymentPlan || "Payment Plan";
+  const rawPlan = catalog?.paymentPlan || project.paymentPlan;
+  const paymentLabel = hasPaymentPlan(rawPlan) ? rawPlan.trim() : null;
   const isSoldOut = (catalog?.status ?? project.status) === "sold-out";
   const unitCount = catalog?.projectUnitCount ?? project.unitCount;
 
@@ -260,9 +262,11 @@ function ListCard({
           <span className="pointer-events-none absolute start-4 top-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark">
             {unitCountLabel(dict, locale, unitCount, unit.propertyType)}
           </span>
-          <span className="pointer-events-none absolute bottom-4 start-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
-            {paymentLabel}
-          </span>
+          {paymentLabel ? (
+            <span className="pointer-events-none absolute bottom-4 start-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
+              {paymentLabel}
+            </span>
+          ) : null}
         </div>
         <div className="flex flex-1 flex-col gap-3 p-5 md:p-6">
           <div className="flex items-start justify-between gap-4">

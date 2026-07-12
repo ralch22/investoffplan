@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { PaymentCalculator } from "@/components/payment-calculator";
 import { bedsLabel, formatPrice, formatSqft, propertyTypeLabel } from "@/lib/format";
+import { parsePaymentPlan } from "@/lib/investment-metrics";
 import type { Project, UnitType } from "@/lib/types";
 import { useI18n } from "@/i18n/locale-provider";
 
@@ -16,20 +17,14 @@ interface ProjectPaymentCalculatorProps {
  * than one unit type, a selector lets the visitor pick which unit's launch
  * price drives the calculation. The payment plan itself is still read from the
  * project (units in the catalog share it today).
+ *
+ * Returns null when the plan is not a real numeric schedule so PDP / tools
+ * never render an empty calculator card (hooks always run first).
  */
 export function ProjectPaymentCalculator({
   project,
 }: ProjectPaymentCalculatorProps) {
   const { dict, locale } = useI18n();
-
-  function unitLabel(unit: UnitType): string {
-    const parts = [
-      bedsLabel(unit.beds, dict),
-      propertyTypeLabel(unit.propertyType, dict, locale),
-      formatSqft(unit.sqftMin, unit.sqftMax),
-    ].filter(Boolean);
-    return `${parts.join(" · ")} — ${formatPrice(unit.launchPriceAed, "AED", { compact: true })}`;
-  }
   const units = project.units;
   const [unitId, setUnitId] = useState(() => {
     if (!units.length) return "";
@@ -45,6 +40,17 @@ export function ProjectPaymentCalculator({
   );
 
   const priceAed = selected?.launchPriceAed ?? project.minPriceAed ?? 0;
+  // Hide empty / non-numeric plans (blank, "2 Payment Plans", "AED 0", …).
+  if (!parsePaymentPlan(project.paymentPlan ?? "")) return null;
+
+  function unitLabel(unit: UnitType): string {
+    const parts = [
+      bedsLabel(unit.beds, dict),
+      propertyTypeLabel(unit.propertyType, dict, locale),
+      formatSqft(unit.sqftMin, unit.sqftMax),
+    ].filter(Boolean);
+    return `${parts.join(" · ")} — ${formatPrice(unit.launchPriceAed, "AED", { compact: true })}`;
+  }
 
   return (
     <div className="space-y-4">

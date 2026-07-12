@@ -20,7 +20,7 @@ import {
   propertyTypeLabel,
 } from "@/lib/format";
 import { useI18n } from "@/i18n/locale-provider";
-import { unitPricePerSqft } from "@/lib/investment-metrics";
+import { hasPaymentPlan, unitPricePerSqft } from "@/lib/investment-metrics";
 import {
   compareMonthlyPaymentAed,
   compareUnitKey,
@@ -85,12 +85,15 @@ export function ComparePage({
     },
     {
       label: dict.pdp.keyFacts.paymentPlan,
-      render: (item) => (
-        <>
-          <span>{item.project.paymentPlan}</span>
-          <PaymentPlanBar plan={item.project.paymentPlan} />
-        </>
-      ),
+      render: (item) =>
+        hasPaymentPlan(item.project.paymentPlan) ? (
+          <>
+            <span>{item.project.paymentPlan.trim()}</span>
+            <PaymentPlanBar plan={item.project.paymentPlan} />
+          </>
+        ) : (
+          <span>{dict.pdp.keyFacts.onRequest}</span>
+        ),
     },
     {
       label: dict.pdp.timeline.handover,

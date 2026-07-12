@@ -1,5 +1,6 @@
 import { cityLabel } from "@/lib/format";
 import { resolveBrochureUrl } from "@/lib/brochure";
+import { hasPaymentPlan } from "@/lib/investment-metrics";
 import { parseMedia } from "@/lib/media";
 import type { Project } from "@/lib/types";
 
@@ -77,8 +78,13 @@ export function buildProjectJsonLd(opts: {
     project.handover
       ? { "@type": "PropertyValue", name: "Handover", value: project.handover }
       : null,
-    project.paymentPlan
-      ? { "@type": "PropertyValue", name: "Payment plan", value: project.paymentPlan }
+    // Skip blank / "AED 0" stubs so rich results never show an empty plan.
+    hasPaymentPlan(project.paymentPlan)
+      ? {
+          "@type": "PropertyValue",
+          name: "Payment plan",
+          value: project.paymentPlan.trim(),
+        }
       : null,
     brochure
       ? { "@type": "PropertyValue", name: "Brochure", value: brochure }
