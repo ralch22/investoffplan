@@ -96,7 +96,7 @@ export function ProjectDetailCtas({
       <div
         className="fixed inset-x-0 bottom-0 z-[var(--z-sticky)] border-t border-border bg-surface/95 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-elevation-lg backdrop-blur-xl lg:hidden"
         role="region"
-        aria-label="Quick actions"
+        aria-label={dict.a11y.quickActions}
       >
         <div className="mx-auto flex max-w-[1200px] gap-3">
           <button

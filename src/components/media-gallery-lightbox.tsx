@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
 import { unoptimizedProp } from "@/lib/asset-image";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 interface MediaGalleryLightboxProps {
   images: string[];
@@ -26,6 +28,7 @@ export function MediaGalleryLightbox({
   onNext,
   onSelect,
 }: MediaGalleryLightboxProps) {
+  const { dict } = useI18n();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const touchStartX = useRef<number | null>(null);
   const count = images.length;
@@ -72,7 +75,11 @@ export function MediaGalleryLightbox({
   return (
     <dialog
       ref={dialogRef}
-      aria-label={alt ? `${alt} photo gallery` : "Photo gallery"}
+      aria-label={
+        alt
+          ? interpolate(dict.a11y.photoGalleryNamed, { alt })
+          : dict.a11y.photoGallery
+      }
       className="fixed inset-0 z-[var(--z-modal)] m-0 h-full max-h-none w-full max-w-none border-0 bg-black/95 p-0 backdrop:bg-black/80"
       onClose={onClose}
       onClick={(e) => {
@@ -95,7 +102,7 @@ export function MediaGalleryLightbox({
             type="button"
             onClick={onClose}
             className="focus-ring-light inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20"
-            aria-label="Close gallery"
+            aria-label={dict.a11y.closeGallery}
           >
             <CloseIcon />
           </button>
@@ -125,7 +132,7 @@ export function MediaGalleryLightbox({
                 type="button"
                 onClick={onPrev}
                 className="focus-ring-light absolute start-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 md:start-6"
-                aria-label="Previous photo"
+                aria-label={dict.a11y.previousPhoto}
               >
                 <ChevronIcon direction="left" />
               </button>
@@ -133,7 +140,7 @@ export function MediaGalleryLightbox({
                 type="button"
                 onClick={onNext}
                 className="focus-ring-light absolute end-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white transition hover:bg-white/20 md:end-6"
-                aria-label="Next photo"
+                aria-label={dict.a11y.nextPhoto}
               >
                 <ChevronIcon direction="right" />
               </button>

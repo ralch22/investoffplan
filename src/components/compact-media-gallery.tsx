@@ -10,6 +10,7 @@ import {
   ExpandIcon,
   MediaGalleryLightbox,
 } from "@/components/media-gallery-lightbox";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface CompactMediaGalleryProps {
   images: string[];
@@ -35,6 +36,7 @@ export function CompactMediaGallery({
   soldOutGrayscale = false,
   fill = true,
 }: CompactMediaGalleryProps) {
+  const { dict } = useI18n();
   const [active, setActive] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -152,7 +154,7 @@ export function CompactMediaGallery({
               type="button"
               onClick={goPrev}
               className="absolute start-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/70 md:opacity-0 md:group-hover/gallery:opacity-100"
-              aria-label="Previous photo"
+              aria-label={dict.a11y.previousPhoto}
             >
               <ChevronIcon direction="left" />
             </button>
@@ -160,7 +162,7 @@ export function CompactMediaGallery({
               type="button"
               onClick={goNext}
               className="absolute end-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/70 md:opacity-0 md:group-hover/gallery:opacity-100"
-              aria-label="Next photo"
+              aria-label={dict.a11y.nextPhoto}
             >
               <ChevronIcon direction="right" />
             </button>

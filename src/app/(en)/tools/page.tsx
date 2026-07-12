@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { DataGuruToolCard } from "@/components/dataguru-tool-card";
 import { InvestorMatchToolCard } from "@/components/investor-match-tool-card";
+import { LocaleLink } from "@/components/locale-link";
 import { DATAGURU_TOOLS } from "@/lib/dataguru";
 import { getHeroImage } from "@/lib/area-images";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
@@ -63,9 +63,9 @@ export async function ToolsHubPageContent({ locale = "en" }: { locale?: Locale }
             </li>
             <li>
               <strong className="text-text-dark">{t.dataguruNewProjects}</strong> —{" "}
-              <Link href="/projects" className="text-brand underline">
+              <LocaleLink href="/projects" className="text-brand underline">
                 {t.dataguruNewProjectsDesc}
-              </Link>
+              </LocaleLink>
             </li>
           </ul>
         </section>

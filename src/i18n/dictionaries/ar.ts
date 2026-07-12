@@ -160,7 +160,18 @@ export const ar: Dict = {
     "brochure": "البروشور",
     "compareProject": "قارن {name}",
     "compareClear": "مسح",
-    "compareHint": "قارن الوحدات"
+    "compareHint": "قارن الوحدات",
+    "share": "مشاركة",
+    "linkCopied": "تم نسخ الرابط",
+    "linkCopiedAria": "تم نسخ الرابط إلى الحافظة",
+    "shareAria": "مشاركة {title}",
+    "fromUpper": "من",
+    "projectsUnits": "{projects} مشروع · {units} وحدة",
+    "matchingUnits": "{city} · {projects} مشروع · {units} وحدة مطابقة",
+    "exploreCommunity": "استكشف المجتمع",
+    "viewProjects": "عرض المشاريع",
+    "fullscreen": "ملء الشاشة",
+    "clear": "مسح"
   },
   "a11y": {
     "skipToContent": "تخطَّ إلى المحتوى",
@@ -168,7 +179,44 @@ export const ar: Dict = {
     "filterByCity": "تصفية حسب المدينة",
     "filterByCollection": "تصفية حسب المجموعة",
     "viewMode": "وضع العرض",
-    "photoCounter": "صورة {current} من {count}"
+    "photoCounter": "صورة {current} من {count}",
+    "previousPhoto": "الصورة السابقة",
+    "nextPhoto": "الصورة التالية",
+    "closeGallery": "إغلاق المعرض",
+    "galleryThumbnails": "مصغّرات المعرض",
+    "photoGallery": "معرض الصور",
+    "photoGalleryNamed": "معرض صور {alt}",
+    "viewFullscreen": "عرض صور {alt} بملء الشاشة",
+    "quickActions": "إجراءات سريعة",
+    "adjustPurchasePrice": "ضبط سعر الشراء",
+    "chartMetric": "مقياس الرسم البياني"
+  },
+  "lifestyles": {
+    "all": "كل أنماط الحياة",
+    "family-friendly": {
+      "label": "مناسب للعائلات",
+      "description": "مجتمعات واسعة بحدائق ومدارس وهدوء ضواحي."
+    },
+    "waterfront": {
+      "label": "واجهة مائية وشاطئ",
+      "description": "حياة المارينا والخليج والجزر مع مرافق ساحلية."
+    },
+    "urban": {
+      "label": "حضري ومركزي",
+      "description": "مراكز مدينة قابلة للمشي، أحياء أعمال، وإطلالات أفقية."
+    },
+    "golf": {
+      "label": "غولف ومساحات خضراء",
+      "description": "مجتمعات مخططة بملاعب غولف وحياة منسّقة."
+    },
+    "investment": {
+      "label": "نقاط استثمار ساخنة",
+      "description": "أحياء عالية النشاط مع إطلاقات قوية على الخارطة."
+    },
+    "luxury": {
+      "label": "فخامة ومكانة",
+      "description": "عناوين فائقة التميّز ومساكن ذات علامة تجارية."
+    }
   },
   "news": {
     "readMore": "اقرأ المزيد",
@@ -753,6 +801,80 @@ export const ar: Dict = {
   },
   "tools": {
     "openTool": "افتح الأداة",
+    "cards": {
+      "price-map": {
+        "title": "خريطة الأسعار",
+        "description": "اكتشف المجتمعات التي تناسب ميزانيتك — أسعار الإطلاق حسب المنطقة وعدد الغرف ونوع العقار.",
+        "pfFeature": "خريطة الأسعار"
+      },
+      "communities": {
+        "title": "رؤى المجتمعات",
+        "description": "استكشف المجتمعات بحسب نمط الحياة — عائلية، واجهة مائية، حضرية، غولف، والمزيد.",
+        "pfFeature": "رؤى المجتمعات"
+      },
+      "rent-vs-buy": {
+        "title": "حاسبة الإيجار مقابل الشراء",
+        "description": "قارن الأقساط الشهرية والتكاليف طويلة الأجل للإيجار مقابل شراء عقار على الخارطة في الإمارات.",
+        "pfFeature": "حاسبة الإيجار مقابل الشراء"
+      },
+      "residential": {
+        "title": "رؤى سكنية",
+        "description": "ذكاء أسعار الإطلاق لكل مشروع — متوسط الأسعار والسعر للقدم المربع ومقارنات قريبة.",
+        "pfFeature": "رؤى سكنية"
+      },
+      "mortgage": {
+        "title": "حاسبة الرهن العقاري",
+        "description": "نمذجة الأقساط والنقد عند الإغلاق مع رسوم دائرة الأراضي واختبار القدرة — ثم اطلب الموافقة المبدئية.",
+        "pfFeature": "أدوات الرهن"
+      },
+      "payment": {
+        "title": "حاسبة خطة السداد",
+        "description": "قسّم أي خطة سداد (60/40، 80/20، بعد التسليم) إلى مبالغ بالدرهم لكل مرحلة حسب سعر الشراء.",
+        "pfFeature": "خطط السداد"
+      },
+      "new-projects": {
+        "title": "مشاريع جديدة",
+        "description": "تصفّح أكثر من 2,000 خيار وحدة على الخارطة مع البروشورات والمقارنة وحاسبات السداد.",
+        "pfFeature": "مشاريع جديدة"
+      },
+      "roi": {
+        "title": "مقدّر العائد والإيجار",
+        "description": "قدّر عائد الإيجار والارتفاع الرأسمالي وإجمالي العائد — مُعبّأ ببيانات دائرة الأراضي 2025 وقابل للمشاركة عبر رابط.",
+        "pfFeature": "عائد الاستثمار"
+      }
+    },
+    "priceMapExplorer": {
+      "filters": "عوامل التصفية",
+      "bedrooms": "غرف النوم",
+      "allBedrooms": "كل غرف النوم",
+      "propertyType": "نوع العقار",
+      "maxBudget": "الحد الأقصى للميزانية (درهم)",
+      "budgetPlaceholder": "مثال: 2000000",
+      "applyFilters": "تطبيق الغرف والنوع",
+      "searchPlaceholder": "ابحث عن المجتمعات…",
+      "tierLow": "أكثر توفيرًا",
+      "tierMid": "متوسط",
+      "tierHigh": "فاخر",
+      "avgLaunch": "متوسط الإطلاق: {price}",
+      "avgPsf": "متوسط درهم/قدم²: {value}",
+      "launchPrices": "أسعار الإطلاق {min} – {max}",
+      "bed0": "استوديو",
+      "bed1": "غرفة واحدة",
+      "bed2": "غرفتان",
+      "bed3": "3 غرف",
+      "bed4": "4+ غرف"
+    },
+    "communityInsightsExplorer": {
+      "searchPlaceholder": "ابحث عن المجتمعات…",
+      "countSingular": "مجتمع واحد",
+      "countPlural": "{count} مجتمع",
+      "unitOptions": "{count} خيار وحدة",
+      "priceOnRequest": "السعر عند الطلب",
+      "fromPrice": "من {price}",
+      "dldLine": "دائرة الأراضي 2025:",
+      "grossYield": "عائد إجمالي {value}%",
+      "soldPsf": "بيع {value} درهم/قدم²"
+    },
     "hubLinks": {
       "roi": "حاسبة العائد والإيجار",
       "investorMatch": "مطابقة المستثمر"
@@ -1134,7 +1256,22 @@ export const ar: Dict = {
     },
     "map": {
       "heroTitle": "خريطة المشاريع",
-      "heroSubtitle": "{count} مشروع جاهز للخريطة في الإمارات"
+      "heroSubtitle": "{count} مشروع جاهز للخريطة في الإمارات",
+      "goldenVisaYears": "10 سنوات",
+      "goldenVisa": "التأشيرة الذهبية",
+      "goldenVisaBody": "قد تفتح الاستثمارات المؤهلة على الخارطة مزايا إقامة طويلة الأمد في الإمارات. استخدم الخريطة لاختيار المشاريع، ثم قارن الوحدات وحمّل البروشورات قبل التحدث مع مستشار.",
+      "searchPlaceholder": "ابحث عن مشاريع على الخريطة…",
+      "projectsWithCoords": "{count} مشروع بإحداثيات",
+      "noMatch": "لا توجد مشاريع تطابق عوامل التصفية الحالية.",
+      "priceOnRequest": "السعر عند الطلب",
+      "exploreHint": "انقر على دبوس أو ابحث في القائمة لاستكشاف المشاريع"
+    },
+    "topDevelopers": {
+      "title": "أبرز 5 مطوّرين",
+      "rankedByUnits": "مرتّبون حسب خيارات الوحدات في الكتالوج المباشر",
+      "rankedByProjects": "مرتّبون حسب المشاريع في الكتالوج المباشر",
+      "byUnits": "حسب الوحدات",
+      "byProjects": "حسب المشاريع"
     },
     "locations": {
       "heroTitle": "أدلّة المواقع",
@@ -1356,6 +1493,15 @@ export const ar: Dict = {
     "hintPriceTrend": "درهم/قدم²، البداية ← الأحدث",
     "studio": "استوديو",
     "fourPlusBed": "4+ غرف",
-    "bedLabel": "{k} غرف"
+    "bedLabel": "{k} غرف",
+    "marketDataHeading": "بيانات السوق",
+    "marketDataBody": "ما بيعت به {areaName} فعليًا في 2025 — من سجلات دائرة الأراضي الرسمية.",
+    "confidenceLine": "ثقة {confidence} · {source}",
+    "bedTableHeading": "وسيط سعر البيع حسب غرف النوم",
+    "typeCol": "النوع",
+    "medianPriceCol": "وسيط السعر",
+    "aedSqftCol": "درهم/قدم²",
+    "salesCol": "المبيعات",
+    "monthlyTrendHeading": "وسيط درهم/قدم² حسب الشهر"
   }
 };

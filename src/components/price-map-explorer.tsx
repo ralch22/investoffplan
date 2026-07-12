@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import {
@@ -13,25 +12,11 @@ import { communitySlugFor } from "@/lib/community-slug";
 import { formatMapPrice } from "@/lib/map-data";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { LocaleLink } from "@/components/locale-link";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate, localePath } from "@/i18n/config";
 
 const DUBAI_CENTER: [number, number] = [25.15, 55.28];
-
-const BED_OPTIONS = [
-  { value: "", label: "All bedrooms" },
-  { value: "0", label: "Studio" },
-  { value: "1", label: "1 BR" },
-  { value: "2", label: "2 BR" },
-  { value: "3", label: "3 BR" },
-  { value: "4", label: "4+ BR" },
-];
-
-const TYPE_OPTIONS = [
-  { value: "", label: "All types" },
-  { value: "apartment", label: "Apartment" },
-  { value: "villa", label: "Villa" },
-  { value: "townhouse", label: "Townhouse" },
-  { value: "penthouse", label: "Penthouse" },
-];
 
 interface PriceMapExplorerProps {
   initialPoints: AreaPricePoint[];
@@ -44,11 +29,37 @@ function MapFocus({ center }: { center: [number, number] | null }) {
 }
 
 export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
+  const { dict, locale } = useI18n();
+  const t = dict.tools.priceMapExplorer;
+  const f = dict.serp.filters;
   const [beds, setBeds] = useState("");
   const [propertyType, setPropertyType] = useState("");
   const [maxBudget, setMaxBudget] = useState("");
   const [selected, setSelected] = useState<AreaPricePoint | null>(null);
   const [query, setQuery] = useState("");
+
+  const bedOptions = useMemo(
+    () => [
+      { value: "", label: t.allBedrooms },
+      { value: "0", label: t.bed0 },
+      { value: "1", label: t.bed1 },
+      { value: "2", label: t.bed2 },
+      { value: "3", label: t.bed3 },
+      { value: "4", label: t.bed4 },
+    ],
+    [t],
+  );
+
+  const typeOptions = useMemo(
+    () => [
+      { value: "", label: f.allTypes },
+      { value: "apartment", label: f.apartment },
+      { value: "villa", label: f.villa },
+      { value: "townhouse", label: f.townhouse },
+      { value: "penthouse", label: f.penthouse },
+    ],
+    [f],
+  );
 
   const points = useMemo(() => {
     let list = initialPoints;
@@ -69,11 +80,12 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
     ? ([selected.lat, selected.lng] as [number, number])
     : null;
 
-  async function applyServerFilters() {
+  function applyServerFilters() {
     const params = new URLSearchParams();
     if (beds) params.set("beds", beds);
     if (propertyType) params.set("type", propertyType);
-    const url = `/tools/price-map${params.size ? `?${params}` : ""}`;
+    const base = localePath(locale, "/tools/price-map");
+    const url = `${base}${params.size ? `?${params}` : ""}`;
     window.location.href = url;
   }
 
@@ -81,16 +93,16 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-[340px_1fr]">
       <aside className="flex flex-col gap-4">
         <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
-          <h2 className="text-sm font-semibold text-text-dark">Filters</h2>
+          <h2 className="text-sm font-semibold text-text-dark">{t.filters}</h2>
           <div className="mt-3 space-y-3">
             <label className="block text-xs font-medium text-muted">
-              Bedrooms
+              {t.bedrooms}
               <select
                 value={beds}
                 onChange={(e) => setBeds(e.target.value)}
                 className="iop-input mt-1 w-full"
               >
-                {BED_OPTIONS.map((o) => (
+                {bedOptions.map((o) => (
                   <option key={o.value} value={o.value}>
                     {o.label}
                   </option>
@@ -98,13 +110,13 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
               </select>
             </label>
             <label className="block text-xs font-medium text-muted">
-              Property type
+              {t.propertyType}
               <select
                 value={propertyType}
                 onChange={(e) => setPropertyType(e.target.value)}
                 className="iop-input mt-1 w-full"
               >
-                {TYPE_OPTIONS.map((o) => (
+                {typeOptions.map((o) => (
                   <option key={o.value} value={o.value}>
                     {o.label}
                   </option>
@@ -112,12 +124,12 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
               </select>
             </label>
             <label className="block text-xs font-medium text-muted">
-              Max budget (AED)
+              {t.maxBudget}
               <input
                 type="number"
                 value={maxBudget}
                 onChange={(e) => setMaxBudget(e.target.value)}
-                placeholder="e.g. 2000000"
+                placeholder={t.budgetPlaceholder}
                 className="iop-input mt-1 w-full font-mono tabular-nums"
               />
             </label>
@@ -126,14 +138,14 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
               onClick={applyServerFilters}
               className="w-full rounded-full bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
             >
-              Apply bedroom & type
+              {t.applyFilters}
             </button>
           </div>
         </div>
 
         <input
           type="search"
-          placeholder="Search communities…"
+          placeholder={t.searchPlaceholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="iop-input"
@@ -146,7 +158,7 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
                 className="h-2.5 w-2.5 rounded-full"
                 style={{ backgroundColor: PRICE_TIER_COLORS[tier] }}
               />
-              {tier === "low" ? "More affordable" : tier === "mid" ? "Mid-range" : "Premium"}
+              {tier === "low" ? t.tierLow : tier === "mid" ? t.tierMid : t.tierHigh}
             </span>
           ))}
         </div>
@@ -171,7 +183,10 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
                     <div>
                       <p className="font-semibold text-text-dark">{point.name}</p>
                       <p className="text-xs text-muted">
-                        {point.projectCount} projects · {point.unitCount} units
+                        {interpolate(dict.common.projectsUnits, {
+                          projects: point.projectCount,
+                          units: point.unitCount,
+                        })}
                       </p>
                     </div>
                     <span
@@ -220,13 +235,24 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
                 <Popup>
                   <div className="text-sm">
                     <p className="font-semibold">{point.name}</p>
-                    <p>Avg launch: {formatPrice(point.avgPriceAed, "AED", { compact: true })}</p>
+                    <p>
+                      {interpolate(t.avgLaunch, {
+                        price: formatPrice(point.avgPriceAed, "AED", { compact: true }),
+                      })}
+                    </p>
                     {point.avgPpsf ? (
-                      <p>Avg AED/sqft: {point.avgPpsf.toLocaleString()}</p>
+                      <p>
+                        {interpolate(t.avgPsf, {
+                          value: point.avgPpsf.toLocaleString(),
+                        })}
+                      </p>
                     ) : null}
-                    <Link href={`/communities/${communitySlugFor(point.name)}`} className="text-brand underline">
-                      Explore community
-                    </Link>
+                    <LocaleLink
+                      href={`/communities/${communitySlugFor(point.name)}`}
+                      className="text-brand underline"
+                    >
+                      {dict.common.exploreCommunity}
+                    </LocaleLink>
                   </div>
                 </Popup>
               </CircleMarker>
@@ -241,27 +267,32 @@ export function PriceMapExplorer({ initialPoints }: PriceMapExplorerProps) {
             <div>
               <h3 className="text-xl font-semibold text-text-dark">{selected.name}</h3>
               <p className="mt-1 text-sm text-muted">
-                {selected.cityLabel} · {selected.projectCount} projects · {selected.unitCount}{" "}
-                matching units
+                {interpolate(dict.common.matchingUnits, {
+                  city: selected.cityLabel,
+                  projects: selected.projectCount,
+                  units: selected.unitCount,
+                })}
               </p>
               <p className="mt-3 text-lg font-semibold text-brand">
-                Launch prices {formatMapPrice(selected.minPriceAed)} –{" "}
-                {formatMapPrice(selected.maxPriceAed)}
+                {interpolate(t.launchPrices, {
+                  min: formatMapPrice(selected.minPriceAed),
+                  max: formatMapPrice(selected.maxPriceAed),
+                })}
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Link
+              <LocaleLink
                 href={`/communities/${communitySlugFor(selected.name)}`}
                 className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white"
               >
-                Explore community
-              </Link>
-              <Link
+                {dict.common.exploreCommunity}
+              </LocaleLink>
+              <LocaleLink
                 href={`/projects?q=${encodeURIComponent(selected.name)}`}
                 className="rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-text-dark"
               >
-                View projects
-              </Link>
+                {dict.common.viewProjects}
+              </LocaleLink>
             </div>
           </div>
         </div>

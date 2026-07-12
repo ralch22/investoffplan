@@ -158,7 +158,18 @@ const dict = {
     "brochure": "Brochure",
     "compareProject": "Compare {name}",
     "compareClear": "Clear",
-    "compareHint": "Compare units"
+    "compareHint": "Compare units",
+    "share": "Share",
+    "linkCopied": "Link copied",
+    "linkCopiedAria": "Link copied to clipboard",
+    "shareAria": "Share {title}",
+    "fromUpper": "FROM",
+    "projectsUnits": "{projects} projects · {units} units",
+    "matchingUnits": "{city} · {projects} projects · {units} matching units",
+    "exploreCommunity": "Explore community",
+    "viewProjects": "View projects",
+    "fullscreen": "Fullscreen",
+    "clear": "Clear"
   },
   "a11y": {
     "skipToContent": "Skip to content",
@@ -166,7 +177,44 @@ const dict = {
     "filterByCity": "Filter by city",
     "filterByCollection": "Filter by collection",
     "viewMode": "View mode",
-    "photoCounter": "Photo {current} of {count}"
+    "photoCounter": "Photo {current} of {count}",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "closeGallery": "Close gallery",
+    "galleryThumbnails": "Gallery thumbnails",
+    "photoGallery": "Photo gallery",
+    "photoGalleryNamed": "{alt} photo gallery",
+    "viewFullscreen": "View {alt} photos fullscreen",
+    "quickActions": "Quick actions",
+    "adjustPurchasePrice": "Adjust purchase price",
+    "chartMetric": "Chart metric"
+  },
+  "lifestyles": {
+    "all": "All lifestyles",
+    "family-friendly": {
+      "label": "Family-friendly",
+      "description": "Spacious communities with parks, schools, and suburban calm."
+    },
+    "waterfront": {
+      "label": "Waterfront & beach",
+      "description": "Marina, creek, and island living with coastal amenities."
+    },
+    "urban": {
+      "label": "Urban & central",
+      "description": "Walkable city cores, business districts, and skyline views."
+    },
+    "golf": {
+      "label": "Golf & green",
+      "description": "Master-planned estates with golf courses and landscaped living."
+    },
+    "investment": {
+      "label": "Investment hotspots",
+      "description": "High-velocity districts with strong off-plan launch activity."
+    },
+    "luxury": {
+      "label": "Luxury & prestige",
+      "description": "Ultra-prime addresses and branded residences."
+    }
   },
   "news": {
     "readMore": "Read More",
@@ -751,6 +799,80 @@ const dict = {
   },
   "tools": {
     "openTool": "Open tool",
+    "cards": {
+      "price-map": {
+        "title": "Price Map",
+        "description": "See which communities fit your budget — launch prices by area, bedroom count, and property type.",
+        "pfFeature": "Price Map"
+      },
+      "communities": {
+        "title": "Community Insights",
+        "description": "Explore communities grouped by lifestyle — family-friendly, waterfront, urban, golf, and more.",
+        "pfFeature": "Community Insights"
+      },
+      "rent-vs-buy": {
+        "title": "Rent vs Buy Calculator",
+        "description": "Compare monthly payments and long-term costs of renting versus buying off-plan in the UAE.",
+        "pfFeature": "Rent vs Buy Calculator"
+      },
+      "residential": {
+        "title": "Residential Insights",
+        "description": "Launch-price intelligence per project — average prices, price per sqft, and nearby comparisons.",
+        "pfFeature": "Residential Insights"
+      },
+      "mortgage": {
+        "title": "Mortgage Calculator",
+        "description": "Model repayments, cash-to-close with DLD fees, and stress-tested affordability — then request pre-approval.",
+        "pfFeature": "Mortgage tools"
+      },
+      "payment": {
+        "title": "Payment Plan Calculator",
+        "description": "Break any payment plan (60/40, 80/20, post-handover) into dirham amounts per phase at your purchase price.",
+        "pfFeature": "Payment plans"
+      },
+      "new-projects": {
+        "title": "New Projects",
+        "description": "Browse 2,000+ off-plan unit options with brochures, compare, and payment calculators.",
+        "pfFeature": "New Projects"
+      },
+      "roi": {
+        "title": "ROI & Yield Estimator",
+        "description": "Estimate off-plan rental yield, capital appreciation, and total return — prefilled with 2025 DLD market data and shareable via link.",
+        "pfFeature": "Investment ROI"
+      }
+    },
+    "priceMapExplorer": {
+      "filters": "Filters",
+      "bedrooms": "Bedrooms",
+      "allBedrooms": "All bedrooms",
+      "propertyType": "Property type",
+      "maxBudget": "Max budget (AED)",
+      "budgetPlaceholder": "e.g. 2000000",
+      "applyFilters": "Apply bedroom & type",
+      "searchPlaceholder": "Search communities…",
+      "tierLow": "More affordable",
+      "tierMid": "Mid-range",
+      "tierHigh": "Premium",
+      "avgLaunch": "Avg launch: {price}",
+      "avgPsf": "Avg AED/sqft: {value}",
+      "launchPrices": "Launch prices {min} – {max}",
+      "bed0": "Studio",
+      "bed1": "1 BR",
+      "bed2": "2 BR",
+      "bed3": "3 BR",
+      "bed4": "4+ BR"
+    },
+    "communityInsightsExplorer": {
+      "searchPlaceholder": "Search communities…",
+      "countSingular": "{count} community",
+      "countPlural": "{count} communities",
+      "unitOptions": "{count} unit options",
+      "priceOnRequest": "price on request",
+      "fromPrice": "from {price}",
+      "dldLine": "DLD 2025:",
+      "grossYield": "{value}% gross yield",
+      "soldPsf": "AED {value}/sqft sold"
+    },
     "hubLinks": {
       "roi": "ROI & Yield Estimator",
       "investorMatch": "Investor Match"
@@ -1132,7 +1254,22 @@ const dict = {
     },
     "map": {
       "heroTitle": "Project map",
-      "heroSubtitle": "{count} map-ready projects across the UAE"
+      "heroSubtitle": "{count} map-ready projects across the UAE",
+      "goldenVisaYears": "10 Years",
+      "goldenVisa": "Golden Visa",
+      "goldenVisaBody": "Qualifying off-plan investments may unlock long-term UAE residency benefits. Use the map to shortlist projects, then compare units and download brochures before you speak with an advisor.",
+      "searchPlaceholder": "Search map projects…",
+      "projectsWithCoords": "{count} projects with coordinates",
+      "noMatch": "No projects match the current filters.",
+      "priceOnRequest": "Price on request",
+      "exploreHint": "Tap a pin or search the list to explore projects"
+    },
+    "topDevelopers": {
+      "title": "Top 5 Developers",
+      "rankedByUnits": "Ranked by live catalog unit options",
+      "rankedByProjects": "Ranked by live catalog projects",
+      "byUnits": "By units",
+      "byProjects": "By projects"
     },
     "locations": {
       "heroTitle": "Location guides",
@@ -1354,7 +1491,16 @@ const dict = {
     "hintPriceTrend": "AED/sqft, start→latest",
     "studio": "Studio",
     "fourPlusBed": "4+ bed",
-    "bedLabel": "{k} bed"
+    "bedLabel": "{k} bed",
+    "marketDataHeading": "Market data",
+    "marketDataBody": "What {areaName} actually sold for in 2025 — from official Dubai Land Department records.",
+    "confidenceLine": "{confidence} confidence · {source}",
+    "bedTableHeading": "Median sold price by bedroom",
+    "typeCol": "Type",
+    "medianPriceCol": "Median price",
+    "aedSqftCol": "AED/sqft",
+    "salesCol": "Sales",
+    "monthlyTrendHeading": "Median AED/sqft by month"
   }
 } as const;
 

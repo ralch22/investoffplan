@@ -6,6 +6,7 @@ import {
   formatPrice,
   formatPricePerSqft,
 } from "@/lib/format";
+import { useI18n } from "@/i18n/locale-provider";
 
 /**
  * Client price primitives for server-rendered surfaces (PDP). They take RAW AED
@@ -22,7 +23,8 @@ export function Price({
   fallback?: string;
 }) {
   const currency = useCurrency();
-  if (!(aed > 0)) return <>{fallback ?? "Price on request"}</>;
+  const { dict } = useI18n();
+  if (!(aed > 0)) return <>{fallback ?? dict.pdp.priceOnRequest}</>;
   return <>{formatPrice(aed, currency)}</>;
 }
 

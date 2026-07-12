@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 interface ShareButtonProps {
   title: string;
@@ -8,6 +10,7 @@ interface ShareButtonProps {
 }
 
 export function ShareButton({ title, className }: ShareButtonProps) {
+  const { dict } = useI18n();
   const [copied, setCopied] = useState(false);
 
   async function handleShare() {
@@ -29,13 +32,17 @@ export function ShareButton({ title, className }: ShareButtonProps) {
     <button
       type="button"
       onClick={handleShare}
-      aria-label={copied ? "Link copied to clipboard" : `Share ${title}`}
+      aria-label={
+        copied
+          ? dict.common.linkCopiedAria
+          : interpolate(dict.common.shareAria, { title })
+      }
       className={
         className ??
         "iop-btn-press focus-ring rounded-full border border-border px-4 py-2 text-sm font-semibold text-muted transition hover:border-brand hover:text-brand"
       }
     >
-      {copied ? "Link copied" : "Share"}
+      {copied ? dict.common.linkCopied : dict.common.share}
     </button>
   );
 }

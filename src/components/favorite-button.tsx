@@ -8,6 +8,7 @@ import {
 } from "@/lib/favorites";
 import { cn } from "@/lib/cn";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface FavoriteButtonProps {
   slug: string;
@@ -20,6 +21,7 @@ export function FavoriteButton({
   className,
   variant = "default",
 }: FavoriteButtonProps) {
+  const { dict } = useI18n();
   const [active, setActive] = useState(false);
 
   useEffect(() => {
@@ -38,7 +40,9 @@ export function FavoriteButton({
   return (
     <button
       type="button"
-      aria-label={active ? "Remove from favorites" : "Add to favorites"}
+      aria-label={
+        active ? dict.common.removeFromFavorites : dict.common.addToFavorites
+      }
       aria-pressed={active}
       onClick={() => {
         const nowActive = toggleFavoriteSlug(slug).includes(slug);

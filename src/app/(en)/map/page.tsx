@@ -66,14 +66,10 @@ export async function MapPageContent({
       <section className="border-t border-border bg-white py-14">
         <div className="mx-auto grid grid-cols-1 max-w-[1200px] gap-8 px-5 md:grid-cols-2 md:items-center md:px-8">
           <div className="rounded-2xl bg-brand/10 p-8">
-            <p className="text-4xl font-semibold text-brand">10 Years</p>
-            <p className="mt-2 text-xl font-semibold text-text-dark">Golden Visa</p>
+            <p className="text-4xl font-semibold text-brand">{t.goldenVisaYears}</p>
+            <p className="mt-2 text-xl font-semibold text-text-dark">{t.goldenVisa}</p>
           </div>
-          <p className="text-sm leading-relaxed text-muted">
-            Qualifying off-plan investments may unlock long-term UAE residency benefits.
-            Use the map to shortlist projects, then compare units and download brochures
-            before you speak with an advisor.
-          </p>
+          <p className="text-sm leading-relaxed text-muted">{t.goldenVisaBody}</p>
         </div>
       </section>
     </PageShell>
