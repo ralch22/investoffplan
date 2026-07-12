@@ -98,7 +98,7 @@ export async function CommunitiesPageContent({ locale = "en" }: { locale?: Local
       {comparisons.length > 0 ? (
         <section className="py-14">
           <div className="mx-auto max-w-[1200px] px-5 md:px-8">
-            <p className="section-eyebrow">Real DLD data</p>
+            <p className="section-eyebrow">{t.realDldEyebrow}</p>
             <h2 className="mt-2 font-display text-2xl font-semibold text-text-dark md:text-3xl">
               {t.compareHeading}<span className="text-brand">.</span>
             </h2>

@@ -82,12 +82,12 @@ export async function CompareHubPageContent({
 
       <section className="py-14">
         <div className="mx-auto max-w-[1200px] px-5 md:px-8">
-          <p className="section-eyebrow">Decide with data</p>
+          <p className="section-eyebrow">{t.decideWithData}</p>
           <h2 className="mt-2 font-display text-2xl font-semibold text-text-dark md:text-3xl">
-            Compare communities<span className="text-brand">.</span>
+            {t.hubHeading}<span className="text-brand">.</span>
           </h2>
           <p className="mt-2 max-w-xl text-sm text-muted">
-            Side-by-side on real 2025 sold prices, price per sqft, and gross rental yields.
+            {t.hubSubtitle}
           </p>
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {comparisons.map((c) => (

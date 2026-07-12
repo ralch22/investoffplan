@@ -1068,7 +1068,10 @@ const dict = {
       "rowPaymentPlan": "Payment plan",
       "rowAreaYield": "Area gross yield (DLD)",
       "rowGoldenVisa": "Golden Visa eligible",
-      "viewProjectCta": "View {name}"
+      "viewProjectCta": "View {name}",
+      "decideWithData": "Decide with data",
+      "hubHeading": "Compare communities",
+      "hubSubtitle": "Side-by-side on real 2025 sold prices, price per sqft, and gross rental yields."
     },
     "compareDev": {
       "heroSubtitle": "Off-plan developer comparison — portfolio, pricing, and delivery pipeline from our live catalog.",
@@ -1116,7 +1119,8 @@ const dict = {
       "mapHeading": "Search The Map",
       "mapSubtitle": "Explore communities with launch-price tiers or project pins — two map views for budget and inventory.",
       "priceMap": "Price map",
-      "projectMap": "Project map"
+      "projectMap": "Project map",
+      "realDldEyebrow": "Real DLD data"
     },
     "developers": {
       "heroTitle": "Top Real Estate Developers in UAE",
