@@ -26,6 +26,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: `${topic.title} — FAQ`,
     description: topic.description,
     alternates: enMeta(`/faq/${slug}`),
+    openGraph: {
+      title: `${topic.title} — FAQ`,
+      description: topic.description,
+      images: [{ url: "/brand/icon-red.png", width: 512, height: 512, alt: "invest off-plan" }],
+    },
   };
 }
 

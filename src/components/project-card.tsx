@@ -67,6 +67,8 @@ interface ProjectCardProps {
    */
   placed?: boolean;
   index?: number;
+  /** Override image fetch priority independently from the "featured" visual style. */
+  imgPriority?: boolean;
 }
 
 export function ProjectCard({
@@ -78,6 +80,7 @@ export function ProjectCard({
   featured = false,
   placed = false,
   index = 0,
+  imgPriority,
 }: ProjectCardProps) {
   const [brochureOpen, setBrochureOpen] = useState(false);
   const { locale, dict } = useI18n();
@@ -127,7 +130,7 @@ export function ProjectCard({
             alt={project.name}
             projectHref={`/projects/${project.slug}`}
             fallbackClassName={cn("bg-gradient-to-br", project.imageGradient)}
-            priority={featured}
+            priority={imgPriority ?? featured}
             soldOutGrayscale={isSoldOut}
             sizes={featured ? "(max-width: 1024px) 100vw, 1200px" : "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 600px"}
             className="rounded-none"

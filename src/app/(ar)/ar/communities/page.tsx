@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { arMeta } from "@/lib/ar-meta";
-
-// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
-export { default } from "@/app/(en)/communities/page";
+import { CommunitiesPageContent } from "@/app/(en)/communities/page";
 
 export const metadata: Metadata = arMeta({
   path: "/communities",
@@ -10,3 +8,7 @@ export const metadata: Metadata = arMeta({
   description:
     "استكشف مجتمعات العقارات على الخارطة في دبي والإمارات مع عدد المشاريع وأسعار الإطلاق وبيانات دائرة الأراضي والأملاك.",
 });
+
+export default async function ArCommunitiesPage() {
+  return <CommunitiesPageContent locale="ar" />;
+}

@@ -1,19 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { communitySlugFor } from "@/lib/community-slug";
 import type { ResidentialBuilding } from "@/lib/residential-insights";
 import { formatPrice } from "@/lib/format";
 import { unoptimizedProp } from "@/lib/asset-image";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface ResidentialInsightsTableProps {
   buildings: ResidentialBuilding[];
 }
 
 export function ResidentialInsightsTable({ buildings }: ResidentialInsightsTableProps) {
+  const { dict } = useI18n();
+  const t = dict.tools.residentialInsights;
+
   if (!buildings.length) {
     return (
       <p className="rounded-2xl border border-dashed border-border bg-surface-alt p-8 text-center text-muted">
-        No projects match your filters. Try a different area or search term.
+        {t.noProjects}
       </p>
     );
   }
@@ -24,12 +30,12 @@ export function ResidentialInsightsTable({ buildings }: ResidentialInsightsTable
         <table className="w-full min-w-[720px] text-start text-sm">
           <thead className="bg-surface-alt text-xs font-semibold uppercase tracking-wide text-muted">
             <tr>
-              <th className="px-4 py-3">Project</th>
-              <th className="px-4 py-3">Area</th>
-              <th className="px-4 py-3">Launch range</th>
-              <th className="px-4 py-3">Avg AED/sqft</th>
-              <th className="px-4 py-3">Unit types</th>
-              <th className="px-4 py-3">Handover</th>
+              <th className="px-4 py-3">{t.colProject}</th>
+              <th className="px-4 py-3">{t.colArea}</th>
+              <th className="px-4 py-3">{t.colLaunchRange}</th>
+              <th className="px-4 py-3">{t.colAvgPpsf}</th>
+              <th className="px-4 py-3">{t.colUnitTypes}</th>
+              <th className="px-4 py-3">{t.colHandover}</th>
             </tr>
           </thead>
           <tbody>

@@ -12,6 +12,16 @@ const SIZE_CLASSES = {
   xl: "h-20 w-20 text-base",
 } as const;
 
+// Intrinsic pixel dimensions matching each SIZE_CLASS so next/image downloads
+// an appropriately-sized asset rather than always fetching an 80×80 image.
+const SIZE_PX: Record<keyof typeof SIZE_CLASSES, number> = {
+  xs: 24,
+  sm: 32,
+  md: 40,
+  lg: 56,
+  xl: 80,
+};
+
 interface DeveloperLogoProps {
   name: string;
   logoUrl?: string;
@@ -46,8 +56,8 @@ export function DeveloperLogo({
     <Image
       src={logoUrl}
       alt={`${name} logo`}
-      width={80}
-      height={80}
+      width={SIZE_PX[size]}
+      height={SIZE_PX[size]}
       className={cn(
         "object-contain bg-white",
         SIZE_CLASSES[size],

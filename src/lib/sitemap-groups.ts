@@ -58,6 +58,8 @@ export async function buildGroups(): Promise<Entry[][]> {
   }));
 
   const projectRoutes: Entry[] = api.projects.map((p) => {
+    const enUrl = `${BASE}/projects/${p.slug}`;
+    const arUrl = `${BASE}/ar/projects/${p.slug}`;
     const thumb = p.imageUrl
       ? p.imageUrl.startsWith("http")
         ? p.imageUrl
@@ -69,29 +71,38 @@ export async function buildGroups(): Promise<Entry[][]> {
       thumbnail: thumb,
     });
     return {
-      url: `${BASE}/projects/${p.slug}`,
+      url: enUrl,
       lastModified: catalogUpdated,
       changeFrequency: "weekly" as const,
       priority: 0.7,
+      alternates: { languages: { "x-default": enUrl, en: enUrl, ar: arUrl } },
       ...(video ? { videos: [video] } : {}),
     };
   });
 
   const developers = await getDevelopers();
-  const developerRoutes: Entry[] = developers.map((d) => ({
-    url: `${BASE}/developers/${d.slug}`,
-    lastModified: catalogUpdated,
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
+  const developerRoutes: Entry[] = developers.map((d) => {
+    const enUrl = `${BASE}/developers/${d.slug}`;
+    return {
+      url: enUrl,
+      lastModified: catalogUpdated,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+      alternates: { languages: { "x-default": enUrl, en: enUrl, ar: `${BASE}/ar/developers/${d.slug}` } },
+    };
+  });
 
   const communities = await getCommunities();
-  const areaRoutes: Entry[] = communities.map((c) => ({
-    url: `${BASE}/communities/${c.slug}`,
-    lastModified: catalogUpdated,
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
+  const areaRoutes: Entry[] = communities.map((c) => {
+    const enUrl = `${BASE}/communities/${c.slug}`;
+    return {
+      url: enUrl,
+      lastModified: catalogUpdated,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+      alternates: { languages: { "x-default": enUrl, en: enUrl, ar: `${BASE}/ar/communities/${c.slug}` } },
+    };
+  });
 
   const comparePairs = await getComparablePairSlugs();
   const compareRoutes: Entry[] = comparePairs.map((pair) => ({
@@ -124,19 +135,27 @@ export async function buildGroups(): Promise<Entry[][]> {
     priority: 0.6,
   }));
 
-  const guideRoutes: Entry[] = GUIDE_CARDS.filter((g) => g.href.startsWith("/guides/")).map((g) => ({
-    url: `${BASE}${g.href}`,
-    lastModified: catalogUpdated,
-    changeFrequency: "monthly" as const,
-    priority: 0.5,
-  }));
+  const guideRoutes: Entry[] = GUIDE_CARDS.filter((g) => g.href.startsWith("/guides/")).map((g) => {
+    const enUrl = `${BASE}${g.href}`;
+    return {
+      url: enUrl,
+      lastModified: catalogUpdated,
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+      alternates: { languages: { "x-default": enUrl, en: enUrl, ar: `${BASE}/ar${g.href}` } },
+    };
+  });
 
-  const newsRoutes: Entry[] = getNewsArticles().map((article) => ({
-    url: `${BASE}/news/${article.slug}`,
-    lastModified: new Date(`${article.publishedAt}T00:00:00Z`),
-    changeFrequency: "monthly" as const,
-    priority: 0.5,
-  }));
+  const newsRoutes: Entry[] = getNewsArticles().map((article) => {
+    const enUrl = `${BASE}/news/${article.slug}`;
+    return {
+      url: enUrl,
+      lastModified: new Date(`${article.publishedAt}T00:00:00Z`),
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+      alternates: { languages: { "x-default": enUrl, en: enUrl, ar: `${BASE}/ar/news/${article.slug}` } },
+    };
+  });
 
   const collectionRoutes: Entry[] = COLLECTION_PAGES.map((page) => ({
     url: `${BASE}/collections/${page.slug}`,
@@ -172,18 +191,23 @@ export async function buildGroups(): Promise<Entry[][]> {
       },
     },
   }));
-  // AR detail mirrors, derived from the EN detail arrays (videos dropped — the
-  // EN video sitemap is canonical for video discovery).
+  // AR detail mirrors — derived from EN detail arrays with reciprocal hreflang.
+  // Videos dropped: EN video sitemap is canonical for video discovery.
   const arDetailRoutes: Entry[] = [
     ...projectRoutes, ...areaRoutes, ...developerRoutes, ...guideRoutes,
     ...newsRoutes, ...collectionRoutes, ...faqRoutes, ...compareRoutes,
     ...projectCompareRoutes, ...developerCompareRoutes, ...locationGuideRoutes,
-  ].map((r) => ({
-    url: r.url.replace(`${BASE}/`, `${BASE}/ar/`),
-    lastModified: r.lastModified,
-    changeFrequency: r.changeFrequency,
-    priority: 0.5,
-  }));
+  ].map((r) => {
+    const enUrl = r.url;
+    const arUrl = enUrl.replace(`${BASE}/`, `${BASE}/ar/`);
+    return {
+      url: arUrl,
+      lastModified: r.lastModified,
+      changeFrequency: r.changeFrequency,
+      priority: 0.5,
+      alternates: { languages: { "x-default": enUrl, en: enUrl, ar: arUrl } },
+    };
+  });
 
   GROUPS = [
     // 0 core: static EN + AR static (with hreflang)

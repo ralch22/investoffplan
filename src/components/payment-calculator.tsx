@@ -7,6 +7,8 @@ import {
 } from "@/lib/investment-metrics";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n";
 
 interface PaymentCalculatorProps {
   priceAed: number;
@@ -26,41 +28,45 @@ export function PaymentCalculator({
   paymentPlan,
   projectName,
 }: PaymentCalculatorProps) {
+  const { dict } = useI18n();
+  const t = dict.tools.paymentCalc;
   const [price, setPrice] = useState(clampPrice(priceAed));
 
   const schedule = useMemo(() => {
     const parsed = parsePaymentPlan(paymentPlan);
     if (!parsed) return null;
     const phases = [
-      { label: "Down payment", pct: parsed.downPaymentPct, tone: "bg-brand" },
+      { label: t.phaseDownPayment, pct: parsed.downPaymentPct, tone: "bg-brand" },
       {
-        label: "During construction",
+        label: t.phaseDuringConstruction,
         pct: parsed.duringPct,
         tone: "bg-brand-dark",
       },
-      { label: "On handover", pct: parsed.handoverPct, tone: "bg-brand-light" },
-      { label: "After handover", pct: parsed.afterPct, tone: "bg-muted-light" },
+      { label: t.phaseOnHandover, pct: parsed.handoverPct, tone: "bg-brand-light" },
+      { label: t.phaseAfterHandover, pct: parsed.afterPct, tone: "bg-muted-light" },
     ].filter((p) => p.pct > 0);
 
     return phases.map((p) => ({
       ...p,
       amount: Math.round((price * p.pct) / 100),
     }));
-  }, [price, paymentPlan]);
+  }, [price, paymentPlan, t]);
 
   const down = downPaymentAed(price, paymentPlan);
   const totalPct = schedule?.reduce((sum, row) => sum + row.pct, 0) ?? 0;
 
   return (
     <section className="rounded-2xl border border-border bg-white p-6 shadow-elevation-sm">
-      <h2 className="text-xl font-semibold text-text-dark">Payment plan calculator</h2>
+      <h2 className="text-xl font-semibold text-text-dark">{t.heading}</h2>
       {projectName ? (
-        <p className="mt-1 text-sm text-muted">For {projectName}</p>
+        <p className="mt-1 text-sm text-muted">
+          {interpolate(t.forProject, { name: projectName })}
+        </p>
       ) : null}
 
       <div className="mt-5">
         <label htmlFor="calc-price" className="block text-sm font-medium text-text-dark">
-          Purchase price (AED)
+          {t.purchasePrice}
         </label>
         <input
           id="calc-price"
@@ -90,18 +96,18 @@ export function PaymentCalculator({
 
       {paymentPlan?.trim() ? (
         <p className="mt-4 text-sm text-muted">
-          Plan: <span className="font-semibold text-text-dark">{paymentPlan}</span>
+          {t.planLabel} <span className="font-semibold text-text-dark">{paymentPlan}</span>
         </p>
       ) : null}
 
       {down != null ? (
         down > 0 ? (
           <p className="mt-2 text-lg font-semibold text-brand">
-            Down payment: {formatPrice(down, "AED")}
+            {t.downPaymentLabel} {formatPrice(down, "AED")}
           </p>
         ) : (
           <p className="mt-2 text-lg font-semibold text-brand">
-            No down payment — fully staged plan
+            {t.noDownPayment}
           </p>
         )
       ) : null}
@@ -131,9 +137,9 @@ export function PaymentCalculator({
             <table className="w-full text-start text-sm">
               <thead className="bg-surface-alt text-muted">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Phase</th>
+                  <th className="px-4 py-3 font-medium">{t.phaseCol}</th>
                   <th className="px-4 py-3 font-medium">%</th>
-                  <th className="px-4 py-3 font-medium">Amount</th>
+                  <th className="px-4 py-3 font-medium">{t.amountCol}</th>
                 </tr>
               </thead>
               <tbody>
@@ -152,8 +158,7 @@ export function PaymentCalculator({
         </>
       ) : (
         <p className="mt-4 rounded-xl border border-dashed border-border bg-surface-alt p-4 text-sm text-muted">
-          The developer hasn&apos;t published a staged payment schedule for this
-          project yet — WhatsApp us for the current plan and a personalised breakdown.
+          {t.noSchedule}
         </p>
       )}
     </section>

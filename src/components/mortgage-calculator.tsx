@@ -9,6 +9,8 @@ import {
 } from "@/lib/mortgage";
 import { formatPrice } from "@/lib/format";
 import { AnimatedCurrency } from "@/components/animated-currency";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n";
 
 const DEFAULTS: MortgageInput = {
   propertyPriceAed: 1_500_000,
@@ -19,6 +21,8 @@ const DEFAULTS: MortgageInput = {
 };
 
 export function MortgageCalculator() {
+  const { dict } = useI18n();
+  const t = dict.tools.mortgage;
   const [input, setInput] = useState<MortgageInput>(DEFAULTS);
   const result = useMemo(() => calculateMortgage(input), [input]);
 
@@ -29,15 +33,14 @@ export function MortgageCalculator() {
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1fr]">
       <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-text-dark">Your mortgage</h2>
+        <h2 className="text-lg font-semibold text-text-dark">{t.yourMortgage}</h2>
         <p className="mt-1 text-sm text-muted">
-          UAE norms applied: max {MAX_TERM_YEARS}-year term, expat minimum{" "}
-          {MIN_DOWN_PAYMENT_PCT}% down payment under AED 5M.
+          {interpolate(t.uaeNormsNote, { max: MAX_TERM_YEARS, min: MIN_DOWN_PAYMENT_PCT })}
         </p>
 
         <div className="mt-6 space-y-5">
           <Field
-            label="Property price (AED)"
+            label={t.propertyPrice}
             id="mtg-price"
             value={input.propertyPriceAed}
             onChange={(v) => update("propertyPriceAed", v)}
@@ -45,7 +48,7 @@ export function MortgageCalculator() {
             min={100_000}
           />
           <Field
-            label="Down payment (%)"
+            label={t.downPaymentPct}
             id="mtg-down"
             value={input.downPaymentPct}
             onChange={(v) => update("downPaymentPct", v)}
@@ -53,7 +56,7 @@ export function MortgageCalculator() {
             max={80}
           />
           <Field
-            label="Interest rate (% p.a.)"
+            label={t.interestRate}
             id="mtg-rate"
             value={input.annualRatePct}
             onChange={(v) => update("annualRatePct", v)}
@@ -62,7 +65,7 @@ export function MortgageCalculator() {
             max={12}
           />
           <Field
-            label={`Term (years, max ${MAX_TERM_YEARS})`}
+            label={interpolate(t.termYears, { max: MAX_TERM_YEARS })}
             id="mtg-term"
             value={input.termYears}
             onChange={(v) => update("termYears", v)}
@@ -76,7 +79,7 @@ export function MortgageCalculator() {
               onChange={(e) => update("includeFees", e.target.checked)}
               className="h-4 w-4 rounded accent-brand"
             />
-            Include DLD 4% transfer fee + typical fixed fees
+            {t.includeFees}
           </label>
         </div>
       </section>
@@ -84,45 +87,44 @@ export function MortgageCalculator() {
       <section className="space-y-6">
         <div className="rounded-2xl bg-brand p-6 text-white" role="status" aria-live="polite">
           <p className="text-sm font-semibold uppercase tracking-wide opacity-90">
-            Monthly payment
+            {t.monthlyPayment}
           </p>
           <p className="mt-2 text-4xl font-semibold tabular-nums">
             <AnimatedCurrency value={result.monthlyPaymentAed} currency="AED" />
           </p>
           <p className="mt-2 text-sm text-white/85">
-            Stress-tested at +2%: {formatPrice(result.stressedMonthlyPaymentAed, "AED")}
-            /month
+            {interpolate(t.stressTestedLine, {
+              amount: formatPrice(result.stressedMonthlyPaymentAed, "AED"),
+            })}
           </p>
         </div>
 
         <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-text-dark">Breakdown</h2>
+          <h2 className="text-lg font-semibold text-text-dark">{t.breakdown}</h2>
           <div className="mt-4 space-y-3 text-sm">
-            <Row label="Down payment" value={formatPrice(result.downPaymentAed, "AED")} />
-            <Row label="Loan amount" value={formatPrice(result.loanAmountAed, "AED")} />
+            <Row label={t.downPayment} value={formatPrice(result.downPaymentAed, "AED")} />
+            <Row label={t.loanAmount} value={formatPrice(result.loanAmountAed, "AED")} />
             <Row
-              label="Total interest over term"
+              label={t.totalInterest}
               value={formatPrice(result.totalInterestAed, "AED")}
             />
             {input.includeFees ? (
               <>
-                <Row label="DLD transfer fee (4%)" value={formatPrice(result.dldFeeAed, "AED")} />
+                <Row label={t.dldFee} value={formatPrice(result.dldFeeAed, "AED")} />
                 <Row
-                  label="Typical fixed fees (trustee, valuation, registration)"
+                  label={t.typicalFixedFees}
                   value={formatPrice(result.estimatedFixedFeesAed, "AED")}
                 />
               </>
             ) : null}
             <Row
-              label="Estimated cash to close"
+              label={t.cashToClose}
               value={formatPrice(result.cashToCloseAed, "AED")}
               highlight
             />
           </div>
           <p className="mt-4 text-xs leading-relaxed text-muted">
-            Illustrative only — not financial advice. Off-plan purchases under
-            construction are commonly capped at 50% loan-to-value; completed-property
-            caps differ. Confirm current rates and eligibility with your bank.
+            {t.disclaimer}
           </p>
         </div>
       </section>

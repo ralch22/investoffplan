@@ -35,6 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: guide.description,
       type: "article",
       url: `${getSiteUrl()}/guides/${slug}`,
+      images: [{ url: "/brand/icon-red.png", width: 512, height: 512, alt: "invest off-plan" }],
     },
   };
 }

@@ -313,7 +313,14 @@ export function ProjectsPage({
         ? initialPageItems
         : [];
 
-  const heroImage = pageItems[0]?.catalog?.imageUrl ?? pageItems[0]?.project.imageUrl;
+  // Seed heroImage from SSR initialPageItems when pageItems is not yet populated
+  // (e.g. a filtered view where API hasn't responded yet) to avoid a blank-then-
+  // flash visual on back-navigation.
+  const heroImage =
+    pageItems[0]?.catalog?.imageUrl ??
+    pageItems[0]?.project.imageUrl ??
+    initialPageItems[0]?.catalog?.imageUrl ??
+    initialPageItems[0]?.project.imageUrl;
 
   function updateFilters(next: Filters) {
     setFilters(next);
@@ -624,6 +631,7 @@ export function ProjectsPage({
                   onCompareToggle={toggleCompare}
                   layout={cardLayout}
                   featured={cardLayout === "grid" && index === 0 && currentPage === 1}
+                  imgPriority={cardLayout === "grid" && index <= 1 && currentPage === 1}
                   placed={Boolean(item.placed)}
                   index={index}
                 />

@@ -8,8 +8,12 @@ import {
 } from "@/lib/rent-vs-buy";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n";
 
 export function RentVsBuyCalculator() {
+  const { dict } = useI18n();
+  const t = dict.tools.rentVsBuy;
   const [input, setInput] = useState<RentVsBuyInput>(RENT_VS_BUY_DEFAULTS);
 
   const result = useMemo(() => calculateRentVsBuy(input), [input]);
@@ -21,14 +25,14 @@ export function RentVsBuyCalculator() {
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_1fr]">
       <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-text-dark">Your circumstances</h2>
+        <h2 className="text-lg font-semibold text-text-dark">{t.yourCircumstances}</h2>
         <p className="mt-1 text-sm text-muted">
-          Adjust price, rent, mortgage terms, and how long you plan to stay.
+          {t.yourCircumstancesHint}
         </p>
 
         <div className="mt-6 space-y-5">
           <Field
-            label="Property price (AED)"
+            label={t.propertyPrice}
             id="rvb-price"
             type="number"
             value={input.propertyPriceAed}
@@ -36,7 +40,7 @@ export function RentVsBuyCalculator() {
             step={50_000}
           />
           <Field
-            label="Down payment (%)"
+            label={t.downPaymentPct}
             id="rvb-down"
             type="number"
             value={input.downPaymentPct}
@@ -45,7 +49,7 @@ export function RentVsBuyCalculator() {
             max={80}
           />
           <Field
-            label="Mortgage rate (% p.a.)"
+            label={t.mortgageRate}
             id="rvb-rate"
             type="number"
             value={input.annualMortgageRatePct}
@@ -53,7 +57,7 @@ export function RentVsBuyCalculator() {
             step={0.1}
           />
           <Field
-            label="Mortgage term (years)"
+            label={t.mortgageTerm}
             id="rvb-term"
             type="number"
             value={input.mortgageTermYears}
@@ -62,7 +66,7 @@ export function RentVsBuyCalculator() {
             max={30}
           />
           <Field
-            label="Monthly rent (AED)"
+            label={t.monthlyRent}
             id="rvb-rent"
             type="number"
             value={Math.round(input.monthlyRentAed)}
@@ -70,7 +74,7 @@ export function RentVsBuyCalculator() {
             step={500}
           />
           <Field
-            label="Annual rent increase (%)"
+            label={t.annualRentIncrease}
             id="rvb-rent-growth"
             type="number"
             value={input.annualRentIncreasePct}
@@ -78,7 +82,7 @@ export function RentVsBuyCalculator() {
             step={0.5}
           />
           <Field
-            label="Property value growth (% p.a.)"
+            label={t.propertyGrowth}
             id="rvb-appreciation"
             type="number"
             value={input.annualPropertyGrowthPct}
@@ -86,7 +90,7 @@ export function RentVsBuyCalculator() {
             step={0.5}
           />
           <Field
-            label="Comparison period (years)"
+            label={t.comparisonPeriod}
             id="rvb-years"
             type="number"
             value={input.comparisonYears}
@@ -99,15 +103,15 @@ export function RentVsBuyCalculator() {
 
       <section className="space-y-6">
         <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
-          <h2 className="text-lg font-semibold text-text-dark">Monthly payments</h2>
+          <h2 className="text-lg font-semibold text-text-dark">{t.monthlyPaymentsHeading}</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Metric
-              label="Buying (mortgage)"
+              label={t.buyingMortgage}
               value={formatPrice(result.monthlyMortgageAed, "AED")}
               tone="brand"
             />
             <Metric
-              label="Renting (year 1)"
+              label={t.rentingYear1}
               value={formatPrice(result.monthlyRentYear1Aed, "AED")}
               tone="muted"
             />
@@ -116,33 +120,32 @@ export function RentVsBuyCalculator() {
 
         <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-text-dark">
-            Long-term position ({input.comparisonYears} years)
+            {interpolate(t.longTermPosition, { years: input.comparisonYears })}
           </h2>
           <div className="mt-4 space-y-3 text-sm">
-            <Row label="Total rent paid" value={formatPrice(result.totalRentPaidAed, "AED")} />
+            <Row label={t.totalRentPaid} value={formatPrice(result.totalRentPaidAed, "AED")} />
             <Row
-              label="Total buy cost (down + mortgage + maintenance)"
+              label={t.totalBuyCost}
               value={formatPrice(result.totalBuyCostAed, "AED")}
             />
             <Row
-              label="Estimated equity at end"
+              label={t.estimatedEquity}
               value={formatPrice(result.estimatedEquityAed, "AED")}
             />
             <Row
-              label="Net position — buy"
+              label={t.netPositionBuy}
               value={formatPrice(result.netBuyPositionAed, "AED")}
               highlight={result.netBuyPositionAed >= result.netRentPositionAed}
             />
             <Row
-              label="Net position — rent"
+              label={t.netPositionRent}
               value={formatPrice(result.netRentPositionAed, "AED")}
               highlight={result.netRentPositionAed > result.netBuyPositionAed}
             />
           </div>
           {result.breakEvenYear ? (
             <p className="mt-4 rounded-xl bg-brand-muted px-4 py-3 text-sm text-brand">
-              Buying may overtake renting around year {result.breakEvenYear}, assuming
-              steady appreciation and rent growth.
+              {interpolate(t.breakEvenNote, { year: result.breakEvenYear })}
             </p>
           ) : null}
         </div>
@@ -158,18 +161,17 @@ export function RentVsBuyCalculator() {
           )}
         >
           <p className="text-sm font-semibold uppercase tracking-wide opacity-90">
-            Indicative outlook
+            {t.indicativeOutlook}
           </p>
           <p className="mt-2 text-xl font-semibold">
             {result.recommendation === "buy"
-              ? "Buying may build more wealth over this horizon"
+              ? t.recommendBuy
               : result.recommendation === "rent"
-                ? "Renting may cost less over this horizon"
-                : "Outcomes are close — model a longer stay or different down payment"}
+                ? t.recommendRent
+                : t.recommendNeutral}
           </p>
           <p className="mt-3 text-sm text-white/85">
-            Illustrative only — not financial advice. UAE mortgage eligibility, fees, and
-            off-plan payment plans will change your real numbers.
+            {t.disclaimer}
           </p>
         </div>
       </section>
