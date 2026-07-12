@@ -7,6 +7,7 @@ import { FAQ_TOPICS } from "@/content/faq";
 import { getHeroImage } from "@/lib/area-images";
 import { enMeta } from "@/lib/ar-meta";
 import { localePath, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n";
 
 export const metadata: Metadata = {
   title: "Off-Plan Property FAQ",
@@ -22,6 +23,7 @@ export default async function FaqHubPage({
   locale?: Locale;
 } = {}) {
   const heroImage = await getHeroImage();
+  const dict = getDictionary(locale);
 
   return (
     <PageShell headerVariant="transparent">
@@ -35,8 +37,8 @@ export default async function FaqHubPage({
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "FAQ" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.faq },
           ]}
         />
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

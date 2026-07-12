@@ -412,8 +412,8 @@ export default async function ProjectDetailPage({
       <main className="mx-auto max-w-[1200px] px-5 py-8 pb-28 md:px-8 md:pb-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Projects", href: "/projects" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.projects, href: "/projects" },
             { label: project.name },
           ]}
         />

@@ -186,6 +186,7 @@ export async function buildGroups(): Promise<Entry[][]> {
     priority: 0.6,
     alternates: {
       languages: {
+        "x-default": path === "/ar" ? `${BASE}/` : `${BASE}${path.slice(3)}`,
         en: path === "/ar" ? `${BASE}/` : `${BASE}${path.slice(3)}`,
         ar: `${BASE}${path}`,
       },

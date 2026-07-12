@@ -14,9 +14,12 @@ import {
   getComparableProjectSlugs,
   type ProjectSide,
 } from "@/lib/project-compare";
+import { getDictionary } from "@/i18n";
+import { interpolate, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ pair: string }>;
+  locale?: Locale;
 }
 
 // Pairs are derived at build time from project slugs — unknown pairs are 404.
@@ -33,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!cmp) return { title: "Comparison not found" };
   const { a, b } = cmp;
   return {
-    title: `${a.name} vs ${b.name}: Off-Plan Comparison`,
+    title: { absolute: `${a.name} vs ${b.name} — off-plan | invest off-plan` },
     description:
       `Compare ${a.name} (${a.developer}) and ${b.name} (${b.developer}) in ${a.area} — from-price, price per sqft, handover, payment plan, and bedrooms.`.slice(
         0,
@@ -112,11 +115,13 @@ function Head({ side }: { side: ProjectSide }) {
   );
 }
 
-export default async function CompareProjectsPage({ params }: PageProps) {
+export default async function CompareProjectsPage({ params, locale = "en" }: PageProps) {
   const { pair } = await params;
   const cmp = await buildProjectComparison(pair);
   if (!cmp) notFound();
 
+  const dict = getDictionary(locale);
+  const t = dict.pages.compare;
   const { a, b } = cmp;
   const money = (n: number | null) => (n != null && n > 0 ? formatPrice(Math.round(n), "AED") : "—");
   const psf = (n: number | null) => (n != null ? `AED ${n.toLocaleString()}` : "—");
@@ -130,31 +135,31 @@ export default async function CompareProjectsPage({ params }: PageProps) {
         subtitle={`Two off-plan projects in ${a.area}, side by side.`}
       />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
-        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Compare", href: "/compare" }, { label: `${a.name} vs ${b.name}` }]} />
+        <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: t.breadcrumb, href: "/compare" }, { label: `${a.name} vs ${b.name}` }]} />
         <div className="overflow-x-auto rounded-2xl border border-border bg-white shadow-elevation-sm">
           <table className="w-full min-w-[560px]">
             <thead>
               <tr className="bg-surface-alt">
                 <th className="px-4 py-4 text-start text-xs font-semibold uppercase tracking-wide text-muted">
-                  Metric
+                  {t.metricHeader}
                 </th>
                 <Head side={a} />
                 <Head side={b} />
               </tr>
             </thead>
             <tbody>
-              <Row label="From price" aVal={money(a.fromPrice)} bVal={money(b.fromPrice)}
+              <Row label={t.rowFromPrice} aVal={money(a.fromPrice)} bVal={money(b.fromPrice)}
                 aNum={a.fromPrice} bNum={b.fromPrice} better="lower" />
-              <Row label="Launch AED/sqft" aVal={psf(a.ppsqft)} bVal={psf(b.ppsqft)}
+              <Row label={t.rowLaunchPsf} aVal={psf(a.ppsqft)} bVal={psf(b.ppsqft)}
                 aNum={a.ppsqft} bNum={b.ppsqft} better="lower" />
-              <Row label="Bedrooms" aVal={a.bedsRange} bVal={b.bedsRange} />
-              <Row label="Handover" aVal={a.handover ?? "—"} bVal={b.handover ?? "—"} />
-              <Row label="Payment plan" aVal={a.paymentPlan || "—"} bVal={b.paymentPlan || "—"} />
-              <Row label="Unit options" aVal={a.unitCount.toLocaleString()} bVal={b.unitCount.toLocaleString()}
+              <Row label={t.rowBedrooms} aVal={a.bedsRange} bVal={b.bedsRange} />
+              <Row label={t.rowHandover} aVal={a.handover ?? "—"} bVal={b.handover ?? "—"} />
+              <Row label={t.rowPaymentPlan} aVal={a.paymentPlan || "—"} bVal={b.paymentPlan || "—"} />
+              <Row label={t.rowUnitOptions} aVal={a.unitCount.toLocaleString()} bVal={b.unitCount.toLocaleString()}
                 aNum={a.unitCount} bNum={b.unitCount} better="higher" />
-              <Row label="Area gross yield (DLD)" aVal={yld(a.areaYield)} bVal={yld(b.areaYield)}
+              <Row label={t.rowAreaYield} aVal={yld(a.areaYield)} bVal={yld(b.areaYield)}
                 aNum={a.areaYield} bNum={b.areaYield} better="higher" />
-              <Row label="Golden Visa eligible" aVal={a.goldenVisa ? "Yes" : "No"} bVal={b.goldenVisa ? "Yes" : "No"} />
+              <Row label={t.rowGoldenVisa} aVal={a.goldenVisa ? "Yes" : "No"} bVal={b.goldenVisa ? "Yes" : "No"} />
             </tbody>
           </table>
         </div>
@@ -166,7 +171,7 @@ export default async function CompareProjectsPage({ params }: PageProps) {
               href={`/projects/${side.slug}`}
               className="iop-btn-press focus-ring rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
             >
-              View {side.name}
+              {interpolate(t.viewProjectCta, { name: side.name })}
             </Link>
           ))}
         </div>

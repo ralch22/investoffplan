@@ -23,9 +23,12 @@ import {
   getComparablePairSlugs,
   type AreaComparison,
 } from "@/lib/area-compare";
+import { getDictionary } from "@/i18n";
+import { interpolate, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ pair: string }>;
+  locale?: Locale;
 }
 
 // Pairs are derived at build time from community slugs — unknown pairs are 404.
@@ -46,7 +49,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const yB = cmp.b.stats?.grossYieldPct;
   const yieldBit = yA && yB ? ` Gross yields ${yA}% vs ${yB}%.` : "";
   return {
-    title: `${a} vs ${b}: Off-Plan Investment Comparison`,
+    title: { absolute: `${a} vs ${b} — off-plan comparison | invest off-plan` },
     description:
       `Compare ${a} and ${b} for off-plan investment — real Dubai Land Department sold prices, price per sqft, gross rental yield, and available projects.${yieldBit}`.slice(
         0,
@@ -104,27 +107,28 @@ function Row({
   );
 }
 
-function verdict(cmp: AreaComparison): string {
+function verdict(cmp: AreaComparison, dict: ReturnType<typeof getDictionary>): string {
   const { a, b } = cmp;
   const parts: string[] = [];
   if (a.stats?.grossYieldPct != null && b.stats?.grossYieldPct != null) {
     const hi = a.stats.grossYieldPct >= b.stats.grossYieldPct ? a : b;
-    parts.push(`${hi.area.name} leads on gross rental yield (${hi.stats!.grossYieldPct}%)`);
+    parts.push(interpolate(dict.pages.compare.verdictLeadsYield, { name: hi.area.name, value: hi.stats!.grossYieldPct ?? 0 }));
   }
   const cheaper = a.area.minPriceAed > 0 && b.area.minPriceAed > 0
     ? a.area.minPriceAed <= b.area.minPriceAed ? a : b
     : null;
-  if (cheaper) parts.push(`${cheaper.area.name} has the lower entry price (from ${formatPrice(cheaper.area.minPriceAed, "AED")})`);
+  if (cheaper) parts.push(interpolate(dict.pages.compare.verdictLowerPrice, { name: cheaper.area.name, price: formatPrice(cheaper.area.minPriceAed, "AED") }));
   const deeper = a.area.projectCount >= b.area.projectCount ? a : b;
-  parts.push(`${deeper.area.name} has more live projects (${deeper.area.projectCount})`);
+  parts.push(interpolate(dict.pages.compare.verdictMoreProjects, { name: deeper.area.name, count: deeper.area.projectCount }));
   return parts.join("; ") + ".";
 }
 
-export default async function CompareAreasPage({ params }: PageProps) {
+export default async function CompareAreasPage({ params, locale = "en" }: PageProps) {
   const { pair } = await params;
   const cmp = await buildAreaComparison(pair);
   if (!cmp) notFound();
 
+  const dict = getDictionary(locale);
   const { a, b } = cmp;
   const [extras, related] = await Promise.all([
     getComparisonExtras(cmp),
@@ -142,11 +146,11 @@ export default async function CompareAreasPage({ params }: PageProps) {
   const pct = (n: number | null | undefined) => (n != null ? `${n}%` : "—");
 
   const scorecards = [
-    { label: "Gross yield", aVal: pct(a.stats?.grossYieldPct), bVal: pct(b.stats?.grossYieldPct) },
-    { label: "Median sold", aVal: money(a.stats?.medianPrice), bVal: money(b.stats?.medianPrice) },
-    { label: "Sold AED/sqft", aVal: psf(a.stats?.medianPpsqft), bVal: psf(b.stats?.medianPpsqft) },
+    { label: dict.pages.compare.kpiGrossYield, aVal: pct(a.stats?.grossYieldPct), bVal: pct(b.stats?.grossYieldPct) },
+    { label: dict.pages.compare.kpiMedianSold, aVal: money(a.stats?.medianPrice), bVal: money(b.stats?.medianPrice) },
+    { label: dict.pages.compare.kpiSoldPsf, aVal: psf(a.stats?.medianPpsqft), bVal: psf(b.stats?.medianPpsqft) },
     {
-      label: "2025 sales",
+      label: dict.pages.compare.kpi2025Sales,
       aVal: a.stats?.saleSample.toLocaleString() ?? "—",
       bVal: b.stats?.saleSample.toLocaleString() ?? "—",
     },
@@ -165,8 +169,8 @@ export default async function CompareAreasPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             buildBreadcrumbListJsonLd([
-              { name: "Home", url: getSiteUrl() },
-              { name: "Compare", url: `${getSiteUrl()}/compare` },
+              { name: dict.common.home, url: getSiteUrl() },
+              { name: dict.pages.compare.breadcrumb, url: `${getSiteUrl()}/compare` },
               { name: `${a.area.name} vs ${b.area.name}` },
             ]),
           ),
@@ -175,10 +179,10 @@ export default async function CompareAreasPage({ params }: PageProps) {
       <PageHero
         title={`${a.area.name} vs ${b.area.name}`}
         italicTitle
-        subtitle="Off-plan investment comparison — real Dubai Land Department sold data."
+        subtitle={dict.pages.compare.heroSubtitleArea}
       />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
-        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Compare", href: "/compare" }, { label: `${a.area.name} vs ${b.area.name}` }]} />
+        <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: dict.pages.compare.breadcrumb, href: "/compare" }, { label: `${a.area.name} vs ${b.area.name}` }]} />
         {/* KPI scorecards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {scorecards.map((card) => (
@@ -204,7 +208,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
             <thead>
               <tr className="bg-surface-alt">
                 <th className="px-4 py-4 text-start text-xs font-semibold uppercase tracking-wide text-muted">
-                  Metric
+                  {dict.pages.compare.metricHeader}
                 </th>
                 {[a, b].map((side) => (
                   <th key={side.area.slug} className="px-4 py-4 text-center">
@@ -220,25 +224,25 @@ export default async function CompareAreasPage({ params }: PageProps) {
               </tr>
             </thead>
             <tbody>
-              <Row label="Gross rental yield" hint="DLD rent ÷ sold price" better="higher"
+              <Row label={dict.pages.compare.rowGrossYield} hint={dict.pages.compare.rowGrossYieldHint} better="higher"
                 aVal={pct(a.stats?.grossYieldPct)} bVal={pct(b.stats?.grossYieldPct)}
                 aNum={a.stats?.grossYieldPct ?? null} bNum={b.stats?.grossYieldPct ?? null} />
-              <Row label="Median sold AED/sqft" hint="Actual 2025 sales" better="none"
+              <Row label={dict.pages.compare.rowMedianPsf} hint={dict.pages.compare.rowMedianPsfHint} better="none"
                 aVal={psf(a.stats?.medianPpsqft)} bVal={psf(b.stats?.medianPpsqft)}
                 aNum={a.stats?.medianPpsqft ?? null} bNum={b.stats?.medianPpsqft ?? null} />
-              <Row label="Median sold price" hint="2025 transactions" better="none"
+              <Row label={dict.pages.compare.rowMedianPrice} hint={dict.pages.compare.rowMedianPriceHint} better="none"
                 aVal={money(a.stats?.medianPrice)} bVal={money(b.stats?.medianPrice)}
                 aNum={a.stats?.medianPrice ?? null} bNum={b.stats?.medianPrice ?? null} />
-              <Row label="Price trend (2025)" hint="AED/sqft, start→latest" better="higher"
+              <Row label={dict.pages.compare.rowPriceTrend} hint={dict.pages.compare.rowPriceTrendHint} better="higher"
                 aVal={pct(a.stats?.appreciationPct)} bVal={pct(b.stats?.appreciationPct)}
                 aNum={a.stats?.appreciationPct ?? null} bNum={b.stats?.appreciationPct ?? null} />
-              <Row label="Launch price from" hint="Off-plan catalog" better="lower"
+              <Row label={dict.pages.compare.rowLaunchPrice} hint={dict.pages.compare.rowLaunchPriceHint} better="lower"
                 aVal={money(a.area.minPriceAed)} bVal={money(b.area.minPriceAed)}
                 aNum={a.area.minPriceAed || null} bNum={b.area.minPriceAed || null} />
-              <Row label="Off-plan projects" better="higher"
+              <Row label={dict.pages.compare.rowProjects} better="higher"
                 aVal={String(a.area.projectCount)} bVal={String(b.area.projectCount)}
                 aNum={a.area.projectCount} bNum={b.area.projectCount} />
-              <Row label="Unit options" better="higher"
+              <Row label={dict.pages.compare.rowUnitOptions} better="higher"
                 aVal={a.area.unitCount.toLocaleString()} bVal={b.area.unitCount.toLocaleString()}
                 aNum={a.area.unitCount} bNum={b.area.unitCount} />
             </tbody>
@@ -248,12 +252,11 @@ export default async function CompareAreasPage({ params }: PageProps) {
 
         <div className="mt-6 rounded-2xl border border-border bg-surface-alt p-6">
           <h2 className="font-display text-xl font-semibold text-text-dark">
-            The verdict<span className="text-brand">.</span>
+            {dict.pages.compare.verdictHeading}<span className="text-brand">.</span>
           </h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted">{verdict(cmp)}</p>
+          <p className="mt-2 text-sm leading-relaxed text-muted">{verdict(cmp, dict)}</p>
           <p className="mt-2 text-xs text-muted-light">
-            Sold-price, yield and trend figures are anonymized aggregates from Dubai Land Department
-            open data (2025). Yield = median annual rent ÷ median sold price for the community.
+            {dict.pages.compare.verdictDisclaimer}
           </p>
         </div>
 
@@ -261,7 +264,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
         {prosA.length > 0 || prosB.length > 0 ? (
           <section className="mt-10">
             <h2 className="font-display text-2xl font-semibold text-text-dark">
-              The case for each<span className="text-brand">.</span>
+              {dict.pages.compare.caseForEachHeading}<span className="text-brand">.</span>
             </h2>
             <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
               {[
@@ -281,8 +284,9 @@ export default async function CompareAreasPage({ params }: PageProps) {
                     </ul>
                   ) : (
                     <p className="mt-3 text-sm text-muted">
-                      Trails {side.area.slug === a.area.slug ? b.area.name : a.area.name} on the
-                      measured metrics — compare the table above against your priorities.
+                      {interpolate(dict.pages.compare.trailingFallback, {
+                        name: side.area.slug === a.area.slug ? b.area.name : a.area.name,
+                      })}
                     </p>
                   )}
                 </div>
@@ -295,7 +299,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
         {suitA.length > 0 || suitB.length > 0 ? (
           <section className="mt-10">
             <h2 className="font-display text-2xl font-semibold text-text-dark">
-              Who each suits<span className="text-brand">.</span>
+              {dict.pages.compare.whoSuitsHeading}<span className="text-brand">.</span>
             </h2>
             <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
               {[
@@ -315,7 +319,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
                     </dl>
                   ) : (
                     <p className="mt-3 text-sm text-muted">
-                      A specialist play — check the live projects to see if the inventory fits.
+                      {dict.pages.compare.specialistFallback}
                     </p>
                   )}
                 </div>
@@ -331,7 +335,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
               href={`/projects?q=${encodeURIComponent(side.area.name)}`}
               className="iop-btn-press focus-ring rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
             >
-              Browse {side.area.name}
+              {interpolate(dict.pages.compare.browseCta, { name: side.area.name })}
             </Link>
           ))}
         </div>
@@ -353,7 +357,7 @@ export default async function CompareAreasPage({ params }: PageProps) {
         {/* Related comparisons — internal-linking mesh */}
         {related.length > 0 ? (
           <section className="mt-10">
-            <h2 className="text-lg font-semibold text-text-dark">Related comparisons</h2>
+            <h2 className="text-lg font-semibold text-text-dark">{dict.pages.compare.relatedHeading}</h2>
             <div className="mt-3 flex flex-wrap gap-2">
               {related.map((r) => (
                 <Link

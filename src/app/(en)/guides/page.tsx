@@ -8,6 +8,7 @@ import { getHeroImage } from "@/lib/area-images";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
 import { enMeta } from "@/lib/ar-meta";
 import { localePath, type Locale } from "@/i18n/config";
+import { getDictionary } from "@/i18n";
 
 export const metadata: Metadata = {
   title: "Dubai Off-Plan Buying Guides & Investor Insights",
@@ -25,6 +26,7 @@ export default async function InsightsPage({
   const analytics = await getCatalogAnalytics();
   const brochureGap = analytics.projectCount - analytics.brochureCount;
   const heroImage = await getHeroImage();
+  const dict = getDictionary(locale);
 
   return (
     <PageShell headerVariant="transparent">
@@ -37,8 +39,8 @@ export default async function InsightsPage({
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Guides" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.guides },
           ]}
         />
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
