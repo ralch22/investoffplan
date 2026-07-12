@@ -85,6 +85,55 @@ test.describe("AR nav loop stays in /ar", () => {
     await expect(page).toHaveURL(/\/projects\/?$/);
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
   });
+
+  // #317 — residual after 732a428: mega-nav item labels used EN constants.
+  test("desktop mega-nav location guides + tools + guides are Arabic", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/ar");
+    await expect(page.locator("html")).toHaveAttribute("lang", "ar");
+
+    const mainNav = page.getByRole("navigation", { name: "القائمة الرئيسية" });
+
+    // Communities → location guide labels (LOCATION_GUIDE_LINKS.labelAr).
+    await mainNav.getByRole("button", { name: /المجتمعات السكنية/ }).click();
+    const communitiesPanel = page.locator("#meganav-communities");
+    await expect(communitiesPanel).toBeVisible({ timeout: 10_000 });
+    await expect(
+      communitiesPanel.getByRole("link", { name: "الأفضل للعائلات" }),
+    ).toBeVisible();
+    await expect(
+      communitiesPanel.getByRole("link", { name: "Best for families" }),
+    ).toHaveCount(0);
+
+    // Tools → dict.tools.cards titles (not EN DATAGURU_TOOLS).
+    await mainNav.getByRole("button", { name: /البيانات والأدوات/ }).click();
+    const toolsPanel = page.locator("#meganav-tools");
+    await expect(toolsPanel).toBeVisible({ timeout: 10_000 });
+    await expect(
+      toolsPanel.getByRole("link", { name: /خريطة الأسعار/ }),
+    ).toBeVisible();
+    await expect(toolsPanel.getByText("Price Map", { exact: true })).toHaveCount(
+      0,
+    );
+    await expect(
+      toolsPanel.getByText(/See which communities fit your budget/),
+    ).toHaveCount(0);
+
+    // Insights → dict.pages.guides.cards titles (not EN GUIDE_CARDS).
+    await mainNav.getByRole("button", { name: /^رؤى/ }).click();
+    const insightsPanel = page.locator("#meganav-insights");
+    await expect(insightsPanel).toBeVisible({ timeout: 10_000 });
+    await expect(
+      insightsPanel.getByRole("link", {
+        name: /لماذا تستثمر في المشاريع على الخارطة/,
+      }),
+    ).toBeVisible();
+    await expect(
+      insightsPanel.getByText("Why Invest in Off-Plan Dubai"),
+    ).toHaveCount(0);
+  });
 });
 
 test.describe("Compare cold path (promise cache)", () => {

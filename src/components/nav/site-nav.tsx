@@ -178,7 +178,9 @@ export function SiteNav({ solid, onOpenChange }: SiteNavProps) {
               onKeyDown={onKeyDown}
             >
               <div className="mx-auto max-w-[1200px] px-8 py-7">
-                {open === "communities" && <CommunitiesPanel lp={lp} dict={dict} />}
+                {open === "communities" && (
+                  <CommunitiesPanel lp={lp} dict={dict} locale={locale} />
+                )}
                 {open === "tools" && <ToolsPanel lp={lp} dict={dict} />}
                 {open === "insights" && <InsightsPanel lp={lp} dict={dict} />}
               </div>
@@ -191,12 +193,23 @@ export function SiteNav({ solid, onOpenChange }: SiteNavProps) {
 }
 
 type Dict = ReturnType<typeof useI18n>["dict"];
+type Locale = ReturnType<typeof useI18n>["locale"];
 type LP = (href: string) => string;
+type ToolCardSlug = keyof Dict["tools"]["cards"];
+type GuideCardSlug = keyof Dict["pages"]["guides"]["cards"];
 
 const colHead = "section-eyebrow mb-3";
 const megaLink = "iop-btn-press focus-ring block rounded-lg px-2 py-1.5 text-sm text-muted transition hover:bg-surface-alt hover:text-brand";
 
-function CommunitiesPanel({ lp, dict }: { lp: LP; dict: Dict }) {
+function CommunitiesPanel({
+  lp,
+  dict,
+  locale,
+}: {
+  lp: LP;
+  dict: Dict;
+  locale: Locale;
+}) {
   const { topCommunities } = useNavData();
   return (
     <div className="grid grid-cols-[1fr_260px] gap-8">
@@ -231,7 +244,7 @@ function CommunitiesPanel({ lp, dict }: { lp: LP; dict: Dict }) {
         <div className="space-y-0.5">
           {LOCATION_GUIDE_LINKS.map((g) => (
             <Link key={g.slug} href={lp(`/locations/${g.slug}`)} className={megaLink}>
-              {g.label}
+              {locale === "ar" ? g.labelAr : g.label}
             </Link>
           ))}
         </div>
@@ -249,18 +262,26 @@ function ToolsPanel({ lp, dict }: { lp: LP; dict: Dict }) {
       <div>
         <p className={colHead}>{dict.nav.groups.tools}</p>
         <div className="grid grid-cols-2 gap-1">
-          {DATAGURU_TOOLS.map((t) => (
-            <Link
-              key={t.slug}
-              href={lp(t.href)}
-              className="iop-btn-press focus-ring group rounded-xl p-2.5 transition hover:bg-surface-alt"
-            >
-              <span className="block text-sm font-semibold text-text-dark group-hover:text-brand">
-                {t.slug === "roi" ? dict.tools.hubLinks.roi : t.title}
-              </span>
-              <span className="mt-0.5 block text-xs leading-snug text-muted-light">{t.description}</span>
-            </Link>
-          ))}
+          {DATAGURU_TOOLS.map((t) => {
+            // Prefer dict.tools.cards (EN+AR) over EN DATAGURU_TOOLS constants (#317).
+            const card = dict.tools.cards[t.slug as ToolCardSlug];
+            const title = card?.title ?? t.title;
+            const description = card?.description ?? t.description;
+            return (
+              <Link
+                key={t.slug}
+                href={lp(t.href)}
+                className="iop-btn-press focus-ring group rounded-xl p-2.5 transition hover:bg-surface-alt"
+              >
+                <span className="block text-sm font-semibold text-text-dark group-hover:text-brand">
+                  {title}
+                </span>
+                <span className="mt-0.5 block text-xs leading-snug text-muted-light">
+                  {description}
+                </span>
+              </Link>
+            );
+          })}
           {/* Investor Match lives outside DATAGURU_TOOLS (richer standalone card
               on the hub) — surfaced here so it's reachable + Arabic-labelled. */}
           <Link
@@ -299,9 +320,14 @@ function InsightsPanel({ lp, dict }: { lp: LP; dict: Dict }) {
           >
             {dict.nav.marketReport} →
           </Link>
-          {GUIDE_CARDS.filter((g) => g.href.startsWith("/guides/")).map((g) => (
-            <Link key={g.slug} href={lp(g.href)} className={megaLink}>{g.title}</Link>
-          ))}
+          {GUIDE_CARDS.filter((g) => g.href.startsWith("/guides/")).map((g) => {
+            const copy = dict.pages.guides.cards[g.slug as GuideCardSlug];
+            return (
+              <Link key={g.slug} href={lp(g.href)} className={megaLink}>
+                {copy?.title ?? g.title}
+              </Link>
+            );
+          })}
           <Link href={lp("/faq")} className={megaLink}>{dict.nav.faq}</Link>
           <Link href={lp("/news")} className={megaLink}>{dict.nav.news}</Link>
         </div>
