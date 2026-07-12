@@ -202,4 +202,16 @@ test.describe("Content routes", () => {
       expect(html, path).not.toMatch(/<title>Off-Plan Projects in Dubai \|/i);
     }
   });
+  // #262 — AR FAQ topic pages use dict chrome (not EN FAQ_TOPICS title).
+  test("AR FAQ topic page H1 is Arabic", async ({ page }) => {
+    const res = await page.goto("/ar/faq/off-plan-basics", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    expect(html).toMatch(/أساسيات العقارات على الخارطة/);
+    expect(html).not.toMatch(/>Off-Plan Basics</);
+    expect(html).toMatch(/href="\/ar\/projects"/);
+  });
+
 });
