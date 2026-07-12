@@ -174,7 +174,12 @@ export const ar: Dict = {
     "fullscreen": "ملء الشاشة",
     "clear": "مسح",
     "filter": "تصفية",
-    "clearFilters": "مسح الفلاتر"
+    "clearFilters": "مسح الفلاتر",
+    "errorEyebrow": "خطأ",
+    "errorTitle": "حدث خطأ ما",
+    "errorBody": "وقع خطأ غير متوقع. يُرجى المحاولة مجدداً أو العودة إلى الصفحة الرئيسية.",
+    "tryAgain": "حاول مجدداً",
+    "goHome": "الرئيسية"
   },
   "a11y": {
     "skipToContent": "تخطَّ إلى المحتوى",

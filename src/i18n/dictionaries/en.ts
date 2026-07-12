@@ -172,7 +172,12 @@ const dict = {
     "fullscreen": "Fullscreen",
     "clear": "Clear",
     "filter": "Filter",
-    "clearFilters": "Clear filters"
+    "clearFilters": "Clear filters",
+    "errorEyebrow": "Error",
+    "errorTitle": "Something went wrong",
+    "errorBody": "An unexpected error occurred. Please try again or return to the homepage.",
+    "tryAgain": "Try again",
+    "goHome": "Go home"
   },
   "a11y": {
     "skipToContent": "Skip to content",
