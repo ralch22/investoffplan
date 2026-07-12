@@ -27,10 +27,12 @@ interface PageShellProps {
 
 // Height each dock reserves at the mobile bottom edge; every fixed fixture and
 // <main>'s padding reads --bottom-dock so they stack instead of overlap.
+// Both tabs/cta tokens already include safe-area. "none" still reserves the
+// home-indicator inset so FABs (advisor) never sit under the system gesture bar.
 const DOCK_H: Record<MobileDock, string> = {
   tabs: "var(--bottom-bar-h)",
   cta: "var(--dock-cta-h)",
-  none: "0px",
+  none: "env(safe-area-inset-bottom, 0px)",
 };
 
 export function PageShell({

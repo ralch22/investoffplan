@@ -39,10 +39,24 @@
   --duration-normal: 220ms;
   /* Chrome geometry — single source of truth (kills the top-[57px] magic). */
   --header-h: 4rem;
+  /* Both dock heights include safe-area so --bottom-dock is full reserved height. */
   --bottom-bar-h: calc(3.75rem + env(safe-area-inset-bottom, 0px));
-  --dock-cta-h: 5.25rem;
+  --dock-cta-h: calc(5.25rem + env(safe-area-inset-bottom, 0px));
   /* Set per-page by PageShell: which fixture owns the mobile bottom edge. */
   --bottom-dock: 0px;
+  /* CookieConsentBanner sets --consent-h on :root when visible (else 0). */
+  --consent-h: 0px;
+  /* Gap between the dock edge and floating widgets (advisor FAB, etc.). */
+  --fab-gap: 0.875rem;
+  /*
+   * Bottom offset for fixed FABs / chat panels.
+   * = dock height (tabs/CTA/safe-area) + consent banner + breathing room.
+   * Consumers: bottom: var(--fab-bottom). Do not re-add safe-area.
+   * --bottom-dock is overridden per-page on PageShell; var() resolves there.
+   */
+  --fab-bottom: calc(
+    var(--bottom-dock) + var(--consent-h, 0px) + var(--fab-gap)
+  );
   --z-subheader: 30;
   --z-sticky: 40;
   --z-bottom-bar: 45;
@@ -290,6 +304,16 @@ h3 {
   100% {
     background-position: -200% 0;
   }
+}
+
+/*
+ * Advisor FAB + panel: hide while a native <dialog open> is up (gallery
+ * lightbox, etc.). Advisor uses role="dialog" on a div, not <dialog>, so it
+ * does not match this selector and stays usable when open on its own.
+ */
+body:has(dialog[open]) [data-advisor-chrome] {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .skip-link {

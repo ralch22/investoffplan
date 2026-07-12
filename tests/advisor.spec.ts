@@ -44,4 +44,74 @@ test.describe("Off-Plan Advisor", () => {
       page.getByRole("button", { name: "مستشار العقارات" }),
     ).toBeVisible();
   });
+
+  // #181 — FAB/panel must clear PDP sticky CTA + stay reachable on home.
+  test("mobile PDP: advisor launcher clears sticky CTA bar", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/projects/105-residences");
+
+    const cta = page.getByRole("region", { name: "Quick actions" });
+    const fab = page.getByTestId("advisor-launcher");
+    await expect(cta).toBeVisible();
+    await expect(fab).toBeVisible();
+
+    const ctaBox = await cta.boundingBox();
+    const fabBox = await fab.boundingBox();
+    expect(ctaBox, "sticky CTA should have a box").toBeTruthy();
+    expect(fabBox, "advisor launcher should have a box").toBeTruthy();
+
+    // FAB bottom edge must sit at or above the CTA top edge (2px subpixel slack).
+    expect(fabBox!.y + fabBox!.height).toBeLessThanOrEqual(ctaBox!.y + 2);
+  });
+
+  test("mobile PDP: open panel clears sticky CTA and stays on-screen", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/projects/105-residences");
+
+    await page.getByTestId("advisor-launcher").click();
+    const panel = page.getByTestId("advisor-panel");
+    const cta = page.getByRole("region", { name: "Quick actions" });
+    await expect(panel).toBeVisible();
+
+    const panelBox = await panel.boundingBox();
+    const ctaBox = await cta.boundingBox();
+    expect(panelBox).toBeTruthy();
+    expect(ctaBox).toBeTruthy();
+
+    expect(panelBox!.y + panelBox!.height).toBeLessThanOrEqual(ctaBox!.y + 2);
+    expect(panelBox!.y).toBeGreaterThanOrEqual(-2);
+  });
+
+  test("desktop: advisor launcher remains reachable on home", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/");
+    const fab = page.getByTestId("advisor-launcher");
+    await expect(fab).toBeVisible();
+    const box = await fab.boundingBox();
+    expect(box).toBeTruthy();
+    expect(box!.y + box!.height).toBeLessThanOrEqual(800);
+    expect(box!.y).toBeGreaterThan(0);
+  });
+
+  test("gallery lightbox hides advisor chrome", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto("/projects/105-residences");
+    await expect(page.getByRole("heading", { name: /Project gallery/i })).toBeVisible({
+      timeout: 20_000,
+    });
+
+    const fab = page.getByTestId("advisor-launcher");
+    await expect(fab).toBeVisible();
+
+    await page.getByRole("button", { name: /fullscreen/i }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    // visibility:hidden — not in a11y tree / not hittable over gallery thumbs.
+    await expect(fab).toBeHidden();
+
+    await page.getByRole("button", { name: "Close gallery" }).click();
+    await expect(page.getByRole("dialog")).toBeHidden();
+    await expect(fab).toBeVisible();
+  });
 });
