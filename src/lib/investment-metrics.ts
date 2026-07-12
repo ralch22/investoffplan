@@ -2,7 +2,12 @@ import type { FlatUnit } from "./projects";
 import { resolveBrochureUrl } from "./brochure";
 
 export function pricePerSqft(priceAed: number, sqft: number): number | null {
-  if (!sqft || sqft <= 0) return null;
+  // Absolute band mirrors catalog-core unit-size sanity (#180): reject missing,
+  // sub-habitable, and absurd sizes so AED/sqft never divides by 1e6 typos.
+  // Full type-aware nulling runs at the catalog read chokepoint; this is the
+  // compute safety net for any residual raw path.
+  if (!sqft || sqft < 150 || sqft > 40_000) return null;
+  if (!priceAed || priceAed <= 0) return null;
   return Math.round(priceAed / sqft);
 }
 
