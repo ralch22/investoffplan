@@ -1,8 +1,8 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { LocaleLink } from "@/components/locale-link";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { GUIDE_CARDS, GUIDE_REASONS, getGuide } from "@/lib/figma-copy";
 import { getGuideBody } from "@/content/articles";
@@ -11,11 +11,26 @@ import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
   locale?: Locale;
+}
+
+type GuideChrome = { title: string; description: string };
+
+/** Prefer dict.pages.guides.cards chrome; fall back to EN GUIDE_CARDS. */
+export function guideChrome(locale: Locale, slug: string): GuideChrome | null {
+  const guide = getGuide(slug);
+  if (!guide) return null;
+  const dict = getDictionary(locale);
+  const cards = dict.pages.guides.cards as Record<string, GuideChrome>;
+  const copy = cards[slug];
+  return {
+    title: copy?.title ?? guide.title,
+    description: copy?.description ?? guide.description,
+  };
 }
 
 // In-repo guide set is finite — unknown slugs must 404 (issue #241).
@@ -29,16 +44,16 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const guide = getGuide(slug);
-  if (!guide) return { title: "Guide not found" };
+  const chrome = guideChrome("en", slug);
+  if (!chrome) return { title: "Guide not found" };
 
   return {
-    title: guide.title,
-    description: guide.description,
+    title: chrome.title,
+    description: chrome.description,
     alternates: enMeta(`/guides/${slug}`),
     openGraph: {
-      title: guide.title,
-      description: guide.description,
+      title: chrome.title,
+      description: chrome.description,
       type: "article",
       url: `${getSiteUrl()}/guides/${slug}`,
       images: [{ url: "/brand/icon-red.png", width: 512, height: 512, alt: "invest off-plan" }],
@@ -50,17 +65,21 @@ export default async function GuideDetailPage({ params, locale = "en" }: PagePro
   const dict = getDictionary(locale);
   const { slug } = await params;
   const guide = getGuide(slug);
-  if (!guide) notFound();
+  const chrome = guideChrome(locale, slug);
+  if (!guide || !chrome) notFound();
 
   const body = getGuideBody(slug);
   const reasons = GUIDE_REASONS[slug] ?? [
     {
-      title: guide.title,
-      body: guide.description,
+      title: chrome.title,
+      body: chrome.description,
     },
   ];
 
   const siteUrl = getSiteUrl();
+  const guidesUrl =
+    locale === "ar" ? `${siteUrl}/ar/guides` : `${siteUrl}/guides`;
+  const homeUrl = locale === "ar" ? `${siteUrl}/ar` : siteUrl;
 
   return (
     <PageShell>
@@ -69,9 +88,9 @@ export default async function GuideDetailPage({ params, locale = "en" }: PagePro
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             buildBreadcrumbListJsonLd([
-              { name: "Home", url: siteUrl },
-              { name: "Guides", url: `${siteUrl}/guides` },
-              { name: guide.title },
+              { name: dict.common.home, url: homeUrl },
+              { name: dict.nav.guides, url: guidesUrl },
+              { name: chrome.title },
             ]),
           ),
         }}
@@ -79,10 +98,10 @@ export default async function GuideDetailPage({ params, locale = "en" }: PagePro
       <section className="bg-guide-hero py-16">
         <div className="mx-auto max-w-[800px] px-5 text-center md:px-8">
           <h1 className="font-display text-4xl font-semibold text-text-dark md:text-5xl">
-            {guide.title}
+            {chrome.title}
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted">
-            {guide.description}
+            {chrome.description}
           </p>
           <div className="mx-auto mt-4 h-1 w-16 bg-brand" />
         </div>
@@ -93,7 +112,7 @@ export default async function GuideDetailPage({ params, locale = "en" }: PagePro
           items={[
             { label: dict.common.home, href: "/" },
             { label: dict.nav.guides, href: "/guides" },
-            { label: guide.title },
+            { label: chrome.title },
           ]}
         />
         {body ? (
@@ -143,15 +162,18 @@ export default async function GuideDetailPage({ params, locale = "en" }: PagePro
 
         <div className="mt-10 rounded-2xl bg-brand p-8 text-center text-white">
           <p className="text-xl font-semibold">{dict.pages.guides.ctaHeading}</p>
-          <PrimaryButton href="/projects" className="mt-4 bg-white text-brand hover:bg-white/90">
+          <PrimaryButton
+            href={localePath(locale, "/projects")}
+            className="mt-4 bg-white text-brand hover:bg-white/90"
+          >
             {dict.pages.guides.ctaButton}
           </PrimaryButton>
         </div>
 
         <p className="mt-8 text-center text-sm text-muted">
-          <Link href="/guides" className="font-semibold text-brand hover:text-brand-dark">
+          <LocaleLink href="/guides" className="font-semibold text-brand hover:text-brand-dark">
             {dict.pages.guides.backLink}
-          </Link>
+          </LocaleLink>
         </p>
       </main>
     </PageShell>

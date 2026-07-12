@@ -214,4 +214,16 @@ test.describe("Content routes", () => {
     expect(html).not.toMatch(/<h1[^>]*>\s*Off-Plan Basics/i);
     expect(html).not.toMatch(/<title>Off-Plan Basics/i);
   });
+
+  // #262 — AR guide detail title + H1 from dict.pages.guides.cards, not EN GUIDE_CARDS.
+  test("AR guide detail pages use Arabic title and H1", async ({ page }) => {
+    const res = await page.goto("/ar/guides/understanding-payment-plans", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    expect(html).toMatch(/فهم خطط السداد/);
+    expect(html).not.toMatch(/<title>Understanding Payment Plans/i);
+    expect(html).not.toMatch(/>Understanding Payment Plans</);
+  });
 });
