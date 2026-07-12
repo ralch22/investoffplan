@@ -1,4 +1,4 @@
-import { formatBeds, formatSqft } from "@/lib/format";
+import { bedsLabel, formatSqft, propertyTypeLabel } from "@/lib/format";
 import type { UnitType } from "@/lib/types";
 import { getDictionary } from "@/i18n";
 import type { Locale } from "@/i18n/config";
@@ -9,7 +9,8 @@ interface ProjectUnitRangesProps {
 }
 
 export function ProjectUnitRanges({ units, locale = "en" }: ProjectUnitRangesProps) {
-  const u = getDictionary(locale).pdp.units;
+  const dict = getDictionary(locale);
+  const u = dict.pdp.units;
   const groups = new Map<
     string,
     { beds: number; propertyType: string; sqftMin: number; sqftMax: number }
@@ -49,7 +50,7 @@ export function ProjectUnitRanges({ units, locale = "en" }: ProjectUnitRangesPro
         {rows.map((row) => (
           <li key={`${row.beds}-${row.propertyType}`} className="text-sm text-text-dark">
             <span className="font-semibold capitalize">
-              {formatBeds(row.beds)} {row.propertyType}{u.typePlural}
+              {bedsLabel(row.beds, dict)} {propertyTypeLabel(row.propertyType, dict, locale)}{u.typePlural}
             </span>
             {row.sqftMin > 0 ? (
               <>
