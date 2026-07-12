@@ -53,7 +53,12 @@ export async function getCommunities(): Promise<CommunitySummary[]> {
     }
     existing.projectCount += area.projectCount;
     existing.unitCount += area.unitCount;
-    existing.minPriceAed = Math.min(existing.minPriceAed, area.minPriceAed);
+    if (area.minPriceAed > 0) {
+      existing.minPriceAed =
+        existing.minPriceAed > 0
+          ? Math.min(existing.minPriceAed, area.minPriceAed)
+          : area.minPriceAed;
+    }
     existing.variantSlugs.push(area.slug);
   }
 

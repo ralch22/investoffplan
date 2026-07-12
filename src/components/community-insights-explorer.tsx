@@ -85,8 +85,10 @@ export function CommunityInsightsExplorer({ areas }: CommunityInsightsExplorerPr
               </span>
             </div>
             <p className="mt-3 text-sm text-muted">
-              {area.unitCount} unit options · from{" "}
-              {formatPrice(area.minPriceAed, "AED", { compact: true })}
+              {area.unitCount} unit options
+              {area.minPriceAed > 0
+                ? ` · from ${formatPrice(area.minPriceAed, "AED", { compact: true })}`
+                : " · price on request"}
             </p>
             {area.grossYieldPct != null || area.medianSoldPpsqft != null ? (
               <p className="mt-1 text-xs font-medium text-brand">

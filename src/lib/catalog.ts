@@ -88,7 +88,11 @@ export async function getDevelopers(): Promise<DeveloperSummary[]> {
     const slug = slugify(project.developer);
     const devMeta = devListBySlug.get(slug);
     const existing = map.get(slug);
-    const minUnit = Math.min(...project.units.map((u) => u.launchPriceAed));
+    // 0 = unstated PF price — exclude so minPrice never collapses to "AED 0".
+    const positive = project.units
+      .map((u) => u.launchPriceAed)
+      .filter((p) => p > 0);
+    const minUnit = positive.length > 0 ? Math.min(...positive) : 0;
 
     if (!existing) {
       map.set(slug, {
@@ -109,7 +113,10 @@ export async function getDevelopers(): Promise<DeveloperSummary[]> {
 
     existing.projectCount += 1;
     existing.unitCount += project.units.length;
-    existing.minPriceAed = Math.min(existing.minPriceAed, minUnit);
+    if (minUnit > 0) {
+      existing.minPriceAed =
+        existing.minPriceAed > 0 ? Math.min(existing.minPriceAed, minUnit) : minUnit;
+    }
     if (!existing.cities.includes(project.city)) {
       existing.cities.push(project.city);
     }
@@ -248,7 +255,11 @@ export async function getAreas(): Promise<AreaSummary[]> {
   for (const project of api.projects) {
     const slug = slugify(project.area);
     const existing = map.get(slug);
-    const minUnit = Math.min(...project.units.map((u) => u.launchPriceAed));
+    // 0 = unstated PF price — exclude so area "from" never reads "AED 0".
+    const positive = project.units
+      .map((u) => u.launchPriceAed)
+      .filter((p) => p > 0);
+    const minUnit = positive.length > 0 ? Math.min(...positive) : 0;
 
     if (!existing) {
       map.set(slug, {
@@ -265,7 +276,10 @@ export async function getAreas(): Promise<AreaSummary[]> {
 
     existing.projectCount += 1;
     existing.unitCount += project.units.length;
-    existing.minPriceAed = Math.min(existing.minPriceAed, minUnit);
+    if (minUnit > 0) {
+      existing.minPriceAed =
+        existing.minPriceAed > 0 ? Math.min(existing.minPriceAed, minUnit) : minUnit;
+    }
   }
 
   return [...map.values()].sort((a, b) => b.projectCount - a.projectCount);

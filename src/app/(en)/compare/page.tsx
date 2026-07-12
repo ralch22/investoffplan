@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { HomeYields } from "@/components/home-yields";
 import { PrimaryButton } from "@/components/ui/primary-button";
+import { CompareUnitsLegacyRedirect } from "@/components/compare-units-legacy-redirect";
 import { getTopCoveredAreas, getComparisonList } from "@/lib/area-compare";
-import { getComparableProjectSlugs } from "@/lib/project-compare";
-import { getComparableDeveloperSlugs } from "@/lib/developer-compare";
-import { getCatalogApi, getDevelopers } from "@/lib/catalog";
+import { getHubProjectPairs } from "@/lib/project-compare";
+import { getHubDeveloperPairs } from "@/lib/developer-compare";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
 import type { Locale } from "@/i18n/config";
+
+/** ISR — hub must not be per-request dynamic (Worker CPU → CF 1102 / 503). */
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Compare Dubai Communities & Off-Plan Projects",
@@ -27,58 +29,27 @@ export const metadata: Metadata = {
   },
 };
 
-interface PageProps {
-  searchParams: Promise<{ units?: string }>;
-}
-
 export async function CompareHubPageContent({
   locale = "en",
-  searchParams,
 }: {
   locale?: Locale;
-  searchParams?: Promise<{ units?: string }>;
 }) {
   const dict = getDictionary(locale);
   const t = dict.pages.compare;
 
-  // Legacy deep links: /compare?units=a,b,c was the unit-compare tool.
-  const { units } = (await searchParams) ?? {};
-  if (units) redirect(`/compare/units?units=${encodeURIComponent(units)}`);
-
-  const [topYields, comparisons, projectPairSlugs, developerPairSlugs, developers, api] =
-    await Promise.all([
-      getTopCoveredAreas("yield", 6),
-      getComparisonList(),
-      getComparableProjectSlugs(),
-      getComparableDeveloperSlugs(),
-      getDevelopers(),
-      getCatalogApi(),
-    ]);
-
-  const devNameBySlug = new Map(developers.map((d) => [d.slug, d.name]));
-  const developerPairs = developerPairSlugs
-    .slice(0, 6)
-    .map((pairSlug) => {
-      const idx = pairSlug.indexOf("-vs-");
-      const a = devNameBySlug.get(pairSlug.slice(0, idx));
-      const b = devNameBySlug.get(pairSlug.slice(idx + 4));
-      return a && b ? { pairSlug, a, b } : null;
-    })
-    .filter((x): x is { pairSlug: string; a: string; b: string } => x != null);
-
-  const nameBySlug = new Map(api.projects.map((p) => [p.slug, p.name]));
-  const projectPairs = projectPairSlugs
-    .slice(0, 6)
-    .map((pairSlug) => {
-      const idx = pairSlug.indexOf("-vs-");
-      const a = nameBySlug.get(pairSlug.slice(0, idx));
-      const b = nameBySlug.get(pairSlug.slice(idx + 4));
-      return a && b ? { pairSlug, a, b } : null;
-    })
-    .filter((x): x is { pairSlug: string; a: string; b: string } => x != null);
+  // Slim parallel load: DLD hub lists + 6 named project/dev pairs each.
+  // Do NOT call getCatalogApi + getComparable*Slugs + getDevelopers separately
+  // (that re-scanned the full catalog on every dynamic request → CF 1102).
+  const [topYields, comparisons, projectPairs, developerPairs] = await Promise.all([
+    getTopCoveredAreas("yield", 6),
+    getComparisonList(8),
+    getHubProjectPairs(6),
+    getHubDeveloperPairs(6),
+  ]);
 
   return (
     <PageShell headerVariant="transparent">
+      <CompareUnitsLegacyRedirect />
       <PageHero
         title={t.heroTitle}
         italicTitle
@@ -192,6 +163,6 @@ export async function CompareHubPageContent({
   );
 }
 
-export default async function CompareHubPage({ searchParams }: PageProps) {
-  return <CompareHubPageContent searchParams={searchParams} />;
+export default async function CompareHubPage() {
+  return <CompareHubPageContent />;
 }

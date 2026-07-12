@@ -72,8 +72,8 @@ function toSide(project: Project): ProjectSide {
   };
 }
 
-/** Intra-area pairs among the top projects of the top areas — meaningful head-to-heads. */
-export async function getComparableProjectSlugs(): Promise<string[]> {
+/** Group top projects per top communities (shared by slug list + hub cards). */
+async function topProjectsByCommunity(): Promise<Project[][]> {
   const api = await getCatalogApi();
   const byArea = new Map<string, Project[]>();
   for (const p of api.projects) {
@@ -82,10 +82,17 @@ export async function getComparableProjectSlugs(): Promise<string[]> {
     if (arr) arr.push(p);
     else byArea.set(k, [p]);
   }
-  const areas = [...byArea.values()].sort((a, b) => b.length - a.length).slice(0, TOP_AREAS);
+  return [...byArea.values()]
+    .sort((a, b) => b.length - a.length)
+    .slice(0, TOP_AREAS)
+    .map((projs) => [...projs].sort(rankProject).slice(0, PROJECTS_PER_AREA));
+}
+
+/** Intra-area pairs among the top projects of the top areas — meaningful head-to-heads. */
+export async function getComparableProjectSlugs(): Promise<string[]> {
+  const areas = await topProjectsByCommunity();
   const pairs = new Set<string>();
-  for (const projs of areas) {
-    const top = [...projs].sort(rankProject).slice(0, PROJECTS_PER_AREA);
+  for (const top of areas) {
     for (let i = 0; i < top.length; i++) {
       for (let j = i + 1; j < top.length; j++) {
         pairs.add([top[i].slug, top[j].slug].sort().join(SEP));
@@ -93,6 +100,28 @@ export async function getComparableProjectSlugs(): Promise<string[]> {
     }
   }
   return [...pairs];
+}
+
+/**
+ * Lightweight hub cards — only `limit` named pairs, one catalog pass.
+ * Avoids the compare hub loading full pair lists + a second catalog for names
+ * (that path was CF 1102 / 503 on /compare under Worker CPU limits).
+ */
+export async function getHubProjectPairs(
+  limit = 6,
+): Promise<{ pairSlug: string; a: string; b: string }[]> {
+  const areas = await topProjectsByCommunity();
+  const out: { pairSlug: string; a: string; b: string }[] = [];
+  for (const top of areas) {
+    for (let i = 0; i < top.length; i++) {
+      for (let j = i + 1; j < top.length; j++) {
+        const [x, y] = [top[i], top[j]].sort((p, q) => p.slug.localeCompare(q.slug));
+        out.push({ pairSlug: `${x.slug}${SEP}${y.slug}`, a: x.name, b: y.name });
+        if (out.length >= limit) return out;
+      }
+    }
+  }
+  return out;
 }
 
 /** Other projects in the same area to offer as comparisons on a PDP. */
