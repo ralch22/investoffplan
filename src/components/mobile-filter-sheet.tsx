@@ -64,119 +64,128 @@ export function MobileFilterSheet({
       {open ? (
         <div
           data-testid="mobile-filter-sheet"
-          className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5 shadow-elevation-lg"
+          className="absolute inset-x-0 bottom-0 flex max-h-[85vh] flex-col rounded-t-2xl bg-white shadow-elevation-lg"
         >
-        <div className="mb-4 flex items-center justify-between">
-          <h2 id="mobile-filter-sheet-title" className="text-lg font-semibold text-text-dark">
-            {f.title}
-          </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={f.closeFilters}
-            className="focus-ring inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 text-sm font-semibold text-muted hover:text-text-dark"
-          >
-            {f.close}
-          </button>
-        </div>
+          {/* Header — stays put while filters scroll. */}
+          <div className="flex shrink-0 items-center justify-between border-b border-border px-5 py-4">
+            <h2
+              id="mobile-filter-sheet-title"
+              className="text-lg font-semibold text-text-dark"
+            >
+              {f.title}
+            </h2>
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label={f.closeFilters}
+              className="focus-ring inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 text-sm font-semibold text-muted hover:text-text-dark"
+            >
+              {f.close}
+            </button>
+          </div>
 
-        <div className="space-y-4">
-          <label className="block text-sm font-semibold text-text-dark">
-            {f.search}
-            <input
-              type="search"
-              placeholder={f.searchPlaceholderMobile}
-              value={filters.query}
-              onChange={(e) => onChange({ ...filters, query: e.target.value })}
-              className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] px-4 py-2.5 text-sm outline-none"
+          {/* Scrollable filter body — primary CTA is sticky below, not in this stream. */}
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-5 py-4">
+            <label className="block text-sm font-semibold text-text-dark">
+              {f.search}
+              <input
+                type="search"
+                placeholder={f.searchPlaceholderMobile}
+                value={filters.query}
+                onChange={(e) => onChange({ ...filters, query: e.target.value })}
+                className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] px-4 py-2.5 text-sm outline-none"
+              />
+            </label>
+
+            <label className="block text-sm font-semibold text-text-dark">
+              {f.propertyType}
+              <select
+                value={filters.propertyType}
+                onChange={(e) =>
+                  onChange({
+                    ...filters,
+                    propertyType: e.target.value as Filters["propertyType"],
+                  })
+                }
+                className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] bg-white px-4 py-2.5 text-sm outline-none"
+              >
+                <option value="all">{f.allTypes}</option>
+                <option value="apartment">{f.apartment}</option>
+                <option value="villa">{f.villa}</option>
+                <option value="townhouse">{f.townhouse}</option>
+                <option value="penthouse">{f.penthouse}</option>
+              </select>
+            </label>
+
+            <label className="block text-sm font-semibold text-text-dark">
+              {f.beds}
+              <select
+                value={filters.beds}
+                onChange={(e) =>
+                  onChange({
+                    ...filters,
+                    beds:
+                      e.target.value === "all"
+                        ? "all"
+                        : e.target.value === "studio"
+                          ? "studio"
+                          : Number(e.target.value),
+                  })
+                }
+                className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] bg-white px-4 py-2.5 text-sm outline-none"
+              >
+                <option value="all">{f.any}</option>
+                <option value="studio">{f.studio}</option>
+                <option value="1">{f.bed1}</option>
+                <option value="2">{f.beds2}</option>
+                <option value="3">{f.beds3}</option>
+                <option value="4">{f.beds4}</option>
+                <option value="5">{f.beds5Plus}</option>
+              </select>
+            </label>
+
+            <label className="block text-sm font-semibold text-text-dark">
+              {f.maxPrice}
+              <select
+                value={filters.maxPrice ?? "all"}
+                onChange={(e) =>
+                  onChange({
+                    ...filters,
+                    maxPrice:
+                      e.target.value === "all" ? null : Number(e.target.value),
+                  })
+                }
+                className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] bg-white px-4 py-2.5 text-sm outline-none"
+              >
+                <option value="all">{f.any}</option>
+                <option value="1500000">{f.upTo15m}</option>
+                <option value="2500000">{f.upTo25m}</option>
+                <option value="4000000">{f.upTo4m}</option>
+              </select>
+            </label>
+
+            <MoreFiltersPanel
+              filters={filters}
+              onChange={onChange}
+              developerOptions={developerOptions}
+              amenityOptions={amenityOptions}
+              variant="sheet"
             />
-          </label>
 
-          <label className="block text-sm font-semibold text-text-dark">
-            {f.propertyType}
-            <select
-              value={filters.propertyType}
-              onChange={(e) =>
-                onChange({
-                  ...filters,
-                  propertyType: e.target.value as Filters["propertyType"],
-                })
-              }
-              className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] bg-white px-4 py-2.5 text-sm outline-none"
+            <SaveSearchButton filters={filters} />
+          </div>
+
+          {/* Sticky primary CTA — always in viewport; safe-area for home indicator. */}
+          <div className="shrink-0 border-t border-border bg-white px-5 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+            <button
+              type="button"
+              data-testid="mobile-filter-show-results"
+              onClick={onClose}
+              className="iop-btn-press w-full rounded-full bg-brand py-3 text-sm font-semibold text-white hover:bg-brand-dark"
             >
-              <option value="all">{f.allTypes}</option>
-              <option value="apartment">{f.apartment}</option>
-              <option value="villa">{f.villa}</option>
-              <option value="townhouse">{f.townhouse}</option>
-              <option value="penthouse">{f.penthouse}</option>
-            </select>
-          </label>
-
-          <label className="block text-sm font-semibold text-text-dark">
-            {f.beds}
-            <select
-              value={filters.beds}
-              onChange={(e) =>
-                onChange({
-                  ...filters,
-                  beds:
-                    e.target.value === "all"
-                      ? "all"
-                      : e.target.value === "studio"
-                        ? "studio"
-                        : Number(e.target.value),
-                })
-              }
-              className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] bg-white px-4 py-2.5 text-sm outline-none"
-            >
-              <option value="all">{f.any}</option>
-              <option value="studio">{f.studio}</option>
-              <option value="1">{f.bed1}</option>
-              <option value="2">{f.beds2}</option>
-              <option value="3">{f.beds3}</option>
-              <option value="4">{f.beds4}</option>
-              <option value="5">{f.beds5Plus}</option>
-            </select>
-          </label>
-
-          <label className="block text-sm font-semibold text-text-dark">
-            {f.maxPrice}
-            <select
-              value={filters.maxPrice ?? "all"}
-              onChange={(e) =>
-                onChange({
-                  ...filters,
-                  maxPrice:
-                    e.target.value === "all" ? null : Number(e.target.value),
-                })
-              }
-              className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] bg-white px-4 py-2.5 text-sm outline-none"
-            >
-              <option value="all">{f.any}</option>
-              <option value="1500000">{f.upTo15m}</option>
-              <option value="2500000">{f.upTo25m}</option>
-              <option value="4000000">{f.upTo4m}</option>
-            </select>
-          </label>
-
-          <MoreFiltersPanel
-            filters={filters}
-            onChange={onChange}
-            developerOptions={developerOptions}
-            amenityOptions={amenityOptions}
-            variant="sheet"
-          />
-
-          <SaveSearchButton filters={filters} />
-        </div>
-
-          <button
-            type="button"
-            onClick={onClose}
-            className="iop-btn-press mt-6 w-full rounded-full bg-brand py-3 text-sm font-semibold text-white hover:bg-brand-dark"
-          >
-            {f.showResults}
-          </button>
+              {f.showResults}
+            </button>
+          </div>
         </div>
       ) : null}
     </dialog>
