@@ -1078,7 +1078,31 @@ const dict = {
       "viewProjectCta": "View {name}",
       "decideWithData": "Decide with data",
       "hubHeading": "Compare communities",
-      "hubSubtitle": "Side-by-side on real 2025 sold prices, price per sqft, and gross rental yields."
+      "hubSubtitle": "Side-by-side on real 2025 sold prices, price per sqft, and gross rental yields.",
+      "allProjectComparisons": "All project comparisons →",
+      "allDeveloperComparisons": "All developer comparisons →"
+    },
+    "compareProjectsIndex": {
+      "heroTitle": "Compare projects",
+      "heroSubtitle": "Head-to-head on price, handover, payment plans, and unit mix — from our live off-plan catalog.",
+      "breadcrumb": "Projects",
+      "eyebrow": "Project pairs",
+      "heading": "Popular project comparisons",
+      "subtitle": "Pick a pair to open a full side-by-side breakdown.",
+      "empty": "Project comparisons will appear here once the catalog is ready.",
+      "backToHub": "All comparisons",
+      "developersLink": "Compare developers →"
+    },
+    "compareDevelopersIndex": {
+      "heroTitle": "Compare developers",
+      "heroSubtitle": "Portfolio size, entry prices, communities covered, and handover pipelines.",
+      "breadcrumb": "Developers",
+      "eyebrow": "Developer pairs",
+      "heading": "Popular developer comparisons",
+      "subtitle": "Pick a pair to open a full side-by-side breakdown.",
+      "empty": "Developer comparisons will appear here once the catalog is ready.",
+      "backToHub": "All comparisons",
+      "projectsLink": "Compare projects →"
     },
     "compareDev": {
       "heroSubtitle": "Off-plan developer comparison — portfolio, pricing, and delivery pipeline from our live catalog.",
