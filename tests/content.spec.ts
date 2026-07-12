@@ -9,6 +9,16 @@ test.describe("Content routes", () => {
     ).toBeVisible();
   });
 
+  // #250 — AR guides hub must not hardcode EN H1/chrome.
+  test("AR /ar/guides hub H1 is Arabic", async ({ page }) => {
+    const res = await page.goto("/ar/guides", { waitUntil: "commit" });
+    expect(res?.status()).toBe(200);
+    const html = await res!.text();
+    expect(html).toContain('lang="ar"');
+    expect(html).not.toContain(">Investment Guides<");
+    expect(html).toContain("أدلّة الاستثمار");
+  });
+
   test("news article renders with date, sections, and JSON-LD", async ({ page }) => {
     await page.goto("/news");
     const firstLink = page.getByRole("link", { name: "Read More" }).first();
