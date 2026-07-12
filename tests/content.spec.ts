@@ -19,6 +19,18 @@ test.describe("Content routes", () => {
     expect(html).toContain("أدلّة الاستثمار");
   });
 
+  // #298 — AR news detail title/H1 use titleAr, not EN article.title only.
+  test("AR news article H1 and title use Arabic titleAr", async ({ page }) => {
+    const res = await page.goto("/ar/news/golden-visa-threshold-off-plan-catalog", {
+      waitUntil: "commit",
+    });
+    expect(res?.status()).toBe(200);
+    const html = await res!.text();
+    expect(html).toContain('lang="ar"');
+    expect(html).not.toContain("The AED 2 Million Question");
+    expect(html).toContain("سؤال المليوني درهم");
+  });
+
   test("news article renders with date, sections, and JSON-LD", async ({ page }) => {
     await page.goto("/news");
     const firstLink = page.getByRole("link", { name: "Read More" }).first();

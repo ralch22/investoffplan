@@ -6,7 +6,12 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ArticleBody } from "@/components/article-body";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { PrimaryButton } from "@/components/ui/primary-button";
-import { getNewsArticle, getNewsArticles } from "@/content/articles";
+import {
+  articleDescription,
+  articleTitle,
+  getNewsArticle,
+  getNewsArticles,
+} from "@/content/articles";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
@@ -63,13 +68,15 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
   const article = getNewsArticle(slug);
   if (!article) notFound();
   const dict = getDictionary(locale);
+  const title = articleTitle(article, locale);
+  const description = articleDescription(article, locale);
 
   const siteUrl = getSiteUrl();
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
-    headline: article.title,
-    description: article.description,
+    headline: title,
+    description,
     datePublished: article.publishedAt,
     dateModified: article.publishedAt,
     image: { "@type": "ImageObject", url: `${siteUrl}/brand/icon-red.png`, width: 512, height: 512 },
@@ -108,7 +115,7 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
             buildBreadcrumbListJsonLd([
               { name: "Home", url: siteUrl },
               { name: "News", url: `${siteUrl}/news` },
-              { name: article.title },
+              { name: title },
             ]),
           ),
         }}
@@ -120,10 +127,10 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
             {formatDate(article.publishedAt, locale)}
           </p>
           <h1 className="mt-3 font-display text-4xl font-semibold text-text-dark md:text-5xl">
-            {article.title}
+            {title}
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted">
-            {article.description}
+            {description}
           </p>
           <div className="mx-auto mt-4 h-1 w-16 bg-brand" />
         </div>
@@ -134,7 +141,7 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
           items={[
             { label: dict.common.home, href: "/" },
             { label: dict.nav.news, href: "/news" },
-            { label: article.title },
+            { label: title },
           ]}
         />
 
