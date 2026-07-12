@@ -4,6 +4,7 @@ import {
   propertyTypeLabel,
 } from "@/lib/format";
 import { LaunchPrice } from "@/components/currency-price";
+import { hasPaymentPlan } from "@/lib/investment-metrics";
 import type { Project, UnitType } from "@/lib/types";
 import { getDictionary } from "@/i18n";
 import type { Locale } from "@/i18n/config";
@@ -17,6 +18,9 @@ interface ProjectUnitsTableProps {
 export function ProjectUnitsTable({ units, project, locale = "en" }: ProjectUnitsTableProps) {
   const dict = getDictionary(locale);
   const u = dict.pdp.units;
+  const planLabel = hasPaymentPlan(project.paymentPlan)
+    ? project.paymentPlan.trim()
+    : null;
   return (
     <>
       <div className="mt-4 hidden overflow-hidden rounded-xl border border-border bg-white md:block">
@@ -71,7 +75,9 @@ export function ProjectUnitsTable({ units, project, locale = "en" }: ProjectUnit
                 />
               </p>
             </div>
-            <p className="mt-2 text-xs text-muted">{project.paymentPlan}</p>
+            {planLabel ? (
+              <p className="mt-2 text-xs text-muted">{planLabel}</p>
+            ) : null}
           </article>
         ))}
       </div>

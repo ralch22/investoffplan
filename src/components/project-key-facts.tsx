@@ -1,6 +1,7 @@
 import { LocaleLink } from "@/components/locale-link";
 import { cityLabel } from "@/lib/format";
 import { communitySlugFor } from "@/lib/community-slug";
+import { hasPaymentPlan } from "@/lib/investment-metrics";
 import { slugify } from "@/lib/slugify";
 import type { Project } from "@/lib/types";
 import { getDictionary } from "@/i18n";
@@ -18,10 +19,13 @@ export function ProjectKeyFacts({ project, locale = "en" }: ProjectKeyFactsProps
     ...new Set(project.units.map((u) => u.propertyType)),
   ].map((t) => translatePropertyType(t, kf));
 
+  const planKnown = hasPaymentPlan(project.paymentPlan);
   const paymentLabel =
     project.paymentPlanCount && project.paymentPlanCount > 1
       ? interpolate(kf.seePaymentPlans, { count: project.paymentPlanCount })
-      : project.paymentPlan?.trim() || kf.onRequest;
+      : planKnown
+        ? project.paymentPlan.trim()
+        : kf.onRequest;
 
   const facts = [
     {
@@ -36,7 +40,11 @@ export function ProjectKeyFacts({ project, locale = "en" }: ProjectKeyFactsProps
     {
       label: kf.paymentPlan,
       value: paymentLabel,
-      href: "#calculator",
+      // Only deep-link when a real plan drives the calculator section.
+      href:
+        planKnown || (project.paymentPlanCount && project.paymentPlanCount > 1)
+          ? "#calculator"
+          : undefined,
     },
     {
       label: kf.propertyTypes,

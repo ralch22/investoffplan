@@ -24,6 +24,21 @@ export function handoverMonths(handover?: string): number | null {
   return Math.max(0, months);
 }
 
+/**
+ * True when the catalog has a real payment-plan string worth showing in UI.
+ * Filters blank, whitespace, generic "Payment Plan" placeholders, and
+ * zero-value stubs like "AED 0" / "0" (162+ projects publish an empty plan).
+ */
+export function hasPaymentPlan(plan?: string | null): boolean {
+  if (plan == null) return false;
+  const trimmed = plan.trim();
+  if (!trimmed) return false;
+  if (/^payment\s*plan$/i.test(trimmed)) return false;
+  if (/^aed\s*0(?:\.0+)?$/i.test(trimmed)) return false;
+  if (trimmed === "0") return false;
+  return true;
+}
+
 export function parsePaymentPlan(plan: string): {
   downPaymentPct: number;
   duringPct: number;

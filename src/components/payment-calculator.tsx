@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import {
   downPaymentAed,
+  hasPaymentPlan,
   parsePaymentPlan,
 } from "@/lib/investment-metrics";
 import { formatPrice } from "@/lib/format";
@@ -31,8 +32,10 @@ export function PaymentCalculator({
   const { dict } = useI18n();
   const t = dict.tools.paymentCalc;
   const [price, setPrice] = useState(clampPrice(priceAed));
+  const planKnown = hasPaymentPlan(paymentPlan);
 
   const schedule = useMemo(() => {
+    if (!planKnown) return null;
     const parsed = parsePaymentPlan(paymentPlan);
     if (!parsed) return null;
     const phases = [
@@ -50,7 +53,10 @@ export function PaymentCalculator({
       ...p,
       amount: Math.round((price * p.pct) / 100),
     }));
-  }, [price, paymentPlan, t]);
+  }, [price, paymentPlan, planKnown, t]);
+
+  // No real plan string → do not render an empty calculator shell.
+  if (!planKnown) return null;
 
   const down = downPaymentAed(price, paymentPlan);
   const totalPct = schedule?.reduce((sum, row) => sum + row.pct, 0) ?? 0;
@@ -94,11 +100,10 @@ export function PaymentCalculator({
         </p>
       </div>
 
-      {paymentPlan?.trim() ? (
-        <p className="mt-4 text-sm text-muted">
-          {t.planLabel} <span className="font-semibold text-text-dark">{paymentPlan}</span>
-        </p>
-      ) : null}
+      <p className="mt-4 text-sm text-muted">
+        {t.planLabel}{" "}
+        <span className="font-semibold text-text-dark">{paymentPlan.trim()}</span>
+      </p>
 
       {down != null ? (
         down > 0 ? (
