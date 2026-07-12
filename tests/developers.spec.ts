@@ -39,8 +39,11 @@ test.describe("Developers directory", () => {
       (schema) => schema.mainEntity?.["@type"] === "ItemList",
     );
     expect(itemList).toBeTruthy();
+    // numberOfItems = full catalog count; itemListElement is capped for HTML budget.
     expect(itemList.mainEntity.numberOfItems).toBeGreaterThan(0);
-    expect(itemList.mainEntity.itemListElement.length).toBe(
+    expect(itemList.mainEntity.itemListElement.length).toBeGreaterThan(0);
+    expect(itemList.mainEntity.itemListElement.length).toBeLessThanOrEqual(24);
+    expect(itemList.mainEntity.itemListElement.length).toBeLessThanOrEqual(
       itemList.mainEntity.numberOfItems,
     );
     expect(itemList.mainEntity.itemListElement[0]).toMatchObject({
@@ -48,5 +51,16 @@ test.describe("Developers directory", () => {
       position: 1,
     });
     expect(itemList.mainEntity.itemListElement[0].url).toContain("/projects/");
+  });
+
+  test("developer detail first page shows project cards", async ({ page }) => {
+    await page.goto("/developers/emaar-properties");
+    await expect(
+      page.getByRole("heading", { level: 1, name: /New & Off-Plan Projects by/i }),
+    ).toBeVisible();
+    // 12 cards per page (DEVELOPER_PAGE_SIZE); at least a few links into PDPs.
+    const projectLinks = page.locator('a[href^="/projects/"]');
+    await expect(projectLinks.first()).toBeVisible();
+    expect(await projectLinks.count()).toBeGreaterThanOrEqual(4);
   });
 });

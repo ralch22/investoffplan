@@ -1,5 +1,5 @@
 import { developerBlurb } from "./figma-copy";
-import type { Project, SortOption } from "./types";
+import type { DeveloperProjectCardData, Project, SortOption } from "./types";
 
 /**
  * PF project names often already end with "By {developer}" ("Nesba 1 By
@@ -43,41 +43,6 @@ function handoverValue(handover?: string): number {
   return Number(match[2]) * 10 + Number(match[1]);
 }
 
-function projectMinPrice(project: Project): number {
-  return Math.min(...project.units.map((unit) => unit.launchPriceAed));
-}
-
-export function sortDeveloperProjects(
-  projects: Project[],
-  sort: SortOption,
-): Project[] {
-  const sorted = [...projects];
-  switch (sort) {
-    case "price-asc":
-      return sorted.sort((a, b) => projectMinPrice(a) - projectMinPrice(b));
-    case "price-desc":
-      return sorted.sort((a, b) => projectMinPrice(b) - projectMinPrice(a));
-    case "handover-asc":
-      return sorted.sort(
-        (a, b) => handoverValue(a.handover) - handoverValue(b.handover),
-      );
-    case "handover-desc":
-      return sorted.sort(
-        (a, b) => handoverValue(b.handover) - handoverValue(a.handover),
-      );
-    default:
-      return sorted.sort((a, b) => {
-        if (a.status === "sold-out" && b.status !== "sold-out") return 1;
-        if (b.status === "sold-out" && a.status !== "sold-out") return -1;
-        const rankA = a.featuredRank ?? 999;
-        const rankB = b.featuredRank ?? 999;
-        if (rankA !== rankB) return rankA - rankB;
-        if (a.isPremium !== b.isPremium) return a.isPremium ? -1 : 1;
-        return a.name.localeCompare(b.name);
-      });
-  }
-}
-
 export function projectBedsLabel(project: Project): string | null {
   const beds = [...new Set(project.units.map((unit) => unit.beds))].sort(
     (a, b) => a - b,
@@ -99,6 +64,93 @@ export function projectTypeLabel(project: Project): string {
   if (types.length !== 1) return "Multiple";
   const type = types[0];
   return type.charAt(0).toUpperCase() + type.slice(1);
+}
+
+/**
+ * Project → card payload for developer grids. Drops PDP-only fields
+ * (description, amenities, floorPlans, galleries, full unit rows) so RSC
+ * props stay ~700 B/project instead of ~12 KB.
+ */
+export function toDeveloperProjectCardData(
+  project: Project,
+): DeveloperProjectCardData {
+  const positivePrices = project.units
+    .map((unit) => unit.launchPriceAed)
+    .filter((price) => price > 0);
+  const minPriceAed = positivePrices.length
+    ? Math.min(...positivePrices)
+    : 0;
+  const maxRaw = project.units.length
+    ? Math.max(
+        ...project.units.map(
+          (unit) => unit.launchPriceMaxAed ?? unit.launchPriceAed,
+        ),
+      )
+    : 0;
+  const maxPriceAed =
+    maxRaw > minPriceAed && minPriceAed > 0 ? maxRaw : undefined;
+
+  return {
+    id: project.id,
+    slug: project.slug,
+    name: project.name,
+    developer: project.developer,
+    developerLogo: project.developerLogo,
+    city: project.city,
+    area: project.area,
+    locationFull: project.locationFull,
+    status: project.status,
+    handover: project.handover,
+    paymentPlan: project.paymentPlan,
+    imageUrl: project.imageUrl,
+    imageGradient: project.imageGradient,
+    whatsapp: project.whatsapp,
+    minPriceAed,
+    maxPriceAed,
+    featuredRank: project.featuredRank,
+    isPremium: project.isPremium,
+    bedsLabel: projectBedsLabel(project),
+    typeLabel: projectTypeLabel(project),
+  };
+}
+
+/** Sort card (or full) rows for developer project grids. */
+export function sortDeveloperProjects<
+  T extends Pick<
+    DeveloperProjectCardData,
+    | "minPriceAed"
+    | "handover"
+    | "status"
+    | "featuredRank"
+    | "isPremium"
+    | "name"
+  >,
+>(projects: T[], sort: SortOption): T[] {
+  const sorted = [...projects];
+  switch (sort) {
+    case "price-asc":
+      return sorted.sort((a, b) => a.minPriceAed - b.minPriceAed);
+    case "price-desc":
+      return sorted.sort((a, b) => b.minPriceAed - a.minPriceAed);
+    case "handover-asc":
+      return sorted.sort(
+        (a, b) => handoverValue(a.handover) - handoverValue(b.handover),
+      );
+    case "handover-desc":
+      return sorted.sort(
+        (a, b) => handoverValue(b.handover) - handoverValue(a.handover),
+      );
+    default:
+      return sorted.sort((a, b) => {
+        if (a.status === "sold-out" && b.status !== "sold-out") return 1;
+        if (b.status === "sold-out" && a.status !== "sold-out") return -1;
+        const rankA = a.featuredRank ?? 999;
+        const rankB = b.featuredRank ?? 999;
+        if (rankA !== rankB) return rankA - rankB;
+        if (a.isPremium !== b.isPremium) return a.isPremium ? -1 : 1;
+        return a.name.localeCompare(b.name);
+      });
+  }
 }
 
 export function developerFaqs(

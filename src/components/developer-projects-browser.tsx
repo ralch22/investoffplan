@@ -6,7 +6,11 @@ import { DeveloperProjectCard } from "@/components/developer-project-card";
 import { cn } from "@/lib/cn";
 import { paginationRange } from "@/lib/pagination";
 import { sortDeveloperProjects } from "@/lib/developer-utils";
-import { DEVELOPER_PAGE_SIZE, type Project, type SortOption } from "@/lib/types";
+import {
+  DEVELOPER_PAGE_SIZE,
+  type DeveloperProjectCardData,
+  type SortOption,
+} from "@/lib/types";
 
 const SORT_OPTIONS: readonly SortOption[] = [
   "featured",
@@ -22,22 +26,22 @@ function isSortOption(value: string | null): value is SortOption {
 }
 
 interface DeveloperProjectsBrowserProps {
-  /** Full, already-slim project list for this developer. Sorted + paginated client-side. */
-  projects: Project[];
+  /**
+   * Card-only rows for this developer (no PDP fields / unit arrays). Sorted +
+   * paginated client-side so the route stays ISR-static.
+   */
+  projects: DeveloperProjectCardData[];
   heading: string;
   countLabel: string;
 }
 
 /**
- * Client-side sort + pagination for a developer's project grid. Slices an
- * already-loaded (small) list in the browser so the server route stays static
- * and ISR-cacheable — no `searchParams` read on the server, which would opt the
- * whole route into dynamic (`no-store`) rendering.
+ * Client-side sort + pagination for a developer's project grid. Receives a
+ * slim card projection (not full Project) so large developers stay under the
+ * multi-MB RSC payload budget. No `searchParams` on the server — URL sync is
+ * shallow via `history.replaceState`.
  *
- * The default state ("featured", page 1) renders on the server, so the
- * first-page cards and the h1 are in the initial HTML for SEO/LCP. State syncs
- * to the URL via `history.replaceState` (shallow, no RSC fetch) so the route
- * never leaves the static/ISR cache.
+ * Default state ("featured", page 1) still SSRs first-page cards for SEO/LCP.
  */
 export function DeveloperProjectsBrowser({
   projects,
