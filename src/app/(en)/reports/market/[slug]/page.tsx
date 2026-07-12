@@ -10,7 +10,7 @@ import {
 } from "@/lib/communities";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
 import { formatPrice } from "@/lib/format";
-import { en } from "@/i18n/dictionaries/en";
+import { getDictionary } from "@/i18n";
 import { interpolate, localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const community = await getCommunity(slug);
   if (!community) return { title: "Report not found" };
   return {
-    title: interpolate(en.reports.reportTitle, { name: community.name }),
+    title: interpolate(getDictionary("en").reports.reportTitle, { name: community.name }),
     // Utility/print surface duplicating community-page data — keep out of the index.
     robots: { index: false, follow: false },
   };
@@ -80,7 +80,7 @@ export default async function MarketReportPage({
   });
 
   const trend = stats.monthlyTrend;
-  const s = en.reports;
+  const s = getDictionary(locale).reports;
 
   const summaryTiles = [
     stats.medianPrice != null
