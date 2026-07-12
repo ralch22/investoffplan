@@ -9,7 +9,7 @@ import {
 import { bedsLabel } from "@/lib/format";
 import type { FloorPlan, Project } from "@/lib/types";
 import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { interpolate, type Locale } from "@/i18n/config";
 import { unoptimizedProp } from "@/lib/asset-image";
 
 interface ProjectFloorPlansProps {
@@ -19,6 +19,7 @@ interface ProjectFloorPlansProps {
 
 export function ProjectFloorPlans({ project, locale = "en" }: ProjectFloorPlansProps) {
   const dict = getDictionary(locale);
+  const fp = dict.pdp.floorPlansSection;
   const plans = project.floorPlans ?? [];
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
@@ -43,17 +44,18 @@ export function ProjectFloorPlans({ project, locale = "en" }: ProjectFloorPlansP
         id="floor-plans-heading"
         className="font-display text-2xl font-semibold text-text-dark md:text-3xl"
       >
-        Floor <em className="italic">plans</em>
+        {fp.heading}
       </h2>
       <p className="mt-2 text-sm text-muted">
-        {plans.length} layout{plans.length === 1 ? "" : "s"} published for{" "}
-        {project.name}.
+        {plans.length === 1
+          ? interpolate(fp.countSingular, { name: project.name })
+          : interpolate(fp.countPlural, { count: plans.length, name: project.name })}
       </p>
 
       {bedOptions.length > 1 ? (
         <div className="mt-4 flex flex-wrap gap-2">
           <BedChip
-            label="All"
+            label={fp.all}
             active={bedsFilter === "all"}
             onClick={() => setBedsFilter("all")}
           />
@@ -98,7 +100,7 @@ export function ProjectFloorPlans({ project, locale = "en" }: ProjectFloorPlansP
                 {plan.layoutType ? ` · ${plan.layoutType}` : ""}
               </p>
               {plan.area ? (
-                <p className="text-xs text-muted">{describePlanArea(plan)}</p>
+                <p className="text-xs text-muted">{describePlanArea(plan, fp.sqft)}</p>
               ) : null}
             </div>
           </button>
@@ -119,13 +121,15 @@ export function ProjectFloorPlans({ project, locale = "en" }: ProjectFloorPlansP
   );
 }
 
-function describePlanArea(plan: FloorPlan): string {
+function describePlanArea(plan: FloorPlan, sqftTemplate: string): string {
   // PF layout areas arrive in the same mixed scale as unit sizes; anything
   // below 300 reads as sqm for typical layouts.
   if (!plan.area) return "";
-  return plan.area < 300
-    ? `${Math.round(plan.area * 10.7639).toLocaleString()} sqft`
-    : `${plan.area.toLocaleString()} sqft`;
+  const value =
+    plan.area < 300
+      ? Math.round(plan.area * 10.7639).toLocaleString()
+      : plan.area.toLocaleString();
+  return interpolate(sqftTemplate, { value });
 }
 
 function BedChip({

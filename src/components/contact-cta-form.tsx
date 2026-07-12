@@ -8,6 +8,8 @@ import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import { submitLead } from "@/lib/leads-client";
 import { withUtm } from "@/lib/utm";
+import { useI18n } from "@/i18n/locale-provider";
+import type { Locale } from "@/i18n/config";
 
 interface FormState {
   name: string;
@@ -24,26 +26,39 @@ interface FormErrors {
   message?: string;
 }
 
-function validate(values: FormState): FormErrors {
+interface ValidateMessages {
+  nameRequired: string;
+  phoneRequired: string;
+  phoneInvalid: string;
+  emailRequired: string;
+  emailInvalid: string;
+  messageWhatLooking: string;
+}
+
+function validate(values: FormState, msg: ValidateMessages): FormErrors {
   const errors: FormErrors = {};
   const digits = values.phone.replace(/\D/g, "");
 
-  if (!values.name.trim()) errors.name = "Name is required";
-  if (!digits) errors.phone = "Phone is required";
-  else if (digits.length < 8) errors.phone = "Enter a valid phone number";
+  if (!values.name.trim()) errors.name = msg.nameRequired;
+  if (!digits) errors.phone = msg.phoneRequired;
+  else if (digits.length < 8) errors.phone = msg.phoneInvalid;
 
   const email = values.email.trim();
-  if (!email) errors.email = "Email is required";
+  if (!email) errors.email = msg.emailRequired;
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errors.email = "Enter a valid email";
+    errors.email = msg.emailInvalid;
   }
 
-  if (!values.message.trim()) errors.message = "Tell us what you're looking for";
+  if (!values.message.trim()) errors.message = msg.messageWhatLooking;
 
   return errors;
 }
 
-export function ContactCtaForm() {
+export function ContactCtaForm({ locale = "en" }: { locale?: Locale }) {
+  const { dict } = useI18n();
+  const f = dict.forms.contactCta;
+  const err = dict.forms.errors;
+
   const [values, setValues] = useState<FormState>({
     name: "",
     phone: "",
@@ -69,7 +84,14 @@ export function ContactCtaForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setGuardError("");
-    const nextErrors = validate(values);
+    const nextErrors = validate(values, {
+      nameRequired: err.nameRequired,
+      phoneRequired: err.phoneRequired,
+      phoneInvalid: err.phoneInvalid,
+      emailRequired: err.emailRequired,
+      emailInvalid: err.emailInvalid,
+      messageWhatLooking: err.messageWhatLooking,
+    });
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
@@ -90,7 +112,7 @@ export function ContactCtaForm() {
       return;
     }
     if (!result.ok) {
-      setGuardError(result.error ?? "Unable to submit. Please try again.");
+      setGuardError(result.error ?? err.submitFailed);
       // The token was consumed (or stale) — reset the widget so the retry
       // submits a fresh one instead of 403ing forever.
       setTurnstileToken("");
@@ -108,9 +130,9 @@ export function ContactCtaForm() {
   if (submitted) {
     return (
       <div className="mt-6 rounded-2xl border border-white/20 bg-white/10 p-6 text-center">
-        <p className="font-semibold text-white">Thanks — your enquiry is with our team.</p>
+        <p className="font-semibold text-white">{f.successTitle}</p>
         <p className="mt-2 text-sm text-white/75">
-          We&apos;ll reach out shortly. Prefer instant chat?{" "}
+          {f.successBody}{" "}
           <a
             href={withUtm("https://wa.me/971585276222", {
               medium: "whatsapp",
@@ -120,7 +142,7 @@ export function ContactCtaForm() {
             rel="noopener noreferrer"
             className="font-semibold text-brand-light hover:text-white"
           >
-            Message us on WhatsApp
+            {f.whatsappCta}
           </a>
           .
         </p>
@@ -134,7 +156,7 @@ export function ContactCtaForm() {
           }}
           className="mt-4 text-sm font-semibold text-brand-light hover:text-white"
         >
-          Send another enquiry
+          {f.sendAnotherEnquiry}
         </button>
       </div>
     );
@@ -146,8 +168,8 @@ export function ContactCtaForm() {
       <div>
         <input
           type="text"
-          placeholder="Name"
-          aria-label="Name"
+          placeholder={f.namePlaceholder}
+          aria-label={f.namePlaceholder}
           autoComplete="name"
           value={values.name}
           onChange={(e) => updateField("name", e.target.value)}
@@ -160,8 +182,8 @@ export function ContactCtaForm() {
       <div>
         <input
           type="tel"
-          placeholder="Phone"
-          aria-label="Phone"
+          placeholder={f.phonePlaceholder}
+          aria-label={f.phonePlaceholder}
           autoComplete="tel"
           value={values.phone}
           onChange={(e) => updateField("phone", e.target.value)}
@@ -174,8 +196,8 @@ export function ContactCtaForm() {
       <div>
         <input
           type="email"
-          placeholder="Email"
-          aria-label="Email"
+          placeholder={f.emailPlaceholder}
+          aria-label={f.emailPlaceholder}
           autoComplete="email"
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
@@ -188,8 +210,8 @@ export function ContactCtaForm() {
       <div>
         <input
           type="text"
-          placeholder="Country of residence"
-          aria-label="Country of residence"
+          placeholder={f.countryPlaceholder}
+          aria-label={f.countryPlaceholder}
           autoComplete="country-name"
           value={values.country}
           onChange={(e) => updateField("country", e.target.value)}
@@ -198,8 +220,8 @@ export function ContactCtaForm() {
       </div>
       <div className="sm:col-span-2">
         <textarea
-          placeholder="What are you looking for?"
-          aria-label="What are you looking for?"
+          placeholder={f.messagePlaceholder}
+          aria-label={f.messagePlaceholder}
           rows={4}
           value={values.message}
           onChange={(e) => updateField("message", e.target.value)}
@@ -217,7 +239,7 @@ export function ContactCtaForm() {
         {guardError ? <p className="px-2 text-xs text-brand-light">{guardError}</p> : null}
         <div className="flex justify-end">
           <PrimaryButton type="submit" showArrow={false} disabled={submitting}>
-            {submitting ? "Submitting…" : "Submit enquiry"}
+            {submitting ? f.submitting : f.submit}
           </PrimaryButton>
         </div>
       </div>

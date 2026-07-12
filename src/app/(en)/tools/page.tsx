@@ -9,7 +9,7 @@ import { getHeroImage } from "@/lib/area-images";
 import { getCatalogAnalytics } from "@/lib/catalog-analytics";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { interpolate, type Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Property Data Toolkit — Free Investor Tools",
@@ -34,10 +34,7 @@ export async function ToolsHubPageContent({ locale = "en" }: { locale?: Locale }
 
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <p className="max-w-2xl text-sm leading-relaxed text-muted">
-          DataGuru on Property Finder covers rental heatmaps and resale towers. invest
-          off-plan mirrors the same five-tool structure using our catalog of{" "}
-          {analytics.unitCount.toLocaleString()} launch units — plus brochures, compare,
-          and payment calculators they do not offer on new projects.
+          {interpolate(t.dataguruIntro, { count: analytics.unitCount.toLocaleString() })}
         </p>
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -49,31 +46,26 @@ export async function ToolsHubPageContent({ locale = "en" }: { locale?: Locale }
 
         <section className="mt-14 rounded-2xl border border-border bg-surface-alt p-8">
           <h2 className="font-display text-2xl font-semibold text-text-dark">
-            How this maps to Property Finder DataGuru
+            {t.dataguruHeading}
           </h2>
           <ul className="mt-4 space-y-2 text-sm text-muted">
             <li>
-              <strong className="text-text-dark">Price Map</strong> — community launch-price
-              tiers instead of rental heatmaps (same budget-fit workflow).
+              <strong className="text-text-dark">{t.dataguruPriceMap}</strong> — {t.dataguruPriceMapDesc}
             </li>
             <li>
-              <strong className="text-text-dark">Community Insights</strong> — lifestyle
-              clusters with off-plan project counts per area.
+              <strong className="text-text-dark">{t.dataguruCommunity}</strong> — {t.dataguruCommunityDesc}
             </li>
             <li>
-              <strong className="text-text-dark">Rent vs Buy</strong> — full calculator with
-              mortgage, rent growth, and equity modelling.
+              <strong className="text-text-dark">{t.dataguruRentVsBuy}</strong> — {t.dataguruRentVsBuyDesc}
             </li>
             <li>
-              <strong className="text-text-dark">Residential Insights</strong> — per-project
-              launch pricing and sqft benchmarks (resale trends require a licensed feed).
+              <strong className="text-text-dark">{t.dataguruResidential}</strong> — {t.dataguruResidentialDesc}
             </li>
             <li>
-              <strong className="text-text-dark">New Projects</strong> —{" "}
+              <strong className="text-text-dark">{t.dataguruNewProjects}</strong> —{" "}
               <Link href="/projects" className="text-brand underline">
-                unit-level SERP
-              </Link>{" "}
-              with compare and brochures.
+                {t.dataguruNewProjectsDesc}
+              </Link>
             </li>
           </ul>
         </section>

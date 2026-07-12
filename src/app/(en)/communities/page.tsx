@@ -11,7 +11,7 @@ import { getHeroImage } from "@/lib/area-images";
 import { unoptimizedProp } from "@/lib/asset-image";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { interpolate, type Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Communities — Off-Plan Projects by Neighbourhood",
@@ -45,9 +45,9 @@ export async function CommunitiesPageContent({ locale = "en" }: { locale?: Local
       <section className="relative z-10 -mt-10 mx-auto max-w-[1200px] px-5 md:px-8">
         <div className="rounded-2xl border-t-4 border-brand bg-white p-6 shadow-xl md:p-8">
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-text-dark">The Key Communities</h2>
+            <h2 className="text-xl font-semibold text-text-dark">{t.keyCommunities}</h2>
             <LocaleLink href="/projects" className="text-sm font-semibold text-brand">
-              View all →
+              {t.viewAll}
             </LocaleLink>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -80,10 +80,13 @@ export async function CommunitiesPageContent({ locale = "en" }: { locale?: Local
                     {areaTagline(community.slug, community.name)}
                   </p>
                   <p className="mt-1 text-xs text-muted-light">
-                    {community.projectCount} projects · {community.unitCount.toLocaleString()} units
+                    {interpolate(t.communityStats, {
+                      projects: community.projectCount,
+                      units: community.unitCount.toLocaleString(),
+                    })}
                   </p>
                   <span className="mt-4 inline-block rounded-full bg-brand px-4 py-1.5 text-xs font-semibold text-white">
-                    View
+                    {t.view}
                   </span>
                 </div>
               </LocaleLink>
@@ -97,10 +100,10 @@ export async function CommunitiesPageContent({ locale = "en" }: { locale?: Local
           <div className="mx-auto max-w-[1200px] px-5 md:px-8">
             <p className="section-eyebrow">Real DLD data</p>
             <h2 className="mt-2 font-display text-2xl font-semibold text-text-dark md:text-3xl">
-              Compare communities<span className="text-brand">.</span>
+              {t.compareHeading}<span className="text-brand">.</span>
             </h2>
             <p className="mt-2 max-w-xl text-sm text-muted">
-              Side-by-side on real 2025 sold prices and gross rental yields.
+              {t.compareSubtitle}
             </p>
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {comparisons.map((c) => (
@@ -114,14 +117,14 @@ export async function CommunitiesPageContent({ locale = "en" }: { locale?: Local
                   </p>
                   {c.aYield != null && c.bYield != null ? (
                     <p className="mt-1 text-xs tabular-nums text-muted">
-                      Gross yield {c.aYield}% vs {c.bYield}%
+                      {interpolate(t.compareYield, { a: c.aYield, b: c.bYield })}
                     </p>
                   ) : null}
                 </LocaleLink>
               ))}
             </div>
             <div className="mt-6">
-              <PrimaryButton href="/compare">All comparisons</PrimaryButton>
+              <PrimaryButton href="/compare">{t.allComparisons}</PrimaryButton>
             </div>
           </div>
         </section>
@@ -130,17 +133,15 @@ export async function CommunitiesPageContent({ locale = "en" }: { locale?: Local
       <section className="border-t border-border bg-surface-alt py-14">
         <div className="mx-auto max-w-[1200px] px-5 md:px-8">
           <h2 className="font-display text-2xl font-semibold text-text-dark md:text-3xl">
-            Community insights<span className="text-brand">.</span>
+            {t.insightsHeading}<span className="text-brand">.</span>
           </h2>
           <p className="mt-3 max-w-xl text-sm text-muted">
-            Not sure where to start? Our data-ranked location guides shortlist communities by
-            what matters — family homes, rental yield, affordability, value per sqft, and resale
-            liquidity.
+            {t.insightsBody}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <PrimaryButton href="/locations">Location guides</PrimaryButton>
+            <PrimaryButton href="/locations">{t.locationGuides}</PrimaryButton>
             <PrimaryButton href="/tools/communities" variant="ghost" showArrow={false}>
-              Explore by lifestyle
+              {t.exploreLifestyle}
             </PrimaryButton>
           </div>
         </div>
@@ -149,16 +150,15 @@ export async function CommunitiesPageContent({ locale = "en" }: { locale?: Local
       <section className="bg-surface-darker py-16 text-white">
         <div className="mx-auto max-w-[1200px] px-5 md:px-8">
           <h2 className="font-display text-3xl font-semibold md:text-4xl">
-            Search The Map<span className="text-brand">.</span>
+            {t.mapHeading}<span className="text-brand">.</span>
           </h2>
           <p className="mt-3 max-w-xl text-white/80">
-            Explore communities with launch-price tiers or project pins — two map views for
-            budget and inventory.
+            {t.mapSubtitle}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <PrimaryButton href="/tools/price-map">Price map</PrimaryButton>
+            <PrimaryButton href="/tools/price-map">{t.priceMap}</PrimaryButton>
             <PrimaryButton href="/map" variant="ghost" showArrow={false}>
-              Project map
+              {t.projectMap}
             </PrimaryButton>
           </div>
         </div>

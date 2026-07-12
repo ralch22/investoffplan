@@ -151,6 +151,7 @@ export const ar: Dict = {
     "next": "التالي",
     "browseProjects": "تصفّح جميع العقارات",
     "readMore": "اقرأ المزيد",
+    "showLess": "عرض أقل",
     "breadcrumbAria": "مسار التنقل",
     "paginationAria": "ترقيم الصفحات",
     "viewAll": "عرض الكل ←",
@@ -444,7 +445,20 @@ export const ar: Dict = {
       "statusSoldOut": "بيع بالكامل",
       "statusUnderConstruction": "قيد الإنشاء",
       "statusReady": "جاهز",
-      "statusOffPlan": "على الخارطة"
+      "statusOffPlan": "على الخارطة",
+      "propertyTypeApartment": "شقة",
+      "propertyTypeVilla": "فيلا",
+      "propertyTypeTownhouse": "تاون هاوس",
+      "propertyTypePenthouse": "بنتهاوس",
+      "propertyTypeDuplex": "دوبلكس",
+      "propertyTypeLand": "أرض"
+    },
+    "floorPlansSection": {
+      "heading": "مخططات الطوابق",
+      "countSingular": "مخطط طابق واحد منشور لـ {name}.",
+      "countPlural": "{count} مخطط طابق منشورة لـ {name}.",
+      "all": "الكل",
+      "sqft": "{value} قدم مربع"
     },
     "timeline": {
       "heading": "الجدول الزمني للمشروع",
@@ -537,7 +551,16 @@ export const ar: Dict = {
       "successBody": "سنتواصل معك قريباً. تفضّل الدردشة الفورية؟",
       "whatsappCta": "راسلنا على واتساب",
       "sendAnotherEnquiry": "إرسال استفسار آخر",
-      "submitViaWhatsapp": "أرسل عبر واتساب"
+      "submitViaWhatsapp": "أرسل عبر واتساب",
+      "submit": "أرسل استفساري",
+      "submitting": "جارٍ الإرسال…",
+      "getInfoOn": "احصل على معلومات حول",
+      "contactUs": "تواصل معنا",
+      "contactUsBody": "أترك بياناتك — سنفتح واتساب برسالة مُعبَّأة مسبقاً لفريقنا.",
+      "brochure": "بروشور المشروع",
+      "paymentPlans": "خطط الدفع",
+      "floorPlans": "مخططات الطوابق",
+      "availableUnits": "الوحدات المتاحة"
     },
     "newsletter": {
       "title": "نشرة العقارات على الخارطة.",
@@ -876,7 +899,19 @@ export const ar: Dict = {
     },
     "hubPage": {
       "heroTitle": "تعرّف على خطوتك القادمة",
-      "heroSubtitle": "خمس أدوات بيانات لقرارات أذكى على الخارطة — تعادل DataGuru من Property Finder، مُضبَّطة لمخزون الإطلاق."
+      "heroSubtitle": "خمس أدوات بيانات لقرارات أذكى على الخارطة — تعادل DataGuru من Property Finder، مُضبَّطة لمخزون الإطلاق.",
+      "dataguruIntro": "تغطّي DataGuru على Property Finder خرائط حرارية للإيجارات وأبراج إعادة البيع. يعكس invest off-plan نفس بنية الأدوات الخمس باستخدام كتالوجنا المكوّن من {count} وحدة إطلاق — إضافة إلى البروشورات والمقارنات وحاسبات السداد التي لا تتوفر للمشاريع الجديدة.",
+      "dataguruHeading": "كيف يتوافق ذلك مع DataGuru على Property Finder",
+      "dataguruPriceMap": "خريطة الأسعار",
+      "dataguruPriceMapDesc": "مستويات أسعار إطلاق المجتمعات بدلاً من الخرائط الحرارية للإيجار (نفس سير عمل الملاءمة الميزانية).",
+      "dataguruCommunity": "رؤى المجتمعات",
+      "dataguruCommunityDesc": "مجموعات بحسب نمط الحياة مع أعداد المشاريع على الخارطة لكل منطقة.",
+      "dataguruRentVsBuy": "إيجار مقابل شراء",
+      "dataguruRentVsBuyDesc": "حاسبة متكاملة مع نمذجة الرهن العقاري ونمو الإيجار وحقوق الملكية.",
+      "dataguruResidential": "رؤى سكنية",
+      "dataguruResidentialDesc": "أسعار إطلاق لكل مشروع ومعايير القدم المربع (تتطلب اتجاهات إعادة البيع تغذية مرخّصة).",
+      "dataguruNewProjects": "مشاريع جديدة",
+      "dataguruNewProjectsDesc": "نتائج بحث على مستوى الوحدة مع المقارنة والبروشورات."
     },
     "priceMapPage": {
       "heroTitle": "خريطة الأسعار",
@@ -1067,7 +1102,23 @@ export const ar: Dict = {
     },
     "communities": {
       "heroTitle": "المجتمعات",
-      "heroSubtitle": "استكشف أحياء دبي — المخزون والأسعار وبيانات السوق الحقيقية"
+      "heroSubtitle": "استكشف أحياء دبي — المخزون والأسعار وبيانات السوق الحقيقية",
+      "keyCommunities": "أبرز المجتمعات",
+      "viewAll": "عرض الكل ←",
+      "communityStats": "{projects} مشروع · {units} وحدة",
+      "view": "عرض",
+      "compareHeading": "قارن بين المجتمعات",
+      "compareSubtitle": "مقارنة جنبًا إلى جنب على أسعار البيع الفعلية لعام 2025 وعوائد الإيجار الإجمالية.",
+      "compareYield": "عائد إجمالي {a}% مقابل {b}%",
+      "allComparisons": "جميع المقارنات",
+      "insightsHeading": "رؤى المجتمعات",
+      "insightsBody": "لا تعرف من أين تبدأ؟ أدلتنا المستندة إلى البيانات تختصر المجتمعات بما يهمك — المنازل العائلية، عوائد الإيجار، القدرة على تحمّل التكاليف، القيمة بالقدم المربع، وسيولة إعادة البيع.",
+      "locationGuides": "أدلة المواقع",
+      "exploreLifestyle": "استكشف بحسب نمط الحياة",
+      "mapHeading": "ابحث على الخريطة",
+      "mapSubtitle": "استكشف المجتمعات بمستويات أسعار الإطلاق أو نقاط المشاريع — طريقتا عرض للميزانية والمخزون.",
+      "priceMap": "خريطة الأسعار",
+      "projectMap": "خريطة المشاريع"
     },
     "developers": {
       "heroTitle": "أبرز المطوّرين العقاريين في الإمارات",

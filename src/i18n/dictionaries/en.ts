@@ -149,6 +149,7 @@ const dict = {
     "next": "Next",
     "browseProjects": "Browse all properties",
     "readMore": "Read more",
+    "showLess": "Show less",
     "breadcrumbAria": "Breadcrumb",
     "paginationAria": "Pagination",
     "viewAll": "View All →",
@@ -442,7 +443,20 @@ const dict = {
       "statusSoldOut": "Sold out",
       "statusUnderConstruction": "Under construction",
       "statusReady": "Ready",
-      "statusOffPlan": "Off-plan"
+      "statusOffPlan": "Off-plan",
+      "propertyTypeApartment": "Apartment",
+      "propertyTypeVilla": "Villa",
+      "propertyTypeTownhouse": "Townhouse",
+      "propertyTypePenthouse": "Penthouse",
+      "propertyTypeDuplex": "Duplex",
+      "propertyTypeLand": "Land"
+    },
+    "floorPlansSection": {
+      "heading": "Floor plans",
+      "countSingular": "1 layout published for {name}.",
+      "countPlural": "{count} layouts published for {name}.",
+      "all": "All",
+      "sqft": "{value} sqft"
     },
     "timeline": {
       "heading": "Project timeline",
@@ -535,7 +549,16 @@ const dict = {
       "successBody": "We'll reach out shortly. Prefer instant chat?",
       "whatsappCta": "Message us on WhatsApp",
       "sendAnotherEnquiry": "Send another enquiry",
-      "submitViaWhatsapp": "Submit via WhatsApp"
+      "submitViaWhatsapp": "Submit via WhatsApp",
+      "submit": "Submit enquiry",
+      "submitting": "Submitting…",
+      "getInfoOn": "Get information on",
+      "contactUs": "Contact us",
+      "contactUsBody": "Leave your details — we'll open WhatsApp with a pre-filled message for our team.",
+      "brochure": "Project Brochure",
+      "paymentPlans": "Payment Plans",
+      "floorPlans": "Floor Plans",
+      "availableUnits": "Available Units"
     },
     "newsletter": {
       "title": "Off-Plan Newsletter.",
@@ -874,7 +897,19 @@ const dict = {
     },
     "hubPage": {
       "heroTitle": "Know your next move",
-      "heroSubtitle": "Five data tools for smarter off-plan decisions — parity with Property Finder DataGuru, tuned for launch inventory."
+      "heroSubtitle": "Five data tools for smarter off-plan decisions — parity with Property Finder DataGuru, tuned for launch inventory.",
+      "dataguruIntro": "DataGuru on Property Finder covers rental heatmaps and resale towers. invest off-plan mirrors the same five-tool structure using our catalog of {count} launch units — plus brochures, compare, and payment calculators they do not offer on new projects.",
+      "dataguruHeading": "How this maps to Property Finder DataGuru",
+      "dataguruPriceMap": "Price Map",
+      "dataguruPriceMapDesc": "community launch-price tiers instead of rental heatmaps (same budget-fit workflow).",
+      "dataguruCommunity": "Community Insights",
+      "dataguruCommunityDesc": "lifestyle clusters with off-plan project counts per area.",
+      "dataguruRentVsBuy": "Rent vs Buy",
+      "dataguruRentVsBuyDesc": "full calculator with mortgage, rent growth, and equity modelling.",
+      "dataguruResidential": "Residential Insights",
+      "dataguruResidentialDesc": "per-project launch pricing and sqft benchmarks (resale trends require a licensed feed).",
+      "dataguruNewProjects": "New Projects",
+      "dataguruNewProjectsDesc": "unit-level SERP with compare and brochures."
     },
     "priceMapPage": {
       "heroTitle": "Price map",
@@ -1065,7 +1100,23 @@ const dict = {
     },
     "communities": {
       "heroTitle": "Communities",
-      "heroSubtitle": "Explore Dubai's neighbourhoods — inventory, prices, and real market data"
+      "heroSubtitle": "Explore Dubai's neighbourhoods — inventory, prices, and real market data",
+      "keyCommunities": "The Key Communities",
+      "viewAll": "View all →",
+      "communityStats": "{projects} projects · {units} units",
+      "view": "View",
+      "compareHeading": "Compare communities",
+      "compareSubtitle": "Side-by-side on real 2025 sold prices and gross rental yields.",
+      "compareYield": "Gross yield {a}% vs {b}%",
+      "allComparisons": "All comparisons",
+      "insightsHeading": "Community insights",
+      "insightsBody": "Not sure where to start? Our data-ranked location guides shortlist communities by what matters — family homes, rental yield, affordability, value per sqft, and resale liquidity.",
+      "locationGuides": "Location guides",
+      "exploreLifestyle": "Explore by lifestyle",
+      "mapHeading": "Search The Map",
+      "mapSubtitle": "Explore communities with launch-price tiers or project pins — two map views for budget and inventory.",
+      "priceMap": "Price map",
+      "projectMap": "Project map"
     },
     "developers": {
       "heroTitle": "Top Real Estate Developers in UAE",

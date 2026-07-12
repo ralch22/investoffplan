@@ -490,7 +490,7 @@ export function ProjectsPage({
                 {filters.city !== "all" ? ` ${interpolate(s.resultsIn, { location: locationLabel ?? "" })}` : ""}
                 {" · "}
                 {interpolate(s.updated, {
-                  date: new Date(meta.scrapedAt).toLocaleDateString("en-GB", {
+                  date: new Date(meta.scrapedAt).toLocaleDateString(locale === "ar" ? "ar-AE" : "en-GB", {
                     day: "numeric",
                     month: "short",
                     year: "numeric",

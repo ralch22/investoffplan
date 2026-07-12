@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface ExpandableRichTextProps {
   html: string;
@@ -18,6 +19,7 @@ export function ExpandableRichText({
   truncate,
   className,
 }: ExpandableRichTextProps) {
+  const { dict } = useI18n();
   const [expanded, setExpanded] = useState(false);
   const collapsed = truncate && !expanded;
 
@@ -41,7 +43,7 @@ export function ExpandableRichText({
           aria-expanded={expanded}
           className="mt-4 inline-flex items-center text-sm font-bold text-brand transition-colors duration-300 hover:text-brand-dark"
         >
-          {expanded ? "Show less" : "Read more"}
+          {expanded ? dict.common.showLess : dict.common.readMore}
         </button>
       ) : null}
     </div>

@@ -16,7 +16,7 @@ export function ProjectKeyFacts({ project, locale = "en" }: ProjectKeyFactsProps
   const kf = dict.pdp.keyFacts;
   const propertyTypes = [
     ...new Set(project.units.map((u) => u.propertyType)),
-  ].map((t) => t.charAt(0).toUpperCase() + t.slice(1));
+  ].map((t) => translatePropertyType(t, kf));
 
   const paymentLabel =
     project.paymentPlanCount && project.paymentPlanCount > 1
@@ -92,6 +92,28 @@ export function ProjectKeyFacts({ project, locale = "en" }: ProjectKeyFactsProps
       </dl>
     </section>
   );
+}
+
+function translatePropertyType(
+  type: string,
+  kf: {
+    propertyTypeApartment: string;
+    propertyTypeVilla: string;
+    propertyTypeTownhouse: string;
+    propertyTypePenthouse: string;
+    propertyTypeDuplex: string;
+    propertyTypeLand: string;
+  },
+): string {
+  switch (type.toLowerCase()) {
+    case "apartment": return kf.propertyTypeApartment;
+    case "villa": return kf.propertyTypeVilla;
+    case "townhouse": return kf.propertyTypeTownhouse;
+    case "penthouse": return kf.propertyTypePenthouse;
+    case "duplex": return kf.propertyTypeDuplex;
+    case "land": return kf.propertyTypeLand;
+    default: return type.charAt(0).toUpperCase() + type.slice(1);
+  }
 }
 
 function formatStatus(

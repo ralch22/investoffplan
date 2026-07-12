@@ -7,6 +7,7 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/cn";
 import { submitLead } from "@/lib/leads-client";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface FormState {
   email: string;
@@ -20,32 +21,45 @@ interface FormErrors {
   message?: string;
 }
 
-function validate(values: FormState): FormErrors {
+interface ValidateMessages {
+  emailRequired: string;
+  emailInvalidAddress: string;
+  subjectRequired: string;
+  subjectShort: string;
+  messageRequired: string;
+  messageShort: string;
+}
+
+function validate(values: FormState, msg: ValidateMessages): FormErrors {
   const errors: FormErrors = {};
   const email = values.email.trim();
 
   if (!email) {
-    errors.email = "Email is required";
+    errors.email = msg.emailRequired;
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    errors.email = "Enter a valid email address";
+    errors.email = msg.emailInvalidAddress;
   }
 
   if (!values.subject.trim()) {
-    errors.subject = "Subject is required";
+    errors.subject = msg.subjectRequired;
   } else if (values.subject.trim().length < 3) {
-    errors.subject = "Subject must be at least 3 characters";
+    errors.subject = msg.subjectShort;
   }
 
   if (!values.message.trim()) {
-    errors.message = "Message is required";
+    errors.message = msg.messageRequired;
   } else if (values.message.trim().length < 10) {
-    errors.message = "Message must be at least 10 characters";
+    errors.message = msg.messageShort;
   }
 
   return errors;
 }
 
 export function ContactForm() {
+  const { dict } = useI18n();
+  const f = dict.forms.contact;
+  const err = dict.forms.errors;
+
   const [values, setValues] = useState<FormState>({
     email: "",
     subject: "",
@@ -69,7 +83,14 @@ export function ContactForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setGuardError("");
-    const nextErrors = validate(values);
+    const nextErrors = validate(values, {
+      emailRequired: err.emailRequired,
+      emailInvalidAddress: err.emailInvalidAddress,
+      subjectRequired: err.subjectRequired,
+      subjectShort: err.subjectShort,
+      messageRequired: err.messageRequired,
+      messageShort: err.messageShort,
+    });
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
@@ -87,7 +108,7 @@ export function ContactForm() {
       return;
     }
     if (!result.ok) {
-      setGuardError(result.error ?? "Unable to submit. Please try again.");
+      setGuardError(result.error ?? err.submitFailed);
       // The token was consumed (or stale) — reset the widget so the retry
       // submits a fresh one instead of 403ing forever.
       setTurnstileToken("");
@@ -102,9 +123,9 @@ export function ContactForm() {
   if (submitted) {
     return (
       <div className="mt-6 rounded-xl border border-border bg-surface-alt p-6 text-center">
-        <p className="font-semibold text-text-dark">Thanks — your message has been sent.</p>
+        <p className="font-semibold text-text-dark">{f.successTitle}</p>
         <p className="mt-2 text-sm text-muted">
-          Our team will get back to you shortly. You can also email info@investoffplan.com
+          {f.successBody}
         </p>
         <button
           type="button"
@@ -116,7 +137,7 @@ export function ContactForm() {
           }}
           className="mt-4 text-sm font-semibold text-brand hover:text-brand-dark"
         >
-          Send another message
+          {f.sendAnother}
         </button>
       </div>
     );
@@ -128,8 +149,8 @@ export function ContactForm() {
       <div>
         <input
           type="email"
-          placeholder="Email address"
-          aria-label="Email address"
+          placeholder={f.emailPlaceholder}
+          aria-label={f.emailPlaceholder}
           autoComplete="email"
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
@@ -147,8 +168,8 @@ export function ContactForm() {
       <div>
         <input
           type="text"
-          placeholder="Subject"
-          aria-label="Subject"
+          placeholder={f.subjectPlaceholder}
+          aria-label={f.subjectPlaceholder}
           value={values.subject}
           onChange={(e) => updateField("subject", e.target.value)}
           aria-invalid={Boolean(errors.subject)}
@@ -164,8 +185,8 @@ export function ContactForm() {
 
       <div>
         <textarea
-          placeholder="Message"
-          aria-label="Message"
+          placeholder={f.messagePlaceholder}
+          aria-label={f.messagePlaceholder}
           rows={6}
           value={values.message}
           onChange={(e) => updateField("message", e.target.value)}
@@ -186,7 +207,7 @@ export function ContactForm() {
       <TurnstileField onToken={setTurnstileToken} action="contact" resetSignal={turnstileReset} />
       {guardError ? <p className="iop-field-error">{guardError}</p> : null}
       <PrimaryButton type="submit" disabled={submitting}>
-        {submitting ? "Submitting…" : "Submit"}
+        {submitting ? f.submitting : f.submit}
       </PrimaryButton>
     </form>
   );
