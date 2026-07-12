@@ -14,6 +14,12 @@ interface ProjectAboutProps {
   description?: string;
   amenities?: string[];
   locale?: Locale;
+  /**
+   * Factual, verified-claims-only fallback prose for thin PDPs that carry no
+   * real description / enrichment summary. Rendered as the About body (with the
+   * normal heading) only when no richer text exists — see project detail page.
+   */
+  factualFallback?: string;
 }
 
 function stripHtml(html: string): string {
@@ -27,6 +33,7 @@ export function ProjectAbout({
   description,
   amenities: amenitiesProp,
   locale = "en",
+  factualFallback,
 }: ProjectAboutProps) {
   const about = getDictionary(locale).pdp.about;
   const clean = (u?: string) => (u && u !== "#" ? u : undefined);
@@ -42,8 +49,11 @@ export function ProjectAbout({
   const aboutText =
     enrichment?.summary ??
     (description && !hasRichHtml ? stripHtml(description) : undefined);
+  // Only surfaces when there is no richer prose (rich HTML / enrichment / plain
+  // description); the page passes it solely for thin fallback PDPs.
+  const proseText = aboutText ?? factualFallback;
 
-  if (!aboutText && !hasRichHtml && !brochure && !video && amenities.length === 0) {
+  if (!proseText && !hasRichHtml && !brochure && !video && amenities.length === 0) {
     return null;
   }
 
@@ -63,7 +73,7 @@ export function ProjectAbout({
             className="prose-balance mt-4 max-w-none space-y-4 text-base leading-relaxed text-text-dark/85 [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-semibold [&_li]:ms-4 [&_li]:list-disc [&_p]:mt-3 [&_ul]:mt-3 [&_ul]:space-y-1"
           />
         </div>
-      ) : aboutText ? (
+      ) : proseText ? (
         <div>
           <h2
             id="about-heading"
@@ -72,7 +82,7 @@ export function ProjectAbout({
             {about.headingLead} <em className="italic">{about.headingEm}</em>
           </h2>
           <p className="prose-balance mt-4 text-lg leading-relaxed text-text-dark/80">
-            {aboutText}
+            {proseText}
           </p>
         </div>
       ) : null}

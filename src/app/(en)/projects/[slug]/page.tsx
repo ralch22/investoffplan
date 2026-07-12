@@ -41,6 +41,7 @@ import {
   formatPrice,
 } from "@/lib/format";
 import { stripTrailingDeveloper } from "@/lib/developer-utils";
+import { buildFactualSummary } from "@/lib/project-factual-summary";
 import { unitPricePerSqft } from "@/lib/investment-metrics";
 import { getSiteUrl } from "@/lib/site-url";
 import {
@@ -110,11 +111,52 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   // truncation; brand suffix dropped here since Google appends the site name.
   const areaName = project.area.split(",")[0].trim();
   const cityName = cityLabel(project.city);
-  const locBit =
-    areaName && areaName.toLowerCase() !== cityName.toLowerCase()
-      ? `${areaName}, ${cityName}`
-      : cityName;
-  const seoTitle = `${project.name} — Off-Plan in ${locBit}`;
+  const hasDistinctArea =
+    Boolean(areaName) && areaName.toLowerCase() !== cityName.toLowerCase();
+  const locBit = hasDistinctArea ? `${areaName}, ${cityName}` : cityName;
+
+  // Duplicate-title disambiguation: two DIFFERENT projects can share the same
+  // (name, area, city) — e.g. the Arthouse Residences twins (Cledor + Aviaan) —
+  // and would render byte-identical titles. Only when a genuine collision
+  // exists do we append the developer, so the ~768 non-colliding titles stay
+  // unchanged. Developer is already correctly cased ("Arada") by normalizeProject.
+  const api = await getCatalogApi();
+  const collisionKey = (p: (typeof api.projects)[number]) =>
+    `${p.name.trim().toLowerCase()}|${p.area.split(",")[0].trim().toLowerCase()}|${p.city}`;
+  const thisKey = collisionKey(project);
+  const isCollision =
+    api.projects.filter((p) => collisionKey(p) === thisKey).length > 1;
+  const nameBit = isCollision
+    ? `${project.name} by ${project.developer}`
+    : project.name;
+
+  // Sold-out projects (212 of them) must NOT be framed as "Off-Plan". Prefer a
+  // "Sold Out in {loc}" frame when it fits the length budget; otherwise a plain
+  // "{name} — {loc}". Off-plan/ready projects keep the "Off-Plan in" frame.
+  const SEO_TITLE_MAX = 60;
+  const isSoldOut = project.status === "sold-out";
+  const compose = (loc: string): string => {
+    if (isSoldOut) {
+      const framed = `${nameBit} — Sold Out in ${loc}`;
+      return framed.length <= SEO_TITLE_MAX ? framed : `${nameBit} — ${loc}`;
+    }
+    return `${nameBit} — Off-Plan in ${loc}`;
+  };
+  // Length: if the full "{area}, {city}" title overflows, drop the city and
+  // keep the (more specific) area; if it still overflows (e.g. a long developer
+  // appended on a collision), drop the location clause entirely rather than
+  // leave a dangling "— Off-"; hard-trim only as the true last resort so the
+  // name is never butchered.
+  let seoTitle = compose(locBit);
+  if (seoTitle.length > SEO_TITLE_MAX && hasDistinctArea) {
+    seoTitle = compose(areaName);
+  }
+  if (seoTitle.length > SEO_TITLE_MAX && nameBit.length <= SEO_TITLE_MAX) {
+    seoTitle = nameBit;
+  }
+  if (seoTitle.length > SEO_TITLE_MAX) {
+    seoTitle = seoTitle.slice(0, SEO_TITLE_MAX).trimEnd();
+  }
 
   return {
     title: { absolute: seoTitle },
@@ -238,6 +280,20 @@ export default async function ProjectDetailPage({
     ? (enrichment.facts.amenities as string[])
     : [];
   const amenities = project.amenities ?? enrichmentAmenities;
+
+  // Thin-PDP fallback: 45 dev-fallback projects carry no descriptionUnique,
+  // description, or enrichment summary — so ProjectAbout renders no body prose
+  // and the page is thin/indexable. Compose a FACTUAL, verified-claims-only
+  // summary from stated catalog fields ONLY when every richer source is absent
+  // (mirrors the descriptionUnique ?? enrichment ?? description precedence);
+  // real descriptions are never overridden.
+  const hasRealDescription = Boolean(
+    project.descriptionUnique?.trim() || project.description?.trim(),
+  );
+  const factualAbout =
+    !hasRealDescription && !enrichment?.summary
+      ? buildFactualSummary(project, locale)
+      : undefined;
 
   const heroImage = gallery[0];
   const resolvedVideoUrl = project.videoUrl ?? enrichment?.videoUrl ?? null;
@@ -482,6 +538,7 @@ export default async function ProjectDetailPage({
           description={project.descriptionUnique ?? project.description}
           amenities={amenities}
           locale={locale}
+          factualFallback={factualAbout}
         />
 
         <ProjectUnitRanges units={project.units} locale={locale} />
