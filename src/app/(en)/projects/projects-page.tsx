@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
@@ -65,6 +65,57 @@ const DEFAULT_FILTERS: Filters = {
   amenities: [],
 };
 
+const SORT_OPTIONS: readonly SortOption[] = [
+  "featured", "price-asc", "price-desc", "value-asc", "handover-asc", "handover-desc",
+];
+
+// Parse filter state from the current URL so useState lazy-initializers can
+// seed the correct values on first render, avoiding the DEFAULT_FILTERS →
+// onSync flash that caused back-navigation to briefly show the wrong cards.
+function parseUrlFilters(): {
+  filters: Filters;
+  collection: CollectionFilter;
+  page: number;
+  sort: SortOption;
+} {
+  if (typeof window === "undefined") {
+    return { filters: DEFAULT_FILTERS, collection: "all", page: 1, sort: "featured" };
+  }
+  const sp = new URLSearchParams(window.location.search);
+  const filters: Filters = { ...DEFAULT_FILTERS };
+
+  const q = sp.get("q") ?? sp.get("query");
+  if (q) filters.query = q;
+  const city = sp.get("city");
+  if (city) filters.city = city as CitySlug;
+  const beds = sp.get("beds");
+  if (beds === "all" || beds === "studio") { filters.beds = beds; }
+  else if (beds) { const n = Number(beds); if (Number.isFinite(n) && n >= 0) filters.beds = n; }
+  const propType = sp.get("type");
+  if (propType) filters.propertyType = propType as Filters["propertyType"];
+  const minP = Number(sp.get("minP")); if (minP > 0) filters.minPrice = minP;
+  const maxP = Number(sp.get("maxP")); if (maxP > 0) filters.maxPrice = maxP;
+  const dev = sp.get("dev"); if (dev) filters.developer = dev;
+  const pay = sp.get("pay");
+  if (pay === "post-handover" || pay === "multiple") filters.paymentPlan = pay;
+  const handover = Number(sp.get("handover"));
+  if (Number.isFinite(handover) && handover > 0) filters.handoverBy = handover;
+  const amen = sp.get("amen");
+  if (amen) filters.amenities = amen.split(",").map((a) => a.trim()).filter(Boolean);
+
+  const collection = (sp.get("collection") as CollectionFilter) || "all";
+  const pageN = Number(sp.get("page"));
+  const page = Number.isInteger(pageN) && pageN >= 1 ? pageN : 1;
+  const sortP = sp.get("sort");
+  const sort: SortOption = SORT_OPTIONS.includes(sortP as SortOption)
+    ? (sortP as SortOption)
+    : "featured";
+
+  return { filters, collection, page, sort };
+}
+
+const SCROLL_KEY = "iop-serp-scroll";
+
 export interface ProjectsPageMeta {
   unitCount: number;
   projectCount: number;
@@ -92,7 +143,16 @@ export function ProjectsPage({
 }: ProjectsPageProps) {
   const { api, loading, error } = useCatalog();
   const currency = useCurrency();
-  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
+
+  // Seed all filter/pagination state directly from the URL on first render.
+  // This eliminates the DEFAULT_FILTERS→onSync flash that caused back-navigation
+  // to briefly show unfiltered SSR cards before the sync effect fired.
+  const [filters, setFilters] = useState<Filters>(() => parseUrlFilters().filters);
+  const [sort, setSort] = useState<SortOption>(() => parseUrlFilters().sort);
+  const [page, setPage] = useState<number>(() => parseUrlFilters().page);
+  const [collection, setCollection] = useState<CollectionFilter>(
+    () => parseUrlFilters().collection,
+  );
 
   const handleSync = useCallback(
     (
@@ -108,20 +168,44 @@ export function ProjectsPage({
     },
     [],
   );
-  const [sort, setSort] = useState<SortOption>("featured");
-  const [page, setPage] = useState(1);
   const [compareIds, setCompareIds] = useState<CompareUnitId[]>(getStoredCompareIds);
   const compareGate = useGate("compare-slot");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("project");
   const [cardLayout, setCardLayout] = useState<"grid" | "list" | "map">("grid");
-  const [collection, setCollection] = useState<CollectionFilter>("all");
 
   const { dict, locale } = useI18n();
   const s = dict.serp;
 
   const [apiData, setApiData] = useState<{ items: FlatUnit[], meta: any } | null>(null);
   const [apiLoading, setApiLoading] = useState(false);
+
+  // Save scroll position when navigating away (e.g. clicking into a PDP), so
+  // back-navigation can restore it once the correct page data has loaded.
+  useEffect(() => {
+    return () => {
+      sessionStorage.setItem(SCROLL_KEY, String(window.scrollY));
+    };
+  }, []);
+
+  // Restore scroll after the first data load resolves. Only fires once.
+  const scrollRestoredRef = useRef(false);
+  useEffect(() => {
+    if (scrollRestoredRef.current || apiLoading) return;
+    scrollRestoredRef.current = true;
+    const saved = sessionStorage.getItem(SCROLL_KEY);
+    if (!saved) return;
+    sessionStorage.removeItem(SCROLL_KEY);
+    const y = parseInt(saved, 10);
+    if (y > 100) window.scrollTo({ top: y, behavior: "instant" });
+  }, [apiLoading]);
+
+  // Scroll to top when the user changes pages (but not on initial mount).
+  const skipFirstPageScroll = useRef(true);
+  useEffect(() => {
+    if (skipFirstPageScroll.current) { skipFirstPageScroll.current = false; return; }
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [page]);
 
   useEffect(() => {
     if (!isApiMode) return;

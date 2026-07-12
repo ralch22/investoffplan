@@ -164,10 +164,13 @@ export function ProjectsSearchSync({
     const newSearch = params.toString();
     const currentSearch = searchParams.toString();
 
-    if (newSearch !== currentSearch) {
+    // Compare against live URL rather than `searchParams` to avoid including
+    // searchParams in deps (that would re-trigger this effect on every
+    // router.replace, causing a redundant re-run after each URL write).
+    if (newSearch !== new URLSearchParams(window.location.search).toString()) {
       router.replace(`${pathname}${newSearch ? `?${newSearch}` : ""}`, { scroll: false });
     }
-  }, [filters, collection, page, sort, pathname, router, searchParams]);
+  }, [filters, collection, page, sort, pathname, router]);
 
   return null;
 }
