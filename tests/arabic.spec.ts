@@ -1,4 +1,5 @@
 import { test, expect } from "./fixtures";
+import { waitForCatalog } from "./helpers";
 
 test.describe("Arabic locale", () => {
   test("/ar renders RTL with Arabic chrome", async ({ page }) => {
@@ -40,5 +41,22 @@ test.describe("Arabic locale", () => {
     await expect(page.getByText("نوع العقار").first()).toBeVisible();
     // Grid view toggle etc localized
     await expect(page.getByRole("button", { name: "شبكة" }).first()).toBeVisible();
+  });
+
+  // #280 — SERP developer blocks stay under /ar after catalog hydrate.
+  test("/ar/projects developer spotlight/known links under /ar", async ({
+    page,
+  }) => {
+    await page.goto("/ar/projects");
+    await expect(page.locator("html")).toHaveAttribute("lang", "ar");
+    await waitForCatalog(page, {
+      viewDetailsLabel: /عرض التفاصيل|View Details/,
+    });
+    await expect(
+      page.getByRole("heading", { name: "أبرز المطوّرين بمخزون حيّ" }),
+    ).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('a[href^="/ar/developers/"]').first()).toBeVisible();
+    // Spotlight + known-developers must not emit bare EN developer PDPs.
+    await expect(page.locator('main a[href^="/developers/"]')).toHaveCount(0);
   });
 });

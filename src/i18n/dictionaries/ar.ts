@@ -500,6 +500,14 @@ export const ar: Dict = {
     "error": {
       "couldNotLoad": "تعذّر تحميل كتالوج المشاريع",
       "retry": "إعادة المحاولة"
+    },
+    "developerSpotlight": {
+      "title": "أبرز المطوّرين بمخزون حيّ",
+      "subtitle": "أعداد المشاريع مُزامَنة من صفحات المطوّرين على Property Finder",
+      "projectsOnline": "{count} مشروع متاح"
+    },
+    "knownDevelopers": {
+      "title": "مشاريع لمطوّرين معروفين في الإمارات"
     }
   },
   "pdp": {

@@ -498,6 +498,14 @@ const dict = {
     "error": {
       "couldNotLoad": "Could not load project catalog",
       "retry": "Retry"
+    },
+    "developerSpotlight": {
+      "title": "Top developers with live stock",
+      "subtitle": "Project counts synced from Property Finder developer pages",
+      "projectsOnline": "{count} projects online"
+    },
+    "knownDevelopers": {
+      "title": "Projects by Known Developers in UAE"
     }
   },
   "pdp": {
