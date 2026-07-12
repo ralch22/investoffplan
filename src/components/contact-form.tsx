@@ -122,7 +122,10 @@ export function ContactForm() {
 
   if (submitted) {
     return (
-      <div className="mt-6 rounded-xl border border-border bg-surface-alt p-6 text-center">
+      <div
+        role="status"
+        className="mt-6 rounded-xl border border-border bg-surface-alt p-6 text-center"
+      >
         <p className="font-semibold text-text-dark">{f.successTitle}</p>
         <p className="mt-2 text-sm text-muted">
           {f.successBody}
@@ -147,10 +150,13 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="relative mt-6 space-y-4" noValidate>
       <HoneypotField value={honeypot} onChange={setHoneypot} />
       <div>
+        <label htmlFor="contact-email" className="mb-1.5 block text-sm font-medium text-text-dark">
+          {f.emailPlaceholder}
+        </label>
         <input
+          id="contact-email"
           type="email"
           placeholder={f.emailPlaceholder}
-          aria-label={f.emailPlaceholder}
           autoComplete="email"
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
@@ -159,17 +165,20 @@ export function ContactForm() {
           className={cn("iop-input", errors.email && "iop-input-error")}
         />
         {errors.email ? (
-          <p id="contact-email-error" className="iop-field-error">
+          <p id="contact-email-error" role="alert" className="iop-field-error">
             {errors.email}
           </p>
         ) : null}
       </div>
 
       <div>
+        <label htmlFor="contact-subject" className="mb-1.5 block text-sm font-medium text-text-dark">
+          {f.subjectPlaceholder}
+        </label>
         <input
+          id="contact-subject"
           type="text"
           placeholder={f.subjectPlaceholder}
-          aria-label={f.subjectPlaceholder}
           value={values.subject}
           onChange={(e) => updateField("subject", e.target.value)}
           aria-invalid={Boolean(errors.subject)}
@@ -177,16 +186,19 @@ export function ContactForm() {
           className={cn("iop-input", errors.subject && "iop-input-error")}
         />
         {errors.subject ? (
-          <p id="contact-subject-error" className="iop-field-error">
+          <p id="contact-subject-error" role="alert" className="iop-field-error">
             {errors.subject}
           </p>
         ) : null}
       </div>
 
       <div>
+        <label htmlFor="contact-message" className="mb-1.5 block text-sm font-medium text-text-dark">
+          {f.messagePlaceholder}
+        </label>
         <textarea
+          id="contact-message"
           placeholder={f.messagePlaceholder}
-          aria-label={f.messagePlaceholder}
           rows={6}
           value={values.message}
           onChange={(e) => updateField("message", e.target.value)}
@@ -198,14 +210,18 @@ export function ContactForm() {
           )}
         />
         {errors.message ? (
-          <p id="contact-message-error" className="iop-field-error">
+          <p id="contact-message-error" role="alert" className="iop-field-error">
             {errors.message}
           </p>
         ) : null}
       </div>
 
       <TurnstileField onToken={setTurnstileToken} action="contact" resetSignal={turnstileReset} />
-      {guardError ? <p className="iop-field-error">{guardError}</p> : null}
+      {guardError ? (
+        <p role="alert" className="iop-field-error">
+          {guardError}
+        </p>
+      ) : null}
       <PrimaryButton type="submit" disabled={submitting}>
         {submitting ? f.submitting : f.submit}
       </PrimaryButton>

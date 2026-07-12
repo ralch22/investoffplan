@@ -161,7 +161,12 @@ const dict = {
     "compareHint": "Compare units"
   },
   "a11y": {
-    "skipToContent": "Skip to content"
+    "skipToContent": "Skip to content",
+    "mobileNav": "Mobile navigation",
+    "filterByCity": "Filter by city",
+    "filterByCollection": "Filter by collection",
+    "viewMode": "View mode",
+    "photoCounter": "Photo {current} of {count}"
   },
   "news": {
     "readMore": "Read More",

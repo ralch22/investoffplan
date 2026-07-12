@@ -163,7 +163,12 @@ export const ar: Dict = {
     "compareHint": "قارن الوحدات"
   },
   "a11y": {
-    "skipToContent": "تخطَّ إلى المحتوى"
+    "skipToContent": "تخطَّ إلى المحتوى",
+    "mobileNav": "التنقل للجوال",
+    "filterByCity": "تصفية حسب المدينة",
+    "filterByCollection": "تصفية حسب المجموعة",
+    "viewMode": "وضع العرض",
+    "photoCounter": "صورة {current} من {count}"
   },
   "news": {
     "readMore": "اقرأ المزيد",

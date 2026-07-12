@@ -398,7 +398,7 @@ export function ProjectsPage({
             </h1>
           </div>
         </section>
-        <main className="mx-auto max-w-[1200px] px-5 py-16 text-center md:px-8">
+        <section className="mx-auto max-w-[1200px] px-5 py-16 text-center md:px-8">
           <p className="text-lg font-medium text-text-dark">{s.error.couldNotLoad}</p>
           <p className="mt-2 text-sm text-muted">{error}</p>
           <button
@@ -408,7 +408,7 @@ export function ProjectsPage({
           >
             {s.error.retry}
           </button>
-        </main>
+        </section>
       </PageShell>
     );
   }
@@ -452,7 +452,8 @@ export function ProjectsPage({
         </div>
       </section>
 
-      <main
+      {/* PageShell owns the single <main> landmark — avoid nested mains (WCAG 1.3.1). */}
+      <section
         className={cn(
           "mx-auto max-w-[1200px] px-5 py-8 md:px-8",
           compareIds.length > 0 && "max-md:pb-28",
@@ -475,7 +476,9 @@ export function ProjectsPage({
               <button
                 type="button"
                 onClick={() => setMobileFiltersOpen(true)}
-                className="flex-1 rounded-xl border border-border bg-white px-4 py-3 text-start text-sm font-medium text-text-dark"
+                aria-haspopup="dialog"
+                aria-expanded={mobileFiltersOpen}
+                className="focus-ring flex-1 rounded-xl border border-border bg-white px-4 py-3 text-start text-sm font-medium text-text-dark"
               >
                 {s.filtersAndSearch}
               </button>
@@ -500,7 +503,11 @@ export function ProjectsPage({
             </div>
 
             <div className="flex flex-wrap items-center gap-3">
-              <div className="inline-flex rounded-full border border-border p-0.5">
+              <div
+                className="inline-flex rounded-full border border-border p-0.5"
+                role="group"
+                aria-label={dict.a11y.viewMode}
+              >
                 <button
                   type="button"
                   onClick={() => setCardLayout("grid")}
@@ -650,7 +657,7 @@ export function ProjectsPage({
             <KnownDevelopers />
           </>
         ) : null}
-      </main>
+      </section>
 
       <MobileFilterSheet
         open={mobileFiltersOpen}

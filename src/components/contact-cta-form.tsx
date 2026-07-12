@@ -129,7 +129,10 @@ export function ContactCtaForm({ locale = "en" }: { locale?: Locale }) {
 
   if (submitted) {
     return (
-      <div className="mt-6 rounded-2xl border border-white/20 bg-white/10 p-6 text-center">
+      <div
+        role="status"
+        className="mt-6 rounded-2xl border border-white/20 bg-white/10 p-6 text-center"
+      >
         <p className="font-semibold text-white">{f.successTitle}</p>
         <p className="mt-2 text-sm text-white/75">
           {f.successBody}{" "}
@@ -173,10 +176,14 @@ export function ContactCtaForm({ locale = "en" }: { locale?: Locale }) {
           autoComplete="name"
           value={values.name}
           onChange={(e) => updateField("name", e.target.value)}
+          aria-invalid={Boolean(errors.name)}
+          aria-describedby={errors.name ? "cta-name-error" : undefined}
           className={cn(inputClass, errors.name && "ring-2 ring-brand")}
         />
         {errors.name ? (
-          <p className="mt-1 px-2 text-xs text-brand-light">{errors.name}</p>
+          <p id="cta-name-error" role="alert" className="mt-1 px-2 text-xs text-brand-light">
+            {errors.name}
+          </p>
         ) : null}
       </div>
       <div>
@@ -187,10 +194,14 @@ export function ContactCtaForm({ locale = "en" }: { locale?: Locale }) {
           autoComplete="tel"
           value={values.phone}
           onChange={(e) => updateField("phone", e.target.value)}
+          aria-invalid={Boolean(errors.phone)}
+          aria-describedby={errors.phone ? "cta-phone-error" : undefined}
           className={cn(inputClass, errors.phone && "ring-2 ring-brand")}
         />
         {errors.phone ? (
-          <p className="mt-1 px-2 text-xs text-brand-light">{errors.phone}</p>
+          <p id="cta-phone-error" role="alert" className="mt-1 px-2 text-xs text-brand-light">
+            {errors.phone}
+          </p>
         ) : null}
       </div>
       <div>
@@ -201,10 +212,14 @@ export function ContactCtaForm({ locale = "en" }: { locale?: Locale }) {
           autoComplete="email"
           value={values.email}
           onChange={(e) => updateField("email", e.target.value)}
+          aria-invalid={Boolean(errors.email)}
+          aria-describedby={errors.email ? "cta-email-error" : undefined}
           className={cn(inputClass, errors.email && "ring-2 ring-brand")}
         />
         {errors.email ? (
-          <p className="mt-1 px-2 text-xs text-brand-light">{errors.email}</p>
+          <p id="cta-email-error" role="alert" className="mt-1 px-2 text-xs text-brand-light">
+            {errors.email}
+          </p>
         ) : null}
       </div>
       <div>
@@ -225,18 +240,26 @@ export function ContactCtaForm({ locale = "en" }: { locale?: Locale }) {
           rows={4}
           value={values.message}
           onChange={(e) => updateField("message", e.target.value)}
+          aria-invalid={Boolean(errors.message)}
+          aria-describedby={errors.message ? "cta-message-error" : undefined}
           className={cn(
             "w-full rounded-2xl border-0 bg-white/10 px-5 py-4 text-sm text-white placeholder:text-white/50 outline-none focus:ring-2 focus:ring-brand/40",
             errors.message && "ring-2 ring-brand",
           )}
         />
         {errors.message ? (
-          <p className="mt-1 px-2 text-xs text-brand-light">{errors.message}</p>
+          <p id="cta-message-error" role="alert" className="mt-1 px-2 text-xs text-brand-light">
+            {errors.message}
+          </p>
         ) : null}
       </div>
       <div className="space-y-3 sm:col-span-2">
         <TurnstileField onToken={setTurnstileToken} action="contact-cta" resetSignal={turnstileReset} />
-        {guardError ? <p className="px-2 text-xs text-brand-light">{guardError}</p> : null}
+        {guardError ? (
+          <p role="alert" className="px-2 text-xs text-brand-light">
+            {guardError}
+          </p>
+        ) : null}
         <div className="flex justify-end">
           <PrimaryButton type="submit" showArrow={false} disabled={submitting}>
             {submitting ? f.submitting : f.submit}

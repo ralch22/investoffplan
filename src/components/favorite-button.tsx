@@ -49,10 +49,10 @@ export function FavoriteButton({
       className={cn(
         "iop-btn-press inline-flex h-10 w-10 items-center justify-center rounded-full border transition",
         active
-          ? "border-brand bg-brand text-white"
+          ? "focus-ring border-brand bg-brand text-white"
           : variant === "light"
-            ? "border-white/30 bg-white/10 text-white hover:border-white hover:bg-white/20"
-            : "border-border bg-white text-muted hover:border-brand hover:text-brand",
+            ? "focus-ring-light border-white/30 bg-white/10 text-white hover:border-white hover:bg-white/20"
+            : "focus-ring border-border bg-white text-muted hover:border-brand hover:text-brand",
         className,
       )}
     >

@@ -212,6 +212,7 @@ export function BrochureModal({
             </label>
             <input
               id="brochure-name"
+              autoComplete="name"
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
@@ -222,7 +223,7 @@ export function BrochureModal({
               className={cn("iop-input mt-1", errors.name && "iop-input-error")}
             />
             {errors.name ? (
-              <p id="brochure-name-error" className="iop-field-error">
+              <p id="brochure-name-error" role="alert" className="iop-field-error">
                 {errors.name}
               </p>
             ) : null}
@@ -235,6 +236,7 @@ export function BrochureModal({
             <input
               id="brochure-phone"
               type="tel"
+              autoComplete="tel"
               value={phone}
               onChange={(e) => {
                 setPhone(e.target.value);
@@ -245,14 +247,18 @@ export function BrochureModal({
               className={cn("iop-input mt-1", errors.phone && "iop-input-error")}
             />
             {errors.phone ? (
-              <p id="brochure-phone-error" className="iop-field-error">
+              <p id="brochure-phone-error" role="alert" className="iop-field-error">
                 {errors.phone}
               </p>
             ) : null}
           </div>
 
           <TurnstileField onToken={setTurnstileToken} action="brochure" resetSignal={turnstileReset} />
-          {guardError ? <p className="iop-field-error">{guardError}</p> : null}
+          {guardError ? (
+            <p role="alert" className="iop-field-error">
+              {guardError}
+            </p>
+          ) : null}
           <button
             type="submit"
             disabled={submitting}

@@ -28,7 +28,11 @@ export function CollectionChips({ value, onChange }: CollectionChipsProps) {
   const { dict } = useI18n();
   const chips = dict.serp.chips;
   return (
-    <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div
+      role="group"
+      aria-label={dict.a11y.filterByCollection}
+      className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
       {COLLECTIONS.map((c) => (
         <button
           key={c.id}

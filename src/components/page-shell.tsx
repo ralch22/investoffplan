@@ -62,7 +62,12 @@ export function PageShell({
         onCurrencyChange={handleCurrency}
         variant={headerVariant}
       />
-      <main id="main-content" className="flex-1 max-lg:pb-[var(--bottom-dock)]">
+      {/* tabIndex=-1 so skip-link fragment focus lands on the landmark (WCAG 2.4.1). */}
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex-1 outline-none max-lg:pb-[var(--bottom-dock)]"
+      >
         {children}
       </main>
       <SiteFooter />

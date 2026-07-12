@@ -44,6 +44,8 @@ export function ProjectFilters({
 
   return (
     <div
+      role="search"
+      aria-label={f.title}
       className={cn(
         "grid gap-3 rounded-2xl border border-border bg-surface p-4 shadow-elevation-md md:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr_auto] md:items-end",
         className,
@@ -131,6 +133,7 @@ export function ProjectFilters({
         type="button"
         onClick={() => setMoreOpen((v) => !v)}
         aria-expanded={moreOpen}
+        aria-controls="serp-more-filters"
         className={cn(
           "iop-btn-press focus-ring hidden h-12 rounded-xl border px-4 text-sm font-semibold md:inline-flex md:items-center md:justify-center md:gap-2",
           moreOpen || moreCount > 0
@@ -147,7 +150,10 @@ export function ProjectFilters({
       </button>
 
       {moreOpen ? (
-        <div className="hidden border-t border-border pt-4 md:col-span-full md:block">
+        <div
+          id="serp-more-filters"
+          className="hidden border-t border-border pt-4 md:col-span-full md:block"
+        >
           <MoreFiltersPanel
             filters={filters}
             onChange={onChange}

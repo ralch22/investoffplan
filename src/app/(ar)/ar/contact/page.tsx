@@ -56,7 +56,8 @@ export default async function ArabicContactPage() {
         imageUrl={heroImage}
       />
 
-      <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
+      {/* PageShell owns the single <main> landmark — avoid nested mains (WCAG 1.3.1). */}
+      <section className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <Breadcrumbs
           items={[
             { label: "الرئيسية", href: "/ar" },
@@ -93,7 +94,7 @@ export default async function ArabicContactPage() {
             من Aria Properties LLC — وساطة عقارية مرخّصة في دبي (رخصة رقم DRN 20678).
           </p>
         </section>
-      </main>
+      </section>
     </PageShell>
   );
 }

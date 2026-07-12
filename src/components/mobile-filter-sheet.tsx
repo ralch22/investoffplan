@@ -39,10 +39,22 @@ export function MobileFilterSheet({
     else if (!open && dialog.open) dialog.close();
   }, [open]);
 
+  // Escape fires native `cancel`; sync to React so the open-effect doesn't re-open.
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const handleCancel = (e: Event) => {
+      e.preventDefault();
+      onClose();
+    };
+    dialog.addEventListener("cancel", handleCancel);
+    return () => dialog.removeEventListener("cancel", handleCancel);
+  }, [onClose]);
+
   return (
     <dialog
       ref={dialogRef}
-      aria-label={f.title}
+      aria-labelledby="mobile-filter-sheet-title"
       onClose={onClose}
       onClick={(e) => {
         if (e.target === dialogRef.current) onClose();
@@ -55,11 +67,14 @@ export function MobileFilterSheet({
           className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5 shadow-elevation-lg"
         >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-text-dark">{f.title}</h2>
+          <h2 id="mobile-filter-sheet-title" className="text-lg font-semibold text-text-dark">
+            {f.title}
+          </h2>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg px-3 py-1 text-sm font-semibold text-muted hover:text-text-dark"
+            aria-label={f.closeFilters}
+            className="focus-ring inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 text-sm font-semibold text-muted hover:text-text-dark"
           >
             {f.close}
           </button>
@@ -73,7 +88,7 @@ export function MobileFilterSheet({
               placeholder={f.searchPlaceholderMobile}
               value={filters.query}
               onChange={(e) => onChange({ ...filters, query: e.target.value })}
-              className="focus-ring mt-1 w-full rounded-full border border-border px-4 py-2.5 text-sm outline-none"
+              className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] px-4 py-2.5 text-sm outline-none"
             />
           </label>
 
@@ -87,7 +102,7 @@ export function MobileFilterSheet({
                   propertyType: e.target.value as Filters["propertyType"],
                 })
               }
-              className="focus-ring mt-1 w-full rounded-full border border-border bg-white px-4 py-2.5 text-sm outline-none"
+              className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] bg-white px-4 py-2.5 text-sm outline-none"
             >
               <option value="all">{f.allTypes}</option>
               <option value="apartment">{f.apartment}</option>
@@ -112,7 +127,7 @@ export function MobileFilterSheet({
                         : Number(e.target.value),
                 })
               }
-              className="focus-ring mt-1 w-full rounded-full border border-border bg-white px-4 py-2.5 text-sm outline-none"
+              className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] bg-white px-4 py-2.5 text-sm outline-none"
             >
               <option value="all">{f.any}</option>
               <option value="studio">{f.studio}</option>
@@ -135,7 +150,7 @@ export function MobileFilterSheet({
                     e.target.value === "all" ? null : Number(e.target.value),
                 })
               }
-              className="focus-ring mt-1 w-full rounded-full border border-border bg-white px-4 py-2.5 text-sm outline-none"
+              className="focus-ring mt-1 w-full rounded-full border border-[var(--input-border)] bg-white px-4 py-2.5 text-sm outline-none"
             >
               <option value="all">{f.any}</option>
               <option value="1500000">{f.upTo15m}</option>
