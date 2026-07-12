@@ -93,17 +93,17 @@ test.describe("SearchSuggest typeahead", () => {
   test("mobile: bottom tab-bar search sheet suggests for 'damac'", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
-    await page
-      .getByRole("navigation", { name: "Primary" })
-      .getByRole("button", { name: "Search" })
-      .click();
-    // Scope to the open sheet dialog — the hero combobox is also mounted.
-    const input = page
-      .getByRole("dialog")
-      .getByRole("combobox", { name: SEARCH_LABEL });
+    const primary = page.getByRole("navigation", { name: "Primary" });
+    await expect(primary.getByRole("button", { name: "Search" })).toBeVisible({
+      timeout: 15_000,
+    });
+    await primary.getByRole("button", { name: "Search" }).click();
+    // Scope to the open <dialog> sheet (not the cookie banner, which is a div role=dialog).
+    const sheet = page.locator("dialog[open]");
+    const input = sheet.getByRole("combobox", { name: SEARCH_LABEL });
     await expect(input).toBeVisible();
     await input.fill("damac");
-    const listbox = page.getByRole("dialog").getByRole("listbox").first();
+    const listbox = sheet.getByRole("listbox").first();
     await expect(listbox).toBeVisible();
     await expect(
       listbox.getByRole("option", { name: /damac/i }).first(),
