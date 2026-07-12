@@ -1446,6 +1446,60 @@ const dict = {
           "description": "Evaluate up to three units on price, handover, brochures, and amenities."
         }
       }
+    },
+    "collections": {
+      "unitOptionsSubtitle": "{units} unit options across {projects} projects",
+      "emptyState": "No live launches in this collection right now — check back after the next weekly catalog refresh.",
+      "refineCta": "Refine by beds, price, developer, and handover on the full SERP.",
+      "openInProjects": "Open in Projects",
+      "moreCollections": "More collections",
+      "pages": {
+        "waterfront": {
+          "title": "Waterfront Off-Plan Projects in the UAE",
+          "h1": "Waterfront living",
+          "description": "Off-plan apartments and villas on the UAE's beaches, islands, marinas, and creeks — launch prices, payment plans, and brochures."
+        },
+        "luxury": {
+          "title": "Luxury & Premium Off-Plan Launches",
+          "h1": "Premium launches",
+          "description": "Premium-tier off-plan launches across Dubai and the UAE — flagship towers, villa enclaves, and signature addresses with payment plans."
+        },
+        "branded": {
+          "title": "Branded Residences Off-Plan in the UAE",
+          "h1": "Branded residences",
+          "description": "Off-plan branded residences — hotel, fashion, and automotive brand partnerships across Dubai and the UAE, with launch pricing."
+        },
+        "under-2m": {
+          "title": "Off-Plan Properties Under AED 2M",
+          "h1": "Under AED 2M",
+          "description": "Off-plan units under AED 2 million — Golden Visa-eligible entry points with payment plans across Dubai and the northern emirates."
+        },
+        "studios": {
+          "title": "Off-Plan Studios in the UAE",
+          "h1": "Studio apartments",
+          "description": "Off-plan studio apartments across the UAE — the lowest entry prices and strongest gross yields in the launch market."
+        },
+        "dubai": {
+          "title": "Off-Plan Projects in Dubai",
+          "h1": "Dubai off-plan",
+          "description": "Every off-plan launch we track in Dubai — unit-level pricing, payment plans, handovers, and brochures across the city's communities."
+        },
+        "abu-dhabi": {
+          "title": "Off-Plan Projects in Abu Dhabi",
+          "h1": "Abu Dhabi off-plan",
+          "description": "Off-plan launches across Abu Dhabi — Yas Island, Saadiyat, Al Reem, and Zayed City — with launch prices and payment plans."
+        },
+        "ras-al-khaimah": {
+          "title": "Off-Plan Projects in Ras Al Khaimah",
+          "h1": "Ras Al Khaimah off-plan",
+          "description": "Off-plan launches in Ras Al Khaimah — Al Marjan Island's casino-resort corridor and the UAE's fastest-appreciating launch market."
+        },
+        "sharjah": {
+          "title": "Off-Plan Projects in Sharjah",
+          "h1": "Sharjah off-plan",
+          "description": "Off-plan launches in Sharjah — Al Mamsha, Aljada, and family-first communities at the UAE's most accessible price points."
+        }
+      }
     }
   },
   "developers": {
