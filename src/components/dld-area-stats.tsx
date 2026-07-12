@@ -49,14 +49,17 @@ export function DldAreaStatsBand({ stats, areaName, source, locale = "en" }: Pro
     <section className="mt-8 rounded-2xl border border-border bg-surface-alt p-6 md:p-8">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="font-display text-2xl font-semibold text-text-dark">
-          Market data<span className="text-brand">.</span>
+          {dld.marketDataHeading}<span className="text-brand">.</span>
         </h2>
         <span className="text-xs font-medium uppercase tracking-wide text-muted-light">
-          {stats.confidence} confidence · {source}
+          {interpolate(dld.confidenceLine, {
+            confidence: stats.confidence,
+            source,
+          })}
         </span>
       </div>
       <p className="mt-1 text-sm text-muted">
-        What {areaName} actually sold for in 2025 — from official Dubai Land Department records.
+        {interpolate(dld.marketDataBody, { areaName })}
       </p>
 
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -74,16 +77,16 @@ export function DldAreaStatsBand({ stats, areaName, source, locale = "en" }: Pro
       {stats.beds && Object.keys(stats.beds).length > 0 ? (
         <div className="mt-6">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-            Median sold price by bedroom
+            {dld.bedTableHeading}
           </p>
           <div className="mt-3 overflow-x-auto">
             <table className="w-full min-w-[420px] text-sm">
               <thead>
                 <tr className="text-start text-xs text-muted-light">
-                  <th className="px-3 py-1.5 text-start font-medium">Type</th>
-                  <th className="px-3 py-1.5 text-end font-medium">Median price</th>
-                  <th className="px-3 py-1.5 text-end font-medium">AED/sqft</th>
-                  <th className="px-3 py-1.5 text-end font-medium">Sales</th>
+                  <th className="px-3 py-1.5 text-start font-medium">{dld.typeCol}</th>
+                  <th className="px-3 py-1.5 text-end font-medium">{dld.medianPriceCol}</th>
+                  <th className="px-3 py-1.5 text-end font-medium">{dld.aedSqftCol}</th>
+                  <th className="px-3 py-1.5 text-end font-medium">{dld.salesCol}</th>
                 </tr>
               </thead>
               <tbody>
@@ -116,7 +119,7 @@ export function DldAreaStatsBand({ stats, areaName, source, locale = "en" }: Pro
         <div className="mt-6">
           <div className="flex items-baseline justify-between gap-2">
             <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-              Median AED/sqft by month
+              {dld.monthlyTrendHeading}
             </p>
             <p className="text-[11px] tabular-nums text-muted-light">
               AED {trendMin.toLocaleString()} – {trendMax.toLocaleString()}

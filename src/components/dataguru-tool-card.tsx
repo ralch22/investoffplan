@@ -10,19 +10,24 @@ interface DataGuruToolCardProps {
 
 export function DataGuruToolCard({ tool }: DataGuruToolCardProps) {
   const { dict } = useI18n();
+  const card = dict.tools.cards[tool.slug as keyof typeof dict.tools.cards];
+  const title = card?.title ?? tool.title;
+  const description = card?.description ?? tool.description;
+  const pfFeature = card?.pfFeature ?? tool.pfFeature;
+
   return (
     <LocaleLink
       href={tool.href}
       className="group flex flex-col rounded-2xl border border-border bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-brand hover:shadow-md"
     >
       <p className="text-xs font-semibold uppercase tracking-wide text-brand">
-        {tool.pfFeature}
+        {pfFeature}
       </p>
       <h2 className="mt-2 text-xl font-semibold text-text-dark group-hover:text-brand">
-        {tool.title}
+        {title}
       </h2>
       <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
-        {tool.description}
+        {description}
       </p>
       <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand">
         {dict.tools.openTool}

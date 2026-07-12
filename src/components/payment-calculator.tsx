@@ -86,7 +86,7 @@ export function PaymentCalculator({
           value={price}
           onChange={(e) => setPrice(Number(e.target.value))}
           className="mt-4 h-2 w-full max-w-md cursor-pointer accent-brand"
-          aria-label="Adjust purchase price"
+          aria-label={dict.a11y.adjustPurchasePrice}
         />
         <p className="mt-2 text-xs text-muted-light">
           {formatPrice(MIN_PRICE, "AED", { compact: true })} –{" "}

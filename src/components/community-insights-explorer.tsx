@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { communitySlugFor } from "@/lib/community-slug";
 import type { CommunityInsightArea } from "@/lib/community-insights-shared";
 import {
@@ -10,12 +10,17 @@ import {
 } from "@/lib/community-lifestyles";
 import { formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 interface CommunityInsightsExplorerProps {
   areas: CommunityInsightArea[];
 }
 
 export function CommunityInsightsExplorer({ areas }: CommunityInsightsExplorerProps) {
+  const { dict } = useI18n();
+  const t = dict.tools.communityInsightsExplorer;
+  const lifestyles = dict.lifestyles;
   const [lifestyle, setLifestyle] = useState<LifestyleSlug | "all">("all");
   const [query, setQuery] = useState("");
 
@@ -29,18 +34,24 @@ export function CommunityInsightsExplorer({ areas }: CommunityInsightsExplorerPr
     return list;
   }, [areas, lifestyle, query]);
 
+  function lifestyleCopy(slug: LifestyleSlug) {
+    return lifestyles[slug];
+  }
+
   return (
     <div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <input
           type="search"
-          placeholder="Search communities…"
+          placeholder={t.searchPlaceholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="iop-input max-w-md"
         />
         <p className="text-sm text-muted">
-          {filtered.length} communit{filtered.length === 1 ? "y" : "ies"}
+          {filtered.length === 1
+            ? interpolate(t.countSingular, { count: filtered.length })
+            : interpolate(t.countPlural, { count: filtered.length })}
         </p>
       </div>
 
@@ -48,27 +59,30 @@ export function CommunityInsightsExplorer({ areas }: CommunityInsightsExplorerPr
         <LifestyleChip
           active={lifestyle === "all"}
           onClick={() => setLifestyle("all")}
-          label="All lifestyles"
+          label={lifestyles.all}
         />
-        {LIFESTYLE_CATEGORIES.map((cat) => (
-          <LifestyleChip
-            key={cat.slug}
-            active={lifestyle === cat.slug}
-            onClick={() => setLifestyle(cat.slug)}
-            label={`${cat.emoji} ${cat.label}`}
-          />
-        ))}
+        {LIFESTYLE_CATEGORIES.map((cat) => {
+          const copy = lifestyleCopy(cat.slug);
+          return (
+            <LifestyleChip
+              key={cat.slug}
+              active={lifestyle === cat.slug}
+              onClick={() => setLifestyle(cat.slug)}
+              label={`${cat.emoji} ${copy.label}`}
+            />
+          );
+        })}
       </div>
 
       {lifestyle !== "all" ? (
         <p className="mt-4 text-sm text-muted">
-          {LIFESTYLE_CATEGORIES.find((c) => c.slug === lifestyle)?.description}
+          {lifestyleCopy(lifestyle).description}
         </p>
       ) : null}
 
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((area) => (
-          <Link
+          <LocaleLink
             key={area.slug}
             href={`/communities/${communitySlugFor(area.name)}`}
             className="group rounded-2xl border border-border bg-white p-5 shadow-sm transition hover:border-brand hover:shadow-md"
@@ -85,35 +99,42 @@ export function CommunityInsightsExplorer({ areas }: CommunityInsightsExplorerPr
               </span>
             </div>
             <p className="mt-3 text-sm text-muted">
-              {area.unitCount} unit options
+              {interpolate(t.unitOptions, { count: area.unitCount })}
               {area.minPriceAed > 0
-                ? ` · from ${formatPrice(area.minPriceAed, "AED", { compact: true })}`
-                : " · price on request"}
+                ? ` · ${interpolate(t.fromPrice, {
+                    price: formatPrice(area.minPriceAed, "AED", { compact: true }),
+                  })}`
+                : ` · ${t.priceOnRequest}`}
             </p>
             {area.grossYieldPct != null || area.medianSoldPpsqft != null ? (
               <p className="mt-1 text-xs font-medium text-brand">
-                DLD 2025:
-                {area.grossYieldPct != null ? ` ${area.grossYieldPct}% gross yield` : ""}
+                {t.dldLine}
+                {area.grossYieldPct != null
+                  ? ` ${interpolate(t.grossYield, { value: area.grossYieldPct })}`
+                  : ""}
                 {area.grossYieldPct != null && area.medianSoldPpsqft != null ? " ·" : ""}
                 {area.medianSoldPpsqft != null
-                  ? ` AED ${area.medianSoldPpsqft.toLocaleString()}/sqft sold`
+                  ? ` ${interpolate(t.soldPsf, {
+                      value: area.medianSoldPpsqft.toLocaleString(),
+                    })}`
                   : ""}
               </p>
             ) : null}
             <div className="mt-3 flex flex-wrap gap-1.5">
               {area.lifestyles.slice(0, 3).map((tag) => {
                 const cat = LIFESTYLE_CATEGORIES.find((c) => c.slug === tag);
+                const copy = lifestyleCopy(tag);
                 return (
                   <span
                     key={tag}
                     className="rounded-full bg-surface-alt px-2 py-0.5 text-[11px] text-muted"
                   >
-                    {cat?.emoji} {cat?.label ?? tag}
+                    {cat?.emoji} {copy.label}
                   </span>
                 );
               })}
             </div>
-          </Link>
+          </LocaleLink>
         ))}
       </div>
     </div>

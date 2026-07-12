@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { LocaleLink } from "@/components/locale-link";
 import { DeveloperLogo } from "@/components/developer-logo";
 import type { DeveloperSummary } from "@/lib/types";
 import { cn } from "@/lib/cn";
+import { useI18n } from "@/i18n/locale-provider";
 
 type Metric = "units" | "projects";
 
@@ -13,6 +14,8 @@ interface TopDevelopersChartProps {
 }
 
 export function TopDevelopersChart({ developers }: TopDevelopersChartProps) {
+  const { dict } = useI18n();
+  const t = dict.pages.topDevelopers;
   const [metric, setMetric] = useState<Metric>("units");
   const top = [...developers]
     .sort((a, b) =>
@@ -32,21 +35,21 @@ export function TopDevelopersChart({ developers }: TopDevelopersChartProps) {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 className="font-display text-2xl font-semibold text-text-dark md:text-3xl">
-            Top 5 Developers
+            {t.title}
           </h2>
           <p className="mt-1 text-sm text-muted">
-            Ranked by live catalog {metric === "units" ? "unit options" : "projects"}
+            {metric === "units" ? t.rankedByUnits : t.rankedByProjects}
           </p>
         </div>
         <div
           className="inline-flex rounded-full border border-border bg-surface p-1"
           role="group"
-          aria-label="Chart metric"
+          aria-label={dict.a11y.chartMetric}
         >
           {(
             [
-              { id: "units" as const, label: "By units" },
-              { id: "projects" as const, label: "By projects" },
+              { id: "units" as const, label: t.byUnits },
+              { id: "projects" as const, label: t.byProjects },
             ] as const
           ).map((option) => (
             <button
@@ -74,7 +77,7 @@ export function TopDevelopersChart({ developers }: TopDevelopersChartProps) {
 
           return (
             <div key={dev.slug} className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,220px)_1fr_auto] md:items-center">
-              <Link
+              <LocaleLink
                 href={`/developers/${dev.slug}`}
                 className="flex min-w-0 items-center gap-3 transition hover:opacity-80"
               >
@@ -85,7 +88,7 @@ export function TopDevelopersChart({ developers }: TopDevelopersChartProps) {
                   size="sm"
                 />
                 <span className="truncate font-semibold text-text-dark">{dev.name}</span>
-              </Link>
+              </LocaleLink>
               <div className="relative h-8 overflow-hidden rounded-lg bg-surface-alt">
                 <div
                   className="absolute inset-y-0 start-0 rounded-lg bg-brand/85 transition-all duration-500"

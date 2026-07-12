@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCatalog } from "@/lib/catalog-browser";
 import {
@@ -15,6 +14,9 @@ import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { unoptimizedProp } from "@/lib/asset-image";
 import L from "leaflet";
+import { LocaleLink } from "@/components/locale-link";
+import { useI18n } from "@/i18n/locale-provider";
+import { interpolate } from "@/i18n/config";
 
 const isApiMode = process.env.NEXT_PUBLIC_CATALOG_API === "1";
 
@@ -57,6 +59,8 @@ export function ProjectMapInner({
   visibleProjectIds = null,
 }: ProjectMapInnerProps) {
   const { api } = useCatalog();
+  const { dict } = useI18n();
+  const t = dict.pages.map;
   const searchParams = useSearchParams();
   const [apiProjects, setApiProjects] = useState<MapProject[] | null>(null);
 
@@ -115,7 +119,7 @@ export function ProjectMapInner({
       <div className="order-2 flex flex-col gap-4 lg:order-1">
         <input
           type="search"
-          placeholder="Search map projects…"
+          placeholder={t.searchPlaceholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="iop-input"
@@ -127,12 +131,14 @@ export function ProjectMapInner({
           aria-live="polite"
           aria-atomic="true"
         >
-          {filtered.length.toLocaleString()} projects with coordinates
+          {interpolate(t.projectsWithCoords, {
+            count: filtered.length.toLocaleString(),
+          })}
         </p>
         <div className="max-h-[min(420px,50vh)] space-y-2 overflow-y-auto pe-1 lg:max-h-[520px]">
           {filtered.length === 0 ? (
             <p className="rounded-xl border border-dashed border-border bg-surface-alt px-4 py-6 text-center text-sm text-muted">
-              No projects match the current filters.
+              {t.noMatch}
             </p>
           ) : null}
           {filtered.slice(0, 80).map((p) => (
@@ -149,7 +155,13 @@ export function ProjectMapInner({
             >
               <p className="text-sm font-semibold text-text-dark">{p.name}</p>
               <p className="mt-1 text-xs text-muted">
-                {p.developer}{p.minPriceAed > 0 ? <> · FROM {formatMapPrice(p.minPriceAed)}</> : null}
+                {p.developer}
+                {p.minPriceAed > 0 ? (
+                  <>
+                    {" "}
+                    · {dict.common.fromUpper} {formatMapPrice(p.minPriceAed)}
+                  </>
+                ) : null}
               </p>
             </button>
           ))}
@@ -204,31 +216,31 @@ export function ProjectMapInner({
                 </p>
                 <p className="mt-1 text-sm font-semibold text-brand">
                   {selected.minPriceAed > 0
-                    ? `FROM ${formatMapPrice(selected.minPriceAed)}`
-                    : "Price on request"}
+                    ? `${dict.common.fromUpper} ${formatMapPrice(selected.minPriceAed)}`
+                    : t.priceOnRequest}
                   {selected.handover ? ` · ${selected.handover}` : ""}
                 </p>
               </div>
             </div>
             <div className="mt-3 flex flex-wrap gap-2">
-              <Link
+              <LocaleLink
                 href={`/projects/${selected.slug}`}
                 className="iop-btn-press inline-flex rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
               >
-                View details
-              </Link>
+                {dict.common.viewDetails}
+              </LocaleLink>
               <button
                 type="button"
                 onClick={() => setSelected(null)}
                 className="iop-btn-press rounded-full border border-border px-4 py-2 text-sm font-medium text-muted hover:border-brand hover:text-brand"
               >
-                Clear
+                {dict.common.clear}
               </button>
             </div>
           </div>
         ) : (
           <p className="absolute bottom-4 start-4 end-4 z-[400] pointer-events-none rounded-xl border border-dashed border-border bg-white/80 px-4 py-3 text-center text-sm text-muted backdrop-blur">
-            Tap a pin or search the list to explore projects
+            {t.exploreHint}
           </p>
         )}
       </div>
