@@ -310,6 +310,19 @@ test.describe("Content routes", () => {
     );
   });
 
+  // #315 — AR ranking secondary rationale lines from dict (not EN templates).
+  test("AR location guide ranking rationale is Arabic", async ({ page }) => {
+    const res = await page.goto("/ar/locations/best-communities-for-families", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    expect(html).toContain("خيار وحدة فلل أو منازل");
+    expect(html).toContain("مشاريع نشطة");
+    expect(html).not.toContain("unit options are villas or townhouses");
+    expect(html).not.toContain("live projects");
+  });
+
   // #311 — AR JSON-LD BreadcrumbList uses dict names + /ar absolute paths.
   test("AR news + locations BreadcrumbList JSON-LD stays in-locale", async ({
     page,

@@ -1399,7 +1399,15 @@ const dict = {
       "methodologyDisclaimer": "DLD figures are anonymized aggregates from Dubai Land Department open data (2025); catalog figures are live off-plan launch data. No purchase-level or owner data is used.",
       "moreGuidesHeading": "More location guides",
       "allCommunitiesLink": "All communities",
-      "seeRanking": "See the ranking"
+      "seeRanking": "See the ranking",
+      "rationale": {
+        "familyStock": "{pct}% of {units} unit options are villas or townhouses · {projects} live projects",
+        "grossYield": "{yield}% gross yield · median sold {price} · {sales} sales in 2025",
+        "affordable": "Launches from {price} · {projects} projects · {units} unit options",
+        "valueSqft": "AED {ppsf}/sqft median sold · {sales} sales in 2025",
+        "liquid": "{sales} sales in 2025",
+        "liquidWithYield": "{sales} sales in 2025 · {yield}% gross yield"
+      }
     },
     "communities": {
       "heroTitle": "Communities",

@@ -1401,7 +1401,15 @@ export const ar: Dict = {
       "methodologyDisclaimer": "أرقام دائرة الأراضي مجمّعات مجهولة الهوية من بيانات دائرة الأراضي المفتوحة (2025)؛ أرقام الكتالوج هي بيانات إطلاق مباشرة للمشاريع على الخارطة. لا تُستخدم بيانات مستوى الشراء أو بيانات المالك.",
       "moreGuidesHeading": "المزيد من أدلّة المواقع",
       "allCommunitiesLink": "جميع المجتمعات",
-      "seeRanking": "اطّلع على الترتيب"
+      "seeRanking": "اطّلع على الترتيب",
+      "rationale": {
+        "familyStock": "{pct}% من {units} خيار وحدة فلل أو منازل · {projects} مشاريع نشطة",
+        "grossYield": "عائد إجمالي {yield}% · وسيط البيع {price} · {sales} صفقة في 2025",
+        "affordable": "إطلاقات من {price} · {projects} مشاريع · {units} خيار وحدة",
+        "valueSqft": "درهم {ppsf}/قدم² وسيط بيع · {sales} صفقة في 2025",
+        "liquid": "{sales} صفقة في 2025",
+        "liquidWithYield": "{sales} صفقة في 2025 · عائد إجمالي {yield}%"
+      }
     },
     "communities": {
       "heroTitle": "المجتمعات",

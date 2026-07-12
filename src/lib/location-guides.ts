@@ -1,6 +1,8 @@
 import { getCatalogApi } from "@/lib/catalog";
 import { getCommunities, communitySlugFor, type CommunitySummary } from "@/lib/communities";
 import { getAreaStats } from "@/lib/dld-area-stats";
+import { getDictionary } from "@/i18n";
+import { interpolate, type Locale } from "@/i18n/config";
 
 /**
  * Topical "location guide" pillar (SEO plan): community-ranking roundups
@@ -92,7 +94,8 @@ export interface LocationGuide {
   metricLabel: string;
   methodology: string;
   ar?: GuideAr;
-  rank: (all: CommunityMetrics[]) => RankedCommunity[];
+  /** Rank communities; `locale` localizes secondary rationale lines (#315). */
+  rank: (all: CommunityMetrics[], locale: Locale) => RankedCommunity[];
 }
 
 /** Return locale-specific text, falling back to EN. */
@@ -108,8 +111,15 @@ export function guideText(
 const MIN_PROJECTS = 3;
 const MIN_SALES = 40;
 
-const money = (n: number) =>
-  `AED ${Math.round(n).toLocaleString("en-US")}`;
+const money = (n: number, locale: Locale = "en") =>
+  `AED ${Math.round(n).toLocaleString(locale === "ar" ? "ar-AE" : "en-US")}`;
+
+const num = (n: number, locale: Locale) =>
+  n.toLocaleString(locale === "ar" ? "ar-AE" : "en-US");
+
+function rationaleDict(locale: Locale) {
+  return getDictionary(locale).pages.locations.rationale;
+}
 
 export const LOCATION_GUIDES: LocationGuide[] = [
   {
@@ -131,17 +141,26 @@ export const LOCATION_GUIDES: LocationGuide[] = [
       methodology:
         "مرتّبة بحسب نسبة وحدات المجتمع على الخارطة من فلل ومنازل وبنتهاوسات ودوبلكس، من بين المجتمعات ذات 3 مشاريع نشطة على الأقل.",
     },
-    rank: (all) =>
-      all
+    rank: (all, locale) => {
+      const t = rationaleDict(locale);
+      return all
         // Title promises Dubai — don't rank Abu Dhabi/Sharjah communities here.
         .filter((c) => c.cityLabel === "Dubai" && c.projectCount >= MIN_PROJECTS && c.familyShare > 0)
         .sort((a, b) => b.familyShare - a.familyShare)
         .slice(0, 12)
-        .map((c) => ({
-          metrics: c,
-          valueLabel: `${Math.round(c.familyShare * 100)}%`,
-          rationale: `${Math.round(c.familyShare * 100)}% of ${c.unitCount.toLocaleString()} unit options are villas or townhouses · ${c.projectCount} live projects`,
-        })),
+        .map((c) => {
+          const pct = Math.round(c.familyShare * 100);
+          return {
+            metrics: c,
+            valueLabel: `${pct}%`,
+            rationale: interpolate(t.familyStock, {
+              pct,
+              units: num(c.unitCount, locale),
+              projects: c.projectCount,
+            }),
+          };
+        });
+    },
   },
   {
     slug: "highest-rental-yield-communities",
@@ -162,16 +181,22 @@ export const LOCATION_GUIDES: LocationGuide[] = [
       methodology:
         "مرتّبة بحسب العائد الإيجاري الإجمالي (الإيجار السنوي الوسيط ÷ سعر البيع الوسيط) من بيانات دائرة الأراضي لعام 2025، من بين المجتمعات ذات 40 صفقة مسجّلة على الأقل.",
     },
-    rank: (all) =>
-      all
+    rank: (all, locale) => {
+      const t = rationaleDict(locale);
+      return all
         .filter((c) => c.grossYieldPct != null && c.saleSample >= MIN_SALES)
         .sort((a, b) => (b.grossYieldPct ?? 0) - (a.grossYieldPct ?? 0))
         .slice(0, 12)
         .map((c) => ({
           metrics: c,
           valueLabel: `${c.grossYieldPct}%`,
-          rationale: `${c.grossYieldPct}% gross yield · median sold ${c.medianPrice ? money(c.medianPrice) : "—"} · ${c.saleSample.toLocaleString()} sales in 2025`,
-        })),
+          rationale: interpolate(t.grossYield, {
+            yield: c.grossYieldPct ?? 0,
+            price: c.medianPrice ? money(c.medianPrice, locale) : "—",
+            sales: num(c.saleSample, locale),
+          }),
+        }));
+    },
   },
   {
     slug: "most-affordable-communities",
@@ -192,17 +217,23 @@ export const LOCATION_GUIDES: LocationGuide[] = [
       methodology:
         "مرتّبة بحسب أدنى سعر إطلاق على الخارطة في كل مجتمع، من بين المجتمعات ذات 3 مشاريع نشطة على الأقل.",
     },
-    rank: (all) =>
-      all
+    rank: (all, locale) => {
+      const t = rationaleDict(locale);
+      return all
         // Title promises Dubai — don't rank Abu Dhabi/Sharjah communities here.
         .filter((c) => c.cityLabel === "Dubai" && c.projectCount >= MIN_PROJECTS && c.minPriceAed > 0)
         .sort((a, b) => a.minPriceAed - b.minPriceAed)
         .slice(0, 12)
         .map((c) => ({
           metrics: c,
-          valueLabel: money(c.minPriceAed),
-          rationale: `Launches from ${money(c.minPriceAed)} · ${c.projectCount} projects · ${c.unitCount.toLocaleString()} unit options`,
-        })),
+          valueLabel: money(c.minPriceAed, locale),
+          rationale: interpolate(t.affordable, {
+            price: money(c.minPriceAed, locale),
+            projects: c.projectCount,
+            units: num(c.unitCount, locale),
+          }),
+        }));
+    },
   },
   {
     slug: "best-value-communities",
@@ -223,16 +254,24 @@ export const LOCATION_GUIDES: LocationGuide[] = [
       methodology:
         "مرتّبة بحسب أدنى وسيط سعر للقدم المربعة المباعة من بيانات دائرة الأراضي لعام 2025، من بين المجتمعات ذات 40 صفقة مسجّلة على الأقل.",
     },
-    rank: (all) =>
-      all
+    rank: (all, locale) => {
+      const t = rationaleDict(locale);
+      return all
         .filter((c) => c.medianPpsqft != null && c.saleSample >= MIN_SALES)
         .sort((a, b) => (a.medianPpsqft ?? 0) - (b.medianPpsqft ?? 0))
         .slice(0, 12)
-        .map((c) => ({
-          metrics: c,
-          valueLabel: `AED ${c.medianPpsqft!.toLocaleString()}`,
-          rationale: `AED ${c.medianPpsqft!.toLocaleString()}/sqft median sold · ${c.saleSample.toLocaleString()} sales in 2025`,
-        })),
+        .map((c) => {
+          const ppsf = num(c.medianPpsqft!, locale);
+          return {
+            metrics: c,
+            valueLabel: `AED ${ppsf}`,
+            rationale: interpolate(t.valueSqft, {
+              ppsf,
+              sales: num(c.saleSample, locale),
+            }),
+          };
+        });
+    },
   },
   {
     slug: "most-liquid-communities",
@@ -253,16 +292,27 @@ export const LOCATION_GUIDES: LocationGuide[] = [
       methodology:
         "مرتّبة بحسب عدد المبيعات المسجّلة في بيانات دائرة الأراضي لعام 2025 — مقياس عملي لسيولة إعادة البيع.",
     },
-    rank: (all) =>
-      all
+    rank: (all, locale) => {
+      const t = rationaleDict(locale);
+      return all
         .filter((c) => c.saleSample >= MIN_SALES)
         .sort((a, b) => b.saleSample - a.saleSample)
         .slice(0, 12)
-        .map((c) => ({
-          metrics: c,
-          valueLabel: c.saleSample.toLocaleString(),
-          rationale: `${c.saleSample.toLocaleString()} sales in 2025${c.grossYieldPct != null ? ` · ${c.grossYieldPct}% gross yield` : ""}`,
-        })),
+        .map((c) => {
+          const sales = num(c.saleSample, locale);
+          return {
+            metrics: c,
+            valueLabel: sales,
+            rationale:
+              c.grossYieldPct != null
+                ? interpolate(t.liquidWithYield, {
+                    sales,
+                    yield: c.grossYieldPct,
+                  })
+                : interpolate(t.liquid, { sales }),
+          };
+        });
+    },
   },
 ];
 
@@ -270,14 +320,17 @@ export function getLocationGuide(slug: string): LocationGuide | undefined {
   return LOCATION_GUIDES.find((g) => g.slug === slug);
 }
 
-export async function buildGuideRanking(slug: string): Promise<{
+export async function buildGuideRanking(
+  slug: string,
+  locale: Locale = "en",
+): Promise<{
   guide: LocationGuide;
   ranked: RankedCommunity[];
 } | null> {
   const guide = getLocationGuide(slug);
   if (!guide) return null;
   const all = await getCommunityMetrics();
-  const ranked = guide.rank(all);
+  const ranked = guide.rank(all, locale);
   if (ranked.length === 0) return null;
   return { guide, ranked };
 }

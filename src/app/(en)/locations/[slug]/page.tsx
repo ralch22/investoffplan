@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function LocationGuidePage({ params, locale = "en" }: PageProps) {
   const { slug } = await params;
   const dict = getDictionary(locale);
-  const result = await buildGuideRanking(slug);
+  const result = await buildGuideRanking(slug, locale);
   if (!result) notFound();
   const { guide, ranked } = result;
   const base = getSiteUrl();
