@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/cn";
 import type { CitySlug } from "@/lib/types";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface CityOption {
   slug: CitySlug;
@@ -16,6 +17,8 @@ interface CityChipsProps {
 }
 
 export function CityChips({ cities, value, onChange }: CityChipsProps) {
+  const { dict } = useI18n();
+  const cityLabels = dict.serp.cities;
   return (
     <div
       className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -35,7 +38,7 @@ export function CityChips({ cities, value, onChange }: CityChipsProps) {
               : "border-border bg-surface text-text-dark hover:border-brand hover:text-brand",
           )}
         >
-          {city.label}
+          {cityLabels[city.slug] ?? city.label}
           <span className="ms-1.5 text-xs opacity-75">({city.count})</span>
         </button>
       ))}

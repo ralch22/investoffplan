@@ -19,6 +19,7 @@ export function CompareBar({
   onClear,
   className,
 }: CompareBarProps) {
+  const { dict } = useI18n();
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     setHydrated(true);
@@ -47,7 +48,7 @@ export function CompareBar({
           className="iop-btn-press focus-ring inline-flex items-center gap-2 rounded-lg px-2 py-1 font-semibold text-brand"
         >
           <CompareIcon />
-          Compare
+          {dict.common.compare}
           <span
             data-testid="compare-count"
             className="rounded-full bg-brand px-2 py-0.5 text-xs text-white"
@@ -58,7 +59,7 @@ export function CompareBar({
       ) : (
         <span className="inline-flex items-center gap-2 font-medium text-muted">
           <CompareIcon />
-          Compare
+          {dict.common.compare}
         </span>
       )}
       {active ? (
@@ -67,11 +68,11 @@ export function CompareBar({
           onClick={onClear}
           className="iop-btn-press focus-ring rounded-lg px-2 py-1 text-muted hover:text-text-dark"
         >
-          Clear
+          {dict.common.compareClear}
         </button>
       ) : null}
       <span className="hidden text-muted-light sm:inline">
-        Select up to 3 units to compare
+        {dict.common.compareHint}
       </span>
       <input type="hidden" data-compare-ids={selectedIds.join(",")} />
     </div>
