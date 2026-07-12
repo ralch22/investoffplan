@@ -74,6 +74,14 @@ export interface RankedCommunity {
   rationale: string;
 }
 
+export interface GuideAr {
+  label?: string;
+  h1?: string;
+  intro?: string;
+  metricLabel?: string;
+  methodology?: string;
+}
+
 export interface LocationGuide {
   slug: string;
   /** Nav/card label. */
@@ -83,7 +91,18 @@ export interface LocationGuide {
   intro: string;
   metricLabel: string;
   methodology: string;
+  ar?: GuideAr;
   rank: (all: CommunityMetrics[]) => RankedCommunity[];
+}
+
+/** Return locale-specific text, falling back to EN. */
+export function guideText(
+  guide: LocationGuide,
+  field: keyof GuideAr,
+  locale: string,
+): string {
+  if (locale === "ar") return guide.ar?.[field] ?? guide[field];
+  return guide[field];
 }
 
 const MIN_PROJECTS = 3;
@@ -103,6 +122,15 @@ export const LOCATION_GUIDES: LocationGuide[] = [
     metricLabel: "Family-home stock",
     methodology:
       "Ranked by the share of a community's off-plan unit options that are villas, townhouses, penthouses or duplexes, among communities with at least 3 live projects.",
+    ar: {
+      label: "الأفضل للعائلات",
+      h1: "أفضل مجتمعات للعائلات",
+      intro:
+        "المشترون العائليون يبحثون عن المساحة، لا مجرد شرفة. تمتلك هذه المجتمعات في دبي أعلى نسبة فلل ومنازل كبيرة من إطلاقات العقارات على الخارطة المتاحة — مرتّبة من كتالوجنا لتعكس ما يمكنك شراؤه اليوم.",
+      metricLabel: "مخزون المنازل العائلية",
+      methodology:
+        "مرتّبة بحسب نسبة وحدات المجتمع على الخارطة من فلل ومنازل وبنتهاوسات ودوبلكس، من بين المجتمعات ذات 3 مشاريع نشطة على الأقل.",
+    },
     rank: (all) =>
       all
         // Title promises Dubai — don't rank Abu Dhabi/Sharjah communities here.
@@ -125,6 +153,15 @@ export const LOCATION_GUIDES: LocationGuide[] = [
     metricLabel: "Gross yield",
     methodology:
       "Ranked by gross rental yield (median annual rent ÷ median sold price) from Dubai Land Department 2025 data, among communities with at least 40 recorded sales.",
+    ar: {
+      label: "أعلى عوائد",
+      h1: "مجتمعات بأعلى عائد إيجاري",
+      intro:
+        "العائد الإيجاري الإجمالي هو أوضح مؤشر للدخل للمستثمر. تُسجّل هذه المجتمعات أعلى العوائد استنادًا إلى بيانات دائرة الأراضي والأملاك الفعلية لعام 2025 — الإيجار السنوي الوسيط مقسومًا على سعر البيع الوسيط، لا الأسعار المطلوبة.",
+      metricLabel: "العائد الإيجاري الإجمالي",
+      methodology:
+        "مرتّبة بحسب العائد الإيجاري الإجمالي (الإيجار السنوي الوسيط ÷ سعر البيع الوسيط) من بيانات دائرة الأراضي لعام 2025، من بين المجتمعات ذات 40 صفقة مسجّلة على الأقل.",
+    },
     rank: (all) =>
       all
         .filter((c) => c.grossYieldPct != null && c.saleSample >= MIN_SALES)
@@ -146,6 +183,15 @@ export const LOCATION_GUIDES: LocationGuide[] = [
     metricLabel: "Launch price from",
     methodology:
       "Ranked by the lowest off-plan launch price in each community, among communities with at least 3 live projects.",
+    ar: {
+      label: "الأكثر تناسبًا",
+      h1: "أكثر مجتمعات دبي تناسبًا للميزانية",
+      intro:
+        "سعر الدخول هو نقطة انطلاق معظم الخطط. تمتلك هذه المجتمعات أدنى أسعار إطلاق على الخارطة في كتالوجنا — قائمة عملية لمن يشتري أول وحدة له أو يحرص على البقاء ضمن الميزانية.",
+      metricLabel: "سعر الإطلاق من",
+      methodology:
+        "مرتّبة بحسب أدنى سعر إطلاق على الخارطة في كل مجتمع، من بين المجتمعات ذات 3 مشاريع نشطة على الأقل.",
+    },
     rank: (all) =>
       all
         // Title promises Dubai — don't rank Abu Dhabi/Sharjah communities here.
@@ -168,6 +214,15 @@ export const LOCATION_GUIDES: LocationGuide[] = [
     metricLabel: "Median sold AED/sqft",
     methodology:
       "Ranked by the lowest median sold price per sqft from Dubai Land Department 2025 data, among communities with at least 40 recorded sales.",
+    ar: {
+      label: "أفضل قيمة/قدم²",
+      h1: "أفضل قيمة مقابل سعر القدم المربعة",
+      intro:
+        "منزلان بالسعر ذاته قد يقدّمان مساحتين مختلفتين جدًا. تمتلك هذه المجتمعات أدنى وسيط سعر للقدم المربعة المباعة وفق بيانات دائرة الأراضي لعام 2025 — حيث يشتري درهمك أكبر مساحة مبنية.",
+      metricLabel: "وسيط البيع درهم/قدم²",
+      methodology:
+        "مرتّبة بحسب أدنى وسيط سعر للقدم المربعة المباعة من بيانات دائرة الأراضي لعام 2025، من بين المجتمعات ذات 40 صفقة مسجّلة على الأقل.",
+    },
     rank: (all) =>
       all
         .filter((c) => c.medianPpsqft != null && c.saleSample >= MIN_SALES)
@@ -189,6 +244,15 @@ export const LOCATION_GUIDES: LocationGuide[] = [
     metricLabel: "2025 sales",
     methodology:
       "Ranked by the number of recorded sales in Dubai Land Department 2025 data — a practical proxy for resale liquidity.",
+    ar: {
+      label: "الأكثر سيولة",
+      h1: "أكثر مجتمعات دبي سيولةً للإعادة",
+      intro:
+        "السيولة هي مدى سهولة خروجك بسعر السوق. سجّلت هذه المجتمعات أكبر عدد من المبيعات في 2025 — أعمق أسواق إعادة البيع في دبي، حيث يتوفّر المشترون حين تقرر البيع.",
+      metricLabel: "مبيعات 2025",
+      methodology:
+        "مرتّبة بحسب عدد المبيعات المسجّلة في بيانات دائرة الأراضي لعام 2025 — مقياس عملي لسيولة إعادة البيع.",
+    },
     rank: (all) =>
       all
         .filter((c) => c.saleSample >= MIN_SALES)

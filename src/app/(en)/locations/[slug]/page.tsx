@@ -9,6 +9,7 @@ import {
   LOCATION_GUIDES,
   buildGuideRanking,
   getLocationGuide,
+  guideText,
 } from "@/lib/location-guides";
 import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
@@ -91,9 +92,9 @@ export default async function LocationGuidePage({ params, locale = "en" }: PageP
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }}
       />
-      <PageHero title={guide.h1} italicTitle subtitle={guide.intro} />
+      <PageHero title={guideText(guide, "h1", locale)} italicTitle subtitle={guideText(guide, "intro", locale)} />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
-        <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: dict.pages.locations.breadcrumb, href: "/locations" }, { label: guide.label }]} />
+        <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: dict.pages.locations.breadcrumb, href: "/locations" }, { label: guideText(guide, "label", locale) }]} />
         <ol className="space-y-3">
           {ranked.map((r, i) => (
             <li key={r.metrics.slug}>
@@ -115,7 +116,7 @@ export default async function LocationGuidePage({ params, locale = "en" }: PageP
                     {r.valueLabel}
                   </span>
                   <span className="block text-[10px] font-medium uppercase tracking-wide text-muted-light">
-                    {guide.metricLabel}
+                    {guideText(guide, "metricLabel", locale)}
                   </span>
                 </span>
               </LocaleLink>
@@ -125,7 +126,7 @@ export default async function LocationGuidePage({ params, locale = "en" }: PageP
 
         <p className="mt-6 max-w-2xl text-xs text-muted-light">
           <span className="font-semibold text-muted">{dict.pages.locations.methodologyLabel}</span>{" "}
-          {guide.methodology} {dict.pages.locations.methodologyDisclaimer}
+          {guideText(guide, "methodology", locale)} {dict.pages.locations.methodologyDisclaimer}
         </p>
 
         <MarketAdviceCta context={guide.h1.toLowerCase()} locale={locale} />
@@ -139,7 +140,7 @@ export default async function LocationGuidePage({ params, locale = "en" }: PageP
                 href={`/locations/${g.slug}`}
                 className="iop-btn-press focus-ring rounded-full border border-border bg-white px-4 py-1.5 text-sm font-medium text-muted transition hover:border-brand hover:text-brand"
               >
-                {g.label}
+                {guideText(g, "label", locale)}
               </LocaleLink>
             ))}
             <LocaleLink

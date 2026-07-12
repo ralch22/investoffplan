@@ -1099,7 +1099,8 @@ const dict = {
       "methodologyLabel": "Methodology.",
       "methodologyDisclaimer": "DLD figures are anonymized aggregates from Dubai Land Department open data (2025); catalog figures are live off-plan launch data. No purchase-level or owner data is used.",
       "moreGuidesHeading": "More location guides",
-      "allCommunitiesLink": "All communities"
+      "allCommunitiesLink": "All communities",
+      "seeRanking": "See the ranking"
     },
     "communities": {
       "heroTitle": "Communities",

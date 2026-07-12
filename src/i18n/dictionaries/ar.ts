@@ -1101,7 +1101,8 @@ export const ar: Dict = {
       "methodologyLabel": "المنهجية.",
       "methodologyDisclaimer": "أرقام دائرة الأراضي مجمّعات مجهولة الهوية من بيانات دائرة الأراضي المفتوحة (2025)؛ أرقام الكتالوج هي بيانات إطلاق مباشرة للمشاريع على الخارطة. لا تُستخدم بيانات مستوى الشراء أو بيانات المالك.",
       "moreGuidesHeading": "المزيد من أدلّة المواقع",
-      "allCommunitiesLink": "جميع المجتمعات"
+      "allCommunitiesLink": "جميع المجتمعات",
+      "seeRanking": "اطّلع على الترتيب"
     },
     "communities": {
       "heroTitle": "المجتمعات",

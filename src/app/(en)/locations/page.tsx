@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LocaleLink } from "@/components/locale-link";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
-import { LOCATION_GUIDES } from "@/lib/location-guides";
+import { LOCATION_GUIDES, guideText } from "@/lib/location-guides";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
 import type { Locale } from "@/i18n/config";
@@ -33,14 +33,14 @@ export function LocationsPageContent({ locale = "en" }: { locale?: Locale }) {
               href={`/locations/${guide.slug}`}
               className="iop-btn-press focus-ring group rounded-2xl border border-border bg-white p-6 shadow-elevation-sm transition hover:-translate-y-0.5 hover:border-brand/25 hover:shadow-elevation-md"
             >
-              <p className="section-eyebrow">{guide.metricLabel}</p>
+              <p className="section-eyebrow">{guideText(guide, "metricLabel", locale)}</p>
               <h2 className="mt-2 font-display text-xl font-semibold text-text-dark group-hover:text-brand">
-                {guide.h1}
+                {guideText(guide, "h1", locale)}
                 <span className="text-brand">.</span>
               </h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{guide.intro}</p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{guideText(guide, "intro", locale)}</p>
               <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand">
-                See the ranking
+                {t.seeRanking}
                 <span
                   className="transition group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5"
                   aria-hidden
