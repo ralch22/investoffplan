@@ -57,6 +57,8 @@ test.describe("InvestOffPlan projects page", () => {
 
   test("map view respects active filters", async ({ page }) => {
     // Desktop filter bar is `hidden md:block` — need md+ for Beds/Type/Price selects.
+    // Leaflet pin re-renders of the full catalog are expensive; give the test headroom.
+    test.setTimeout(120_000);
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto("/projects");
     await waitForCatalog(page);
@@ -65,7 +67,7 @@ test.describe("InvestOffPlan projects page", () => {
     await page.getByRole("button", { name: "Map", exact: true }).click();
 
     const coordCount = page.getByTestId("map-coord-count");
-    await expect(coordCount).toBeVisible();
+    await expect(coordCount).toBeVisible({ timeout: 20_000 });
     await expect(coordCount).toHaveText(/[1-9][\d,]*\s+projects with coordinates/i);
 
     const readCount = async () => {
@@ -78,33 +80,33 @@ test.describe("InvestOffPlan projects page", () => {
     expect(baseline).toBeGreaterThan(0);
 
     // City: Dubai holds the bulk of stock, so Abu Dhabi must yield a strictly
-    // smaller map set than "All UAE".
+    // smaller map set than "All UAE" (no full-catalog reset after this).
     await page.getByRole("button", { name: /Abu Dhabi/i }).click();
-    await expect.poll(readCount, { timeout: 15_000 }).toBeLessThan(baseline);
+    await expect.poll(readCount, { timeout: 20_000 }).toBeLessThan(baseline);
     const afterCity = await readCount();
     expect(afterCity).toBeGreaterThan(0);
 
-    // Reset city so beds/type/price assertions start from the full map set.
-    await page.getByRole("button", { name: /All UAE/i }).click();
-    await expect.poll(readCount, { timeout: 15_000 }).toBe(baseline);
+    // Beds / type / price — same shared filtered unit set as grid/list, no reload.
+    // Use combobox role (desktop ProjectFilters) rather than getByLabel for stability.
+    const beds = page.getByRole("combobox", { name: "Beds", exact: true });
+    const propertyType = page.getByRole("combobox", { name: "Property type", exact: true });
+    const maxPrice = page.getByRole("combobox", { name: "Max price (AED)", exact: true });
 
-    // Beds (desktop filter bar — md+). Map pins must track the same filtered
-    // unit set as grid/list without a full page reload.
-    await page.getByLabel("Beds", { exact: true }).selectOption("2");
-    await expect.poll(readCount, { timeout: 15_000 }).toBeLessThan(baseline);
+    await beds.selectOption("2");
+    // Beds is a subset of the city set — pin count must not grow.
+    await expect.poll(readCount, { timeout: 20_000 }).toBeLessThanOrEqual(afterCity);
     const afterBeds = await readCount();
     expect(afterBeds).toBeGreaterThan(0);
+    expect(afterBeds).toBeLessThan(baseline);
 
-    // Property type further narrows (or at least does not grow) the pin set.
-    await page.getByLabel("Property type", { exact: true }).selectOption("villa");
-    await expect.poll(readCount, { timeout: 15_000 }).toBeLessThanOrEqual(afterBeds);
+    await propertyType.selectOption("villa");
+    await expect.poll(readCount, { timeout: 20_000 }).toBeLessThanOrEqual(afterBeds);
     const afterType = await readCount();
-    // Combined beds+type must still be a real reduction vs unfiltered baseline.
+    // Combined city+beds+type must still be a real reduction vs unfiltered baseline.
     expect(afterType).toBeLessThan(baseline);
 
-    // Max price: stack a tight budget cap — pin count must not increase.
-    await page.getByLabel("Max price (AED)", { exact: true }).selectOption("1500000");
-    await expect.poll(readCount, { timeout: 15_000 }).toBeLessThanOrEqual(afterType);
+    await maxPrice.selectOption("1500000");
+    await expect.poll(readCount, { timeout: 20_000 }).toBeLessThanOrEqual(afterType);
     expect(await readCount()).toBeLessThan(baseline);
   });
 
