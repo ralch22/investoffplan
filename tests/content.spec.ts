@@ -253,9 +253,20 @@ test.describe("Content routes", () => {
     });
     expect(res?.ok()).toBeTruthy();
     const html = await page.content();
-    // Breadcrumb nav should not keep hardcoded EN Home as the link text.
     expect(html).not.toMatch(/aria-label="[^"]*"[^>]*>[\s\S]*?>Home</i);
     expect(html).toMatch(/الرئيسية/);
   });
 
+  // #269 — AR location guide document title must not stay EN guide.title.
+  test("AR location guide pages use Arabic document title", async ({ page }) => {
+    const res = await page.goto("/ar/locations/best-communities-for-families", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    expect(html).toMatch(/أفضل مجتمعات للعائلات/);
+    expect(html).not.toMatch(
+      /<title>Best Communities for Families in Dubai \(Off-Plan\)/i,
+    );
+  });
 });
