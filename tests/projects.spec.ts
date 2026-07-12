@@ -19,12 +19,21 @@ test.describe("InvestOffPlan projects page", () => {
   });
 
   test("opens mobile filter sheet", async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
+    // 375px is the bug-hunt baseline: long filter body must not bury Show results.
+    await page.setViewportSize({ width: 375, height: 812 });
     await page.goto("/projects");
     await waitForCatalog(page);
     await page.getByRole("button", { name: /Filters & search/i }).click();
     await expect(page.getByTestId("mobile-filter-sheet")).toBeVisible();
-    await page.getByRole("button", { name: "Show results" }).click();
+    const showResults = page.getByTestId("mobile-filter-show-results");
+    await expect(showResults).toBeVisible();
+    // Sticky footer: primary CTA stays inside the viewport without scrolling the sheet.
+    const inViewport = await showResults.evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      return r.top >= 0 && r.bottom <= window.innerHeight + 1;
+    });
+    expect(inViewport).toBe(true);
+    await showResults.click();
     await expect(page.getByTestId("mobile-filter-sheet")).toHaveCount(0);
   });
 
