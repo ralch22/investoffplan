@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import { PROJECT_SLUG_REDIRECTS } from "./src/lib/project-slug-renames";
+import { COMMUNITY_NICKNAME_ALIASES } from "./src/lib/community-nickname-aliases";
 
 // Top developers 404 on their short brand slug (e.g. /developers/emaar) when the
 // canonical detail route is the full slug. Permanent-redirect the aliases so the
@@ -47,6 +48,34 @@ const nextConfig: NextConfig = {
         },
       ],
     );
+    // Short community nicknames (jvc, jbr, jlt, dip, …) → canonical community.
+    // Complements /areas/[slug] breadcrumb-variant redirects (catalog area
+    // slugs only). Map lives in src/lib/community-nickname-aliases.ts.
+    // Covers legacy /areas/{nick} and direct /communities/{nick} (EN + AR).
+    const communityNickAliases = Object.entries(COMMUNITY_NICKNAME_ALIASES).flatMap(
+      ([alias, canonical]) => [
+        {
+          source: `/areas/${alias}`,
+          destination: `/communities/${canonical}`,
+          permanent: true,
+        },
+        {
+          source: `/ar/areas/${alias}`,
+          destination: `/ar/communities/${canonical}`,
+          permanent: true,
+        },
+        {
+          source: `/communities/${alias}`,
+          destination: `/communities/${canonical}`,
+          permanent: true,
+        },
+        {
+          source: `/ar/communities/${alias}`,
+          destination: `/ar/communities/${canonical}`,
+          permanent: true,
+        },
+      ],
+    );
     // Bare index paths with no page (only /collections/[slug] and
     // /reports/market/[slug] exist) 404 — send them to the nearest hub instead.
     const indexRedirects = [
@@ -56,7 +85,12 @@ const nextConfig: NextConfig = {
       { source: "/reports/market", destination: "/market-report", permanent: false },
       { source: "/ar/reports", destination: "/ar/market-report", permanent: false },
     ];
-    return [...devAliases, ...projectSlugAliases, ...indexRedirects];
+    return [
+      ...devAliases,
+      ...projectSlugAliases,
+      ...communityNickAliases,
+      ...indexRedirects,
+    ];
   },
   // Removes the `x-powered-by: Next.js` fingerprint from every response.
   poweredByHeader: false,

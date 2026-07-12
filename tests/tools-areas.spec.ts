@@ -37,6 +37,24 @@ test.describe("Mortgage, areas, collections", () => {
     await expect(page).toHaveURL(/\/compare$/);
   });
 
+  test("short community nicknames 308 to canonical communities (EN+AR)", async ({
+    page,
+  }) => {
+    // Marketing nicknames were 404 under /areas (audit #198 / issue #204).
+    await page.goto("/areas/jvc");
+    await expect(page).toHaveURL(/\/communities\/jumeirah-village-circle$/);
+    await page.goto("/areas/jlt");
+    await expect(page).toHaveURL(/\/communities\/jumeirah-lake-towers$/);
+    await page.goto("/areas/dip");
+    await expect(page).toHaveURL(/\/communities\/dubai-investment-park-dip$/);
+    // Direct /communities/{nick} also aliases.
+    await page.goto("/communities/jbr");
+    await expect(page).toHaveURL(/\/communities\/jumeirah-beach-residence$/);
+    // Arabic mirror.
+    await page.goto("/ar/areas/jvc");
+    await expect(page).toHaveURL(/\/ar\/communities\/jumeirah-village-circle$/);
+  });
+
   test("compare hub lists distinct-community pairs (no self-comparisons)", async ({
     page,
   }) => {
