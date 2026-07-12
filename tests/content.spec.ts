@@ -175,4 +175,31 @@ test.describe("Content routes", () => {
     expect(html).toMatch(/أساسيات العقارات على الخارطة/);
     expect(html).not.toMatch(/>Off-Plan Basics</);
   });
+
+  // #253 — AR collection title + H1 must not stay English.
+  test("AR collection pages use Arabic title and H1", async ({ page }) => {
+    for (const { path, arH1, enH1 } of [
+      {
+        path: "/ar/collections/waterfront",
+        arH1: "العيش على الواجهة المائية",
+        enH1: "Waterfront living",
+      },
+      {
+        path: "/ar/collections/dubai",
+        arH1: "دبي على الخارطة",
+        enH1: "Dubai off-plan",
+      },
+    ]) {
+      const res = await page.goto(path, { waitUntil: "domcontentloaded" });
+      expect(res?.ok(), path).toBeTruthy();
+      const html = await page.content();
+      expect(html, path).toMatch(new RegExp(arH1));
+      expect(html, path).not.toMatch(new RegExp(`<h1[^>]*>\\s*${enH1}`));
+      // Meta title should not be the EN COLLECTION_PAGES string.
+      expect(html, path).not.toMatch(
+        /<title>Waterfront Off-Plan Projects in the UAE/i,
+      );
+      expect(html, path).not.toMatch(/<title>Off-Plan Projects in Dubai \|/i);
+    }
+  });
 });
