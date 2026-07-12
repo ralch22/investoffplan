@@ -184,7 +184,8 @@ export function buildDeveloperJsonLd(opts: {
     url: developerUrl,
     image: absoluteAsset(siteUrl, developer.logoUrl) ??
       absoluteAsset(siteUrl, "/brand/icon-red.png"),
-    logo: absoluteAsset(siteUrl, developer.logoUrl),
+    logo: absoluteAsset(siteUrl, developer.logoUrl) ??
+      absoluteAsset(siteUrl, "/brand/icon-red.png"),
     foundingDate: developer.foundedYear
       ? String(developer.foundedYear)
       : undefined,

@@ -177,7 +177,7 @@ export async function buildGroups(): Promise<Entry[][]> {
   const arDetailRoutes: Entry[] = [
     ...projectRoutes, ...areaRoutes, ...developerRoutes, ...guideRoutes,
     ...newsRoutes, ...collectionRoutes, ...faqRoutes, ...compareRoutes,
-    ...projectCompareRoutes, ...locationGuideRoutes,
+    ...projectCompareRoutes, ...developerCompareRoutes, ...locationGuideRoutes,
   ].map((r) => ({
     url: r.url.replace(`${BASE}/`, `${BASE}/ar/`),
     lastModified: r.lastModified,

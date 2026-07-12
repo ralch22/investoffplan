@@ -46,10 +46,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const developer = await getDeveloper(slug);
   if (!developer) return { title: "Developer not found" };
+  const title = `New & Off-Plan Projects by ${developer.name}`;
+  const description = `Browse ${developer.projectCount} off-plan projects by ${developer.name} in the UAE with launch prices, payment plans, and brochures.`;
+  const ogImage = developer.logoUrl ?? "/brand/og-default.png";
   return {
-    title: `New & Off-Plan Projects by ${developer.name}`,
-    description: `Browse ${developer.projectCount} off-plan projects by ${developer.name} in the UAE with launch prices, payment plans, and brochures.`,
+    title,
+    description,
     alternates: enMeta(`/developers/${slug}`),
+    openGraph: {
+      title,
+      description,
+      url: `/developers/${slug}`,
+      images: [{ url: ogImage, width: 1200, height: 630 }],
+    },
+    twitter: { card: "summary_large_image", title, description },
   };
 }
 

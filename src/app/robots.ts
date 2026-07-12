@@ -16,7 +16,7 @@ export default function robots(): MetadataRoute.Robots {
           // be a bare "/compare" — that prefix-blocks the /compare SEO hub,
           // /compare/[pair], /compare-projects/* and /compare-developers/*
           // (~825 sitemap URLs).
-          disallow: ["/api/", "/compare/units", "/compare?"],
+          disallow: ["/api/", "/compare/units"],
         },
     sitemap: "https://investoffplan.com/sitemap.xml",
   };
