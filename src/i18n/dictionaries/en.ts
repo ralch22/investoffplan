@@ -174,6 +174,13 @@ const dict = {
     "filter": "Filter",
     "clearFilters": "Clear filters"
   },
+  "errorPage": {
+    "label": "Error",
+    "title": "Something went wrong",
+    "body": "An unexpected error occurred. Please try again or return to the homepage.",
+    "tryAgain": "Try again",
+    "goHome": "Go home"
+  },
   "a11y": {
     "skipToContent": "Skip to content",
     "mobileNav": "Mobile navigation",
