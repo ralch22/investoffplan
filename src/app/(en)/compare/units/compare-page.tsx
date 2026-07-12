@@ -206,10 +206,13 @@ export function ComparePage({
     setCompareIds(next);
     setStoredCompareIds(next);
     if (next.length === 0) {
-      router.push("/compare");
+      // Keep AR users on /ar/compare (not bare EN hub).
+      router.push(localePath(locale, "/compare"));
       return;
     }
-    router.push(`/compare?units=${encodeURIComponent(serializeCompareIds(next))}`);
+    router.push(
+      `${localePath(locale, "/compare")}?units=${encodeURIComponent(serializeCompareIds(next))}`,
+    );
   }
 
   return (
@@ -252,7 +255,7 @@ export function ComparePage({
             <div className="mb-6 mt-8 flex flex-wrap items-center justify-between gap-3">
               <PrimaryButton href="/projects">{dict.compare.addProperty}</PrimaryButton>
               <Link
-                href="/projects"
+                href={localePath(locale, "/projects")}
                 className="text-sm font-semibold text-brand hover:text-brand-dark"
               >
                 {dict.compare.done}

@@ -8,7 +8,7 @@ import { Pagination } from "@/components/pagination";
 import { DEVELOPER_PAGE_SIZE, type DeveloperSummary } from "@/lib/types";
 import type { CitySlug } from "@/lib/types";
 import { useI18n } from "@/i18n/locale-provider";
-import { interpolate } from "@/i18n/config";
+import { interpolate, localePath } from "@/i18n/config";
 
 interface DeveloperCityCount {
   slug: CitySlug;
@@ -25,7 +25,7 @@ export function DevelopersDirectory({
   developers,
   cityCounts,
 }: DevelopersDirectoryProps) {
-  const { dict } = useI18n();
+  const { dict, locale } = useI18n();
   const t = dict.pages.developers;
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -75,7 +75,9 @@ export function DevelopersDirectory({
       params.delete("page");
     }
     const qs = params.toString();
-    router.replace(qs ? `/developers?${qs}` : "/developers", { scroll: false });
+    // Keep AR filter/search/pagination under /ar/developers (not bare EN).
+    const base = localePath(locale, "/developers");
+    router.replace(qs ? `${base}?${qs}` : base, { scroll: false });
   }
 
   return (
