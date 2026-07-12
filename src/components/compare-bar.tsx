@@ -6,7 +6,7 @@ import { cn } from "@/lib/cn";
 import { serializeCompareIds } from "@/lib/compare";
 import type { CompareUnitId } from "@/lib/compare";
 import { useI18n } from "@/i18n/locale-provider";
-import { interpolate } from "@/i18n/config";
+import { interpolate, localePath } from "@/i18n/config";
 
 interface CompareBarProps {
   selectedIds: CompareUnitId[];
@@ -19,15 +19,16 @@ export function CompareBar({
   onClear,
   className,
 }: CompareBarProps) {
-  const { dict } = useI18n();
+  const { dict, locale } = useI18n();
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
     setHydrated(true);
   }, []);
 
   const active = selectedIds.length > 0;
+  // Keep the AR browse loop under /ar (hub redirects ?units= → /compare/units).
   const compareHref = active
-    ? `/compare?units=${encodeURIComponent(serializeCompareIds(selectedIds))}`
+    ? `${localePath(locale, "/compare")}?units=${encodeURIComponent(serializeCompareIds(selectedIds))}`
     : undefined;
 
   return (
