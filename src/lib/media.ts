@@ -17,7 +17,9 @@ export function parseMedia(raw: string): Media {
     const u = new URL(raw);
     const h = u.hostname.replace(/^www\./, "").toLowerCase();
     if (h === "youtube.com" || h === "m.youtube.com" || h === "youtube-nocookie.com") {
-      const id = u.searchParams.get("v") || u.pathname.split("/embed/")[1]?.split("/")[0];
+      // Shorts: /shorts/<id>[?si=...]
+      const shortsId = u.pathname.startsWith("/shorts/") ? u.pathname.split("/shorts/")[1]?.split("/")[0]?.split("?")[0] : null;
+      const id = shortsId || u.searchParams.get("v") || u.pathname.split("/embed/")[1]?.split("/")[0];
       if (id)
         return {
           kind: "youtube",
