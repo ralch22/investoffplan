@@ -241,11 +241,14 @@ export function buildProjectsItemListJsonLd(opts: {
 
 export function buildDeveloperItemListJsonLd(opts: {
   developer: { name: string };
-  projects: Project[];
+  projects: Array<{ name: string; slug: string }>;
   developerUrl: string;
   siteUrl: string;
+  /** Cap list elements for HTML budget; numberOfItems still reflects the full set. */
+  limit?: number;
 }) {
-  const { developer, projects, developerUrl, siteUrl } = opts;
+  const { developer, projects, developerUrl, siteUrl, limit = 24 } = opts;
+  const items = projects.slice(0, limit);
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -254,7 +257,7 @@ export function buildDeveloperItemListJsonLd(opts: {
     mainEntity: {
       "@type": "ItemList",
       numberOfItems: projects.length,
-      itemListElement: projects.map((project, index) => ({
+      itemListElement: items.map((project, index) => ({
         "@type": "ListItem",
         position: index + 1,
         name: project.name,

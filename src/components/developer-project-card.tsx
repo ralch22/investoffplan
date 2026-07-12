@@ -4,17 +4,16 @@ import Image from "next/image";
 import { LocaleLink } from "@/components/locale-link";
 import { ContactButton } from "@/components/contact-button";
 import { DeveloperAttribution } from "@/components/developer-attribution";
-import { projectBedsLabel, projectTypeLabel } from "@/lib/developer-utils";
 import { cityLabel, formatLaunchPrice, formatPrice } from "@/lib/format";
 import { hasPaymentPlan } from "@/lib/investment-metrics";
-import type { Project } from "@/lib/types";
+import type { DeveloperProjectCardData } from "@/lib/types";
 import { cn } from "@/lib/cn";
 import { unoptimizedProp } from "@/lib/asset-image";
 import { useI18n } from "@/i18n/locale-provider";
 import { interpolate } from "@/i18n/config";
 
 interface DeveloperProjectCardProps {
-  project: Project;
+  project: DeveloperProjectCardData;
   priorityImage?: boolean;
 }
 
@@ -23,18 +22,10 @@ export function DeveloperProjectCard({
   priorityImage = false,
 }: DeveloperProjectCardProps) {
   const { dict } = useI18n();
-  // Only consider PF-stated (positive) prices so a no-price unit can't make the
-  // card read "from AED 0" — mirrors the >0 guard on the SERP card / PDP.
-  const positivePrices = project.units
-    .map((unit) => unit.launchPriceAed)
-    .filter((price) => price > 0);
-  const minPrice = positivePrices.length ? Math.min(...positivePrices) : 0;
-  const maxPrice = Math.max(
-    ...project.units.map((unit) => unit.launchPriceMaxAed ?? unit.launchPriceAed),
-  );
+  // Prices are pre-normalized on the server (positive min only; max when range).
+  const minPrice = project.minPriceAed;
+  const maxPrice = project.maxPriceAed;
   const isSoldOut = project.status === "sold-out";
-  const bedsLabel = projectBedsLabel(project);
-  const typeLabel = projectTypeLabel(project);
   const location =
     project.locationFull ??
     [cityLabel(project.city), project.area].filter(Boolean).join(", ");
@@ -90,8 +81,8 @@ export function DeveloperProjectCard({
         <p className="line-clamp-2 text-sm text-muted">{location}</p>
 
         <div className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-text-dark/80">
-          {bedsLabel ? <span>{bedsLabel}</span> : null}
-          <span className="capitalize">{typeLabel}</span>
+          {project.bedsLabel ? <span>{project.bedsLabel}</span> : null}
+          <span className="capitalize">{project.typeLabel}</span>
         </div>
 
         <div className="mt-auto space-y-3 pt-1">
@@ -100,7 +91,7 @@ export function DeveloperProjectCard({
               {dict.developers.launchPrice}
             </p>
             <p className="text-lg font-bold text-brand">
-              {formatLaunchPrice(minPrice, maxPrice > minPrice ? maxPrice : undefined, "AED")}
+              {formatLaunchPrice(minPrice, maxPrice, "AED")}
             </p>
           </div>
           {hasPaymentPlan(project.paymentPlan) ? (

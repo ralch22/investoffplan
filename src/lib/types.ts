@@ -150,6 +150,40 @@ export interface DeveloperSummary {
 
 export const DEVELOPER_PAGE_SIZE = 12;
 
+/**
+ * Card-only projection for /developers/[slug] grids. Full Project rows carry
+ * description/amenities/floorPlans/pfFaqs/units and balloon RSC HTML to multi-MB
+ * on large developers (Emaar ~3.5 MB). This shape is enough for sort, pagination,
+ * and DeveloperProjectCard — keep the full Project on the server only.
+ */
+export interface DeveloperProjectCardData {
+  id: string;
+  slug: string;
+  name: string;
+  developer: string;
+  developerLogo?: string;
+  city: Exclude<CitySlug, "all">;
+  area: string;
+  locationFull?: string;
+  status: Project["status"];
+  handover?: string;
+  paymentPlan: string;
+  imageUrl?: string;
+  imageGradient?: string;
+  whatsapp: string;
+  /** Positive min launch price (0 when none stated). */
+  minPriceAed: number;
+  /** Optional range high when max > min. */
+  maxPriceAed?: number;
+  featuredRank?: number;
+  isPremium: boolean;
+  bedsLabel: string | null;
+  typeLabel: string;
+}
+
+/** Cap ItemList JSON-LD on developer PDPs so SEO payload stays reasonable. */
+export const DEVELOPER_ITEMLIST_LIMIT = 24;
+
 export interface DevListEntry {
   id: string;
   name: string;

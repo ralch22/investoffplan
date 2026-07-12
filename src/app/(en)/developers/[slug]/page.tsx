@@ -14,7 +14,11 @@ import {
   getDevelopers,
   getProjectsByDeveloper,
 } from "@/lib/catalog";
-import { developerDescription, sortDeveloperProjects } from "@/lib/developer-utils";
+import {
+  developerDescription,
+  sortDeveloperProjects,
+  toDeveloperProjectCardData,
+} from "@/lib/developer-utils";
 import {
   buildBreadcrumbListJsonLd,
   buildDeveloperItemListJsonLd,
@@ -24,6 +28,7 @@ import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
 import { interpolate, localePath, type Locale } from "@/i18n/config";
+import { DEVELOPER_ITEMLIST_LIMIT } from "@/lib/types";
 
 // Statically generate + ISR-cache like the other detail pages. Sort and
 // pagination are handled client-side (DeveloperProjectsBrowser) so this route
@@ -74,9 +79,13 @@ export default async function DeveloperDetailPage({
 
   const projects = await getProjectsByDeveloper(slug);
   const profile = await getDeveloperProfile(slug);
-  // Full list, default ("featured") sort — used for the server-rendered JSON-LD
-  // ItemList and as the initial state the client browser re-sorts/paginates.
-  const sorted = sortDeveloperProjects(projects, "featured");
+  // Card-only projection — full Project rows (floorPlans/pfFaqs/descriptions)
+  // must not enter the client RSC payload on large developers (Emaar ~3.5 MB).
+  // Default "featured" sort for SSR first page + JSON-LD; client re-sorts.
+  const sorted = sortDeveloperProjects(
+    projects.map(toDeveloperProjectCardData),
+    "featured",
+  );
   const countLabel =
     developer.numProjectsOnline && developer.numProjectsOnline > developer.projectCount
       ? `${developer.projectCount.toLocaleString()} projects on invest off-plan · ${developer.numProjectsOnline.toLocaleString()} in developer portfolio`
@@ -95,6 +104,7 @@ export default async function DeveloperDetailPage({
     projects: sorted,
     developerUrl,
     siteUrl,
+    limit: DEVELOPER_ITEMLIST_LIMIT,
   });
   const heroExcerpt = developerDescription(slug, developer.description);
 
