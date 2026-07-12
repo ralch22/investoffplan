@@ -55,7 +55,7 @@ export function ProjectDetailCtas({
         {videoUrl ? (
           <a
             href="#media"
-            className="inline-flex items-center gap-2 rounded-full border border-brand px-6 py-3.5 text-base font-semibold text-brand transition hover:bg-brand hover:text-white"
+            className="iop-btn-press focus-ring inline-flex items-center gap-2 rounded-full border border-brand px-6 py-3.5 text-base font-semibold text-brand transition hover:bg-brand hover:text-white"
           >
             {cta.watchVideo}
           </a>
@@ -67,14 +67,14 @@ export function ProjectDetailCtas({
         <button
           type="button"
           onClick={() => setBrochureOpen(true)}
-          className="rounded-full border border-brand py-3 text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
+          className="iop-btn-press focus-ring rounded-full border border-brand py-3 text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
         >
           {cta.downloadBrochure}
         </button>
         {(virtualTourUrl ?? videoUrl) ? (
           <a
             href="#media"
-            className="rounded-full border border-brand py-3 text-center text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
+            className="iop-btn-press focus-ring rounded-full border border-brand py-3 text-center text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
           >
             {virtualTourUrl ? cta.virtualTour : cta.watchVideo}
           </a>
@@ -87,7 +87,7 @@ export function ProjectDetailCtas({
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => trackWhatsappClick("pdp_pill")}
-          className="rounded-full border border-brand py-3 text-center text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
+          className="iop-btn-press focus-ring rounded-full border border-brand py-3 text-center text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
         >
           {cta.checkAvailability}
         </a>
@@ -102,7 +102,7 @@ export function ProjectDetailCtas({
           <button
             type="button"
             onClick={() => setBrochureOpen(true)}
-            className="iop-btn-press flex-1 rounded-full bg-brand py-3.5 text-sm font-semibold text-white transition hover:bg-brand-dark"
+            className="iop-btn-press focus-ring flex-1 rounded-full bg-brand py-3.5 text-sm font-semibold text-white transition hover:bg-brand-dark"
           >
             {cta.downloadBrochure}
           </button>
@@ -111,7 +111,7 @@ export function ProjectDetailCtas({
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackWhatsappClick("pdp_mobile_bar")}
-            className="iop-btn-press flex-1 rounded-full border border-brand py-3.5 text-center text-sm font-semibold text-brand transition hover:bg-brand-muted"
+            className="iop-btn-press focus-ring flex-1 rounded-full border border-brand py-3.5 text-center text-sm font-semibold text-brand transition hover:bg-brand-muted"
           >
             {dict.common.whatsapp}
           </a>
@@ -144,8 +144,8 @@ function ActionPill({
       href={href}
       className={
         filled
-          ? "rounded-full bg-brand py-3 text-center text-sm font-bold text-white transition hover:bg-brand-dark"
-          : "rounded-full border border-brand py-3 text-center text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
+          ? "iop-btn-press focus-ring rounded-full bg-brand py-3 text-center text-sm font-bold text-white transition hover:bg-brand-dark"
+          : "iop-btn-press focus-ring rounded-full border border-brand py-3 text-center text-sm font-bold text-brand transition hover:bg-brand hover:text-white"
       }
     >
       {label}

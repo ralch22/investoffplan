@@ -310,11 +310,12 @@ h3 {
 }
 
 /*
- * Advisor FAB + panel: hide while a native <dialog open> is up (gallery
- * lightbox, etc.). Advisor uses role="dialog" on a div, not <dialog>, so it
- * does not match this selector and stays usable when open on its own.
+ * Advisor FAB: hide while a *non-advisor* native <dialog open> is up (gallery
+ * lightbox, brochure, mobile nav, etc.) so chrome never covers those controls.
+ * Advisor panel is itself a <dialog data-advisor-dialog> — exclude it so the
+ * FAB is not hidden while the advisor is open alone.
  */
-body:has(dialog[open]) [data-advisor-chrome] {
+body:has(dialog[open]:not([data-advisor-dialog])) [data-advisor-chrome] {
   visibility: hidden;
   pointer-events: none;
 }

@@ -262,7 +262,7 @@ export function BrochureModal({
           <button
             type="submit"
             disabled={submitting}
-            className="iop-btn-press w-full rounded-xl bg-brand py-3.5 text-base font-bold text-white transition hover:bg-brand-dark disabled:opacity-60"
+            className="iop-btn-press focus-ring w-full rounded-xl bg-brand py-3.5 text-base font-bold text-white transition hover:bg-brand-dark disabled:opacity-60"
           >
             {submitting
               ? dict.common.submitting

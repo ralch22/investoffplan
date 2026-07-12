@@ -153,7 +153,7 @@ export function CompactMediaGallery({
             <button
               type="button"
               onClick={goPrev}
-              className="absolute start-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/70 md:opacity-0 md:group-hover/gallery:opacity-100"
+              className="focus-ring-light absolute start-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/70 md:opacity-0 md:group-hover/gallery:opacity-100"
               aria-label={dict.a11y.previousPhoto}
             >
               <ChevronIcon direction="left" />
@@ -161,12 +161,16 @@ export function CompactMediaGallery({
             <button
               type="button"
               onClick={goNext}
-              className="absolute end-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/70 md:opacity-0 md:group-hover/gallery:opacity-100"
+              className="focus-ring-light absolute end-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white opacity-100 backdrop-blur-sm transition hover:bg-black/70 md:opacity-0 md:group-hover/gallery:opacity-100"
               aria-label={dict.a11y.nextPhoto}
             >
               <ChevronIcon direction="right" />
             </button>
-            <div className="absolute bottom-2 start-2 z-20 rounded-full bg-black/50 px-2.5 py-1 text-[11px] font-semibold tabular-nums text-white backdrop-blur-sm">
+            <div
+              className="absolute bottom-2 start-2 z-20 rounded-full bg-black/50 px-2.5 py-1 text-[11px] font-semibold tabular-nums text-white backdrop-blur-sm"
+              aria-live="polite"
+              aria-atomic="true"
+            >
               {active + 1} / {count}
             </div>
           </>
@@ -179,7 +183,7 @@ export function CompactMediaGallery({
             e.stopPropagation();
             setLightboxOpen(true);
           }}
-          className="absolute end-2 top-2 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white backdrop-blur-sm transition hover:bg-black/70"
+          className="focus-ring-light absolute end-2 top-2 z-20 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-black/50 text-white backdrop-blur-sm transition hover:bg-black/70"
           aria-label={`View ${alt} photos fullscreen`}
         >
           <ExpandIcon />
