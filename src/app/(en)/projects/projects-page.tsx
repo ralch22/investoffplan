@@ -278,8 +278,8 @@ export function ProjectsPage({
   const meta = api?.meta ?? initialMeta;
   const heading =
     viewMode === "unit"
-      ? interpolate(s.heading, { count: meta.unitCount.toLocaleString() })
-      : interpolate(s.headingProjects, { count: meta.projectCount.toLocaleString() });
+      ? interpolate(s.heading, { count: resultCount.toLocaleString() })
+      : interpolate(s.headingProjects, { count: resultCount.toLocaleString() });
 
   const locationLabel =
     filters.city !== "all"

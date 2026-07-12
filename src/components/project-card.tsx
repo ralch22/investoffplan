@@ -293,8 +293,7 @@ function ListCard({
             {propertyTypeLabel(unit.propertyType, dict, locale)}
           </p>
           <p className="text-lg font-semibold text-brand">
-            {unit.launchPriceAed > 0 ? "from " : ""}
-            {formatLaunchPrice(unit.launchPriceAed, unit.launchPriceMaxAed, currency)}
+            {formatFromPrice(unit.launchPriceAed, unit.launchPriceMaxAed, currency)}
           </p>
           <div className="mt-auto flex flex-wrap gap-2">
             <Link

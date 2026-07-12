@@ -477,17 +477,15 @@ export function createCatalogApi(raw: CatalogFile): CatalogApi {
       return sorted;
     },
     aggregateProjectView(items) {
-      const seen = new Set<string>();
-      const out: FlatUnit[] = [];
+      // O(n) single pass: keep cheapest unit per project in insertion order.
+      const cheapestByProject = new Map<string, FlatUnit>();
       for (const item of items) {
-        if (seen.has(item.project.id)) continue;
-        seen.add(item.project.id);
-        const cheapest = items
-          .filter((x) => x.project.id === item.project.id)
-          .sort((a, b) => priceAscKey(a) - priceAscKey(b))[0];
-        out.push(cheapest ?? item);
+        const existing = cheapestByProject.get(item.project.id);
+        if (!existing || priceAscKey(item) < priceAscKey(existing)) {
+          cheapestByProject.set(item.project.id, item);
+        }
       }
-      return out;
+      return [...cheapestByProject.values()];
     },
     resolveCompareUnits(ids) {
       const index = new Map(
