@@ -14,6 +14,12 @@ export const metadata: Metadata = {
   description:
     "Explore UAE communities by lifestyle — family-friendly, waterfront, urban, golf, investment, and luxury.",
   alternates: enMeta("/tools/communities"),
+  openGraph: {
+    title: "Dubai Community Insights — Compare Lifestyles & Yields",
+    description: "Explore UAE communities by lifestyle — family-friendly, waterfront, urban, golf, investment, and luxury.",
+    url: "/tools/communities",
+    images: [{ url: "/brand/icon-red.png", width: 512, height: 512, alt: "invest off-plan" }],
+  },
 };
 
 export async function CommunityInsightsPageContent({ locale = "en" }: { locale?: Locale }) {

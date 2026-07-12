@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   description:
     "Estimate off-plan rental yield, capital appreciation, and total return from your inputs and 2025 DLD market data — cash invested, net yield, and payback in one view.",
   alternates: enMeta("/tools/roi"),
+  openGraph: {
+    title: "Off-Plan ROI & Rental Yield Estimator — Dubai",
+    description: "Estimate off-plan rental yield, capital appreciation, and total return from your inputs and 2025 DLD market data.",
+    url: "/tools/roi",
+    images: [{ url: "/brand/icon-red.png", width: 512, height: 512, alt: "invest off-plan" }],
+  },
 };
 
 /**

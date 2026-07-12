@@ -16,6 +16,12 @@ export const metadata: Metadata = {
   description:
     "Find UAE communities in your budget with an interactive launch-price map. Filter by bedrooms and property type.",
   alternates: enMeta("/tools/price-map"),
+  openGraph: {
+    title: "Dubai Property Price Map — Launch Prices by Community",
+    description: "Find UAE communities in your budget with an interactive launch-price map. Filter by bedrooms and property type.",
+    url: "/tools/price-map",
+    images: [{ url: "/brand/icon-red.png", width: 512, height: 512, alt: "invest off-plan" }],
+  },
 };
 
 function MapLoading() {

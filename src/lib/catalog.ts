@@ -349,7 +349,7 @@ export async function getLatestLaunches(limit = 4, excludeSlugs: string[] = []) 
 
 export async function getSiteStats() {
   const api = await getCatalogApi();
-  const prices = api.units.map((u) => u.launchPriceAed);
+  const prices = api.units.map((u) => u.launchPriceAed).filter((p) => p > 0);
   const developers = await getDevelopers();
   const areas = await getAreas();
   return {
@@ -357,7 +357,7 @@ export async function getSiteStats() {
     unitCount: api.meta.unitCount,
     developerCount: developers.length,
     areaCount: areas.length,
-    minPriceAed: Math.min(...prices),
+    minPriceAed: prices.length > 0 ? Math.min(...prices) : null,
     premiumCount: api.units.filter((u) => u.isPremium).length,
     enrichedCount: 0,
   };
@@ -394,11 +394,15 @@ export async function getInsights(): Promise<InsightStat[]> {
       value: stats.premiumCount.toString(),
       detail: "Premium-tier launches",
     },
-    {
-      label: "Price floor",
-      value: `AED ${(stats.minPriceAed / 1000).toFixed(0)}K`,
-      detail: "Lowest launch price in catalog",
-    },
+    ...(stats.minPriceAed != null
+      ? [
+          {
+            label: "Price floor",
+            value: `AED ${(stats.minPriceAed / 1000).toFixed(0)}K`,
+            detail: "Lowest launch price in catalog",
+          },
+        ]
+      : []),
   ];
 }
 

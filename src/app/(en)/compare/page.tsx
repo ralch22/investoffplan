@@ -18,6 +18,13 @@ export const metadata: Metadata = {
   description:
     "Side-by-side comparisons on real Dubai Land Department 2025 data — sold prices, price per sqft, gross rental yields — across communities and off-plan projects.",
   alternates: enMeta("/compare"),
+  openGraph: {
+    title: "Compare Dubai Communities & Off-Plan Projects",
+    description:
+      "Side-by-side comparisons on real Dubai Land Department 2025 data — sold prices, price per sqft, gross rental yields.",
+    url: "/compare",
+    images: [{ url: "/brand/icon-red.png", width: 512, height: 512, alt: "invest off-plan" }],
+  },
 };
 
 interface PageProps {
