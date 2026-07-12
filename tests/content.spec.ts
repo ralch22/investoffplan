@@ -202,4 +202,16 @@ test.describe("Content routes", () => {
       expect(html, path).not.toMatch(/<title>Off-Plan Projects in Dubai \|/i);
     }
   });
+
+  // FAQ topic detail residual — hub fixed in #252; topic H1/title still EN on main.
+  test("AR FAQ topic page H1 and title use Arabic chrome", async ({ page }) => {
+    const res = await page.goto("/ar/faq/off-plan-basics", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    expect(html).toMatch(/أساسيات العقارات على الخارطة/);
+    expect(html).not.toMatch(/<h1[^>]*>\s*Off-Plan Basics/i);
+    expect(html).not.toMatch(/<title>Off-Plan Basics/i);
+  });
 });

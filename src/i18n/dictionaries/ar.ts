@@ -234,6 +234,7 @@ export const ar: Dict = {
     "heroTitle": "الأسئلة الشائعة",
     "heroSubtitle": "إجابات مباشرة عن شراء العقارات على الخارطة في الإمارات.",
     "answersCount": "{count} إجابات",
+    "topicTitleSuffix": "أسئلة شائعة",
     "ctaBody": "هل ما زلت تتردد؟ استعرض المخزون المتاح.",
     "ctaButton": "استعرض المشاريع",
     "moreTopics": "مزيد من مواضيع الأسئلة الشائعة",
