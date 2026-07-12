@@ -43,24 +43,24 @@ export function AdvisorWidget() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [entries, busy]);
 
-  // Native <dialog>.showModal() — focus trap, Escape, focus restore (residual O1).
+  // Mount the panel only while open so a closed <dialog> never dual-matches
+  // gallery/brochure dialogs in a11y tests (strict getByRole('dialog')).
+  // showModal on mount = focus trap + Escape + focus restore (residual O1).
   useEffect(() => {
+    if (!open) return;
     const dialog = dialogRef.current;
     if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
-    else if (!open && dialog.open) dialog.close();
-  }, [open]);
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
+    if (!dialog.open) dialog.showModal();
     const handleCancel = (e: Event) => {
       e.preventDefault();
       setOpen(false);
     };
     dialog.addEventListener("cancel", handleCancel);
-    return () => dialog.removeEventListener("cancel", handleCancel);
-  }, []);
+    return () => {
+      dialog.removeEventListener("cancel", handleCancel);
+      if (dialog.open) dialog.close();
+    };
+  }, [open]);
 
   const starters = [t.starterProjects, t.starterAreas, t.starterProcess];
 
@@ -155,167 +155,165 @@ export function AdvisorWidget() {
         <span className="hidden sm:inline">{t.launcher}</span>
       </button>
 
-      <dialog
-        ref={dialogRef}
-        data-advisor-dialog
-        data-testid="advisor-panel"
-        aria-label={t.title}
-        onClose={() => setOpen(false)}
-        className="fixed end-5 z-[var(--z-modal)] m-0 flex w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white p-0 shadow-elevation-lg open:flex bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap)+4rem)] max-h-[min(32rem,calc(100dvh-var(--header-h)-var(--bottom-dock)-var(--consent-h,0px)-var(--fab-gap)-5rem))] backdrop:bg-transparent lg:bottom-[calc(6rem+var(--consent-h,0px))] lg:max-h-[min(32rem,calc(100dvh-8rem-var(--consent-h,0px)))]"
-      >
-        {open ? (
-          <>
-            <div className="flex items-center justify-between gap-3 bg-surface-darker px-4 py-3 text-white">
-              <div>
-                <p className="text-sm font-semibold">{t.title}</p>
-                <p className="text-xs text-white/70">{t.subtitle}</p>
-              </div>
-              <div className="flex items-center gap-1">
-                <a
-                  href={`https://wa.me/${WHATSAPP_PRIMARY}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={t.whatsapp}
-                  className="focus-ring-light rounded-full border border-white/25 px-3 py-1.5 text-xs font-semibold text-white/90 hover:bg-white/10"
-                >
-                  {t.whatsapp}
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  aria-label={t.close}
-                  className="focus-ring-light flex h-8 w-8 items-center justify-center rounded-full text-white/80 hover:bg-white/10"
-                >
-                  ✕
-                </button>
-              </div>
+      {open ? (
+        <dialog
+          ref={dialogRef}
+          data-advisor-dialog
+          data-testid="advisor-panel"
+          aria-label={t.title}
+          onClose={() => setOpen(false)}
+          className="fixed end-5 z-[var(--z-modal)] m-0 flex w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white p-0 shadow-elevation-lg bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap)+4rem)] max-h-[min(32rem,calc(100dvh-var(--header-h)-var(--bottom-dock)-var(--consent-h,0px)-var(--fab-gap)-5rem))] backdrop:bg-transparent lg:bottom-[calc(6rem+var(--consent-h,0px))] lg:max-h-[min(32rem,calc(100dvh-8rem-var(--consent-h,0px)))]"
+        >
+          <div className="flex items-center justify-between gap-3 bg-surface-darker px-4 py-3 text-white">
+            <div>
+              <p className="text-sm font-semibold">{t.title}</p>
+              <p className="text-xs text-white/70">{t.subtitle}</p>
             </div>
-
-            <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4">
-              {entries.length === 0 ? (
-                <div className="space-y-2">
-                  {starters.map((s) => (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => send(s)}
-                      className="iop-btn-press focus-ring block w-full rounded-xl border border-border bg-surface-alt px-4 py-2.5 text-start text-sm text-text-dark hover:border-brand"
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-
-              {entries.map((entry, i) => (
-                <div key={i}>
-                  <div
-                    className={cn(
-                      "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
-                      entry.role === "user"
-                        ? "ms-auto bg-brand text-white"
-                        : "bg-surface-alt text-text-dark",
-                    )}
-                  >
-                    {entry.content}
-                  </div>
-                  {entry.cards?.length ? (
-                    <div className="mt-2 space-y-2">
-                      {entry.cards.map((card) => (
-                        <AdvisorCardView key={card.slug} card={card} />
-                      ))}
-                    </div>
-                  ) : null}
-                  {entry.showLeadForm && !leadDone ? (
-                    <div className="mt-2 space-y-2 rounded-2xl border border-border bg-white p-3">
-                      <p className="text-xs font-semibold text-text-dark">{t.leadTitle}</p>
-                      <input
-                        value={leadName}
-                        onChange={(e) => setLeadName(e.target.value)}
-                        placeholder={t.leadName}
-                        aria-label={t.leadName}
-                        autoComplete="name"
-                        className="iop-input h-10 text-sm"
-                      />
-                      <input
-                        value={leadPhone}
-                        onChange={(e) => setLeadPhone(e.target.value)}
-                        placeholder={t.leadPhone}
-                        aria-label={t.leadPhone}
-                        autoComplete="tel"
-                        type="tel"
-                        className="iop-input h-10 text-sm"
-                      />
-                      <TurnstileField
-                        onToken={setLeadToken}
-                        action="advisor-callback"
-                        resetSignal={leadTokenReset}
-                      />
-                      {leadError ? (
-                        <p className="text-xs font-medium text-brand" role="alert">
-                          {leadError}
-                        </p>
-                      ) : null}
-                      <button
-                        type="button"
-                        onClick={sendLead}
-                        disabled={leadBusy}
-                        className="iop-btn-press focus-ring w-full rounded-full bg-brand py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
-                      >
-                        {leadBusy ? t.leadSending : t.leadSubmit}
-                      </button>
-                    </div>
-                  ) : null}
-                </div>
-              ))}
-
-              {busy ? (
-                <p className="text-xs text-muted" role="status">
-                  {t.thinking}
-                </p>
-              ) : null}
-
-              {!busy && entries.length > 0 && suggestions.length > 0 ? (
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {suggestions.map((s) => (
-                    <button
-                      key={s}
-                      type="button"
-                      onClick={() => send(s)}
-                      className="focus-ring rounded-full border border-border bg-white px-3 py-1 text-xs text-muted hover:border-brand hover:text-brand"
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                send(input);
-              }}
-              className="flex gap-2 border-t border-border p-3"
-            >
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder={t.placeholder}
-                aria-label={t.placeholder}
-                className="iop-input h-11 flex-1 text-sm"
-              />
-              <button
-                type="submit"
-                disabled={busy || !input.trim()}
-                className="iop-btn-press focus-ring rounded-full bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50"
+            <div className="flex items-center gap-1">
+              <a
+                href={`https://wa.me/${WHATSAPP_PRIMARY}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={t.whatsapp}
+                className="focus-ring-light rounded-full border border-white/25 px-3 py-1.5 text-xs font-semibold text-white/90 hover:bg-white/10"
               >
-                {t.send}
+                {t.whatsapp}
+              </a>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label={t.close}
+                className="focus-ring-light flex h-8 w-8 items-center justify-center rounded-full text-white/80 hover:bg-white/10"
+              >
+                ✕
               </button>
-            </form>
-          </>
-        ) : null}
-      </dialog>
+            </div>
+          </div>
+
+          <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4">
+            {entries.length === 0 ? (
+              <div className="space-y-2">
+                {starters.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => send(s)}
+                    className="iop-btn-press focus-ring block w-full rounded-xl border border-border bg-surface-alt px-4 py-2.5 text-start text-sm text-text-dark hover:border-brand"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+
+            {entries.map((entry, i) => (
+              <div key={i}>
+                <div
+                  className={cn(
+                    "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
+                    entry.role === "user"
+                      ? "ms-auto bg-brand text-white"
+                      : "bg-surface-alt text-text-dark",
+                  )}
+                >
+                  {entry.content}
+                </div>
+                {entry.cards?.length ? (
+                  <div className="mt-2 space-y-2">
+                    {entry.cards.map((card) => (
+                      <AdvisorCardView key={card.slug} card={card} />
+                    ))}
+                  </div>
+                ) : null}
+                {entry.showLeadForm && !leadDone ? (
+                  <div className="mt-2 space-y-2 rounded-2xl border border-border bg-white p-3">
+                    <p className="text-xs font-semibold text-text-dark">{t.leadTitle}</p>
+                    <input
+                      value={leadName}
+                      onChange={(e) => setLeadName(e.target.value)}
+                      placeholder={t.leadName}
+                      aria-label={t.leadName}
+                      autoComplete="name"
+                      className="iop-input h-10 text-sm"
+                    />
+                    <input
+                      value={leadPhone}
+                      onChange={(e) => setLeadPhone(e.target.value)}
+                      placeholder={t.leadPhone}
+                      aria-label={t.leadPhone}
+                      autoComplete="tel"
+                      type="tel"
+                      className="iop-input h-10 text-sm"
+                    />
+                    <TurnstileField
+                      onToken={setLeadToken}
+                      action="advisor-callback"
+                      resetSignal={leadTokenReset}
+                    />
+                    {leadError ? (
+                      <p className="text-xs font-medium text-brand" role="alert">
+                        {leadError}
+                      </p>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={sendLead}
+                      disabled={leadBusy}
+                      className="iop-btn-press focus-ring w-full rounded-full bg-brand py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
+                    >
+                      {leadBusy ? t.leadSending : t.leadSubmit}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            ))}
+
+            {busy ? (
+              <p className="text-xs text-muted" role="status">
+                {t.thinking}
+              </p>
+            ) : null}
+
+            {!busy && entries.length > 0 && suggestions.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {suggestions.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => send(s)}
+                    className="focus-ring rounded-full border border-border bg-white px-3 py-1 text-xs text-muted hover:border-brand hover:text-brand"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              send(input);
+            }}
+            className="flex gap-2 border-t border-border p-3"
+          >
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={t.placeholder}
+              aria-label={t.placeholder}
+              className="iop-input h-11 flex-1 text-sm"
+            />
+            <button
+              type="submit"
+              disabled={busy || !input.trim()}
+              className="iop-btn-press focus-ring rounded-full bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50"
+            >
+              {t.send}
+            </button>
+          </form>
+        </dialog>
+      ) : null}
     </>
   );
 }

@@ -106,12 +106,14 @@ test.describe("Off-Plan Advisor", () => {
     await expect(fab).toBeVisible();
 
     await page.getByRole("button", { name: /fullscreen/i }).click();
-    await expect(page.getByRole("dialog")).toBeVisible();
+    // Name the gallery dialog — advisor is also a native <dialog> when open.
+    const gallery = page.getByRole("dialog", { name: /photo gallery/i });
+    await expect(gallery).toBeVisible();
     // visibility:hidden — not in a11y tree / not hittable over gallery thumbs.
     await expect(fab).toBeHidden();
 
     await page.getByRole("button", { name: "Close gallery" }).click();
-    await expect(page.getByRole("dialog")).toBeHidden();
+    await expect(gallery).toBeHidden();
     await expect(fab).toBeVisible();
   });
 });
