@@ -17,19 +17,19 @@ import {
 } from "@/lib/project-compare";
 import { getDictionary } from "@/i18n";
 import { interpolate, localePath, type Locale } from "@/i18n/config";
-import { withReversePairSlugs } from "@/lib/pair-slug";
+
 
 interface PageProps {
   params: Promise<{ pair: string }>;
   locale?: Locale;
 }
 
-// Pairs are derived at build time from project slugs — unknown pairs are 404.
-// Both A-vs-B and B-vs-A are generated; reverse permanently redirects to canonical.
-export const dynamicParams = false;
+// Canonical A-vs-B pairs are SSG'd. Reverse B-vs-A resolves at request time and
+// permanentRedirects to the alphabetical slug (see compare/[pair] CI note #244).
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const pairs = withReversePairSlugs(await getComparableProjectSlugs());
+  const pairs = await getComparableProjectSlugs();
   return pairs.map((pair) => ({ pair }));
 }
 

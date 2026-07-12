@@ -26,19 +26,19 @@ import {
 } from "@/lib/area-compare";
 import { getDictionary } from "@/i18n";
 import { interpolate, localePath, type Locale } from "@/i18n/config";
-import { withReversePairSlugs } from "@/lib/pair-slug";
 
 interface PageProps {
   params: Promise<{ pair: string }>;
   locale?: Locale;
 }
 
-// Pairs are derived at build time from community slugs — unknown pairs are 404.
-// Both A-vs-B and B-vs-A are generated; reverse permanently redirects to canonical.
-export const dynamicParams = false;
+// Canonical A-vs-B pairs are SSG'd. Reverse B-vs-A is allowed at request time
+// (dynamicParams) and permanentRedirect'd to the alphabetical slug — baking
+// reverse into generateStaticParams left next start serving soft-200s (CI #244).
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const pairs = withReversePairSlugs(await getComparablePairSlugs());
+  const pairs = await getComparablePairSlugs();
   return pairs.map((pair) => ({ pair }));
 }
 

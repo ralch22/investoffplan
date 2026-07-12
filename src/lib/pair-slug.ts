@@ -1,7 +1,8 @@
 /**
  * Compare pair URLs use a canonical unordered slug (alphabetical A-vs-B).
- * Reverse B-vs-A is the same comparison — emit both for static params and
- * permanentRedirect reverse hits to the canonical form (SEO + deep links).
+ * Reverse B-vs-A is the same comparison — page handlers permanentRedirect to
+ * the alphabetical form at request time (dynamicParams=true). Helpers below
+ * are for unit tests and any offline expansion tools.
  */
 
 export const PAIR_SEP = "-vs-";

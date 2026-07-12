@@ -109,13 +109,20 @@ test.describe("Content routes", () => {
     }
   });
 
-  // #243 — reverse pair order must land on alphabetical canonical (not 404).
-  // Middleware 308s B-vs-A → A-vs-B; Playwright follows redirects so final URL
-  // is canonical and status is 200 on the destination page.
-  test("reverse area compare pair redirects to canonical order", async ({ page }) => {
+  // #243 — reverse pair order must 308 to alphabetical canonical (not 404 / soft-200).
+  // Middleware 308s B-vs-A → A-vs-B; page permanentRedirect is a belt-and-braces.
+  test("reverse area compare pair redirects to canonical order", async ({
+    page,
+    request,
+  }) => {
     const reverse = "/compare/jumeirah-village-circle-vs-dubai-marina";
     const canonical = "/compare/dubai-marina-vs-jumeirah-village-circle";
-    const res = await page.goto(reverse, { waitUntil: "commit" });
+
+    const bare = await request.fetch(reverse, { maxRedirects: 0 });
+    expect([301, 308], `status for ${reverse}`).toContain(bare.status());
+    expect(bare.headers()["location"] ?? "").toContain(canonical);
+
+    const res = await page.goto(reverse, { waitUntil: "domcontentloaded" });
     expect(res?.status()).toBe(200);
     expect(page.url()).toContain(canonical);
     // Final response body (after redirect follow).
