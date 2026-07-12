@@ -8,6 +8,7 @@ import { FavoriteButton } from "@/components/favorite-button";
 import { PaymentRibbon } from "@/components/payment-ribbon";
 import type { Project } from "@/lib/types";
 import { formatPrice } from "@/lib/format";
+import { hasPaymentPlan } from "@/lib/investment-metrics";
 import { cardEntrance, cardHoverLift } from "@/lib/motion";
 import { cn } from "@/lib/cn";
 import { unoptimizedProp } from "@/lib/asset-image";
@@ -71,8 +72,8 @@ export function ShowcaseProjectCard({
           <span className="absolute start-4 top-4 rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white">
             {dict.common.soldOut}
           </span>
-        ) : project.paymentPlan ? (
-          <PaymentRibbon label={project.paymentPlan} />
+        ) : hasPaymentPlan(project.paymentPlan) ? (
+          <PaymentRibbon label={project.paymentPlan.trim()} />
         ) : (
           <span className="absolute start-4 top-4 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
             {dict.common.comingSoon}

@@ -10,6 +10,7 @@ import {
 } from "@/lib/contact-info";
 import { useCurrency } from "@/hooks/use-currency";
 import { formatPrice, formatPricePerSqft } from "@/lib/format";
+import { hasPaymentPlan } from "@/lib/investment-metrics";
 import { useI18n } from "@/i18n/locale-provider";
 import { interpolate } from "@/i18n/config";
 
@@ -58,12 +59,12 @@ export function ProjectSummaryRail({
   }
 
   const summaryRows = [
-    paymentPlan?.trim()
-      ? { label: dict.pdp.keyFacts.paymentPlan, value: paymentPlan }
-      : null,
+    ...(hasPaymentPlan(paymentPlan)
+      ? [{ label: dict.pdp.keyFacts.paymentPlan, value: paymentPlan.trim() }]
+      : []),
     { label: summary.delivery, value: handover },
     { label: summary.units, value: String(unitCount) },
-  ].filter(Boolean) as { label: string; value: string }[];
+  ];
 
   return (
     <>
