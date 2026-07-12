@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { LocaleLink } from "@/components/locale-link";
 import { ResidentialInsightsTable } from "@/components/residential-insights-table";
 import { getResidentialBuildings } from "@/lib/residential-insights";
 import { getAreas } from "@/lib/catalog";
 import { getHeroImage } from "@/lib/area-images";
 import { enMeta } from "@/lib/ar-meta";
-import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { getDictionary, interpolate } from "@/i18n";
+import { localePath, type Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Residential Insights — Launch Prices & AED/sqft",
@@ -58,20 +58,24 @@ export async function ResidentialPageContent({
           ]}
         />
 
-        <form className="mt-8 flex flex-wrap items-end gap-4" method="get">
+        <form
+          className="mt-8 flex flex-wrap items-end gap-4"
+          method="get"
+          action={localePath(locale, "/tools/residential")}
+        >
           <label className="block text-sm">
-            <span className="font-medium text-text-dark">Search project</span>
+            <span className="font-medium text-text-dark">{t.searchLabel}</span>
             <input
               name="q"
               defaultValue={params.q ?? ""}
-              placeholder="Tower or developer name"
+              placeholder={t.searchPlaceholder}
               className="iop-input mt-1 min-w-[200px]"
             />
           </label>
           <label className="block text-sm">
-            <span className="font-medium text-text-dark">Area</span>
+            <span className="font-medium text-text-dark">{t.areaLabel}</span>
             <select name="area" defaultValue={params.area ?? ""} className="iop-input mt-1">
-              <option value="">All areas</option>
+              <option value="">{t.allAreas}</option>
               {areas.slice(0, 80).map((a) => (
                 <option key={a.slug} value={a.slug}>
                   {a.name}
@@ -83,18 +87,17 @@ export async function ResidentialPageContent({
             type="submit"
             className="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white"
           >
-            Filter
+            {dict.common.filter}
           </button>
           {(params.area || params.q) ? (
-            <Link href="/tools/residential" className="text-sm font-semibold text-brand">
-              Clear filters
-            </Link>
+            <LocaleLink href="/tools/residential" className="text-sm font-semibold text-brand">
+              {dict.common.clearFilters}
+            </LocaleLink>
           ) : null}
         </form>
 
         <p className="mt-4 text-sm text-muted">
-          Showing {buildings.length} projects with launch pricing. Resale rent trends require
-          a licensed market feed — we surface off-plan benchmarks instead.
+          {interpolate(t.showingCount, { count: buildings.length })}
         </p>
 
         <div className="mt-6">

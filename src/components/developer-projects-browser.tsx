@@ -3,9 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SortSelect } from "@/components/sort-select";
 import { DeveloperProjectCard } from "@/components/developer-project-card";
-import { cn } from "@/lib/cn";
-import { paginationRange } from "@/lib/pagination";
+import { Pagination } from "@/components/pagination";
 import { sortDeveloperProjects } from "@/lib/developer-utils";
+import { useI18n } from "@/i18n/locale-provider";
 import {
   DEVELOPER_PAGE_SIZE,
   type DeveloperProjectCardData,
@@ -48,6 +48,7 @@ export function DeveloperProjectsBrowser({
   heading,
   countLabel,
 }: DeveloperProjectsBrowserProps) {
+  const { dict } = useI18n();
   const [sort, setSort] = useState<SortOption>("featured");
   const [page, setPage] = useState(1);
   const sectionRef = useRef<HTMLElement>(null);
@@ -118,9 +119,7 @@ export function DeveloperProjectsBrowser({
       </div>
 
       {pageItems.length === 0 ? (
-        <p className="mt-10 text-muted">
-          No listings for this developer right now. Check back soon or contact our team.
-        </p>
+        <p className="mt-10 text-muted">{dict.developers.noListings}</p>
       ) : (
         <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {pageItems.map((project, index) => (
@@ -133,62 +132,7 @@ export function DeveloperProjectsBrowser({
         </div>
       )}
 
-      {totalPages > 1 ? (
-        <nav
-          aria-label="Pagination"
-          className="flex flex-wrap items-center justify-center gap-1 pt-10"
-        >
-          <button
-            type="button"
-            onClick={() => onPageChange(currentPage - 1)}
-            disabled={currentPage <= 1}
-            className={cn(
-              "iop-btn-press focus-ring rounded-xl border border-border px-3 py-2 text-sm text-muted",
-              currentPage <= 1 && "pointer-events-none opacity-40",
-            )}
-          >
-            Prev
-          </button>
-          {paginationRange(currentPage, totalPages).map((item, i) =>
-            item === "ellipsis" ? (
-              <span
-                key={`e${i}`}
-                aria-hidden
-                className="px-1.5 text-sm text-muted-light select-none"
-              >
-                …
-              </span>
-            ) : (
-              <button
-                type="button"
-                key={item}
-                onClick={() => onPageChange(item)}
-                aria-current={item === currentPage ? "page" : undefined}
-                aria-label={`Page ${item}`}
-                className={cn(
-                  "iop-btn-press focus-ring min-w-10 rounded-xl border px-3 py-2 text-sm font-medium",
-                  item === currentPage
-                    ? "border-brand bg-brand text-white shadow-elevation-sm"
-                    : "border-border text-text-dark hover:bg-surface-alt",
-                )}
-              >
-                {item}
-              </button>
-            ),
-          )}
-          <button
-            type="button"
-            onClick={() => onPageChange(currentPage + 1)}
-            disabled={currentPage >= totalPages}
-            className={cn(
-              "iop-btn-press focus-ring rounded-xl border border-border px-3 py-2 text-sm text-muted",
-              currentPage >= totalPages && "pointer-events-none opacity-40",
-            )}
-          >
-            Next
-          </button>
-        </nav>
-      ) : null}
+      <Pagination page={currentPage} totalPages={totalPages} onChange={onPageChange} />
     </section>
   );
 }

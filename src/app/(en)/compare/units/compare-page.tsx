@@ -267,6 +267,7 @@ export function ComparePage({
                 highestYield: dict.compare.highestYield,
                 earliestHandover: dict.compare.earliestHandover,
                 lowestEntry: dict.compare.lowestEntry,
+                grossPct: dict.compare.grossPct,
               }}
             />
 

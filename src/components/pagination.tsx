@@ -2,6 +2,8 @@
 
 import { cn } from "@/lib/cn";
 import { paginationRange } from "@/lib/pagination";
+import { interpolate } from "@/i18n/config";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface PaginationProps {
   page: number;
@@ -13,15 +15,16 @@ const stepCls =
   "iop-btn-press focus-ring rounded-xl border border-border px-3 py-2 text-sm text-muted disabled:cursor-not-allowed disabled:opacity-40";
 
 export function Pagination({ page, totalPages, onChange }: PaginationProps) {
+  const { dict } = useI18n();
   if (totalPages <= 1) return null;
 
   return (
     <nav
-      aria-label="Pagination"
+      aria-label={dict.common.paginationAria}
       className="flex flex-wrap items-center justify-center gap-1 pt-10"
     >
       <button type="button" disabled={page <= 1} onClick={() => onChange(page - 1)} className={stepCls}>
-        Prev
+        {dict.common.prev}
       </button>
       {paginationRange(page, totalPages).map((item, i) =>
         item === "ellipsis" ? (
@@ -38,7 +41,7 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
             type="button"
             onClick={() => onChange(item)}
             aria-current={item === page ? "page" : undefined}
-            aria-label={`Page ${item}`}
+            aria-label={interpolate(dict.common.pageAria, { n: item })}
             className={cn(
               "iop-btn-press focus-ring min-w-10 rounded-xl border px-3 py-2 text-sm font-medium",
               item === page
@@ -51,7 +54,7 @@ export function Pagination({ page, totalPages, onChange }: PaginationProps) {
         ),
       )}
       <button type="button" disabled={page >= totalPages} onClick={() => onChange(page + 1)} className={stepCls}>
-        Next
+        {dict.common.next}
       </button>
     </nav>
   );

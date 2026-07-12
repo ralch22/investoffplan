@@ -152,6 +152,7 @@ const dict = {
     "showLess": "Show less",
     "breadcrumbAria": "Breadcrumb",
     "paginationAria": "Pagination",
+    "pageAria": "Page {n}",
     "viewAll": "View All →",
     "home": "Home",
     "featured": "Featured",
@@ -169,7 +170,9 @@ const dict = {
     "exploreCommunity": "Explore community",
     "viewProjects": "View projects",
     "fullscreen": "Fullscreen",
-    "clear": "Clear"
+    "clear": "Clear",
+    "filter": "Filter",
+    "clearFilters": "Clear filters"
   },
   "a11y": {
     "skipToContent": "Skip to content",
@@ -246,6 +249,15 @@ const dict = {
     "heroSubtitle": "{unitCount} unit options across {projectCount} projects — brochures, price per sqft, compare, and a live map in one place.",
     "browseAllProperties": "Browse all properties",
     "openMap": "Open map",
+    "popularLabel": "Popular:",
+    "whatsapp": "WhatsApp",
+    "quickFilters": {
+      "apartments": "Apartments",
+      "villas": "Villas",
+      "emaar": "Emaar",
+      "jvc": "JVC",
+      "under1m": "Under AED 1M"
+    },
     "statsEyebrow": "Live catalog intelligence",
     "stats": {
       "unitOptions": "Unit options",
@@ -451,6 +463,11 @@ const dict = {
     "priceOnRequestUpper": "PRICE ON REQUEST",
     "viewOnProjectMap": "View on project map →",
     "googleMaps": "Google Maps →",
+    "openInGoogleMaps": "Open in Google Maps",
+    "mapComingSoon": "Map coordinates coming soon",
+    "locationLine": "{city}, United Arab Emirates · {area}",
+    "exploreAreaNamed": "Explore {area}",
+    "mapIframeTitle": "Map showing {name} in {area}",
     "goldenVisa": "Golden Visa eligible · 10-year residency",
     "financingQuestion": "Financing part of the purchase?",
     "modelMortgage": "Model your mortgage and get pre-approved →",
@@ -1050,7 +1067,12 @@ const dict = {
     },
     "residentialPage": {
       "heroTitle": "Residential insights",
-      "heroSubtitle": "Launch-price data per project — compare towers and compounds in your shortlisted areas."
+      "heroSubtitle": "Launch-price data per project — compare towers and compounds in your shortlisted areas.",
+      "searchLabel": "Search project",
+      "searchPlaceholder": "Tower or developer name",
+      "areaLabel": "Area",
+      "allAreas": "All areas",
+      "showingCount": "Showing {count} projects with launch pricing. Resale rent trends require a licensed market feed — we surface off-plan benchmarks instead."
     },
     "communityInsightsPage": {
       "heroTitle": "Community insights",
@@ -1333,6 +1355,7 @@ const dict = {
     "otherDevelopers": "Other Developers",
     "unitOptionsLabel": "{count} unit options on invest off-plan",
     "viewAllDevelopers": "View all developers →",
+    "noListings": "No listings for this developer right now. Check back soon or contact our team.",
     "profile": {
       "heading": "Developer profile",
       "subtitle": "A data-derived profile of this developer's off-plan catalog — not a quality or delivery rating.",
@@ -1469,7 +1492,8 @@ const dict = {
     "bestValue": "Best value",
     "highestYield": "Highest yield",
     "earliestHandover": "Earliest handover",
-    "lowestEntry": "Lowest entry"
+    "lowestEntry": "Lowest entry",
+    "grossPct": "{value}% gross"
   },
   "marketAdvice": {
     "heading": "Not sure which fits your goals?",
