@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { MarketAdviceCta } from "@/components/market-advice-cta";
@@ -16,7 +16,8 @@ import {
   type ProjectSide,
 } from "@/lib/project-compare";
 import { getDictionary } from "@/i18n";
-import { interpolate, type Locale } from "@/i18n/config";
+import { interpolate, localePath, type Locale } from "@/i18n/config";
+import { withReversePairSlugs } from "@/lib/pair-slug";
 
 interface PageProps {
   params: Promise<{ pair: string }>;
@@ -24,10 +25,11 @@ interface PageProps {
 }
 
 // Pairs are derived at build time from project slugs — unknown pairs are 404.
+// Both A-vs-B and B-vs-A are generated; reverse permanently redirects to canonical.
 export const dynamicParams = false;
 
 export async function generateStaticParams() {
-  const pairs = await getComparableProjectSlugs();
+  const pairs = withReversePairSlugs(await getComparableProjectSlugs());
   return pairs.map((pair) => ({ pair }));
 }
 
@@ -121,6 +123,9 @@ export default async function CompareProjectsPage({ params, locale = "en" }: Pag
   const { pair } = await params;
   const cmp = await buildProjectComparison(pair);
   if (!cmp) notFound();
+  if (pair !== cmp.pairSlug) {
+    permanentRedirect(localePath(locale, `/compare-projects/${cmp.pairSlug}`));
+  }
 
   const dict = getDictionary(locale);
   const t = dict.pages.compare;
