@@ -124,7 +124,7 @@ export function AdvisorWidget() {
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? t.close : t.launcher}
         aria-expanded={open}
-        className="iop-btn-press focus-ring fixed bottom-5 end-5 z-[var(--z-sticky)] flex h-14 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-elevation-lg transition hover:bg-brand-dark max-lg:bottom-[calc(var(--bottom-dock)+env(safe-area-inset-bottom)+0.875rem)]"
+        className="iop-btn-press focus-ring fixed end-5 z-[var(--z-sticky)] flex h-14 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-elevation-lg transition hover:bg-brand-dark max-lg:bottom-[calc(var(--bottom-dock)+env(safe-area-inset-bottom)+0.875rem)] lg:bottom-[calc(1.25rem+var(--consent-h,0px))]"
       >
         <ChatIcon />
         <span className="hidden sm:inline">{t.launcher}</span>
@@ -134,7 +134,7 @@ export function AdvisorWidget() {
         <div
           role="dialog"
           aria-label={t.title}
-          className="fixed bottom-24 end-5 z-[var(--z-modal)] flex max-h-[calc(100dvh-8rem)] w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-elevation-lg max-lg:bottom-[calc(var(--bottom-dock)+env(safe-area-inset-bottom)+4.5rem)]"
+          className="fixed end-5 z-[var(--z-modal)] flex max-h-[calc(100dvh-8rem)] w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-elevation-lg max-lg:bottom-[calc(var(--bottom-dock)+env(safe-area-inset-bottom)+4.5rem)] lg:bottom-[calc(6rem+var(--consent-h,0px))]"
         >
           <div className="flex items-center justify-between gap-3 bg-surface-darker px-4 py-3 text-white">
             <div>

@@ -59,6 +59,12 @@ export function CookieConsentBanner() {
     // "denied" → banner stays hidden, nothing fires
   }, []);
 
+  // Lift floating widgets (advisor, compare bar) above the banner while it's shown.
+  useEffect(() => {
+    document.documentElement.style.setProperty("--consent-h", visible ? "72px" : "0px");
+    return () => document.documentElement.style.setProperty("--consent-h", "0px");
+  }, [visible]);
+
   function accept() {
     localStorage.setItem(CONSENT_KEY, "granted");
     updateConsent("granted");
