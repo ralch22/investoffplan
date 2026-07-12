@@ -27,9 +27,14 @@ const AR_MIRRORED = [
   /^\/compare-projects\/./,
   /^\/compare-developers\/./,
   /^\/map$/,
+  /^\/market-report$/,
   /^\/market-data$/,
   /^\/collections\/./,
-  /^\/tools(\/(payment|mortgage|price-map|rent-vs-buy|residential|communities))?$/,
+  /^\/favorites$/,
+  /^\/account(\/|$)/,
+  /^\/cookie-policy$/,
+  /^\/privacy-policy$/,
+  /^\/tools(\/|$)/,
 ];
 
 export function LanguageSwitcher({ solid = true }: { solid?: boolean }) {
