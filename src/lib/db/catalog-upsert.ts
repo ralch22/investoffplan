@@ -42,22 +42,27 @@ export async function upsertCatalogFile(
   raw: CatalogFile,
 ): Promise<UpsertStats> {
   const prepared = prepareCatalogRows(raw);
+  // Meta must match what we actually insert (post resolveProjectSlugs + unit
+  // dedupe), not raw.catalog.json headline counts — otherwise /api/health
+  // reports "seed is stale" while row coverage is 100% (#225).
+  const projectCount = prepared.projects.length;
+  const unitCount = prepared.catalogUnits.length;
 
   await db
     .insert(catalogMeta)
     .values({
       id: 1,
       version: raw.version,
-      unitCount: raw.unitCount,
-      projectCount: prepared.projects.length,
+      unitCount,
+      projectCount,
       scrapedAt: raw.scrapedAt,
     })
     .onConflictDoUpdate({
       target: catalogMeta.id,
       set: {
         version: raw.version,
-        unitCount: raw.unitCount,
-        projectCount: prepared.projects.length,
+        unitCount,
+        projectCount,
         scrapedAt: raw.scrapedAt,
       },
     });

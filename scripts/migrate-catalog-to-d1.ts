@@ -61,8 +61,30 @@ async function main() {
 
   const db = drizzle(d1);
 
+  // Mirror createCatalogApi EXACTLY: drop true-duplicate rows (same id), and
+  // DISAMBIGUATE genuinely-different projects that collide on a slug (so both
+  // twins are seeded with distinct, reachable slugs) — using the shared
+  // resolver so D1, the static build, and the client agree slug-for-slug.
+  // PF "New Project by X" placeholders are kept (soft-titled on read).
+  // Resolve BEFORE writing catalog_meta so declared counts match inserted rows
+  // (raw.projectCount/unitCount overstate after dedupe — see #225).
+  const { kept: projectRows, slugByProjectId, keptProjectIds } =
+    resolveProjectSlugs(raw.projects);
+  const seenUnitIdsForMeta = new Set<string>();
+  let seededUnitCount = 0;
+  for (const unit of raw.units) {
+    if (!keptProjectIds.has(unit.projectId)) continue;
+    if (seenUnitIdsForMeta.has(unit.id)) continue;
+    seenUnitIdsForMeta.add(unit.id);
+    seededUnitCount += 1;
+  }
+  const seededProjectCount = projectRows.length;
+
   console.log(
-    `[db:seed] Clearing and seeding ${raw.projectCount} projects / ${raw.unitCount} units`,
+    `[db:seed] Clearing and seeding ${seededProjectCount} projects / ${seededUnitCount} units` +
+      (raw.projectCount !== seededProjectCount || raw.unitCount !== seededUnitCount
+        ? ` (raw declared ${raw.projectCount}/${raw.unitCount})`
+        : ""),
   );
 
   await db.delete(catalogUnits);
@@ -76,8 +98,8 @@ async function main() {
   await db.insert(catalogMeta).values({
     id: 1,
     version: raw.version,
-    unitCount: raw.unitCount,
-    projectCount: raw.projectCount,
+    unitCount: seededUnitCount,
+    projectCount: seededProjectCount,
     scrapedAt: raw.scrapedAt,
   });
 
@@ -123,13 +145,6 @@ async function main() {
       );
     }
   }
-
-  // Mirror createCatalogApi EXACTLY: drop true-duplicate rows (same id), and
-  // DISAMBIGUATE genuinely-different projects that collide on a slug (so both
-  // twins are seeded with distinct, reachable slugs) — using the shared
-  // resolver so D1, the static build, and the client agree slug-for-slug.
-  // PF "New Project by X" placeholders are kept (soft-titled on read).
-  const { kept: projectRows, slugByProjectId } = resolveProjectSlugs(raw.projects);
   for (const [id, slug] of slugByProjectId) {
     const original = raw.projects.find((p) => p.id === id);
     if (original && original.slug !== slug) {
@@ -305,7 +320,7 @@ async function main() {
 
   const developerCount = new Set(raw.projects.map((p) => slugify(p.developer))).size;
   console.log(
-    `[db:seed] Done — ${raw.projectCount} projects, ${raw.unitCount} units, ${developerCount} developers`,
+    `[db:seed] Done — ${seededProjectCount} projects, ${seededUnitCount} units, ${developerCount} developers`,
   );
 
   await dispose();

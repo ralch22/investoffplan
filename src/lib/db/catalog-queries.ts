@@ -145,9 +145,12 @@ export async function verifyCatalogSeed(
   if (counts.developers === 0) {
     mismatches.push("developers: 0 rows — developer table is empty");
   }
-  // A stale seed: catalog_meta claims a size that no longer matches the deployed
-  // bundle (redeployed catalog but D1 was never reseeded).
-  if (meta && !metaMatchesBundle) {
+  // Stale seed = row coverage failed. Meta-only drift (e.g. seed wrote raw
+  // catalog.json headline counts while inserts used post-dedupe sizes) is
+  // bookkeeping noise when projects/catalog_units already match the bundle —
+  // do not mark health degraded for that alone (#225). Still surface via
+  // metaMatchesBundle so ops can reseed to refresh the meta row.
+  if (meta && !metaMatchesBundle && (!checks.projects.ok || !checks.catalogUnits.ok)) {
     mismatches.push(
       `catalog_meta declares ${meta.projects}/${meta.units} but bundle expects ` +
         `${expected.projects}/${expected.units} — seed is stale`,
