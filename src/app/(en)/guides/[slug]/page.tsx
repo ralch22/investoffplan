@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { LocaleLink } from "@/components/locale-link";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { GUIDE_CARDS, GUIDE_REASONS, getGuide } from "@/lib/figma-copy";
 import { getGuideBody } from "@/content/articles";
@@ -171,9 +171,12 @@ export default async function GuideDetailPage({ params, locale = "en" }: PagePro
         </div>
 
         <p className="mt-8 text-center text-sm text-muted">
-          <LocaleLink href="/guides" className="font-semibold text-brand hover:text-brand-dark">
+          <Link
+            href={localePath(locale, "/guides")}
+            className="font-semibold text-brand hover:text-brand-dark"
+          >
             {dict.pages.guides.backLink}
-          </LocaleLink>
+          </Link>
         </p>
       </main>
     </PageShell>
