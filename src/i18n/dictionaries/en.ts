@@ -232,6 +232,7 @@ const dict = {
     "heroTitle": "Frequently Asked Questions",
     "heroSubtitle": "Straight answers on buying off-plan in the UAE.",
     "answersCount": "{count} answers",
+    "topicTitleSuffix": "FAQ",
     "ctaBody": "Still deciding? Browse live inventory.",
     "ctaButton": "Browse Projects",
     "moreTopics": "More FAQ topics",
