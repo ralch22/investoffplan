@@ -13,9 +13,12 @@ import {
 import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  locale?: Locale;
 }
 
 // Unknown slugs are real 404s — content is defined at build time by LOCATION_GUIDES.
@@ -36,8 +39,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function LocationGuidePage({ params }: PageProps) {
+export default async function LocationGuidePage({ params, locale = "en" }: PageProps) {
   const { slug } = await params;
+  const dict = getDictionary(locale);
   const result = await buildGuideRanking(slug);
   if (!result) notFound();
   const { guide, ranked } = result;
@@ -89,7 +93,7 @@ export default async function LocationGuidePage({ params }: PageProps) {
       />
       <PageHero title={guide.h1} italicTitle subtitle={guide.intro} />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
-        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Location guides", href: "/locations" }, { label: guide.label }]} />
+        <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: dict.pages.locations.breadcrumb, href: "/locations" }, { label: guide.label }]} />
         <ol className="space-y-3">
           {ranked.map((r, i) => (
             <li key={r.metrics.slug}>
@@ -120,15 +124,14 @@ export default async function LocationGuidePage({ params }: PageProps) {
         </ol>
 
         <p className="mt-6 max-w-2xl text-xs text-muted-light">
-          <span className="font-semibold text-muted">Methodology.</span> {guide.methodology} DLD
-          figures are anonymized aggregates from Dubai Land Department open data (2025); catalog
-          figures are live off-plan launch data. No purchase-level or owner data is used.
+          <span className="font-semibold text-muted">{dict.pages.locations.methodologyLabel}</span>{" "}
+          {guide.methodology} {dict.pages.locations.methodologyDisclaimer}
         </p>
 
         <MarketAdviceCta context={guide.h1.toLowerCase()} />
 
         <section className="mt-10">
-          <h2 className="text-lg font-semibold text-text-dark">More location guides</h2>
+          <h2 className="text-lg font-semibold text-text-dark">{dict.pages.locations.moreGuidesHeading}</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {others.map((g) => (
               <LocaleLink
@@ -143,7 +146,7 @@ export default async function LocationGuidePage({ params }: PageProps) {
               href="/communities"
               className="iop-btn-press focus-ring rounded-full border border-border bg-white px-4 py-1.5 text-sm font-medium text-muted transition hover:border-brand hover:text-brand"
             >
-              All communities
+              {dict.pages.locations.allCommunitiesLink}
             </LocaleLink>
           </div>
         </section>

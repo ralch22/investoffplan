@@ -982,7 +982,52 @@ const dict = {
   "pages": {
     "compare": {
       "heroTitle": "Compare",
-      "heroSubtitle": "Communities, projects, and units side by side — real Dubai Land Department 2025 transactions behind every number."
+      "heroSubtitle": "Communities, projects, and units side by side — real Dubai Land Department 2025 transactions behind every number.",
+      "breadcrumb": "Compare",
+      "metricHeader": "Metric",
+      "verdictHeading": "The verdict",
+      "rowProjects": "Off-plan projects",
+      "rowUnitOptions": "Unit options",
+      "rowLaunchPrice": "Launch price from",
+      "rowLaunchPriceHint": "Off-plan catalog",
+      "heroSubtitleArea": "Off-plan investment comparison — real Dubai Land Department sold data.",
+      "kpiGrossYield": "Gross yield",
+      "kpiMedianSold": "Median sold",
+      "kpiSoldPsf": "Sold AED/sqft",
+      "kpi2025Sales": "2025 sales",
+      "rowGrossYield": "Gross rental yield",
+      "rowGrossYieldHint": "DLD rent ÷ sold price",
+      "rowMedianPsf": "Median sold AED/sqft",
+      "rowMedianPsfHint": "Actual 2025 sales",
+      "rowMedianPrice": "Median sold price",
+      "rowMedianPriceHint": "2025 transactions",
+      "rowPriceTrend": "Price trend (2025)",
+      "rowPriceTrendHint": "AED/sqft, start→latest",
+      "verdictDisclaimer": "Sold-price, yield and trend figures are anonymized aggregates from Dubai Land Department open data (2025). Yield = median annual rent ÷ median sold price for the community.",
+      "caseForEachHeading": "The case for each",
+      "trailingFallback": "Trails {name} on the measured metrics — compare the table above against your priorities.",
+      "whoSuitsHeading": "Who each suits",
+      "specialistFallback": "A specialist play — check the live projects to see if the inventory fits.",
+      "browseCta": "Browse {name}",
+      "relatedHeading": "Related comparisons",
+      "verdictLeadsYield": "{name} leads on gross rental yield ({value}%)",
+      "verdictLowerPrice": "{name} has the lower entry price (from {price})",
+      "verdictMoreProjects": "{name} has more live projects ({count})"
+    },
+    "compareDev": {
+      "heroSubtitle": "Off-plan developer comparison — portfolio, pricing, and delivery pipeline from our live catalog.",
+      "rowProjectsHint": "Live on this portal",
+      "rowAvgPsf": "Avg launch AED/sqft",
+      "rowAvgPsfHint": "Across catalog units",
+      "rowCommunities": "Communities covered",
+      "rowHandover": "Handover pipeline",
+      "rowHandoverHint": "Earliest–latest year",
+      "verdictDisclaimer": "All figures come from our live off-plan catalog (project and unit-level launch data). We do not join developer names against DLD transaction records, so sold-price aggregates remain community-level only.",
+      "whereBuilds": "Where {name} builds",
+      "projectsCta": "{name} projects",
+      "verdictLargerPortfolio": "{name} has the larger live portfolio ({count} projects)",
+      "verdictLowerPrice": "{name} has the lower entry price (from {price})",
+      "verdictMoreCommunities": "{name} covers more communities ({count})"
     },
     "map": {
       "heroTitle": "Project map",
@@ -990,7 +1035,12 @@ const dict = {
     },
     "locations": {
       "heroTitle": "Location guides",
-      "heroSubtitle": "Where to buy in Dubai, answered with data — communities ranked on real Dubai Land Department 2025 transactions and our live off-plan catalog."
+      "heroSubtitle": "Where to buy in Dubai, answered with data — communities ranked on real Dubai Land Department 2025 transactions and our live off-plan catalog.",
+      "breadcrumb": "Location guides",
+      "methodologyLabel": "Methodology.",
+      "methodologyDisclaimer": "DLD figures are anonymized aggregates from Dubai Land Department open data (2025); catalog figures are live off-plan launch data. No purchase-level or owner data is used.",
+      "moreGuidesHeading": "More location guides",
+      "allCommunitiesLink": "All communities"
     },
     "communities": {
       "heroTitle": "Communities",
@@ -1008,6 +1058,7 @@ const dict = {
     "email": "Email",
     "projectsByHeading": "New & Off-Plan Projects by {name}",
     "otherDevelopers": "Other Developers",
+    "unitOptionsLabel": "{count} unit options on invest off-plan",
     "viewAllDevelopers": "View all developers →",
     "profile": {
       "heading": "Developer profile",

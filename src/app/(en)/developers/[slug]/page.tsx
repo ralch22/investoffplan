@@ -147,7 +147,7 @@ export default async function DeveloperDetailPage({
                 </p>
                 <p className="mt-3 text-xs text-muted-light">
                   {developer.projectCount} project{developer.projectCount === 1 ? "" : "s"} ·{" "}
-                  {developer.unitCount.toLocaleString()} unit options on invest off-plan
+                  {interpolate(dict.developers.unitOptionsLabel, { count: developer.unitCount.toLocaleString() })}
                 </p>
               </div>
             </div>
@@ -157,7 +157,7 @@ export default async function DeveloperDetailPage({
       </section>
 
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
-        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Developers", href: "/developers" }, { label: developer.name }]} />
+        <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: dict.nav.developers, href: "/developers" }, { label: developer.name }]} />
         <DeveloperProjectsBrowser
           projects={sorted}
           heading={interpolate(dict.developers.projectsByHeading, { name: developer.name })}
