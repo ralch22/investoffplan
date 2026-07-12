@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/site-url";
-
-// AR reuse of the EN map page — chrome + RTL from the AR layout's LocaleProvider.
-export { default } from "@/app/(en)/map/page";
+import { MapPageContent } from "@/app/(en)/map/page";
 
 export const metadata: Metadata = (() => {
   const base = getSiteUrl();
@@ -16,3 +14,11 @@ export const metadata: Metadata = (() => {
     },
   };
 })();
+
+interface PageProps {
+  searchParams: Promise<{ project?: string }>;
+}
+
+export default async function ArMapPage({ searchParams }: PageProps) {
+  return <MapPageContent locale="ar" searchParams={searchParams} />;
+}

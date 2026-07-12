@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/site-url";
-
-// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
-export { default } from "@/app/(en)/compare/page";
+import { CompareHubPageContent } from "@/app/(en)/compare/page";
 
 export const metadata: Metadata = (() => {
   const base = getSiteUrl();
@@ -13,3 +11,11 @@ export const metadata: Metadata = (() => {
     alternates: { canonical: `${base}/ar/compare`, languages: { "x-default": `${base}/compare`, en: `${base}/compare`, ar: `${base}/ar/compare` } },
   };
 })();
+
+interface PageProps {
+  searchParams: Promise<{ units?: string }>;
+}
+
+export default async function ArCompareHubPage({ searchParams }: PageProps) {
+  return <CompareHubPageContent locale="ar" searchParams={searchParams} />;
+}

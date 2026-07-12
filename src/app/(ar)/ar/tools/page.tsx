@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { arMeta } from "@/lib/ar-meta";
-
-// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
-export { default } from "@/app/(en)/tools/page";
+import { ToolsHubPageContent } from "@/app/(en)/tools/page";
 
 export const metadata: Metadata = arMeta({
   path: "/tools",
@@ -10,3 +8,7 @@ export const metadata: Metadata = arMeta({
   description:
     "مجموعة أدوات ذكاء عقاري للمشترين على الخارطة في الإمارات — خريطة الأسعار، رؤى المجتمعات، حاسبة الإيجار مقابل الشراء، وبيانات إطلاق المشاريع السكنية.",
 });
+
+export default async function ArToolsHubPage() {
+  return <ToolsHubPageContent locale="ar" />;
+}
