@@ -5,15 +5,20 @@ import { PageHero } from "@/components/page-hero";
 import { HomeYields } from "@/components/home-yields";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { CompareUnitsLegacyRedirect } from "@/components/compare-units-legacy-redirect";
-import { getTopCoveredAreas, getComparisonList } from "@/lib/area-compare";
-import { getHubProjectPairs } from "@/lib/project-compare";
-import { getHubDeveloperPairs } from "@/lib/developer-compare";
+import { getCompareHubData } from "@/lib/compare-hub-data";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
 import { localePath, type Locale } from "@/i18n/config";
 
-/** ISR — hub must not be per-request dynamic (Worker CPU → CF 1102 / 503). */
-export const revalidate = 3600;
+/**
+ * Force static — do NOT ISR-regenerate on the Worker.
+ * Cold revalidate of this hub previously blew the CF CPU budget (error 1102 /
+ * intermittent 503 on /compare + /ar/compare). Baked at build/deploy only;
+ * data freshness follows the next ship, same as other catalog SSG pages.
+ * @see https://github.com/ralch22/investoffplan/issues/221
+ */
+export const dynamic = "force-static";
+export const revalidate = false;
 
 export const metadata: Metadata = {
   title: "Compare Dubai Communities & Off-Plan Projects",
@@ -37,15 +42,9 @@ export async function CompareHubPageContent({
   const dict = getDictionary(locale);
   const t = dict.pages.compare;
 
-  // Slim parallel load: DLD hub lists + 6 named project/dev pairs each.
-  // Do NOT call getCatalogApi + getComparable*Slugs + getDevelopers separately
-  // (that re-scanned the full catalog on every dynamic request → CF 1102).
-  const [topYields, comparisons, projectPairs, developerPairs] = await Promise.all([
-    getTopCoveredAreas("yield", 6),
-    getComparisonList(8),
-    getHubProjectPairs(6),
-    getHubDeveloperPairs(6),
-  ]);
+  // Single catalog pass → all four hub sections (see compare-hub-data.ts).
+  const { topYields, comparisons, projectPairs, developerPairs } =
+    await getCompareHubData();
 
   return (
     <PageShell headerVariant="transparent">
@@ -56,7 +55,7 @@ export async function CompareHubPageContent({
         subtitle={t.heroSubtitle}
       />
 
-      <HomeYields areas={topYields} />
+      <HomeYields areas={topYields} locale={locale} />
 
       <section className="py-14">
         <div className="mx-auto max-w-[1200px] px-5 md:px-8">

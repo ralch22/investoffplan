@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { getSiteUrl } from "@/lib/site-url";
 import { CompareHubPageContent } from "@/app/(en)/compare/page";
 
-/** Match EN hub ISR — AR re-exports the same heavy content path. */
-export const revalidate = 3600;
+/** Match EN hub: force-static, no on-request ISR (CF 1102 / #221). */
+export const dynamic = "force-static";
+export const revalidate = false;
 
 export const metadata: Metadata = (() => {
   const base = getSiteUrl();

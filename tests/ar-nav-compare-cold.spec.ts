@@ -88,6 +88,7 @@ test.describe("AR nav loop stays in /ar", () => {
 });
 
 test.describe("Compare cold path (promise cache)", () => {
+  // #221 — hub must stay force-static + single-pass data (no CF 1102 shell).
   test("/compare hub returns 200 with hub chrome (no error shell)", async ({
     page,
   }) => {
