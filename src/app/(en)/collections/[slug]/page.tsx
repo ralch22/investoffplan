@@ -15,7 +15,7 @@ import { enMeta } from "@/lib/ar-meta";
 import type { Project } from "@/lib/types";
 import type { FlatUnit } from "@/lib/catalog-core";
 import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n";
+import { interpolate, localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -34,26 +34,50 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const page = getCollectionPage(slug);
   if (!page) return { title: "Collection not found" };
   const siteUrl = getSiteUrl();
+  const dict = getDictionary("en");
+  const copy =
+    (dict.pages.collections.bySlug as Record<
+      string,
+      { title: string; h1: string; description: string }
+    >)[slug] ?? page;
   return {
-    title: page.title,
-    description: page.description,
+    title: copy.title,
+    description: copy.description,
     alternates: enMeta(`/collections/${slug}`),
     openGraph: {
-      title: page.title,
-      description: page.description,
+      title: copy.title,
+      description: copy.description,
       url: `${siteUrl}/collections/${slug}`,
     },
-    twitter: { card: "summary_large_image", title: page.title, description: page.description },
+    twitter: {
+      card: "summary_large_image",
+      title: copy.title,
+      description: copy.description,
+    },
   };
 }
 
 const MAX_PROJECTS = 12;
 
-export default async function CollectionsSlugPage({ params, locale = "en" }: PageProps) {
+export default async function CollectionsSlugPage({
+  params,
+  locale = "en",
+}: PageProps) {
   const dict = getDictionary(locale);
+  const t = dict.pages.collections;
+  const bySlug = t.bySlug as Record<
+    string,
+    { title: string; h1: string; description: string }
+  >;
   const { slug } = await params;
   const page = getCollectionPage(slug);
   if (!page) notFound();
+
+  const copy = bySlug[slug] ?? {
+    title: page.title,
+    h1: page.h1,
+    description: page.description,
+  };
 
   const api = await getCatalogApi();
   let items: FlatUnit[] = api.flattenCatalogUnits();
@@ -82,12 +106,23 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
 
   const heroImage = await getHeroImage();
   const siteUrl = getSiteUrl();
+  const fmtLocale = locale === "ar" ? "ar-AE" : "en-US";
+  const unitCount = items.length.toLocaleString(fmtLocale);
+  const projectCountLabel =
+    seen.size >= MAX_PROJECTS ? String(MAX_PROJECTS) : String(projects.length);
+  const heroSubtitle = interpolate(
+    seen.size >= MAX_PROJECTS
+      ? t.unitOptionsSubtitlePlus
+      : t.unitOptionsSubtitle,
+    { units: unitCount, projects: projectCountLabel },
+  );
+  const collectionPath = localePath(locale, `/collections/${page.slug}`);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: page.title,
-    description: page.description,
-    url: `${siteUrl}/collections/${page.slug}`,
+    name: copy.title,
+    description: copy.description,
+    url: `${siteUrl}${collectionPath}`,
     mainEntity: {
       "@type": "ItemList",
       numberOfItems: projects.length,
@@ -95,7 +130,7 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
         "@type": "ListItem",
         position: index + 1,
         name: project.name,
-        url: `${siteUrl}/projects/${project.slug}`,
+        url: `${siteUrl}${localePath(locale, `/projects/${project.slug}`)}`,
       })),
     },
   };
@@ -115,26 +150,32 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             buildBreadcrumbListJsonLd([
-              { name: "Home", url: siteUrl },
-              { name: "Projects", url: `${siteUrl}/projects` },
-              { name: page.h1 },
+              { name: dict.common.home, url: `${siteUrl}${localePath(locale, "/")}` },
+              {
+                name: dict.nav.projects,
+                url: `${siteUrl}${localePath(locale, "/projects")}`,
+              },
+              { name: copy.h1 },
             ]),
           ),
         }}
       />
       <PageHero
-        title={page.h1}
+        title={copy.h1}
         italicTitle
-        subtitle={`${items.length.toLocaleString()} unit options across ${seen.size >= MAX_PROJECTS ? `${MAX_PROJECTS}+` : String(projects.length)} projects`}
+        subtitle={heroSubtitle}
         imageUrl={heroImage}
       />
 
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <Breadcrumbs
           items={[
-            { label: dict.common.home, href: "/" },
-            { label: dict.nav.projects, href: "/projects" },
-            { label: page.h1 },
+            { label: dict.common.home, href: localePath(locale, "/") },
+            {
+              label: dict.nav.projects,
+              href: localePath(locale, "/projects"),
+            },
+            { label: copy.h1 },
           ]}
         />
 
@@ -147,10 +188,7 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
         </section>
 
         {projects.length === 0 ? (
-          <p className="mt-10 text-muted">
-            No live launches in this collection right now — check back after the next
-            weekly catalog refresh.
-          </p>
+          <p className="mt-10 text-muted">{t.emptyState}</p>
         ) : (
           <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project, index) => (
@@ -164,31 +202,36 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
         )}
 
         <div className="mt-12 rounded-2xl bg-brand p-8 text-center text-white">
-          <p className="text-xl font-semibold">
-            Refine by beds, price, developer, and handover on the full SERP.
-          </p>
+          <p className="text-xl font-semibold">{t.refineCta}</p>
           <PrimaryButton
-            href={`/projects?${page.serpQuery}`}
+            href={localePath(locale, `/projects?${page.serpQuery}`)}
             className="mt-4 bg-white text-brand hover:bg-white/90"
           >
-            Open in Projects
+            {t.openInProjects}
           </PrimaryButton>
         </div>
 
         <section className="mt-12">
           <h2 className="font-display text-2xl font-semibold text-text-dark">
-            More collections
+            {t.moreCollections}
           </h2>
           <div className="mt-5 flex flex-wrap gap-2">
-            {otherCollections.map((other) => (
-              <Link
-                key={other.slug}
-                href={`/collections/${other.slug}`}
-                className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-muted transition hover:border-brand hover:text-brand"
-              >
-                {other.h1}
-              </Link>
-            ))}
+            {otherCollections.map((other) => {
+              const otherCopy = bySlug[other.slug] ?? {
+                title: other.title,
+                h1: other.h1,
+                description: other.description,
+              };
+              return (
+                <Link
+                  key={other.slug}
+                  href={localePath(locale, `/collections/${other.slug}`)}
+                  className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-muted transition hover:border-brand hover:text-brand"
+                >
+                  {otherCopy.h1}
+                </Link>
+              );
+            })}
           </div>
         </section>
       </main>

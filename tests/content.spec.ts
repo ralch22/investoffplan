@@ -19,6 +19,33 @@ test.describe("Content routes", () => {
     expect(html).toContain("أدلّة الاستثمار");
   });
 
+  // #253 — AR collection SEO title + H1 must not stay EN from COLLECTION_PAGES.
+  test("AR /ar/collections/* title and H1 are Arabic", async ({ page }) => {
+    for (const { path, enH1, arH1, enTitleBit } of [
+      {
+        path: "/ar/collections/waterfront",
+        enH1: "Waterfront living",
+        arH1: "السكن المطل على المياه",
+        enTitleBit: "Waterfront Off-Plan",
+      },
+      {
+        path: "/ar/collections/dubai",
+        enH1: "Dubai off-plan",
+        arH1: "دبي على الخارطة",
+        enTitleBit: "Off-Plan Projects in Dubai",
+      },
+    ]) {
+      const res = await page.goto(path, { waitUntil: "commit" });
+      expect(res?.status(), path).toBe(200);
+      const html = await res!.text();
+      expect(html).toContain('lang="ar"');
+      expect(html).not.toContain(`>${enH1}<`);
+      expect(html).toContain(arH1);
+      expect(html).not.toContain(enTitleBit);
+      expect(html).toMatch(/<title>[^<]*[\u0600-\u06FF]/);
+    }
+  });
+
   test("news article renders with date, sections, and JSON-LD", async ({ page }) => {
     await page.goto("/news");
     const firstLink = page.getByRole("link", { name: "Read More" }).first();
