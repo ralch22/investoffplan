@@ -34,6 +34,7 @@ import { FaqAccordion } from "@/components/faq-accordion";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
 import { buildProjectFaqs } from "@/lib/project-faqs";
 import { ProjectGallery } from "@/components/project-gallery";
+import { normalizeGalleryUrls } from "@/lib/project-gallery-images";
 import { getEnrichment } from "@/lib/enrichments";
 import { DldAreaStatsBand } from "@/components/dld-area-stats";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
@@ -214,8 +215,9 @@ export default async function ProjectDetailPage({
   // Append enrichment-discovered images (issue #37); catalog photos lead so the
   // hero stays a first-party image. ProjectGallery dedupes downstream. External
   // enrichment URLs are hotlinked (unoptimized) — never proxied — see asset-image.ts.
+  // Drop PF walkthrough video paths that cannot render as <img>.
   const enrichmentImages = Array.isArray(enrichment?.images) ? enrichment.images : [];
-  const gallery = [...catalogGallery, ...enrichmentImages];
+  const gallery = normalizeGalleryUrls([...catalogGallery, ...enrichmentImages]);
   const mapUrl = project.coordinates
     ? `https://www.google.com/maps?q=${project.coordinates.lat},${project.coordinates.lng}`
     : null;
