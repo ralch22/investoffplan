@@ -18,6 +18,7 @@ import {
 } from "@/lib/compare-content";
 import { formatPrice } from "@/lib/format";
 import { enMeta } from "@/lib/ar-meta";
+import { comparePairTitle } from "@/lib/seo-title";
 import {
   buildAreaComparison,
   getComparablePairSlugs,
@@ -49,7 +50,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const yB = cmp.b.stats?.grossYieldPct;
   const yieldBit = yA && yB ? ` Gross yields ${yA}% vs ${yB}%.` : "";
   return {
-    title: { absolute: `${a} vs ${b} — off-plan comparison | invest off-plan` },
+    // Plain title + layout brand suffix; avoid double " | invest off-plan".
+    title: comparePairTitle(a, b, "areas"),
     description:
       `Compare ${a} and ${b} for off-plan investment — real Dubai Land Department sold prices, price per sqft, gross rental yield, and available projects.${yieldBit}`.slice(
         0,

@@ -2,7 +2,32 @@ import { getDictionary } from "@/i18n";
 import type { Locale } from "@/i18n/config";
 import { interpolate } from "@/i18n/config";
 import { bedsLabel, cityLabel, formatPrice } from "@/lib/format";
+import { htmlToPlainText } from "@/lib/sanitize-html";
 import type { Project } from "@/lib/types";
+
+/**
+ * Minimum plain-text length to treat scraped description fields as real About
+ * copy. Below this we fall back to {@link buildFactualSummary} — catches empty
+ * HTML shells like `<p><br></p>` that used to block the fallback while still
+ * looking "non-empty" as raw strings.
+ */
+export const MIN_SUBSTANTIAL_COPY_CHARS = 40;
+
+/**
+ * True when the project has real About prose (unique or catalog HTML) after
+ * stripping tags/entities. Junk shells and whitespace-only HTML return false.
+ */
+export function hasSubstantialProjectCopy(project: {
+  descriptionUnique?: string | null;
+  description?: string | null;
+}): boolean {
+  for (const raw of [project.descriptionUnique, project.description]) {
+    const trimmed = raw?.trim();
+    if (!trimmed) continue;
+    if (htmlToPlainText(trimmed).length >= MIN_SUBSTANTIAL_COPY_CHARS) return true;
+  }
+  return false;
+}
 
 /**
  * Build a FACTUAL, verified-claims-only "About" paragraph for thin PDPs that

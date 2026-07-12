@@ -42,7 +42,10 @@ import {
   cityLabel,
 } from "@/lib/format";
 import { stripTrailingDeveloper } from "@/lib/developer-utils";
-import { buildFactualSummary } from "@/lib/project-factual-summary";
+import {
+  buildFactualSummary,
+  hasSubstantialProjectCopy,
+} from "@/lib/project-factual-summary";
 import { hasPaymentPlan, unitPricePerSqft } from "@/lib/investment-metrics";
 import { getSiteUrl } from "@/lib/site-url";
 import {
@@ -271,17 +274,12 @@ export default async function ProjectDetailPage({
     : [];
   const amenities = project.amenities ?? enrichmentAmenities;
 
-  // Thin-PDP fallback: 45 dev-fallback projects carry no descriptionUnique,
-  // description, or enrichment summary — so ProjectAbout renders no body prose
-  // and the page is thin/indexable. Compose a FACTUAL, verified-claims-only
-  // summary from stated catalog fields ONLY when every richer source is absent
-  // (mirrors the descriptionUnique ?? enrichment ?? description precedence);
-  // real descriptions are never overridden.
-  const hasRealDescription = Boolean(
-    project.descriptionUnique?.trim() || project.description?.trim(),
-  );
+  // Thin-PDP fallback: no-copy / junk-HTML projects would render empty About
+  // and stay thin/indexable. Compose a FACTUAL, verified-claims-only summary
+  // from stated catalog fields ONLY when richer sources are absent (plain-text
+  // gate — empty `<p><br></p>` shells do not count as real copy).
   const factualAbout =
-    !hasRealDescription && !enrichment?.summary
+    !hasSubstantialProjectCopy(project) && !enrichment?.summary?.trim()
       ? buildFactualSummary(project, locale)
       : undefined;
 

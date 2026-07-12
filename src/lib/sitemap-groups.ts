@@ -37,7 +37,8 @@ export async function buildGroups(): Promise<Entry[][]> {
     "", "/projects", "/developers", "/communities", "/market-report", "/compare",
     "/compare-projects", "/compare-developers",
     "/locations", "/guides", "/faq", "/map", "/contact", "/about", "/news",
-    "/favorites", "/tools", "/tools/price-map", "/tools/communities",
+    // /favorites is user-state (noindex) — omit from sitemap.
+    "/tools", "/tools/price-map", "/tools/communities",
     "/tools/rent-vs-buy", "/tools/mortgage", "/tools/residential", "/tools/payment",
     "/tools/roi", "/tools/investor-match",
     "/privacy-policy", "/cookie-policy",

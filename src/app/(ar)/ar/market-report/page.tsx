@@ -11,7 +11,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const url = `${base}/ar/market-report`;
   const description = `سوق العقارات على الخارطة في الإمارات ${year}: الأسعار الوسيطة، أعلى العوائد الإيجارية، ارتفاع 2025، نشاط المطوّرين وخط التسليم — من بيانات دائرة الأراضي والأملاك الرسمية.`;
   return {
-    title: `تقرير سوق العقارات على الخارطة في الإمارات ${year} — الأسعار والعوائد والاتجاهات`,
+    // Short base; layout appends brand. Avoid >70-char SERP truncation.
+    title: `تقرير سوق الخارطة ${year}`,
     description,
     alternates: {
       canonical: url,

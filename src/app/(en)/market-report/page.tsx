@@ -14,8 +14,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const url = `${base}/market-report`;
   const description = `The UAE off-plan market in ${year}: median prices, top rental yields, 2025 appreciation, developer activity and handover pipeline — from official DLD data.`;
   return {
-    // Layout template appends " | invest off-plan" → the full canonical title.
-    title: `UAE Off-Plan Property Market Report ${year} — Prices, Yields & Trends`,
+    // Short base title; layout template appends " | invest off-plan" (≤60 total).
+    title: `UAE Off-Plan Market Report ${year}`,
     description,
     alternates: {
       canonical: url,
