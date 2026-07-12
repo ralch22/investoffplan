@@ -1665,7 +1665,9 @@ const dict = {
     "blurb": "Talk to an off-plan specialist about yields, payment plans, and handover timelines — no obligation.",
     "whatsappCta": "WhatsApp an advisor",
     "bookConsultation": "Book a consultation",
-    "waMessage": "Hi, I'm looking at {context} for off-plan investment. Can you advise which fits my goals?"
+    "waMessage": "Hi, I'm looking at {context} for off-plan investment. Can you advise which fits my goals?",
+    "thinkingAboutHeading": "Thinking about {name}?",
+    "investingInContext": "investing in {name}"
   },
   "dld": {
     "medianSoldPrice": "Median sold price",

@@ -212,8 +212,12 @@ export default async function CommunityDetailPage({ params, locale = "en" }: Pag
 
         {dldStats ? (
           <MarketAdviceCta
-            context={`investing in ${community.name}`}
-            heading={`Thinking about ${community.name}?`}
+            context={interpolate(dict.marketAdvice.investingInContext, {
+              name: community.name,
+            })}
+            heading={interpolate(dict.marketAdvice.thinkingAboutHeading, {
+              name: community.name,
+            })}
             locale={locale}
           />
         ) : null}

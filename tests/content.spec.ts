@@ -183,6 +183,22 @@ test.describe("Content routes", () => {
     expect(html).toMatch(/استكشف .+ ←/);
   });
 
+  // #291 — AR community MarketAdvice CTA must not hardcode EN heading/context.
+  test("AR community MarketAdvice heading and WhatsApp context are Arabic", async ({
+    page,
+  }) => {
+    const res = await page.goto("/ar/communities/jumeirah-village-circle", {
+      waitUntil: "commit",
+    });
+    expect(res?.status()).toBe(200);
+    const html = await res!.text();
+    expect(html).toContain('lang="ar"');
+    expect(html).toContain("تفكر في");
+    expect(html).not.toContain("Thinking about Jumeirah Village Circle?");
+    expect(html).not.toContain("investing in Jumeirah Village Circle");
+    expect(html).toContain("الاستثمار في");
+  });
+
   // #252 — AR FAQ hub hero + topic cards must not stay English.
   test("AR FAQ hub H1 and topic cards are Arabic", async ({ page }) => {
     const res = await page.goto("/ar/faq", { waitUntil: "domcontentloaded" });
