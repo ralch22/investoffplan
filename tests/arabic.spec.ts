@@ -22,6 +22,19 @@ test.describe("Arabic locale", () => {
     await expect(page.getByText(/واتساب/).first()).toBeVisible();
   });
 
+  // #260 — AR about primary CTA must stay on Arabic SERP (not bare /projects).
+  // Assert SSR HTML: Turnstile/client chrome can make live-DOM flaky on heavy pages.
+  test("/ar/about CTA href is /ar/projects (not bare /projects)", async ({
+    page,
+  }) => {
+    const response = await page.goto("/ar/about", { waitUntil: "commit" });
+    expect(response?.status()).toBe(200);
+    const html = await response!.text();
+    expect(html).toContain('href="/ar/projects"');
+    // Bare EN SERP path must not appear as an href (LocaleLink + hard /ar prefix).
+    expect(html).not.toMatch(/href="\/projects(?:\?[^"]*)?"/);
+  });
+
   test("EN pages remain LTR and English", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
