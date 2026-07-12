@@ -210,7 +210,8 @@ const DEVELOPER_DISPLAY_CASING: Record<string, string> = {
 
 function normalizeProject(p: Project & { citySlug?: string }): Project {
   const slug = (p.citySlug || p.city) as Project["city"];
-  const developer = DEVELOPER_DISPLAY_CASING[p.developer] ?? p.developer;
+  const rawDev = p.developer?.replace(/\s+/g, " ").trim() ?? p.developer;
+  const developer = DEVELOPER_DISPLAY_CASING[rawDev] ?? rawDev;
   const pfFaqs = p.pfFaqs ? sanitizePfFaqs(p.pfFaqs) : undefined;
   // A project whose handover quarter is already in the past can't honestly be
   // labelled "off-plan" (upcoming). 26 such rows carry a pre-2026 handover but
