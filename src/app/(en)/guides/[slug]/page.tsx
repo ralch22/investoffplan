@@ -10,9 +10,12 @@ import { ArticleBody } from "@/components/article-body";
 import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
 import { getSiteUrl } from "@/lib/site-url";
 import { enMeta } from "@/lib/ar-meta";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  locale?: Locale;
 }
 
 export function generateStaticParams() {
@@ -40,7 +43,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function GuideDetailPage({ params }: PageProps) {
+export default async function GuideDetailPage({ params, locale = "en" }: PageProps) {
+  const dict = getDictionary(locale);
   const { slug } = await params;
   const guide = getGuide(slug);
   if (!guide) notFound();
@@ -84,8 +88,8 @@ export default async function GuideDetailPage({ params }: PageProps) {
       <main className="mx-auto max-w-[800px] px-5 py-12 md:px-8">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Guides", href: "/guides" },
+            { label: dict.common.home, href: "/" },
+            { label: dict.nav.guides, href: "/guides" },
             { label: guide.title },
           ]}
         />

@@ -171,6 +171,11 @@ const dict = {
     "ctaButton": "Browse Projects",
     "relatedHeading": "More from the newsroom"
   },
+  "faq": {
+    "ctaBody": "Still deciding? Browse live inventory.",
+    "ctaButton": "Browse Projects",
+    "moreTopics": "More FAQ topics"
+  },
   "favorites": {
     "titlePrefix": "My",
     "titleEm": "Favorites.",
@@ -1012,7 +1017,15 @@ const dict = {
       "relatedHeading": "Related comparisons",
       "verdictLeadsYield": "{name} leads on gross rental yield ({value}%)",
       "verdictLowerPrice": "{name} has the lower entry price (from {price})",
-      "verdictMoreProjects": "{name} has more live projects ({count})"
+      "verdictMoreProjects": "{name} has more live projects ({count})",
+      "rowFromPrice": "From price",
+      "rowLaunchPsf": "Launch AED/sqft",
+      "rowBedrooms": "Bedrooms",
+      "rowHandover": "Handover",
+      "rowPaymentPlan": "Payment plan",
+      "rowAreaYield": "Area gross yield (DLD)",
+      "rowGoldenVisa": "Golden Visa eligible",
+      "viewProjectCta": "View {name}"
     },
     "compareDev": {
       "heroSubtitle": "Off-plan developer comparison — portfolio, pricing, and delivery pipeline from our live catalog.",

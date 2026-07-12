@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { getGuide } from "@/lib/figma-copy";
 import { getSiteUrl } from "@/lib/site-url";
+import GuideDetailPage, { generateStaticParams } from "@/app/(en)/guides/[slug]/page";
 
-// AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
-export { default, generateStaticParams } from "@/app/(en)/guides/[slug]/page";
+export { generateStaticParams };
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -20,4 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: `دليل المشتري للعقارات على الخارطة في الإمارات: ${guide.description}`,
     alternates,
   };
+}
+
+export default async function ArGuideDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  return <GuideDetailPage params={params} locale="ar" />;
 }

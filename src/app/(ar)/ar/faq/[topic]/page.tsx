@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { arMeta } from "@/lib/ar-meta";
 import { getFaqTopic } from "@/content/faq";
+import FaqTopicPage, { generateStaticParams } from "@/app/(en)/faq/[topic]/page";
 
-export { default, generateStaticParams } from "@/app/(en)/faq/[topic]/page";
+export { generateStaticParams };
 
 export async function generateMetadata({ params }: { params: Promise<{ topic: string }> }): Promise<Metadata> {
   const { topic } = await params;
@@ -13,4 +14,8 @@ export async function generateMetadata({ params }: { params: Promise<{ topic: st
     title: `${faqTopic.title} — أسئلة شائعة`,
     description: faqTopic.description,
   };
+}
+
+export default async function ArFaqTopicPage({ params }: { params: Promise<{ topic: string }> }) {
+  return <FaqTopicPage params={params} locale="ar" />;
 }
