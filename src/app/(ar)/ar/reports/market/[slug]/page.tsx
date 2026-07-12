@@ -39,5 +39,5 @@ export default function ArMarketReportSlugPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  return <MarketReportSlugPage params={params} />;
+  return <MarketReportSlugPage params={params} locale="ar" />;
 }
