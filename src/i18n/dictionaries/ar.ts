@@ -149,7 +149,9 @@ export const ar: Dict = {
     "home": "الرئيسية",
     "featured": "مميّز",
     "brochure": "البروشور",
-    "compareProject": "قارن {name}"
+    "compareProject": "قارن {name}",
+    "compareClear": "مسح",
+    "compareHint": "قارن الوحدات"
   },
   "a11y": {
     "skipToContent": "تخطَّ إلى المحتوى"
@@ -276,12 +278,24 @@ export const ar: Dict = {
     },
     "chips": {
       "all": "الكل",
-      "premium": "مميز",
-      "brochurePdf": "بروشور PDF",
-      "videoTour": "جولة فيديو",
+      "premium": "مميّز",
+      "brochurePdf": "كتيّب PDF",
+      "video": "فيديو",
+      "virtualTour": "جولة افتراضية",
       "under2m": "أقل من 2 مليون درهم",
       "studio": "استوديو",
-      "waterfront": "واجهة بحرية"
+      "waterfront": "واجهة مائية"
+    },
+    "cities": {
+      "all": "كل الإمارات",
+      "dubai": "دبي",
+      "abu-dhabi": "أبوظبي",
+      "sharjah": "الشارقة",
+      "rak": "رأس الخيمة",
+      "ajman": "عجمان",
+      "umm-al-quwain": "أم القيوين",
+      "fujairah": "الفجيرة",
+      "al-ain": "العين"
     },
     "filters": {
       "title": "الفلاتر",

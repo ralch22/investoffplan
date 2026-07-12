@@ -2,16 +2,21 @@
 
 import { cn } from "@/lib/cn";
 import type { CollectionFilter } from "@/lib/types";
+import { useI18n } from "@/i18n/locale-provider";
+import type { Dict } from "@/i18n/dictionaries/en";
 
-const COLLECTIONS: Array<{ id: CollectionFilter; label: string }> = [
-  { id: "all", label: "All" },
-  { id: "premium", label: "Premium" },
-  { id: "brochure", label: "Brochure PDF" },
-  { id: "video", label: "Video" },
-  { id: "tour", label: "Virtual tour" },
-  { id: "under-2m", label: "Under AED 2M" },
-  { id: "studio", label: "Studio" },
-  { id: "waterfront", label: "Waterfront" },
+const COLLECTIONS: Array<{
+  id: CollectionFilter;
+  key: keyof Dict["serp"]["chips"];
+}> = [
+  { id: "all", key: "all" },
+  { id: "premium", key: "premium" },
+  { id: "brochure", key: "brochurePdf" },
+  { id: "video", key: "video" },
+  { id: "tour", key: "virtualTour" },
+  { id: "under-2m", key: "under2m" },
+  { id: "studio", key: "studio" },
+  { id: "waterfront", key: "waterfront" },
 ];
 
 interface CollectionChipsProps {
@@ -20,6 +25,8 @@ interface CollectionChipsProps {
 }
 
 export function CollectionChips({ value, onChange }: CollectionChipsProps) {
+  const { dict } = useI18n();
+  const chips = dict.serp.chips;
   return (
     <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {COLLECTIONS.map((c) => (
@@ -35,7 +42,7 @@ export function CollectionChips({ value, onChange }: CollectionChipsProps) {
               : "border-border bg-white text-text-dark hover:border-brand hover:text-brand",
           )}
         >
-          {c.label}
+          {chips[c.key]}
         </button>
       ))}
     </div>

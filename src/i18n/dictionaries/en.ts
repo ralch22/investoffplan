@@ -147,7 +147,9 @@ const dict = {
     "home": "Home",
     "featured": "Featured",
     "brochure": "Brochure",
-    "compareProject": "Compare {name}"
+    "compareProject": "Compare {name}",
+    "compareClear": "Clear",
+    "compareHint": "Compare units"
   },
   "a11y": {
     "skipToContent": "Skip to content"
@@ -276,10 +278,22 @@ const dict = {
       "all": "All",
       "premium": "Premium",
       "brochurePdf": "Brochure PDF",
-      "videoTour": "Video tour",
+      "video": "Video",
+      "virtualTour": "Virtual tour",
       "under2m": "Under AED 2M",
       "studio": "Studio",
       "waterfront": "Waterfront"
+    },
+    "cities": {
+      "all": "All UAE",
+      "dubai": "Dubai",
+      "abu-dhabi": "Abu Dhabi",
+      "sharjah": "Sharjah",
+      "rak": "Ras Al Khaimah",
+      "ajman": "Ajman",
+      "umm-al-quwain": "Umm Al Quwain",
+      "fujairah": "Fujairah",
+      "al-ain": "Al Ain"
     },
     "filters": {
       "title": "Filters",
