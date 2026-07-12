@@ -19,6 +19,19 @@ test.describe("Content routes", () => {
     expect(html).toContain("أدلّة الاستثمار");
   });
 
+  // #253 — AR collection routes must not serve EN title/H1 from COLLECTION_PAGES.
+  test("AR collection waterfront has Arabic title and H1", async ({ page }) => {
+    const res = await page.goto("/ar/collections/waterfront", {
+      waitUntil: "commit",
+    });
+    expect(res?.status()).toBe(200);
+    const html = await res!.text();
+    expect(html).toContain('lang="ar"');
+    expect(html).not.toMatch(/<title>Waterfront Off-Plan Projects/i);
+    expect(html).not.toContain(">Waterfront living<");
+    expect(html).toContain("السكن على الواجهة المائية");
+  });
+
   test("news article renders with date, sections, and JSON-LD", async ({ page }) => {
     await page.goto("/news");
     const firstLink = page.getByRole("link", { name: "Read More" }).first();
