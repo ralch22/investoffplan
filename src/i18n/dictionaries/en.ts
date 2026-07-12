@@ -409,6 +409,8 @@ const dict = {
     "headingProjects": "{count} New off-plan projects in UAE",
     "searchResultsTitle": "Search Results",
     "propertiesIn": "Properties in {location}",
+    /** Short all-UAE token for hero "Properties in {location}" (not chip "All UAE"). */
+    "locationAll": "UAE",
     "resultsCount": "{count} results",
     "resultsIn": "in {location}",
     "updated": "Updated {date}",

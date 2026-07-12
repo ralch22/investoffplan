@@ -411,6 +411,8 @@ export const ar: Dict = {
     "headingProjects": "{count} مشروعاً جديداً على الخارطة في الإمارات",
     "searchResultsTitle": "نتائج البحث",
     "propertiesIn": "عقارات في {location}",
+    /** Short all-UAE token for hero "Properties in {location}" (not chip "كل الإمارات"). */
+    "locationAll": "الإمارات",
     "resultsCount": "{count} نتيجة",
     "resultsIn": "في {location}",
     "updated": "آخر تحديث {date}",
