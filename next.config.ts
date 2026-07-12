@@ -45,9 +45,6 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // Baseline security headers on every route. (A strict CSP is
-        // intentionally omitted for now — GTM/GA/Clarity/Turnstile/Leaflet/
-        // YouTube embeds need careful allow-listing; tracked as follow-up.)
         source: "/:path*",
         headers: [
           {
@@ -63,6 +60,27 @@ const nextConfig: NextConfig = {
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+          },
+          {
+            key: "Content-Security-Policy",
+            // 'unsafe-inline' in script-src is required for GTM's injected inline
+            // scripts and the Clarity bootstrap snippet. A nonce-based approach
+            // would be cleaner but requires middleware on every request and
+            // instrumentation of every dangerouslySetInnerHTML call.
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://challenges.cloudflare.com",
+              "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.clarity.ms https://challenges.cloudflare.com",
+              "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://new-projects-media.propertyfinder.com https://i.ytimg.com",
+              "frame-src 'self' https://www.openstreetmap.org https://www.youtube-nocookie.com https://challenges.cloudflare.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "worker-src 'self' blob:",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+              "upgrade-insecure-requests",
+            ].join("; "),
           },
         ],
       },

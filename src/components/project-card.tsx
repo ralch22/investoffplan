@@ -251,7 +251,7 @@ function ListCard({
             alt={project.name}
             projectHref={`/projects/${project.slug}`}
             fallbackClassName={cn("bg-gradient-to-br", project.imageGradient)}
-            sizes="320px"
+            sizes="(max-width: 768px) 100vw, 320px"
             className="h-full rounded-none md:rounded-s-2xl"
           />
           <span className="pointer-events-none absolute start-4 top-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark">

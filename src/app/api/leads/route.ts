@@ -154,6 +154,11 @@ export async function POST(request: Request) {
   };
 
   const sendGa4 = async () => {
+    // Only fire GA4 MP if the user has explicitly consented (iop_consent=granted
+    // cookie set by the CookieConsentBanner). Firing without consent would process
+    // the GA4 client ID server-side without a lawful basis (GDPR/UAE PDPL).
+    const consentCookie = request.headers.get("cookie") ?? "";
+    if (!consentCookie.includes("iop_consent=granted")) return;
     // Extract client id if provided by client (from _ga cookie); server falls back inside.
     const clientIdFromBody =
       typeof (body as LeadBody).gaClientId === "string"

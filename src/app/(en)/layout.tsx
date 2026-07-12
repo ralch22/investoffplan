@@ -4,8 +4,9 @@ import type { Metadata, Viewport } from "next";
 // so the bottom tab bar would sit under the home indicator.
 export const viewport: Viewport = { viewportFit: "cover" };
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
+import Script from "next/script";
 import { Inter, PT_Serif } from "next/font/google";
-import { Clarity } from "@/components/clarity";
+import { CookieConsentBanner } from "@/components/cookie-consent-banner";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { CatalogPrefetch } from "@/components/catalog-prefetch";
 import { MotionProvider } from "@/components/motion-provider";
@@ -86,9 +87,16 @@ export default async function RootLayout({
       className={`${inter.variable} ${ptSerif.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-background text-foreground">
+        {/* Consent Mode v2: default all signals to denied before GA/GTM load.
+            GA/GTM operate in cookieless mode until the user accepts. */}
+        <Script id="consent-default" strategy="beforeInteractive">{`
+          window.dataLayer=window.dataLayer||[];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',wait_for_update:500});
+        `}</Script>
         {gaMeasurementId ? <GoogleAnalytics gaId={gaMeasurementId} /> : null}
         {gtmId ? <GoogleTagManager gtmId={gtmId} /> : null}
-        <Clarity />
+        <CookieConsentBanner />
         <SiteJsonLd />
         <CatalogPrefetch />
         <NavDataProvider topCommunities={topCommunities}>
