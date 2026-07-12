@@ -20,6 +20,7 @@ import {
   propertyTypeLabel,
 } from "@/lib/format";
 import { useI18n } from "@/i18n/locale-provider";
+import { localePath } from "@/i18n/config";
 import { hasPaymentPlan, unitPricePerSqft } from "@/lib/investment-metrics";
 import {
   compareMonthlyPaymentAed,
@@ -302,7 +303,7 @@ export function ComparePage({
                             className="min-w-[220px] snap-start border-s border-border p-4 text-start align-top"
                           >
                             <Link
-                              href={`/projects/${item.project.slug}`}
+                              href={localePath(locale, `/projects/${item.project.slug}`)}
                               className="group block"
                             >
                               <DeveloperAttribution
@@ -321,7 +322,7 @@ export function ComparePage({
                               {dict.compare.remove}
                             </button>
                             <Link
-                              href={`/projects/${item.project.slug}`}
+                              href={localePath(locale, `/projects/${item.project.slug}`)}
                               className="mt-2 flex w-full items-center justify-between rounded-full bg-brand px-4 py-2 text-xs font-semibold text-white transition hover:bg-brand-dark"
                             >
                               {dict.compare.viewProperty}
