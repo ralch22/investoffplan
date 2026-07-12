@@ -23,13 +23,22 @@ export async function getAreaInsightsForProject(
   if (!area) return null;
 
   const projects = await getProjectsByArea(areaSlug);
-  const prices = projects.flatMap((p) =>
-    p.units.map((u) => u.launchPriceAed),
-  );
+  // Ignore unstated 0 prices so "From AED 0" never surfaces on the PDP band.
+  const prices = projects
+    .flatMap((p) => p.units.map((u) => u.launchPriceAed))
+    .filter((p) => p > 0);
   const avgPriceAed =
     prices.length > 0
       ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length)
-      : area.minPriceAed;
+      : area.minPriceAed > 0
+        ? area.minPriceAed
+        : 0;
+  const minPriceAed =
+    prices.length > 0
+      ? Math.min(...prices)
+      : area.minPriceAed > 0
+        ? area.minPriceAed
+        : 0;
 
   const heroImage = await getAreaImage(area.name);
 
@@ -40,7 +49,7 @@ export async function getAreaInsightsForProject(
     tagline: areaTagline(area.slug, area.name),
     projectCount: area.projectCount,
     unitCount: area.unitCount,
-    minPriceAed: area.minPriceAed,
+    minPriceAed,
     avgPriceAed,
     heroImage,
   };

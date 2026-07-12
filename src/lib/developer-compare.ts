@@ -56,6 +56,25 @@ export async function getComparableDeveloperSlugs(): Promise<string[]> {
   return pairs;
 }
 
+/**
+ * Lightweight hub cards — only `limit` named pairs (no second getDevelopers
+ * pass for name lookup on the compare hub).
+ */
+export async function getHubDeveloperPairs(
+  limit = 6,
+): Promise<{ pairSlug: string; a: string; b: string }[]> {
+  const devs = await comparableDevelopers();
+  const out: { pairSlug: string; a: string; b: string }[] = [];
+  for (let i = 0; i < devs.length; i++) {
+    for (let j = i + 1; j < devs.length; j++) {
+      const [x, y] = [devs[i], devs[j]].sort((p, q) => p.slug.localeCompare(q.slug));
+      out.push({ pairSlug: pairSlug(x.slug, y.slug), a: x.name, b: y.name });
+      if (out.length >= limit) return out;
+    }
+  }
+  return out;
+}
+
 async function toSide(dev: DeveloperSummary): Promise<DeveloperSide> {
   const projects = await getProjectsByDeveloper(dev.slug);
   const prices: number[] = [];

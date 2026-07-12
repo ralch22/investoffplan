@@ -60,11 +60,19 @@ export function ProjectLivingInArea({ insights, locale = "en" }: ProjectLivingIn
               <InsightStat label={la.unitOptions} value={insights.unitCount.toLocaleString()} />
               <InsightStat
                 label={la.from}
-                value={formatPrice(insights.minPriceAed, "AED")}
+                value={
+                  insights.minPriceAed > 0
+                    ? formatPrice(insights.minPriceAed, "AED")
+                    : dict.pdp.priceOnRequest
+                }
               />
               <InsightStat
                 label={la.avgLaunch}
-                value={formatPrice(insights.avgPriceAed, "AED")}
+                value={
+                  insights.avgPriceAed > 0
+                    ? formatPrice(insights.avgPriceAed, "AED")
+                    : dict.pdp.priceOnRequest
+                }
               />
             </dl>
             <p className="mt-4 text-sm text-muted">
