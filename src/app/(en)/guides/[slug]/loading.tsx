@@ -2,7 +2,7 @@ import { PageShell } from "@/components/page-shell";
 
 export default function GuideDetailLoading() {
   return (
-    <PageShell>
+    <PageShell showAdvisor={false}>
       <section className="bg-guide-hero py-16">
         <div className="mx-auto max-w-[800px] px-5 text-center md:px-8">
           <div className="skeleton mx-auto h-10 w-3/4 rounded-xl opacity-40" />

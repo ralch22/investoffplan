@@ -23,6 +23,13 @@ interface PageShellProps {
   showCurrency?: boolean;
   headerVariant?: "light" | "transparent";
   mobileDock?: MobileDock;
+  /**
+   * When false, omit the Off-Plan Advisor FAB/panel. Use on Suspense
+   * `loading.tsx` shells so a resolved page does not briefly (or stickily)
+   * mount two `data-testid="advisor-launcher"` buttons — strict e2e fails
+   * with "resolved to 2 elements" on PDP after concurrent loading+page shells.
+   */
+  showAdvisor?: boolean;
 }
 
 // Height each dock reserves at the mobile bottom edge; every fixed fixture and
@@ -40,6 +47,7 @@ export function PageShell({
   showCurrency = false,
   headerVariant = "light",
   mobileDock = "tabs",
+  showAdvisor = true,
 }: PageShellProps) {
   // Server-favorites sync: merges localStorage with the account on sign-in.
   // PageShell mounts per page, but the hook dedupes module-wide per session.
@@ -73,7 +81,7 @@ export function PageShell({
         {children}
       </main>
       <SiteFooter />
-      <AdvisorWidget />
+      {showAdvisor ? <AdvisorWidget /> : null}
       {mobileDock === "tabs" ? <BottomTabBar /> : null}
     </div>
   );
