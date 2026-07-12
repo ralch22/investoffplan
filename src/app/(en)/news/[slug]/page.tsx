@@ -35,7 +35,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const article = getNewsArticle(slug);
-  if (!article) return { title: "Article not found" };
+  // Soft metadata titles with HTTP 200 are banned (#241 / content.spec).
+  if (!article) notFound();
 
   return {
     title: article.title,

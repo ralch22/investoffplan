@@ -54,7 +54,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const developer = await getDeveloper(slug);
-  if (!developer) return { title: "Developer not found" };
+  // Soft metadata titles with HTTP 200 are banned (#241 / content.spec).
+  if (!developer) notFound();
   const title = `New & Off-Plan Projects by ${developer.name}`;
   const description = `Browse ${developer.projectCount} off-plan projects by ${developer.name} in the UAE with launch prices, payment plans, and brochures.`;
   const ogImage = developer.logoUrl ?? "/brand/og-default.png";

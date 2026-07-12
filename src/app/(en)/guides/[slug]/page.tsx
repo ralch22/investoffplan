@@ -45,7 +45,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const chrome = guideChrome("en", slug);
-  if (!chrome) return { title: "Guide not found" };
+  // Soft metadata titles with HTTP 200 are banned (#241 / content.spec).
+  if (!chrome) notFound();
 
   return {
     title: chrome.title,
