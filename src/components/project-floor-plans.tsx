@@ -79,7 +79,7 @@ export function ProjectFloorPlans({ project, locale = "en" }: ProjectFloorPlansP
               setActive(index);
               setOpen(true);
             }}
-            className="group relative overflow-hidden rounded-2xl border border-border bg-white p-3 text-start shadow-sm transition hover:border-brand hover:shadow-md"
+            className="focus-ring group relative overflow-hidden rounded-2xl border border-border bg-white p-3 text-start shadow-sm transition hover:border-brand hover:shadow-md"
           >
             <div className="relative h-48 w-full overflow-hidden rounded-xl bg-surface-alt">
               <Image
@@ -148,8 +148,8 @@ function BedChip({
       onClick={onClick}
       className={
         active
-          ? "iop-btn-press rounded-full border border-brand bg-brand px-4 py-1.5 text-sm font-semibold text-white"
-          : "iop-btn-press rounded-full border border-border bg-white px-4 py-1.5 text-sm font-semibold text-muted hover:border-brand hover:text-brand"
+          ? "iop-btn-press focus-ring min-h-11 rounded-full border border-brand bg-brand px-4 py-2 text-sm font-semibold text-white"
+          : "iop-btn-press focus-ring min-h-11 rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-muted hover:border-brand hover:text-brand"
       }
     >
       {label}

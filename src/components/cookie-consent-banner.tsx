@@ -146,14 +146,16 @@ export function CookieConsentBanner() {
         </p>
         <div className="flex shrink-0 gap-3">
           <button
+            type="button"
             onClick={decline}
-            className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-muted transition hover:border-brand hover:text-brand"
+            className="iop-btn-press focus-ring rounded-full border border-[var(--input-border)] px-4 py-2 text-sm font-semibold text-muted transition hover:border-brand hover:text-brand"
           >
             {isAr ? "رفض" : "Decline"}
           </button>
           <button
+            type="button"
             onClick={accept}
-            className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark"
+            className="iop-btn-press focus-ring rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark"
           >
             {isAr ? "قبول الكل" : "Accept all"}
           </button>

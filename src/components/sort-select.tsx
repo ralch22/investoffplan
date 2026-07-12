@@ -23,12 +23,15 @@ export function SortSelect({ value, onChange }: SortSelectProps) {
   ];
 
   return (
-    <label className="inline-flex items-center gap-2 text-sm text-slate-600">
-      <span className="hidden sm:inline">{s.sortBy}</span>
+    <label className="inline-flex items-center gap-2 text-sm text-muted">
+      <span className="hidden sm:inline" aria-hidden="true">
+        {s.sortBy}
+      </span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as SortOption)}
-        className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 outline-none focus:border-slate-400"
+        aria-label={s.sortBy}
+        className="focus-ring rounded-lg border border-[var(--input-border)] bg-white px-3 py-2 text-sm font-medium text-text-dark outline-none hover:border-[var(--input-border-strong)]"
       >
         {OPTIONS.map((opt) => (
           <option key={opt.value} value={opt.value}>

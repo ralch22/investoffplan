@@ -37,10 +37,30 @@ export function AdvisorWidget() {
   const [leadToken, setLeadToken] = useState("");
   const [leadTokenReset, setLeadTokenReset] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [entries, busy]);
+
+  // Mount the panel only while open so a closed <dialog> never dual-matches
+  // gallery/brochure dialogs in a11y tests (strict getByRole('dialog')).
+  // showModal on mount = focus trap + Escape + focus restore (residual O1).
+  useEffect(() => {
+    if (!open) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (!dialog.open) dialog.showModal();
+    const handleCancel = (e: Event) => {
+      e.preventDefault();
+      setOpen(false);
+    };
+    dialog.addEventListener("cancel", handleCancel);
+    return () => {
+      dialog.removeEventListener("cancel", handleCancel);
+      if (dialog.open) dialog.close();
+    };
+  }, [open]);
 
   const starters = [t.starterProjects, t.starterAreas, t.starterProcess];
 
@@ -118,11 +138,9 @@ export function AdvisorWidget() {
 
   return (
     <>
-      {/* data-advisor-chrome: hidden via CSS while a native <dialog open> (gallery
-          lightbox) is open so the FAB never covers gallery controls/thumbs.
-          Bottom offset reads --bottom-dock from PageShell (same pattern as
-          CompareBar). Do not re-add safe-area — dock tokens already include it. */}
-      {/* Launcher (absorbs the WhatsApp FAB — WhatsApp lives inside the widget) */}
+      {/* data-advisor-chrome: hidden via CSS while a *non-advisor* native dialog
+          is open (gallery lightbox, etc.) so the FAB never covers gallery
+          controls. Bottom offset reads --bottom-dock from PageShell. */}
       <button
         type="button"
         data-advisor-chrome
@@ -130,6 +148,7 @@ export function AdvisorWidget() {
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? t.close : t.launcher}
         aria-expanded={open}
+        aria-haspopup="dialog"
         className="iop-btn-press focus-ring fixed end-5 z-[var(--z-sticky)] flex h-14 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-elevation-lg transition hover:bg-brand-dark bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap))] lg:bottom-[calc(1.25rem+var(--consent-h,0px))]"
       >
         <ChatIcon />
@@ -137,12 +156,13 @@ export function AdvisorWidget() {
       </button>
 
       {open ? (
-        <div
-          role="dialog"
-          data-advisor-chrome
+        <dialog
+          ref={dialogRef}
+          data-advisor-dialog
           data-testid="advisor-panel"
           aria-label={t.title}
-          className="fixed end-5 z-[var(--z-modal)] flex w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-elevation-lg bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap)+4rem)] max-h-[min(32rem,calc(100dvh-var(--header-h)-var(--bottom-dock)-var(--consent-h,0px)-var(--fab-gap)-5rem))] lg:bottom-[calc(6rem+var(--consent-h,0px))] lg:max-h-[min(32rem,calc(100dvh-8rem-var(--consent-h,0px)))]"
+          onClose={() => setOpen(false)}
+          className="fixed end-5 z-[var(--z-modal)] m-0 flex w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white p-0 shadow-elevation-lg bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap)+4rem)] max-h-[min(32rem,calc(100dvh-var(--header-h)-var(--bottom-dock)-var(--consent-h,0px)-var(--fab-gap)-5rem))] backdrop:bg-transparent lg:bottom-[calc(6rem+var(--consent-h,0px))] lg:max-h-[min(32rem,calc(100dvh-8rem-var(--consent-h,0px)))]"
         >
           <div className="flex items-center justify-between gap-3 bg-surface-darker px-4 py-3 text-white">
             <div>
@@ -155,7 +175,7 @@ export function AdvisorWidget() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={t.whatsapp}
-                className="focus-ring rounded-full border border-white/25 px-3 py-1.5 text-xs font-semibold text-white/90 hover:bg-white/10"
+                className="focus-ring-light rounded-full border border-white/25 px-3 py-1.5 text-xs font-semibold text-white/90 hover:bg-white/10"
               >
                 {t.whatsapp}
               </a>
@@ -163,7 +183,7 @@ export function AdvisorWidget() {
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label={t.close}
-                className="focus-ring flex h-8 w-8 items-center justify-center rounded-full text-white/80 hover:bg-white/10"
+                className="focus-ring-light flex h-8 w-8 items-center justify-center rounded-full text-white/80 hover:bg-white/10"
               >
                 ✕
               </button>
@@ -292,7 +312,7 @@ export function AdvisorWidget() {
               {t.send}
             </button>
           </form>
-        </div>
+        </dialog>
       ) : null}
     </>
   );
@@ -322,7 +342,7 @@ function AdvisorCardView({ card }: { card: AdvisorCard }) {
         </p>
         <Link
           href={localePath(locale, `/projects/${card.slug}`)}
-          className="mt-1 inline-block text-xs font-semibold text-brand hover:text-brand-dark"
+          className="focus-ring mt-1 inline-block rounded-sm text-xs font-semibold text-brand hover:text-brand-dark"
         >
           {t.viewProject} →
         </Link>

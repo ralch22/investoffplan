@@ -425,7 +425,7 @@ export function ProjectsPage({
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="iop-btn-press mt-6 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
+            className="iop-btn-press focus-ring mt-6 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
           >
             {s.error.retry}
           </button>
