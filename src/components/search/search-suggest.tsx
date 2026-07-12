@@ -2,6 +2,7 @@
 
 import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import type { Dict } from "@/i18n";
 import { useI18n } from "@/i18n/locale-provider";
 import { interpolate, localePath } from "@/i18n/config";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
@@ -89,10 +90,17 @@ function titleCase(value: string): string {
     .replace(/\b\p{L}/gu, (c) => c.toUpperCase());
 }
 
-function smartLabel(parse: SmartQueryResult): string {
+function smartLabel(parse: SmartQueryResult, dict: Dict): string {
   const parts: string[] = parse.matched.map((m) => m.label);
   const f = parse.filters;
-  if (f.beds !== undefined) parts.push(f.beds === "studio" ? "Studio" : `${f.beds} BR`);
+  if (f.beds !== undefined) {
+    const n = f.beds === "studio" ? 0 : Number(f.beds);
+    parts.push(
+      n === 0
+        ? dict.format.beds.studio
+        : interpolate(dict.format.beds.compactBr, { count: String(n) }),
+    );
+  }
   if (f.propertyType) parts.push(titleCase(f.propertyType));
   if (f.minPrice != null && f.maxPrice != null) {
     parts.push(`${formatAedShort(f.minPrice)}–${formatAedShort(f.maxPrice)}`);
@@ -347,8 +355,8 @@ export function SearchSuggest({
       const count = data ? data.api.filterUnits(data.units, serp.filters).length : null;
       const label =
         count === null
-          ? smartLabel(parse)
-          : `${smartLabel(parse)} → ${interpolate(t.results, { count })}`;
+          ? smartLabel(parse, dict)
+          : `${smartLabel(parse, dict)} → ${interpolate(t.results, { count })}`;
       raw.push({
         key: "smart",
         options: [{ kind: "smart", label, href: serp.href }],

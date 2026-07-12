@@ -420,4 +420,38 @@ test.describe("Content routes", () => {
       guideAnchors.filter((h) => h === "/guides" || h.startsWith("/guides?")),
     ).toEqual([]);
   });
+
+  // #327 — AR bed / unit-type chrome must not hardcode EN Studio / Unit type.
+  test("AR PDP unit selector and market report bed labels are Arabic", async ({
+    page,
+  }) => {
+    // Market report bed table (static SSR).
+    const report = await page.goto("/ar/reports/market/dubai-marina", {
+      waitUntil: "commit",
+    });
+    if (report?.status() === 200) {
+      const html = await report.text();
+      expect(html).toContain('lang="ar"');
+      // Prefer AR studio token when bed table present; do not require if community has no bed stats.
+      if (html.includes("نوع") || html.includes("استوديو") || html.includes("غرف")) {
+        expect(html).not.toMatch(/>\s*Studio\s*</);
+        expect(html).not.toMatch(/>\s*4\+ bed\s*</);
+      }
+    }
+
+    // PDP payment selector label (client chrome after hydration — use SSR shell).
+    const pdp = await page.goto("/ar/projects/105-residences", {
+      waitUntil: "commit",
+    });
+    expect(pdp?.status()).toBe(200);
+    const pdpHtml = await pdp!.text();
+    expect(pdpHtml).toContain('lang="ar"');
+    // Label is SSR'd as dict.pdp.unitType when multi-unit projects render calculator.
+    expect(pdpHtml).not.toContain(">Unit type<");
+    // If selector present, AR label should appear.
+    if (pdpHtml.includes("iop-input") && pdpHtml.includes("unit")) {
+      expect(pdpHtml).toMatch(/نوع الوحدة|أنواع الوحدات/);
+    }
+  });
+
 });

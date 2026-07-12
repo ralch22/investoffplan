@@ -88,7 +88,7 @@ export default async function DeveloperDetailPage({
   // must not enter the client RSC payload on large developers (Emaar ~3.5 MB).
   // Default "featured" sort for SSR first page + JSON-LD; client re-sorts.
   const sorted = sortDeveloperProjects(
-    projects.map(toDeveloperProjectCardData),
+    projects.map((project) => toDeveloperProjectCardData(project, dict, locale)),
     "featured",
   );
   const countLabel =

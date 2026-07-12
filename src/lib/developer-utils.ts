@@ -1,3 +1,6 @@
+import type { Dict } from "@/i18n";
+import { bedsLabel, propertyTypeLabel } from "@/lib/format";
+import { interpolate, type Locale } from "@/i18n/config";
 import { developerBlurb } from "./figma-copy";
 import type { DeveloperProjectCardData, Project, SortOption } from "./types";
 
@@ -43,27 +46,27 @@ function handoverValue(handover?: string): number {
   return Number(match[2]) * 10 + Number(match[1]);
 }
 
-export function projectBedsLabel(project: Project): string | null {
+export function projectBedsLabel(project: Project, dict: Dict): string | null {
   const beds = [...new Set(project.units.map((unit) => unit.beds))].sort(
     (a, b) => a - b,
   );
   if (beds.length === 0) return null;
   const min = beds[0];
   const max = beds[beds.length - 1];
-  if (min === max) {
-    if (min === 0) return "Studio";
-    return min === 1 ? "1 Bed" : `${min} Beds`;
-  }
-  const minLabel = min === 0 ? "Studio" : String(min);
-  const maxLabel = max === 0 ? "Studio" : String(max);
-  return `${minLabel} - ${maxLabel} Beds`;
+  if (min === max) return bedsLabel(min, dict);
+  const minLabel = min === 0 ? dict.format.beds.studio : String(min);
+  const maxLabel = max === 0 ? dict.format.beds.studio : String(max);
+  return interpolate(dict.format.beds.range, { min: minLabel, max: maxLabel });
 }
 
-export function projectTypeLabel(project: Project): string {
+export function projectTypeLabel(
+  project: Project,
+  dict: Dict,
+  locale: Locale,
+): string {
   const types = [...new Set(project.units.map((unit) => unit.propertyType))];
-  if (types.length !== 1) return "Multiple";
-  const type = types[0];
-  return type.charAt(0).toUpperCase() + type.slice(1);
+  if (types.length !== 1) return dict.format.multiple;
+  return propertyTypeLabel(types[0], dict, locale);
 }
 
 /**
@@ -73,6 +76,8 @@ export function projectTypeLabel(project: Project): string {
  */
 export function toDeveloperProjectCardData(
   project: Project,
+  dict: Dict,
+  locale: Locale = "en",
 ): DeveloperProjectCardData {
   const positivePrices = project.units
     .map((unit) => unit.launchPriceAed)
@@ -109,8 +114,8 @@ export function toDeveloperProjectCardData(
     maxPriceAed,
     featuredRank: project.featuredRank,
     isPremium: project.isPremium,
-    bedsLabel: projectBedsLabel(project),
-    typeLabel: projectTypeLabel(project),
+    bedsLabel: projectBedsLabel(project, dict),
+    typeLabel: projectTypeLabel(project, dict, locale),
   };
 }
 

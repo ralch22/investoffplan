@@ -561,6 +561,7 @@ export const ar: Dict = {
     "financingQuestion": "هل ستموّل جزءاً من الشراء؟",
     "modelMortgage": "احسب التمويل العقاري واحصل على موافقة مبدئية ←",
     "unitTypes": "أنواع الوحدات",
+    "unitType": "نوع الوحدة",
     "compareWith": "قارن {name} مع:",
     "faqHeading": "الأسئلة الشائعة عن {name}",
     "generatedFaqs": {
@@ -803,8 +804,13 @@ export const ar: Dict = {
     "beds": {
       "studio": "استوديو",
       "one": "غرفة نوم واحدة",
-      "many": "{count} غرف نوم"
+      "many": "{count} غرف نوم",
+      "nShort": "{count} غرفة",
+      "fourPlus": "4+ غرف",
+      "range": "{min} - {max} غرف",
+      "compactBr": "{count} غرف"
     },
+    "multiple": "متعدد",
     "from": "ابتداءً من",
     "fromUpper": "ابتداءً من",
     "million": "مليون",

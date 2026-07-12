@@ -56,7 +56,7 @@ export function ProjectPaymentCalculator({
     <div className="space-y-4">
       {units.length > 1 ? (
         <label className="block max-w-md text-sm font-medium text-text-dark">
-          Unit type
+          {dict.pdp.unitType}
           <select
             value={selected?.id ?? ""}
             onChange={(e) => setUnitId(e.target.value)}

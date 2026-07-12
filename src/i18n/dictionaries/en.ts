@@ -559,6 +559,7 @@ const dict = {
     "financingQuestion": "Financing part of the purchase?",
     "modelMortgage": "Model your mortgage and get pre-approved →",
     "unitTypes": "Unit types",
+    "unitType": "Unit type",
     "compareWith": "Compare {name} with:",
     "faqHeading": "{name} FAQ",
     "generatedFaqs": {
@@ -801,8 +802,13 @@ const dict = {
     "beds": {
       "studio": "Studio",
       "one": "1 Bed",
-      "many": "{count} Beds"
+      "many": "{count} Beds",
+      "nShort": "{count} bed",
+      "fourPlus": "4+ bed",
+      "range": "{min} - {max} Beds",
+      "compactBr": "{count} BR"
     },
+    "multiple": "Multiple",
     "from": "from",
     "fromUpper": "FROM",
     "million": "M",

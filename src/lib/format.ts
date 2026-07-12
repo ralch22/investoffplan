@@ -52,6 +52,13 @@ export function bedsLabel(beds: number, dict: Dict): string {
   return interpolate(dict.format.beds.many, { count: beds });
 }
 
+/** Bed-key label for DLD/report tables ("0" → studio, "4" → 4+ bed, else N bed). */
+export function bedKeyLabel(key: string, dict: Dict): string {
+  if (key === "0") return dict.format.beds.studio;
+  if (key === "4") return dict.format.beds.fourPlus;
+  return interpolate(dict.format.beds.nShort, { count: key });
+}
+
 /**
  * Locale-aware property-type noun ("apartment"/"villa"/"townhouse"/"penthouse").
  * EN returns the raw catalog value unchanged (byte-identical to prior render);

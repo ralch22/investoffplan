@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Gate } from "@/components/auth/gate";
 import { TrendChart } from "@/components/trend-chart";
 import type { DldAreaStats } from "@/lib/dld-area-stats";
-import { formatPrice } from "@/lib/format";
+import { bedKeyLabel, formatPrice } from "@/lib/format";
 import { useI18n } from "@/i18n/locale-provider";
 
 interface DeepAnalyticsResponse {
@@ -184,7 +184,7 @@ export function DeepAnalyticsUnlock({ slug, areaName, reportHref }: Props) {
                       .map(([k, v]) => (
                         <tr key={k} className="border-t border-border">
                           <td className="px-3 py-1.5 font-medium text-text-dark">
-                            {bedLabel(k)}
+                            {bedKeyLabel(k, dict)}
                           </td>
                           <td className="px-3 py-1.5 text-end tabular-nums text-text-dark">
                             {v.medianPrice != null
@@ -212,8 +212,3 @@ export function DeepAnalyticsUnlock({ slug, areaName, reportHref }: Props) {
   );
 }
 
-function bedLabel(key: string): string {
-  if (key === "0") return "Studio";
-  if (key === "4") return "4+ bed";
-  return `${key} bed`;
-}

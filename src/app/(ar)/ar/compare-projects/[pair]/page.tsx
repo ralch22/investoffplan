@@ -18,7 +18,7 @@ export async function generateMetadata({
   params: Promise<{ pair: string }>;
 }): Promise<Metadata> {
   const { pair } = await params;
-  const cmp = await buildProjectComparison(pair);
+  const cmp = await buildProjectComparison(pair, "ar");
   if (!cmp) return arMeta({ path: `/compare-projects/${pair}`, title: "مقارنة غير موجودة" });
   return arMeta({
     path: `/compare-projects/${cmp.pairSlug}`,
