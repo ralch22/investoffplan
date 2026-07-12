@@ -132,7 +132,7 @@ export function ProjectCard({
             fallbackClassName={cn("bg-gradient-to-br", project.imageGradient)}
             priority={imgPriority ?? featured}
             soldOutGrayscale={isSoldOut}
-            sizes={featured ? "(max-width: 1024px) 100vw, 1200px" : "(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 600px"}
+            sizes={featured ? "(max-width: 1024px) 100vw, 1200px" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"}
             className="rounded-none"
           />
           {paymentLabel !== "Payment Plan" ? <PaymentRibbon label={paymentLabel} /> : null}

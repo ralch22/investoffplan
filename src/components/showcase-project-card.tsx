@@ -59,7 +59,7 @@ export function ShowcaseProjectCard({
             fill
             priority={priorityImage || featured}
             fetchPriority={priorityImage || featured ? "high" : "auto"}
-            sizes={featured ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 640px) 100vw, 25vw"}
+            sizes={featured ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"}
             className="object-cover transition duration-500 group-hover:scale-[1.02]"
             {...unoptimizedProp(project.imageUrl)}
           />

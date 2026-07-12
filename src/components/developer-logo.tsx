@@ -58,6 +58,7 @@ export function DeveloperLogo({
       alt={`${name} logo`}
       width={SIZE_PX[size]}
       height={SIZE_PX[size]}
+      quality={90}
       className={cn(
         "object-contain bg-white",
         SIZE_CLASSES[size],

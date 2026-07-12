@@ -138,6 +138,8 @@ const nextConfig: NextConfig = {
   images: {
     loader: "custom",
     loaderFile: "./src/lib/cdn-image-loader.ts",
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 86400,
     localPatterns: [
       { pathname: "/cdn/**" },
       { pathname: "/brand/**" },
