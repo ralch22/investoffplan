@@ -1,6 +1,10 @@
 import { getCatalogApi, getProjectBySlug, slugify } from "@/lib/catalog";
 import { getAreaStats } from "@/lib/dld-area-stats";
 import type { Project } from "@/lib/types";
+import type { Dict } from "@/i18n";
+import { getDictionary } from "@/i18n";
+import { bedsLabel } from "@/lib/format";
+import { interpolate, type Locale } from "@/i18n/config";
 
 const TOP_AREAS = 12;
 const PROJECTS_PER_AREA = 4;
@@ -41,16 +45,16 @@ function rankProject(a: Project, b: Project): number {
   return b.unitCount - a.unitCount;
 }
 
-function bedsRange(project: Project): string {
+function bedsRange(project: Project, dict: Dict): string {
   const beds = project.units.map((u) => u.beds).filter((b) => Number.isFinite(b));
   if (beds.length === 0) return "—";
   const min = Math.min(...beds);
   const max = Math.max(...beds);
-  const label = (n: number) => (n === 0 ? "Studio" : `${n} bed`);
-  return min === max ? label(min) : `${label(min)}–${max} bed`;
+  if (min === max) return bedsLabel(min, dict);
+  return `${interpolate(dict.format.beds.nShort, { count: min })}–${interpolate(dict.format.beds.nShort, { count: max })}`;
 }
 
-function toSide(project: Project): ProjectSide {
+function toSide(project: Project, dict: Dict): ProjectSide {
   const prices = project.units.map((u) => u.launchPriceAed).filter((p) => p > 0);
   const fromPrice = prices.length ? Math.min(...prices) : null;
   const first = project.units.find((u) => u.launchPriceAed > 0 && u.sqftMin > 0);
@@ -66,7 +70,7 @@ function toSide(project: Project): ProjectSide {
     unitCount: project.unitCount,
     fromPrice,
     ppsqft,
-    bedsRange: bedsRange(project),
+    bedsRange: bedsRange(project, dict),
     goldenVisa: project.units.some((u) => u.launchPriceAed >= 2_000_000),
     areaYield: getAreaStats(project.area)?.grossYieldPct ?? null,
   };
@@ -141,7 +145,10 @@ export async function getProjectComparisonLinks(
     }));
 }
 
-export async function buildProjectComparison(slug: string): Promise<ProjectComparison | null> {
+export async function buildProjectComparison(
+  slug: string,
+  locale: Locale = "en",
+): Promise<ProjectComparison | null> {
   const idx = slug.indexOf(SEP);
   if (idx < 0) return null;
   const slugA = slug.slice(0, idx);
@@ -150,10 +157,11 @@ export async function buildProjectComparison(slug: string): Promise<ProjectCompa
 
   const [projA, projB] = await Promise.all([getProjectBySlug(slugA), getProjectBySlug(slugB)]);
   if (!projA || !projB) return null;
+  const dict = getDictionary(locale);
 
   return {
     pairSlug: [slugA, slugB].sort().join(SEP),
-    a: toSide(projA),
-    b: toSide(projB),
+    a: toSide(projA, dict),
+    b: toSide(projB, dict),
   };
 }

@@ -9,7 +9,7 @@ import {
   getProjectsByCommunity,
 } from "@/lib/communities";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
-import { formatPrice } from "@/lib/format";
+import { bedKeyLabel, formatPrice } from "@/lib/format";
 import { getDictionary } from "@/i18n";
 import { interpolate, localePath, type Locale } from "@/i18n/config";
 
@@ -80,7 +80,8 @@ export default async function MarketReportPage({
   });
 
   const trend = stats.monthlyTrend;
-  const s = getDictionary(locale).reports;
+  const dict = getDictionary(locale);
+  const s = dict.reports;
 
   const summaryTiles = [
     stats.medianPrice != null
@@ -176,7 +177,7 @@ export default async function MarketReportPage({
               {Object.entries(stats.beds)
                 .sort(([x], [y]) => Number(x) - Number(y))
                 .map(([k, v]) => {
-                  const label = k === "0" ? "Studio" : k === "4" ? "4+ bed" : `${k} bed`;
+                  const label = bedKeyLabel(k, dict);
                   return (
                     <tr key={k} className="border-t border-border">
                       <td className="px-3 py-2 font-semibold">{label}</td>

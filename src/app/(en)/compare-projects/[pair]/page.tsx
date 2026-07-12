@@ -35,7 +35,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { pair } = await params;
-  const cmp = await buildProjectComparison(pair);
+  const cmp = await buildProjectComparison(pair, "en");
   if (!cmp) return { title: "Comparison not found" };
   const { a, b } = cmp;
   // Plain title + layout brand; enMeta for reciprocal hreflang with /ar mirror.
@@ -121,7 +121,7 @@ function Head({ side, locale }: { side: ProjectSide; locale: Locale }) {
 
 export default async function CompareProjectsPage({ params, locale = "en" }: PageProps) {
   const { pair } = await params;
-  const cmp = await buildProjectComparison(pair);
+  const cmp = await buildProjectComparison(pair, locale);
   if (!cmp) notFound();
   if (pair !== cmp.pairSlug) {
     permanentRedirect(localePath(locale, `/compare-projects/${cmp.pairSlug}`));
