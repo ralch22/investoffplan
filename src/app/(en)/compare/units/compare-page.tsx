@@ -13,11 +13,13 @@ import type { CompareUnitId } from "@/lib/compare";
 import { useCatalog, type FlatUnit } from "@/lib/catalog-browser";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import {
+  bedsLabel,
   cityLabel,
-  formatBeds,
   formatPrice,
   formatSqft,
+  propertyTypeLabel,
 } from "@/lib/format";
+import { useI18n } from "@/i18n/locale-provider";
 import { unitPricePerSqft } from "@/lib/investment-metrics";
 import {
   compareMonthlyPaymentAed,
@@ -55,8 +57,9 @@ interface CompareRow {
   better?: "higher" | "lower";
 }
 
-const ROWS: CompareRow[] = [
-  { label: "Property type", render: (item) => item.unit.propertyType },
+// ROWS without locale-sensitive fields — merged with dynamic rows in component.
+const BASE_ROWS: CompareRow[] = [
+  // "Property type" and "Bedrooms" rows are injected per-render (locale-aware).
   {
     label: "Starting price",
     render: (item, currency) => formatPrice(item.unit.launchPriceAed, currency),
@@ -73,7 +76,7 @@ const ROWS: CompareRow[] = [
     ),
   },
   { label: "Handover", render: (item) => item.project.handover ?? "TBC" },
-  { label: "Bedrooms", render: (item) => formatBeds(item.unit.beds) },
+  // "Bedrooms" row injected per-render below (locale-aware).
   {
     label: "Square footage",
     render: (item) => formatSqft(item.unit.sqftMin, item.unit.sqftMax),
@@ -147,6 +150,13 @@ export function ComparePage({
 }: ComparePageProps) {
   const { api, loading } = useCatalog();
   const currency = useCurrency();
+  const { dict, locale } = useI18n();
+  const ROWS: CompareRow[] = [
+    { label: "Property type", render: (item) => propertyTypeLabel(item.unit.propertyType, dict, locale) },
+    ...BASE_ROWS.slice(0, 3),
+    { label: "Bedrooms", render: (item) => bedsLabel(item.unit.beds, dict) },
+    ...BASE_ROWS.slice(3),
+  ];
   const router = useRouter();
   const [compareIds, setCompareIds] = useState<CompareUnitId[]>(initialIds);
   const items = useMemo(() => {

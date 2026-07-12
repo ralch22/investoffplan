@@ -2,20 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { PaymentCalculator } from "@/components/payment-calculator";
-import { formatBeds, formatPrice, formatSqft } from "@/lib/format";
+import { bedsLabel, formatPrice, formatSqft, propertyTypeLabel } from "@/lib/format";
 import type { Project, UnitType } from "@/lib/types";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface ProjectPaymentCalculatorProps {
   project: Project;
-}
-
-function unitLabel(unit: UnitType): string {
-  const parts = [
-    formatBeds(unit.beds),
-    unit.propertyType,
-    formatSqft(unit.sqftMin, unit.sqftMax),
-  ].filter(Boolean);
-  return `${parts.join(" · ")} — ${formatPrice(unit.launchPriceAed, "AED", { compact: true })}`;
 }
 
 /**
@@ -28,6 +20,16 @@ function unitLabel(unit: UnitType): string {
 export function ProjectPaymentCalculator({
   project,
 }: ProjectPaymentCalculatorProps) {
+  const { dict, locale } = useI18n();
+
+  function unitLabel(unit: UnitType): string {
+    const parts = [
+      bedsLabel(unit.beds, dict),
+      propertyTypeLabel(unit.propertyType, dict, locale),
+      formatSqft(unit.sqftMin, unit.sqftMax),
+    ].filter(Boolean);
+    return `${parts.join(" · ")} — ${formatPrice(unit.launchPriceAed, "AED", { compact: true })}`;
+  }
   const units = project.units;
   const [unitId, setUnitId] = useState(() => {
     if (!units.length) return "";

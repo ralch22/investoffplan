@@ -15,7 +15,7 @@
     "deploy:verify": "node scripts/verify-deploy-env.mjs preview",
     "deploy:verify:production": "node scripts/verify-deploy-env.mjs production",
     "deploy": "node scripts/verify-deploy-env.mjs preview && NEXT_PUBLIC_CATALOG_API=1 NEXT_IS_BUILD=1 opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "deploy:production": "node scripts/verify-deploy-env.mjs production && NEXT_PUBLIC_CATALOG_API=1 NEXT_IS_BUILD=1 opennextjs-cloudflare build -c wrangler.production.jsonc && opennextjs-cloudflare deploy -c wrangler.production.jsonc",
+    "deploy:production": "node scripts/verify-deploy-env.mjs production && NEXT_PUBLIC_CATALOG_API=1 NEXT_IS_BUILD=1 CLOUDFLARE_ACCOUNT_ID=4a75e91d6fca8bc58467fb80ce1b9c2e opennextjs-cloudflare build -c wrangler.production.jsonc && CLOUDFLARE_ACCOUNT_ID=4a75e91d6fca8bc58467fb80ce1b9c2e opennextjs-cloudflare deploy -c wrangler.production.jsonc",
     "ingest": "tsx scripts/ingest-projects.ts",
     "ingest:dry": "tsx scripts/ingest-projects.ts --dry-run",
     "scrape:pf": "tsx scripts/scrape-pf-catalog.ts",
