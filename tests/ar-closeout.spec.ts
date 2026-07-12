@@ -52,24 +52,46 @@ test.describe("AR close-out", () => {
     page,
   }) => {
     // globalNotFound renders a real branded 404 (lang/dir + noindex + 404 status)
-    // instead of the bare `<html id="__next_error__">` shell. Locale follows
-    // Accept-Language (Node.js middleware isn't supported on the Workers deploy
-    // target, so the 404 doc can't see the request path) — an Arabic-preferring
-    // browser gets the RTL Arabic 404.
+    // instead of the bare `<html id="__next_error__">` shell.
+    //
+    // Path prefix wins over Accept-Language (#224): /ar/* 404s are Arabic even
+    // when the browser sends Accept-Language: en (desktop EN / Googlebot-ish).
+    // Edge middleware stamps x-iop-locale; OpenNext rejects Node proxy.ts.
+    const enArCtx = await browser.newContext({ locale: "en-US" });
+    const enArPage = await enArCtx.newPage();
+    const pathArResp = await enArPage.goto("/ar/does-not-exist", {
+      waitUntil: "commit",
+    });
+    expect(pathArResp?.status()).toBe(404);
+    const pathArHtml = await pathArResp!.text();
+    expect(pathArHtml).toContain('lang="ar"');
+    expect(pathArHtml).toContain('dir="rtl"');
+    expect(pathArHtml).toContain("الصفحة غير موجودة"); // Arabic "page not found"
+    expect(pathArHtml).toContain("ar_AE");
+    expect(pathArHtml.toLowerCase()).toContain("noindex");
+    // EN copy must not win for an /ar path.
+    expect(pathArHtml).not.toContain(">Page not found<");
+    await enArCtx.close();
+
+    // Accept-Language: ar still gets Arabic when path is also /ar.
     const arCtx = await browser.newContext({ locale: "ar-AE" });
     const arPage = await arCtx.newPage();
-    const arResp = await arPage.goto("/ar/does-not-exist", { waitUntil: "commit" });
+    const arResp = await arPage.goto("/ar/this-route-should-404-xyz", {
+      waitUntil: "commit",
+    });
     expect(arResp?.status()).toBe(404);
     const arHtml = await arResp!.text();
-    expect(arHtml).toContain("الصفحة غير موجودة"); // Arabic "page not found"
+    expect(arHtml).toContain("الصفحة غير موجودة");
     expect(arHtml).toContain("ar_AE");
-    expect(arHtml.toLowerCase()).toContain("noindex");
     await arCtx.close();
 
-    // Default (English) browser gets the branded EN 404.
-    const enResp = await page.goto("/definitely-not-a-real-page", { waitUntil: "commit" });
+    // Default (English) browser on an EN path gets the branded EN 404.
+    const enResp = await page.goto("/definitely-not-a-real-page", {
+      waitUntil: "commit",
+    });
     expect(enResp?.status()).toBe(404);
     const enHtml = await enResp!.text();
+    expect(enHtml).toContain('lang="en"');
     expect(enHtml).toContain("Page not found");
     expect(enHtml.toLowerCase()).toContain("noindex");
   });

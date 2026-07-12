@@ -17,12 +17,12 @@ import "./globals.css";
  * real 404 status (the old (en)/[...not-found] and (ar)/ar/[...not-found]
  * catch-alls are gone; unmatched URLs land here directly).
  *
- * Locale detection: no middleware (Node.js middleware isn't supported on the
- * Cloudflare Workers deploy target). global-not-found can't see the request
- * pathname, so we fall back to Accept-Language — an Arabic-preferring browser
- * gets the RTL Arabic 404, everyone else the branded EN one. Both are a real
- * branded 404; getting the exact URL-locale is secondary to not shipping the
- * bare `__next_error__` shell.
+ * Locale detection (prefer path over Accept-Language — issue #224):
+ * 1. `x-iop-locale` / `x-iop-pathname` stamped by Edge `src/middleware.ts`
+ *    on `/ar` (OpenNext supports Edge Middleware; Node `proxy.ts` does not).
+ * 2. Other path-bearing headers Next/host may expose (`x-invoke-path`,
+ *    `x-matched-path`, `next-url`, `x-url`, `x-forwarded-uri`).
+ * 3. Accept-Language fallback (Arabic-preferring browsers → AR).
  */
 
 const inter = Inter({
@@ -71,10 +71,49 @@ const COPY = {
   },
 } as const;
 
+/** True when a path string is under the Arabic tree (`/ar` or `/ar/...`). */
+function pathIsArabic(pathname: string | null | undefined): boolean {
+  if (!pathname) return false;
+  // Strip query/hash and tolerate absolute URLs.
+  let path = pathname.trim();
+  try {
+    if (/^https?:\/\//i.test(path)) path = new URL(path).pathname;
+  } catch {
+    // keep raw
+  }
+  const q = path.indexOf("?");
+  if (q >= 0) path = path.slice(0, q);
+  const h = path.indexOf("#");
+  if (h >= 0) path = path.slice(0, h);
+  return path === "/ar" || path.startsWith("/ar/");
+}
+
+function localeFromHeaders(requestHeaders: Headers): Locale {
+  // 1. Explicit stamp from Edge middleware (authoritative for /ar/*).
+  if (requestHeaders.get("x-iop-locale") === "ar") return "ar";
+  if (pathIsArabic(requestHeaders.get("x-iop-pathname"))) return "ar";
+
+  // 2. Path-bearing headers when middleware did not run (local/edge variants).
+  const pathCandidates = [
+    requestHeaders.get("x-invoke-path"),
+    requestHeaders.get("x-matched-path"),
+    requestHeaders.get("next-url"),
+    requestHeaders.get("x-url"),
+    requestHeaders.get("x-forwarded-uri"),
+    requestHeaders.get("x-original-url"),
+  ];
+  for (const candidate of pathCandidates) {
+    if (pathIsArabic(candidate)) return "ar";
+  }
+
+  // 3. Accept-Language fallback (no path signal).
+  const acceptLanguage = requestHeaders.get("accept-language") ?? "";
+  return /(^|,|\s)ar\b/i.test(acceptLanguage) ? "ar" : "en";
+}
+
 export default async function GlobalNotFound() {
   const requestHeaders = await headers();
-  const acceptLanguage = requestHeaders.get("accept-language") ?? "";
-  const locale: Locale = /(^|,|\s)ar\b/i.test(acceptLanguage) ? "ar" : "en";
+  const locale = localeFromHeaders(requestHeaders);
   const t = COPY[locale];
 
   return (
