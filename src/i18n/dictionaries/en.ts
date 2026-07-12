@@ -172,7 +172,15 @@ const dict = {
     "fullscreen": "Fullscreen",
     "clear": "Clear",
     "filter": "Filter",
-    "clearFilters": "Clear filters"
+    "clearFilters": "Clear filters",
+    "errorKicker": "Error",
+    "errorHeading": "Something went wrong",
+    "errorBody": "An unexpected error occurred. Please try again or return to the homepage.",
+    "tryAgain": "Try again",
+    "goHome": "Go home",
+    "notFoundHeading": "Page not found",
+    "notFoundBody": "We couldn't find the page you're looking for. It may have moved or been removed.",
+    "browseProjectsCta": "Browse projects"
   },
   "a11y": {
     "skipToContent": "Skip to content",
