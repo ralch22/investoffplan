@@ -7,6 +7,8 @@ export const NEWS_ARTICLES_CONTENT: Article[] = [
     "slug": "where-off-plan-launches-cluster-2026",
     "title": "Where Off-Plan Launches Cluster in 2026: The Areas With the Most Active Inventory",
     "description": "Dubai Islands, Creek Harbour and Dubai South lead active off-plan inventory in 2026. See where 2,241 unit options across 725 projects concentrate.",
+    "titleAr": "أين تتركّز إطلاقات المشاريع على الخارطة في 2026: المناطق الأكثر نشاطاً",
+    "descriptionAr": "جزر دبي وكريك هاربور ودبي الجنوب تقود المخزون النشط على الخارطة في 2026. أين تتركّز 2,241 خيار وحدة عبر 725 مشروعاً.",
     "category": "news",
     "publishedAt": "2026-06-02",
     "sections": [
@@ -61,6 +63,8 @@ export const NEWS_ARTICLES_CONTENT: Article[] = [
     "slug": "payment-plans-decoded-what-the-numbers-mean",
     "title": "Payment Plans Decoded: What 10/70/20 Actually Means for Your Cash Flow",
     "description": "10/70/20, 20/40/40, 10/80/10 — we decode the most common UAE off-plan payment plan structures and what each means for your capital timeline.",
+    "titleAr": "فكّ خطط السداد: ماذا يعني 10/70/20 لتدفّق نقدك فعلياً",
+    "descriptionAr": "10/70/20 و20/40/40 و10/80/10 — نفسّر أشهر هياكل خطط السداد للعقارات على الخارطة في الإمارات وما تعنيه لجدول رأس مالك.",
     "category": "news",
     "publishedAt": "2026-06-05",
     "sections": [
@@ -115,6 +119,8 @@ export const NEWS_ARTICLES_CONTENT: Article[] = [
     "slug": "studio-to-4-bed-launch-pricing-ladder-dubai",
     "title": "Studio to 4-Bed: How Launch Pricing Scales Across Dubai's Newest Towers",
     "description": "Dubai off-plan apartment launch prices by bedroom count: studios from AED 450k, 1-beds from AED 690k. See the full pricing ladder from live catalog data.",
+    "titleAr": "من الاستوديو إلى 4 غرف: كيف يتدرّج سعر الإطلاق في أحدث أبراج دبي",
+    "descriptionAr": "أسعار إطلاق الشقق على الخارطة في دبي حسب عدد الغرف: استوديوهات من 450 ألف درهم، وغرفة واحدة من 690 ألف. سلّم الأسعار من بيانات الكتالوج الحي.",
     "category": "news",
     "publishedAt": "2026-06-09",
     "sections": [
@@ -168,6 +174,8 @@ export const NEWS_ARTICLES_CONTENT: Article[] = [
     "slug": "developer-league-table-live-inventory-2026",
     "title": "The Developer League Table: Who Actually Has the Most Live Off-Plan Inventory",
     "description": "Emaar lists 222 active projects — more than the next seven developers combined. The full UAE off-plan developer league table by live inventory.",
+    "titleAr": "جدول ترتيب المطوّرين: من يملك أكبر مخزون نشط على الخارطة",
+    "descriptionAr": "إعمار تسرد 222 مشروعاً نشطاً — أكثر من المطوّرين السبعة التاليين مجتمعين. جدول الترتيب الكامل لمطوّري الإمارات حسب المخزون الحي.",
     "category": "news",
     "publishedAt": "2026-06-12",
     "sections": [
@@ -221,6 +229,8 @@ export const NEWS_ARTICLES_CONTENT: Article[] = [
     "slug": "ras-al-khaimah-spotlight-al-marjan-island",
     "title": "Ras Al Khaimah Spotlight: Why Al Marjan Island Now Prices Above Most of Dubai",
     "description": "RAK holds 164 live off-plan options and a median AED 2,717 per sqft — above Dubai's. Inside the Al Marjan Island-led repricing of the northern emirate.",
+    "titleAr": "تسليط الضوء على رأس الخيمة: لماذا يتجاوز تسعير جزيرة المرجان معظم دبي",
+    "descriptionAr": "رأس الخيمة تضم 164 خياراً نشطاً على الخارطة ومتوسط 2,717 درهماً/قدم — أعلى من دبي. داخل إعادة تسعير الإمارة الشمالية بقيادة جزيرة المرجان.",
     "category": "news",
     "publishedAt": "2026-06-16",
     "sections": [
@@ -273,6 +283,8 @@ export const NEWS_ARTICLES_CONTENT: Article[] = [
     "slug": "abu-dhabi-off-plan-island-map",
     "title": "Abu Dhabi's Off-Plan Map: Al Reem, Hudayriat and the Island Premium",
     "description": "Abu Dhabi's 155 live off-plan options cluster on islands — Al Reem, Hudayriat, Yas, Saadiyat — with a AED 3.85M median. What buyers should know.",
+    "titleAr": "خريطة أبوظبي على الخارطة: الريم والحديريات وعلاوة الجزر",
+    "descriptionAr": "155 خياراً نشطاً في أبوظبي تتركّز على الجزر — الريم والحديريات وياس والسعديات — بمتوسط 3.85 مليون درهم. ما يجب أن يعرفه المشتري.",
     "category": "news",
     "publishedAt": "2026-06-19",
     "sections": [
@@ -327,6 +339,8 @@ export const NEWS_ARTICLES_CONTENT: Article[] = [
     "slug": "handover-wave-2027-2028-supply-timeline",
     "title": "The 2027–2028 Handover Wave: Reading the UAE's Off-Plan Delivery Timeline",
     "description": "Over half of live UAE off-plan projects hand over in 2027–2028, peaking at 215 projects in 2028. What the delivery curve means for buyers and investors.",
+    "titleAr": "موجة التسليم 2027–2028: قراءة جدول تسليم المشاريع على الخارطة في الإمارات",
+    "descriptionAr": "أكثر من نصف المشاريع النشطة على الخارطة تُسلَّم في 2027–2028، بذروة 215 مشروعاً في 2028. ماذا يعني منحنى التسليم للمشتري والمستثمر.",
     "category": "news",
     "publishedAt": "2026-06-23",
     "sections": [
@@ -380,6 +394,8 @@ export const NEWS_ARTICLES_CONTENT: Article[] = [
     "slug": "q4-2026-handovers-buyer-window",
     "title": "45 Projects Hand Over in Q4 2026: What Near-Completion Inventory Means for Buyers",
     "description": "45 live projects are due to hand over in Q4 2026 — 81 across the year. Why near-handover off-plan is a distinct opportunity, and how to assess it.",
+    "titleAr": "45 مشروعاً تُسلَّم في الربع الرابع 2026: ماذا يعني المخزون القريب من الاكتمال",
+    "descriptionAr": "45 مشروعاً حياً مستحق التسليم في الربع الرابع 2026 — و81 عبر السنة. لماذا يُعدّ المخزون قريب التسليم فرصة مختلفة وكيف تقيّمه.",
     "category": "news",
     "publishedAt": "2026-06-26",
     "sections": [
@@ -432,6 +448,8 @@ export const NEWS_ARTICLES_CONTENT: Article[] = [
     "slug": "under-aed-1m-entry-points-2026",
     "title": "Under AED 1 Million: Where the UAE's Entry-Level Off-Plan Actually Is",
     "description": "198 live off-plan options list under AED 1M, and 473 under AED 1.5M. Where UAE entry-level inventory sits in 2026 — by emirate, district and unit type.",
+    "titleAr": "أقل من مليون درهم: أين تقع فعلاً نقاط الدخول على الخارطة في الإمارات",
+    "descriptionAr": "198 خياراً حياً بأقل من مليون درهم، و473 بأقل من 1.5 مليون. أين يقع مخزون الدخول في 2026 — حسب الإمارة والمنطقة ونوع الوحدة.",
     "category": "news",
     "publishedAt": "2026-06-30",
     "sections": [
@@ -486,6 +504,8 @@ export const NEWS_ARTICLES_CONTENT: Article[] = [
     "slug": "golden-visa-threshold-off-plan-catalog",
     "title": "The AED 2 Million Question: How Much of the Off-Plan Market Clears the Golden Visa Bar",
     "description": "1,379 of 2,241 live off-plan options list at AED 2M or above — the UAE Golden Visa property threshold. What qualifies, and what buyers should verify.",
+    "titleAr": "سؤال المليوني درهم: كم من سوق على الخارطة يتجاوز عتبة الإقامة الذهبية",
+    "descriptionAr": "1,379 من 2,241 خياراً حياً بسعر مليوني درهم فأكثر — عتبة العقار للإقامة الذهبية. ما الذي يؤهّل، وماذا يجب أن يتحقق منه المشتري.",
     "category": "news",
     "publishedAt": "2026-07-04",
     "sections": [

@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { getNewsArticle } from "@/content/articles";
+import {
+  articleDescription,
+  articleTitle,
+  getNewsArticle,
+} from "@/content/articles";
 import { getSiteUrl } from "@/lib/site-url";
 import NewsArticlePage, { generateStaticParams } from "@/app/(en)/news/[slug]/page";
 
 // AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider;
-// the locale prop localizes internal links and dates.
+// the locale prop localizes internal links, dates, and AR title/description (#298).
 export { generateStaticParams };
 export const dynamicParams = false;
 
@@ -30,9 +34,11 @@ export async function generateMetadata({
   };
   const article = getNewsArticle(slug);
   if (!article) return { title: "المقال غير موجود", alternates };
+  const title = articleTitle(article, "ar");
+  const description = articleDescription(article, "ar");
   return {
-    title: `${article.title} | أخبار العقارات على الخارطة`,
-    description: `آخر أخبار سوق العقارات على الخارطة في الإمارات: ${article.description}`,
+    title: `${title} | أخبار العقارات على الخارطة`,
+    description: `آخر أخبار سوق العقارات على الخارطة في الإمارات: ${description}`,
     alternates,
   };
 }
