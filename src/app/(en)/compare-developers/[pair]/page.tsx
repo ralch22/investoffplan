@@ -18,7 +18,8 @@ import {
   type DeveloperSide,
 } from "@/lib/developer-compare";
 import { formatPrice } from "@/lib/format";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
+import { comparePairTitle } from "@/lib/seo-title";
 import { getDictionary } from "@/i18n";
 import { interpolate, type Locale } from "@/i18n/config";
 
@@ -39,11 +40,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { pair } = await params;
   const cmp = await buildDeveloperComparison(pair);
   if (!cmp) return { title: "Comparison not found" };
+  // Plain title + layout brand suffix; cap so full SERP title stays ≤60 chars.
   return {
-    title: { absolute: `${cmp.a.name} vs ${cmp.b.name} — developers | invest off-plan` },
+    title: comparePairTitle(cmp.a.name, cmp.b.name, "developers"),
     description:
       `Compare ${cmp.a.name} and ${cmp.b.name} — off-plan portfolio size, launch prices, price per sqft, communities covered, and handover pipeline.`.slice(0, 158),
-    alternates: { canonical: `${getSiteUrl()}/compare-developers/${cmp.pairSlug}` },
+    alternates: enMeta(`/compare-developers/${cmp.pairSlug}`),
   };
 }
 

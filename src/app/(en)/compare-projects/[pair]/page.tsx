@@ -8,7 +8,8 @@ import { PageHero } from "@/components/page-hero";
 import { MarketAdviceCta } from "@/components/market-advice-cta";
 import { formatPrice } from "@/lib/format";
 import { unoptimizedProp } from "@/lib/asset-image";
-import { getSiteUrl } from "@/lib/site-url";
+import { enMeta } from "@/lib/ar-meta";
+import { comparePairTitle } from "@/lib/seo-title";
 import {
   buildProjectComparison,
   getComparableProjectSlugs,
@@ -35,14 +36,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const cmp = await buildProjectComparison(pair);
   if (!cmp) return { title: "Comparison not found" };
   const { a, b } = cmp;
+  // Plain title + layout brand; enMeta for reciprocal hreflang with /ar mirror.
   return {
-    title: { absolute: `${a.name} vs ${b.name} — off-plan | invest off-plan` },
+    title: comparePairTitle(a.name, b.name, "off-plan"),
     description:
       `Compare ${a.name} (${a.developer}) and ${b.name} (${b.developer}) in ${a.area} — from-price, price per sqft, handover, payment plan, and bedrooms.`.slice(
         0,
         158,
       ),
-    alternates: { canonical: `${getSiteUrl()}/compare-projects/${cmp.pairSlug}` },
+    alternates: enMeta(`/compare-projects/${cmp.pairSlug}`),
   };
 }
 

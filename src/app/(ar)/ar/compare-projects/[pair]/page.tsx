@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { getSiteUrl } from "@/lib/site-url";
 import CompareProjectsPage, { generateStaticParams } from "@/app/(en)/compare-projects/[pair]/page";
+import { buildProjectComparison } from "@/lib/project-compare";
+import { arMeta } from "@/lib/ar-meta";
+import { comparePairTitle } from "@/lib/seo-title";
 
 // AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider.
 export { generateStaticParams };
@@ -10,9 +12,18 @@ export default function ArCompareProjectsPage(props: { params: Promise<{ pair: s
   return <CompareProjectsPage {...props} locale="ar" />;
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ pair: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ pair: string }>;
+}): Promise<Metadata> {
   const { pair } = await params;
-  const base = getSiteUrl();
-  const path = `/compare-projects/${pair}`;
-  return { alternates: { canonical: `${base}/ar${path}`, languages: { "x-default": `${base}${path}`, en: `${base}${path}`, ar: `${base}/ar${path}` } } };
+  const cmp = await buildProjectComparison(pair);
+  if (!cmp) return arMeta({ path: `/compare-projects/${pair}`, title: "مقارنة غير موجودة" });
+  return arMeta({
+    path: `/compare-projects/${cmp.pairSlug}`,
+    title: comparePairTitle(cmp.a.name, cmp.b.name, "off-plan"),
+    description:
+      `قارن ${cmp.a.name} و${cmp.b.name} — السعر، سعر القدم، التسليم، وخطة السداد.`.slice(0, 158),
+  });
 }

@@ -1,5 +1,8 @@
 import { test, expect } from "./fixtures";
-import { buildFactualSummary } from "../src/lib/project-factual-summary";
+import {
+  buildFactualSummary,
+  hasSubstantialProjectCopy,
+} from "../src/lib/project-factual-summary";
 import type { Project, UnitType } from "../src/lib/types";
 
 function unit(partial: Partial<UnitType> & Pick<UnitType, "id">): UnitType {
@@ -35,6 +38,32 @@ function project(partial: Partial<Project> = {}): Project {
     ...partial,
   };
 }
+
+test.describe("hasSubstantialProjectCopy (empty About residual)", () => {
+  test("rejects empty / whitespace / junk HTML shells", () => {
+    expect(hasSubstantialProjectCopy({})).toBe(false);
+    expect(hasSubstantialProjectCopy({ description: "   " })).toBe(false);
+    expect(hasSubstantialProjectCopy({ description: "<p><br></p>" })).toBe(false);
+    expect(hasSubstantialProjectCopy({ descriptionUnique: "<div></div>" })).toBe(
+      false,
+    );
+  });
+
+  test("accepts real plain or HTML copy", () => {
+    expect(
+      hasSubstantialProjectCopy({
+        description:
+          "A waterfront residential tower by Sample Dev in Dubai Marina with resort amenities.",
+      }),
+    ).toBe(true);
+    expect(
+      hasSubstantialProjectCopy({
+        descriptionUnique:
+          "<p>A waterfront residential tower by Sample Dev in Dubai Marina with resort amenities and marina views.</p>",
+      }),
+    ).toBe(true);
+  });
+});
 
 test.describe("buildFactualSummary (thin PDP About fallback)", () => {
   test("returns undefined without a project name", () => {

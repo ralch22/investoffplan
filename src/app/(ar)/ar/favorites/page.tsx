@@ -5,8 +5,12 @@ import { arMeta } from "@/lib/ar-meta";
 // which feeds the Arabic dictionary into the client <FavoritesPage>.
 export { default } from "@/app/(en)/favorites/page";
 
-export const metadata: Metadata = arMeta({
-  path: "/favorites",
-  title: "المفضلة لديّ",
-  description: "العقارات على الخارطة التي حفظتها على invest off-plan.",
-});
+export const metadata: Metadata = {
+  ...arMeta({
+    path: "/favorites",
+    title: "المفضلة لديّ",
+    description: "العقارات على الخارطة التي حفظتها على invest off-plan.",
+  }),
+  // User-state page — mirror EN noindex policy.
+  robots: { index: false, follow: false },
+};

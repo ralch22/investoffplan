@@ -49,9 +49,10 @@ export function ProjectAbout({
   const aboutText =
     enrichment?.summary ??
     (description && !hasRichHtml ? stripHtml(description) : undefined);
-  // Only surfaces when there is no richer prose (rich HTML / enrichment / plain
-  // description); the page passes it solely for thin fallback PDPs.
-  const proseText = aboutText ?? factualFallback;
+  // Empty-string strip of junk HTML (`<p><br></p>`) must not block the factual
+  // fallback — `??` only reacts to null/undefined, not "".
+  const proseText =
+    aboutText && aboutText.trim().length > 0 ? aboutText : factualFallback;
 
   if (!proseText && !hasRichHtml && !brochure && !video && amenities.length === 0) {
     return null;

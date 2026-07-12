@@ -58,4 +58,32 @@ test.describe("Content routes", () => {
     expect(body).toMatch(/FAQPage/);
     expect(body).toMatch(/Premium-flagged share|حصة المشاريع المميزة/);
   });
+
+  // Soft SEO residual — hub indexes + title/meta hygiene + favorites noindex.
+  test("compare hub indexes render and favorites is noindex", async ({ page }) => {
+    for (const path of ["/compare-projects", "/compare-developers"]) {
+      const res = await page.goto(path);
+      expect(res?.status()).toBe(200);
+      const body = await res!.text();
+      expect(body).toMatch(/<h1[\s>]/i);
+    }
+
+    const fav = await page.goto("/favorites");
+    expect(fav?.status()).toBe(200);
+    const favBody = await fav!.text();
+    expect(favBody).toMatch(/noindex/i);
+
+    const pair = await page.goto(
+      "/compare-developers/damac-properties-vs-emaar-properties",
+    );
+    expect(pair?.status()).toBe(200);
+    const pairBody = await pair!.text();
+    // Title should not double-brand ("… | invest off-plan | invest off-plan").
+    const titleMatch = pairBody.match(/<title>([^<]*)<\/title>/i);
+    expect(titleMatch?.[1] ?? "").not.toMatch(
+      /\|\s*invest off-plan\s*\|\s*invest off-plan/i,
+    );
+    // Cap SERP budget (allow slight overshoot only if names are extreme).
+    expect((titleMatch?.[1] ?? "").length).toBeLessThanOrEqual(70);
+  });
 });
