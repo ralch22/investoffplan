@@ -161,6 +161,12 @@ test.describe("Content routes", () => {
     });
     expect(reportRes?.ok()).toBeTruthy();
     expect(page.url()).toContain("/ar/reports/market/");
+
+    // #281 — AR report "back to community" must stay under /ar/communities/*.
+    const reportHtml = await reportRes!.text();
+    const communitySlug = arReport!.split("/").pop()!;
+    expect(reportHtml).toContain(`href="/ar/communities/${communitySlug}"`);
+    expect(reportHtml).not.toContain(`href="/communities/${communitySlug}"`);
   });
 
   // #252 — AR FAQ hub hero + topic cards must not stay English.
