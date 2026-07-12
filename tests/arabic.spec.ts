@@ -43,6 +43,17 @@ test.describe("Arabic locale", () => {
     await expect(page.getByRole("button", { name: "شبكة" }).first()).toBeVisible();
   });
 
+  // #320 — hero "Properties in {location}" must not hardcode EN "UAE" on AR SERP.
+  test("/ar/projects hero uses Arabic UAE location token", async ({ page }) => {
+    await page.goto("/ar/projects");
+    await expect(page.locator("html")).toHaveAttribute("lang", "ar");
+    // Client SERP hero after hydrate — dict.serp.locationAll = "الإمارات".
+    await expect(page.getByText("عقارات في الإمارات").first()).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.locator("main")).not.toContainText("عقارات في UAE");
+  });
+
   // #280 — SERP developer blocks stay under /ar after catalog hydrate.
   test("/ar/projects developer spotlight/known links under /ar", async ({
     page,
