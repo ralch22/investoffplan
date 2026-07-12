@@ -6,7 +6,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { FAQ_TOPICS } from "@/content/faq";
 import { getHeroImage } from "@/lib/area-images";
 import { enMeta } from "@/lib/ar-meta";
-import { localePath, type Locale } from "@/i18n/config";
+import { interpolate, localePath, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n";
 
 export const metadata: Metadata = {
@@ -24,13 +24,15 @@ export default async function FaqHubPage({
 } = {}) {
   const heroImage = await getHeroImage();
   const dict = getDictionary(locale);
+  const t = dict.pages.faq;
+  const topicCopy = t.topics as Record<string, { title: string; description: string }>;
 
   return (
     <PageShell headerVariant="transparent">
       <PageHero
-        title="Frequently Asked Questions"
+        title={t.heroTitle}
         italicTitle
-        subtitle="Straight answers on buying off-plan in the UAE."
+        subtitle={t.heroSubtitle}
         imageUrl={heroImage}
       />
 
@@ -42,26 +44,28 @@ export default async function FaqHubPage({
           ]}
         />
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {FAQ_TOPICS.map((topic) => (
-            <Link
-              key={topic.slug}
-              href={localePath(locale, `/faq/${topic.slug}`)}
-              className="rounded-2xl border border-border bg-white p-6 shadow-sm transition hover:border-brand hover:shadow-md"
-            >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand text-sm font-bold text-white">
-                ?
-              </span>
-              <h2 className="mt-4 text-lg font-semibold text-text-dark">
-                {topic.title}
-              </h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted">
-                {topic.description}
-              </p>
-              <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-brand">
-                {topic.faqs.length} answers
-              </p>
-            </Link>
-          ))}
+          {FAQ_TOPICS.map((topic) => {
+            const copy = topicCopy[topic.slug] ?? {
+              title: topic.title,
+              description: topic.description,
+            };
+            return (
+              <Link
+                key={topic.slug}
+                href={localePath(locale, `/faq/${topic.slug}`)}
+                className="rounded-2xl border border-border bg-white p-6 shadow-sm transition hover:border-brand hover:shadow-md"
+              >
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand text-sm font-bold text-white">
+                  ?
+                </span>
+                <h2 className="mt-4 text-lg font-semibold text-text-dark">{copy.title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{copy.description}</p>
+                <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-brand">
+                  {interpolate(t.answersCount, { count: topic.faqs.length })}
+                </p>
+              </Link>
+            );
+          })}
         </div>
       </main>
     </PageShell>

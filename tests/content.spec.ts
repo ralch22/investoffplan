@@ -19,6 +19,16 @@ test.describe("Content routes", () => {
     expect(html).toContain("أدلّة الاستثمار");
   });
 
+  // #252 — AR FAQ hub must not hardcode EN H1/chrome.
+  test("AR /ar/faq hub H1 is Arabic", async ({ page }) => {
+    const res = await page.goto("/ar/faq", { waitUntil: "commit" });
+    expect(res?.status()).toBe(200);
+    const html = await res!.text();
+    expect(html).toContain('lang="ar"');
+    expect(html).not.toContain(">Frequently Asked Questions<");
+    expect(html).toContain("الأسئلة الشائعة");
+  });
+
   test("news article renders with date, sections, and JSON-LD", async ({ page }) => {
     await page.goto("/news");
     const firstLink = page.getByRole("link", { name: "Read More" }).first();

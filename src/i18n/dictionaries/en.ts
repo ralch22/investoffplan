@@ -1381,6 +1381,73 @@ const dict = {
           "description": "Evaluate up to three units on price, handover, brochures, and amenities."
         }
       }
+    },
+    "faq": {
+      "heroTitle": "Frequently Asked Questions",
+      "heroSubtitle": "Straight answers on buying off-plan in the UAE.",
+      "answersCount": "{count} answers",
+      "topics": {
+        "off-plan-basics": {
+          "title": "Off-Plan Basics",
+          "description": "What off-plan property means in the UAE, how buying before completion works, and the key risks and rewards every first-time investor should understand."
+        },
+        "payment-plans": {
+          "title": "Payment Plans",
+          "description": "How UAE off-plan payment plans work — 60/40, 80/20, construction-linked milestones, booking deposits, and what happens if you miss an instalment."
+        },
+        "golden-visa": {
+          "title": "Golden Visa via Property",
+          "description": "UAE Golden Visa through property investment — the AED 2 million threshold, off-plan and mortgaged property eligibility, family sponsorship, and renewal."
+        },
+        "escrow-and-rera": {
+          "title": "Escrow & RERA Protection",
+          "description": "How RERA escrow accounts under Dubai Law 8 of 2007 protect off-plan buyers and what happens if a project stalls."
+        },
+        "fees-and-costs": {
+          "title": "Fees & Buying Costs",
+          "description": "The full cost of buying off-plan in Dubai — DLD 4% transfer fee, Oqood, agency, and other charges beyond the unit price."
+        },
+        "handover-process": {
+          "title": "Handover Process",
+          "description": "What happens at off-plan handover in Dubai — completion notice, snagging, title deed, and moving in."
+        },
+        "mortgages-for-off-plan": {
+          "title": "Off-Plan Mortgages",
+          "description": "Financing off-plan property in the UAE — LTV caps, bank pre-approval, and when lenders fund construction vs handover."
+        },
+        "foreign-buyers": {
+          "title": "Foreign Buyers",
+          "description": "How non-residents and expats buy UAE off-plan property — freehold areas, visas, and documentation."
+        },
+        "resale-and-assignment": {
+          "title": "Resale & Assignment",
+          "description": "Selling off-plan before completion in Dubai — assignment rules, developer NOCs, and fees."
+        },
+        "service-charges": {
+          "title": "Service Charges",
+          "description": "Dubai service charges explained — what they cover and how they affect net yield."
+        },
+        "rental-yields": {
+          "title": "Rental Yields",
+          "description": "Understanding rental yields on UAE off-plan property — gross vs net and how launch buyers model returns."
+        },
+        "developer-due-diligence": {
+          "title": "Developer Due Diligence",
+          "description": "How to vet a UAE developer before buying off-plan — track record, escrow, and red flags."
+        },
+        "dubai-vs-other-emirates": {
+          "title": "Dubai vs Other Emirates",
+          "description": "Comparing off-plan investment across the UAE — Dubai, Abu Dhabi, Ras Al Khaimah, and Sharjah."
+        },
+        "snagging-and-defects": {
+          "title": "Snagging & Defects",
+          "description": "Snagging inspections and defect liability in Dubai — the 1-year window and buyer remedies."
+        },
+        "post-handover-payment-plans": {
+          "title": "Post-Handover Payment Plans",
+          "description": "Post-handover payment plans in Dubai — how paying after completion works and the trade-offs."
+        }
+      }
     }
   },
   "developers": {
