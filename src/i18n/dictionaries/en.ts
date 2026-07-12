@@ -764,6 +764,7 @@ const dict = {
       "phoneNumberLabel": "Phone number",
       "downloadPdf": "Download PDF brochure",
       "requestViaWhatsapp": "Request brochure via WhatsApp",
+      "whatsappPrefill": "Hi, I just requested the brochure for {project} on invest off-plan. My name is {name}. Phone: {phone}. Please send it to me!",
       "closeAria": "Close"
     },
     "preapproval": {
