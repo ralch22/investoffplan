@@ -8,6 +8,13 @@ import {
 import { unitPricePerSqft } from "@/lib/investment-metrics";
 import { formatPrice } from "@/lib/format";
 
+interface StripLabels {
+  bestValue: string;
+  highestYield: string;
+  earliestHandover: string;
+  lowestEntry: string;
+}
+
 interface Chip {
   label: string;
   projectName: string;
@@ -18,14 +25,23 @@ interface Chip {
  * At-a-glance winner chips above the compare table. Only renders chips whose
  * metric has a strict winner; renders nothing when no chip qualifies.
  */
+const DEFAULT_LABELS: StripLabels = {
+  bestValue: "Best value",
+  highestYield: "Highest yield",
+  earliestHandover: "Earliest handover",
+  lowestEntry: "Lowest entry",
+};
+
 export function CompareSummaryStrip({
   items,
   stats,
   currency,
+  labels = DEFAULT_LABELS,
 }: {
   items: FlatUnit[];
   stats: CompareStatsMap;
   currency: CurrencyCode;
+  labels?: StripLabels;
 }) {
   if (items.length < 2) return null;
   const winners = computeCompareWinners(items, stats);
@@ -44,18 +60,18 @@ export function CompareSummaryStrip({
     chips.push({ label, projectName: item.project.name, value: v });
   };
 
-  push(winners.lowestPpsqft, "Best value", (i) => {
+  push(winners.lowestPpsqft, labels.bestValue, (i) => {
     const v = unitPricePerSqft(i);
     return v ? `AED ${v.toLocaleString()}/sqft` : null;
   });
-  push(winners.highestYield, "Highest yield", (i) => {
+  push(winners.highestYield, labels.highestYield, (i) => {
     const y = stats[i.project.id]?.grossYieldPct;
     return y != null ? `${y}% gross` : null;
   });
-  push(winners.earliestHandover, "Earliest handover", (i) =>
+  push(winners.earliestHandover, labels.earliestHandover, (i) =>
     i.project.handover ?? null,
   );
-  push(winners.lowestPrice, "Lowest entry", (i) =>
+  push(winners.lowestPrice, labels.lowestEntry, (i) =>
     formatPrice(i.unit.launchPriceAed, currency, { compact: true }),
   );
 

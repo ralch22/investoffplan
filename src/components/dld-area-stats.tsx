@@ -1,11 +1,14 @@
 import type { DldAreaStats } from "@/lib/dld-area-stats";
 import { formatPrice } from "@/lib/format";
 import { TrendChart } from "@/components/trend-chart";
+import { getDictionary, interpolate } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 interface Props {
   stats: DldAreaStats;
   areaName: string;
   source: string;
+  locale?: Locale;
 }
 
 const MONTH_ABBR = ["", "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"];
@@ -15,22 +18,25 @@ const MONTH_ABBR = ["", "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "
  * transaction volume, gross rental yield, and a price-per-sqft trend. Aggregates
  * only (Dubai Land Department open data); no purchase-level or owner data.
  */
-export function DldAreaStatsBand({ stats, areaName, source }: Props) {
+export function DldAreaStatsBand({ stats, areaName, source, locale = "en" }: Props) {
+  const dict = getDictionary(locale);
+  const dld = dict.dld;
+
   const tiles = [
     stats.medianPrice != null
-      ? { label: "Median sold price", value: formatPrice(Math.round(stats.medianPrice), "AED"), hint: "2025 transactions" }
+      ? { label: dld.medianSoldPrice, value: formatPrice(Math.round(stats.medianPrice), "AED"), hint: dld.hint2025Transactions }
       : null,
     stats.medianPpsqft != null
-      ? { label: "Median sold AED/sqft", value: `AED ${stats.medianPpsqft.toLocaleString()}`, hint: "Actual sales, not launch" }
+      ? { label: dld.medianSoldPsf, value: `AED ${stats.medianPpsqft.toLocaleString()}`, hint: dld.hintActualSales }
       : null,
-    { label: "Sales recorded (2025)", value: stats.saleSample.toLocaleString(), hint: "Transaction volume" },
+    { label: dld.salesRecorded, value: stats.saleSample.toLocaleString(), hint: dld.hintTransactionVolume },
     stats.grossYieldPct != null
-      ? { label: "Gross rental yield", value: `${stats.grossYieldPct}%`, hint: "Median rent ÷ median price" }
+      ? { label: dld.grossRentalYield, value: `${stats.grossYieldPct}%`, hint: dld.hintGrossYield }
       : stats.appreciationPct != null
         ? {
-            label: "Price trend (2025)",
+            label: dld.priceTrend,
             value: `${stats.appreciationPct > 0 ? "+" : ""}${stats.appreciationPct}%`,
-            hint: "AED/sqft, start→latest",
+            hint: dld.hintPriceTrend,
           }
         : null,
   ].filter((t): t is { label: string; value: string; hint: string } => t !== null);
@@ -84,7 +90,7 @@ export function DldAreaStatsBand({ stats, areaName, source }: Props) {
                 {Object.entries(stats.beds)
                   .sort(([x], [y]) => Number(x) - Number(y))
                   .map(([k, v]) => {
-                    const label = k === "0" ? "Studio" : k === "4" ? "4+ bed" : `${k} bed`;
+                    const label = k === "0" ? dld.studio : k === "4" ? dld.fourPlusBed : interpolate(dld.bedLabel, { k });
                     return (
                       <tr key={k} className="border-t border-border">
                         <td className="px-3 py-2 font-semibold text-text-dark">{label}</td>

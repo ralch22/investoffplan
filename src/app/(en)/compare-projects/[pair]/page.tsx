@@ -176,7 +176,7 @@ export default async function CompareProjectsPage({ params, locale = "en" }: Pag
           ))}
         </div>
 
-        <MarketAdviceCta context={`${a.name} vs ${b.name}`} />
+        <MarketAdviceCta context={`${a.name} vs ${b.name}`} locale={locale} />
       </main>
     </PageShell>
   );

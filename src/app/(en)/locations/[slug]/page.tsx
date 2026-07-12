@@ -128,7 +128,7 @@ export default async function LocationGuidePage({ params, locale = "en" }: PageP
           {guide.methodology} {dict.pages.locations.methodologyDisclaimer}
         </p>
 
-        <MarketAdviceCta context={guide.h1.toLowerCase()} />
+        <MarketAdviceCta context={guide.h1.toLowerCase()} locale={locale} />
 
         <section className="mt-10">
           <h2 className="text-lg font-semibold text-text-dark">{dict.pages.locations.moreGuidesHeading}</h2>

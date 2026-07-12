@@ -541,7 +541,7 @@ export default async function ProjectDetailPage({
         <ProjectFloorPlans project={project} locale={locale} />
         </div>
 
-        {areaInsights ? <ProjectLivingInArea insights={areaInsights} /> : null}
+        {areaInsights ? <ProjectLivingInArea insights={areaInsights} locale={locale} /> : null}
 
         <ProjectLocationSection project={project} />
 
@@ -575,6 +575,7 @@ export default async function ProjectDetailPage({
               stats={dldStats}
               areaName={project.area.split(",")[0]}
               source={dldSource.source}
+              locale={locale}
             />
           </div>
         ) : null}

@@ -236,7 +236,7 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
           </section>
         ) : null}
 
-        <MarketAdviceCta context={`${a.name} vs ${b.name}`} />
+        <MarketAdviceCta context={`${a.name} vs ${b.name}`} locale={locale} />
       </main>
     </PageShell>
   );

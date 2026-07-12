@@ -504,6 +504,12 @@ const dict = {
       "colSize": "Size",
       "colType": "Type",
       "colFrom": "From"
+    },
+    "livingArea": {
+      "projects": "Projects",
+      "unitOptions": "Unit options",
+      "from": "From",
+      "avgLaunch": "Avg launch"
     }
   },
   "forms": {
@@ -1205,7 +1211,33 @@ const dict = {
     "estMonthlyPaymentHint": "80% loan · 4.25% · 25y",
     "pdfReady": "PDF ready",
     "bedrooms": "Bedrooms",
-    "moreAmenities": "+{count} more"
+    "moreAmenities": "+{count} more",
+    "bestValue": "Best value",
+    "highestYield": "Highest yield",
+    "earliestHandover": "Earliest handover",
+    "lowestEntry": "Lowest entry"
+  },
+  "marketAdvice": {
+    "heading": "Not sure which fits your goals?",
+    "blurb": "Talk to an off-plan specialist about yields, payment plans, and handover timelines — no obligation.",
+    "whatsappCta": "WhatsApp an advisor",
+    "bookConsultation": "Book a consultation",
+    "waMessage": "Hi, I'm looking at {context} for off-plan investment. Can you advise which fits my goals?"
+  },
+  "dld": {
+    "medianSoldPrice": "Median sold price",
+    "hint2025Transactions": "2025 transactions",
+    "medianSoldPsf": "Median sold AED/sqft",
+    "hintActualSales": "Actual sales, not launch",
+    "salesRecorded": "Sales recorded (2025)",
+    "hintTransactionVolume": "Transaction volume",
+    "grossRentalYield": "Gross rental yield",
+    "hintGrossYield": "Median rent ÷ median price",
+    "priceTrend": "Price trend (2025)",
+    "hintPriceTrend": "AED/sqft, start→latest",
+    "studio": "Studio",
+    "fourPlusBed": "4+ bed",
+    "bedLabel": "{k} bed"
   }
 } as const;
 

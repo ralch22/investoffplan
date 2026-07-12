@@ -4,12 +4,17 @@ import { communitySlugFor } from "@/lib/community-slug";
 import { formatPrice } from "@/lib/format";
 import type { AreaInsights } from "@/lib/area-insights";
 import { unoptimizedProp } from "@/lib/asset-image";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 interface ProjectLivingInAreaProps {
   insights: AreaInsights;
+  locale?: Locale;
 }
 
-export function ProjectLivingInArea({ insights }: ProjectLivingInAreaProps) {
+export function ProjectLivingInArea({ insights, locale = "en" }: ProjectLivingInAreaProps) {
+  const dict = getDictionary(locale);
+  const la = dict.pdp.livingArea;
   return (
     <section
       id="living-in-area"
@@ -51,14 +56,14 @@ export function ProjectLivingInArea({ insights }: ProjectLivingInAreaProps) {
 
           <div className="p-6">
             <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <InsightStat label="Projects" value={String(insights.projectCount)} />
-              <InsightStat label="Unit options" value={insights.unitCount.toLocaleString()} />
+              <InsightStat label={la.projects} value={String(insights.projectCount)} />
+              <InsightStat label={la.unitOptions} value={insights.unitCount.toLocaleString()} />
               <InsightStat
-                label="From"
+                label={la.from}
                 value={formatPrice(insights.minPriceAed, "AED")}
               />
               <InsightStat
-                label="Avg launch"
+                label={la.avgLaunch}
                 value={formatPrice(insights.avgPriceAed, "AED")}
               />
             </dl>

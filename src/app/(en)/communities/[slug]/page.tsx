@@ -177,7 +177,7 @@ export default async function CommunityDetailPage({ params, locale = "en" }: Pag
         {/* DLD market data (anonymized aggregates; renders only where we have it) */}
         {dldStats ? (
           <>
-            <DldAreaStatsBand stats={dldStats} areaName={community.name} source={dldSource.source} />
+            <DldAreaStatsBand stats={dldStats} areaName={community.name} source={dldSource.source} locale={locale} />
             {/* Interaction-gated deep analytics + printable report entry point.
                 Static HTML identical for all users — the deep data only ever
                 arrives via the session-guarded API after a click. */}
@@ -210,6 +210,7 @@ export default async function CommunityDetailPage({ params, locale = "en" }: Pag
           <MarketAdviceCta
             context={`investing in ${community.name}`}
             heading={`Thinking about ${community.name}?`}
+            locale={locale}
           />
         ) : null}
 

@@ -259,6 +259,12 @@ export function ComparePage({
               items={items}
               stats={initialStats}
               currency={currency}
+              labels={{
+                bestValue: dict.compare.bestValue,
+                highestYield: dict.compare.highestYield,
+                earliestHandover: dict.compare.earliestHandover,
+                lowestEntry: dict.compare.lowestEntry,
+              }}
             />
 
             <div

@@ -506,6 +506,12 @@ export const ar: Dict = {
       "colSize": "المساحة",
       "colType": "النوع",
       "colFrom": "من"
+    },
+    "livingArea": {
+      "projects": "المشاريع",
+      "unitOptions": "خيارات الوحدات",
+      "from": "من",
+      "avgLaunch": "متوسط الإطلاق"
     }
   },
   "forms": {
@@ -1207,6 +1213,32 @@ export const ar: Dict = {
     "estMonthlyPaymentHint": "تمويل 80% · 4.25% · 25 سنة",
     "pdfReady": "PDF جاهز",
     "bedrooms": "غرف النوم",
-    "moreAmenities": "+{count} المزيد"
+    "moreAmenities": "+{count} المزيد",
+    "bestValue": "أفضل قيمة",
+    "highestYield": "أعلى عائد",
+    "earliestHandover": "أقرب تسليم",
+    "lowestEntry": "أدنى سعر دخول"
+  },
+  "marketAdvice": {
+    "heading": "غير متأكد من الخيار المناسب لأهدافك؟",
+    "blurb": "تحدث مع متخصص في العقارات على الخارطة حول العوائد وخطط الدفع ومواعيد التسليم — دون التزام.",
+    "whatsappCta": "واتساب مع مستشار",
+    "bookConsultation": "احجز استشارة",
+    "waMessage": "مرحباً، أنا أبحث في {context} للاستثمار على الخارطة. هل يمكنك المساعدة في اختيار الأنسب؟"
+  },
+  "dld": {
+    "medianSoldPrice": "متوسط سعر البيع",
+    "hint2025Transactions": "معاملات 2025",
+    "medianSoldPsf": "وسيط درهم/قدم² للبيع",
+    "hintActualSales": "مبيعات فعلية، لا إطلاق",
+    "salesRecorded": "صفقات مسجلة (2025)",
+    "hintTransactionVolume": "حجم المعاملات",
+    "grossRentalYield": "العائد الإيجاري الإجمالي",
+    "hintGrossYield": "متوسط الإيجار ÷ متوسط السعر",
+    "priceTrend": "اتجاه الأسعار (2025)",
+    "hintPriceTrend": "درهم/قدم²، البداية ← الأحدث",
+    "studio": "استوديو",
+    "fourPlusBed": "4+ غرف",
+    "bedLabel": "{k} غرف"
   }
 };

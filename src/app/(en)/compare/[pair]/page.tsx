@@ -352,7 +352,7 @@ export default async function CompareAreasPage({ params, locale = "en" }: PagePr
           </section>
         ) : null}
 
-        <MarketAdviceCta context={`${a.area.name} vs ${b.area.name}`} />
+        <MarketAdviceCta context={`${a.area.name} vs ${b.area.name}`} locale={locale} />
 
         {/* Related comparisons — internal-linking mesh */}
         {related.length > 0 ? (
