@@ -64,7 +64,7 @@ export function MobileFilterSheet({
       {open ? (
         <div
           data-testid="mobile-filter-sheet"
-          className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5 shadow-elevation-lg"
+          className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))] shadow-elevation-lg"
         >
         <div className="mb-4 flex items-center justify-between">
           <h2 id="mobile-filter-sheet-title" className="text-lg font-semibold text-text-dark">
