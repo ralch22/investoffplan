@@ -190,7 +190,7 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
                     {formatDate(other.publishedAt, locale)}
                   </p>
                   <p className="mt-2 text-sm font-semibold leading-snug text-text-dark">
-                    {other.title}
+                    {articleTitle(other, locale)}
                   </p>
                 </Link>
               ))}
