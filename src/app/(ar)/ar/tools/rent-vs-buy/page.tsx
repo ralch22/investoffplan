@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
-import { getSiteUrl } from "@/lib/site-url";
+import { arMeta } from "@/lib/ar-meta";
 import { RentVsBuyPageContent } from "@/app/(en)/tools/rent-vs-buy/page";
 
-export const metadata: Metadata = (() => {
-  const base = getSiteUrl();
-  return {
-    alternates: {
-      canonical: `${base}/ar/tools/rent-vs-buy`,
-      languages: { "x-default": `${base}/tools/rent-vs-buy`, en: `${base}/tools/rent-vs-buy`, ar: `${base}/ar/tools/rent-vs-buy` },
-    },
-  };
-})();
+export const metadata: Metadata = arMeta({
+  path: "/tools/rent-vs-buy",
+  title: "حاسبة الإيجار مقابل الشراء — عقارات دبي",
+  description:
+    "قارن الأقساط الشهرية والتكاليف طويلة الأجل بين الإيجار وشراء عقار في الإمارات.",
+});
 
 export default async function ArRentVsBuyPage() {
   return <RentVsBuyPageContent locale="ar" />;

@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
-import { getSiteUrl } from "@/lib/site-url";
+import { arMeta } from "@/lib/ar-meta";
 import { PriceMapPageContent } from "@/app/(en)/tools/price-map/page";
 
-export const metadata: Metadata = (() => {
-  const base = getSiteUrl();
-  return {
-    alternates: {
-      canonical: `${base}/ar/tools/price-map`,
-      languages: { "x-default": `${base}/tools/price-map`, en: `${base}/tools/price-map`, ar: `${base}/ar/tools/price-map` },
-    },
-  };
-})();
+export const metadata: Metadata = arMeta({
+  path: "/tools/price-map",
+  title: "خريطة أسعار العقارات في دبي — أسعار الإطلاق حسب المجتمع",
+  description:
+    "اعثر على مجتمعات الإمارات ضمن ميزانيتك عبر خريطة تفاعلية لأسعار الإطلاق. صفِّ حسب غرف النوم ونوع العقار.",
+});
 
 interface PageProps {
   searchParams: Promise<{ beds?: string; type?: string; city?: string }>;
