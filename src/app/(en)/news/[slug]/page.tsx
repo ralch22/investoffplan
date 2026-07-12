@@ -72,6 +72,8 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
   const description = articleDescription(article, locale);
 
   const siteUrl = getSiteUrl();
+  const abs = (href: string) => `${siteUrl}${localePath(locale, href)}`;
+  const articleUrl = abs(`/news/${article.slug}`);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -80,7 +82,7 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
     datePublished: article.publishedAt,
     dateModified: article.publishedAt,
     image: { "@type": "ImageObject", url: `${siteUrl}/brand/icon-red.png`, width: 512, height: 512 },
-    mainEntityOfPage: `${siteUrl}/news/${article.slug}`,
+    mainEntityOfPage: articleUrl,
     author: { "@type": "Organization", name: "invest off-plan", url: siteUrl },
     publisher: {
       "@type": "Organization",
@@ -113,8 +115,8 @@ export default async function NewsArticlePage({ params, locale = "en" }: PagePro
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             buildBreadcrumbListJsonLd([
-              { name: "Home", url: siteUrl },
-              { name: "News", url: `${siteUrl}/news` },
+              { name: dict.common.home, url: abs("/") },
+              { name: dict.nav.news, url: abs("/news") },
               { name: title },
             ]),
           ),

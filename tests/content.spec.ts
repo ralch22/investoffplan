@@ -298,6 +298,52 @@ test.describe("Content routes", () => {
     );
   });
 
+  // #311 — AR JSON-LD BreadcrumbList uses dict names + /ar absolute paths.
+  test("AR news + locations BreadcrumbList JSON-LD stays in-locale", async ({
+    page,
+  }) => {
+    const news = await page.goto(
+      "/ar/news/golden-visa-threshold-off-plan-catalog",
+      {
+        waitUntil: "domcontentloaded",
+      },
+    );
+    expect(news?.ok()).toBeTruthy();
+    const newsHtml = await page.content();
+    // Dict labels (not hard-coded EN Home/News).
+    expect(newsHtml).toContain('"name":"الرئيسية"');
+    expect(newsHtml).toContain('"name":"الأخبار"');
+    expect(newsHtml).not.toContain('"name":"Home"');
+    expect(newsHtml).not.toContain('"name":"News"');
+    // Absolute URLs under /ar
+    expect(newsHtml).toMatch(
+      /"item":"https:\/\/investoffplan\.com\/ar\/news"/,
+    );
+    expect(newsHtml).toMatch(
+      /"item":"https:\/\/investoffplan\.com\/ar"/,
+    );
+    // EN bare paths must not appear as breadcrumb items on AR.
+    expect(newsHtml).not.toMatch(
+      /"item":"https:\/\/investoffplan\.com\/news"/,
+    );
+
+    const loc = await page.goto(
+      "/ar/locations/best-communities-for-families",
+      { waitUntil: "domcontentloaded" },
+    );
+    expect(loc?.ok()).toBeTruthy();
+    const locHtml = await page.content();
+    expect(locHtml).toContain('"name":"الرئيسية"');
+    expect(locHtml).toContain('"name":"أدلّة المواقع"');
+    expect(locHtml).not.toContain('"name":"Location guides"');
+    expect(locHtml).toMatch(
+      /"item":"https:\/\/investoffplan\.com\/ar\/locations"/,
+    );
+    expect(locHtml).not.toMatch(
+      /"item":"https:\/\/investoffplan\.com\/locations"/,
+    );
+  });
+
   // #260 — AR about CTA must stay on /ar/projects.
   test("AR about Get-started CTA stays on /ar/projects", async ({ page }) => {
     const res = await page.goto("/ar/about", { waitUntil: "domcontentloaded" });

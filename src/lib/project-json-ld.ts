@@ -140,6 +140,14 @@ export function buildProjectBreadcrumbJsonLd(opts: {
   projectName: string;
   projectUrl: string;
   siteUrl: string;
+  /** Localized home crumb (default EN "Home"). */
+  homeName?: string;
+  /** Localized projects hub crumb (default EN "Projects"). */
+  projectsName?: string;
+  /** Absolute home URL (locale-prefixed for AR). Defaults to siteUrl. */
+  homeUrl?: string;
+  /** Absolute projects hub URL. Defaults to `${siteUrl}/projects`. */
+  projectsUrl?: string;
 }) {
   return {
     "@context": "https://schema.org",
@@ -148,14 +156,14 @@ export function buildProjectBreadcrumbJsonLd(opts: {
       {
         "@type": "ListItem",
         position: 1,
-        name: "Home",
-        item: opts.siteUrl,
+        name: opts.homeName ?? "Home",
+        item: opts.homeUrl ?? opts.siteUrl,
       },
       {
         "@type": "ListItem",
         position: 2,
-        name: "Projects",
-        item: `${opts.siteUrl}/projects`,
+        name: opts.projectsName ?? "Projects",
+        item: opts.projectsUrl ?? `${opts.siteUrl}/projects`,
       },
       {
         "@type": "ListItem",

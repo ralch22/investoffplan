@@ -177,8 +177,14 @@ export default async function CompareAreasPage({ params, locale = "en" }: PagePr
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             buildBreadcrumbListJsonLd([
-              { name: dict.common.home, url: getSiteUrl() },
-              { name: dict.pages.compare.breadcrumb, url: `${getSiteUrl()}/compare` },
+              {
+                name: dict.common.home,
+                url: `${getSiteUrl()}${localePath(locale, "/")}`,
+              },
+              {
+                name: dict.pages.compare.breadcrumb,
+                url: `${getSiteUrl()}${localePath(locale, "/compare")}`,
+              },
               { name: `${a.area.name} vs ${b.area.name}` },
             ]),
           ),

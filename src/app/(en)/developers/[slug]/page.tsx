@@ -97,7 +97,8 @@ export default async function DeveloperDetailPage({
   const allDevelopers = await getDevelopers();
   const others = allDevelopers.filter((dev) => dev.slug !== slug).slice(0, 5);
   const siteUrl = getSiteUrl();
-  const developerUrl = `${siteUrl}/developers/${slug}`;
+  const abs = (href: string) => `${siteUrl}${localePath(locale, href)}`;
+  const developerUrl = abs(`/developers/${slug}`);
   const jsonLd = buildDeveloperJsonLd({
     developer,
     developerUrl,
@@ -129,8 +130,8 @@ export default async function DeveloperDetailPage({
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(
             buildBreadcrumbListJsonLd([
-              { name: "Home", url: siteUrl },
-              { name: "Developers", url: `${siteUrl}/developers` },
+              { name: dict.common.home, url: abs("/") },
+              { name: dict.nav.developers, url: abs("/developers") },
               { name: developer.name },
             ]),
           ),
