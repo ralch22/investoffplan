@@ -45,6 +45,18 @@ test.describe("Content routes", () => {
     await expect(page.locator("details.faq-details").first()).toBeVisible();
   });
 
+  // #252 — AR FAQ hub must not hardcode EN H1/chrome.
+  test("AR /ar/faq hub H1 is Arabic", async ({ page }) => {
+    const res = await page.goto("/ar/faq", { waitUntil: "commit" });
+    expect(res?.status()).toBe(200);
+    const html = await res!.text();
+    expect(html).toContain('lang="ar"');
+    expect(html).not.toContain(">Frequently Asked Questions<");
+    expect(html).toContain("الأسئلة الشائعة");
+    expect(html).not.toContain(">Off-Plan Basics<");
+    expect(html).toContain("أساسيات الشراء على الخارطة");
+  });
+
   test("expanded guide renders rich body sections", async ({ page }) => {
     await page.goto("/guides/understanding-payment-plans");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
