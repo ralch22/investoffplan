@@ -32,4 +32,29 @@ test.describe("Public UAE off-plan market report", () => {
     expect(lower).toContain("application/ld+json");
     expect(html.includes("Dataset") || html.includes("Market Report")).toBe(true);
   });
+
+  // #245 — AR hub must keep print-report deep links under /ar/reports/market/*
+  // and those paths must resolve (not 404 / not escape to EN).
+  test("AR market-report hub links stay under /ar/reports/market and resolve", async ({
+    page,
+  }) => {
+    const hub = await page.goto("/ar/market-report", { waitUntil: "commit" });
+    expect(hub?.status()).toBe(200);
+    const html = await hub!.text();
+
+    // Locale-prefixed print links (not bare /reports/market/*).
+    expect(html).toContain('href="/ar/reports/market/');
+    expect(html).not.toMatch(/href="\/reports\/market\/[^"]+"/);
+
+    // One deep link must return 200 (print surface, Arabic chrome).
+    const deep = await page.goto("/ar/reports/market/dubai-marina", {
+      waitUntil: "commit",
+    });
+    expect(deep?.status()).toBe(200);
+    expect(page.url()).toContain("/ar/reports/market/dubai-marina");
+    const body = await deep!.text();
+    expect(body).toMatch(/Dubai Marina/i);
+    // Arabic report chrome from dict.reports.summaryTitle
+    expect(body).toMatch(/ملخص السوق/);
+  });
 });

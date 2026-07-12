@@ -10,11 +10,12 @@ import {
 } from "@/lib/communities";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
 import { formatPrice } from "@/lib/format";
-import { en } from "@/i18n/dictionaries/en";
-import { interpolate } from "@/i18n/config";
+import { getDictionary } from "@/i18n";
+import { interpolate, localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  locale?: Locale;
 }
 
 const TOP_REPORT_COUNT = 30;
@@ -26,6 +27,9 @@ const TOP_PROJECTS_IN_REPORT = 10;
  * (src/lib/dld-area-stats.ts) and project facts from the catalog — no
  * invented numbers. The page HTML is fully static and identical for every
  * visitor; only the "Export PDF" ACTION is sign-in-gated (no cloaking).
+ *
+ * EN + AR share this page (`locale` prop). AR re-export at
+ * `/ar/reports/market/[slug]` so hub links stay in-locale (#245).
  */
 export async function generateStaticParams() {
   // Pre-build the top 30 covered communities by transaction volume; the rest
@@ -41,18 +45,25 @@ export async function generateStaticParams() {
     .map((x) => ({ slug: x.slug }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  locale = "en",
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const community = await getCommunity(slug);
+  const dict = getDictionary(locale);
   if (!community) return { title: "Report not found" };
   return {
-    title: interpolate(en.reports.reportTitle, { name: community.name }),
+    title: interpolate(dict.reports.reportTitle, { name: community.name }),
     // Utility/print surface duplicating community-page data — keep out of the index.
     robots: { index: false, follow: false },
   };
 }
 
-export default async function MarketReportPage({ params }: PageProps) {
+export default async function MarketReportPage({
+  params,
+  locale = "en",
+}: PageProps) {
   const { slug } = await params;
   const community = await getCommunity(slug);
   if (!community) notFound();
@@ -76,16 +87,36 @@ export default async function MarketReportPage({ params }: PageProps) {
   });
 
   const trend = stats.monthlyTrend;
-  const s = en.reports;
+  const s = getDictionary(locale).reports;
+  const fmtLocale = locale === "ar" ? "ar-AE" : "en-US";
+  const numberFmt = (n: number) => n.toLocaleString(fmtLocale);
+  const backHref = localePath(locale, `/communities/${slug}`);
+  // Bed band labels: keep EN short forms; AR uses plain numbers + studio word.
+  const bedLabel = (k: string) => {
+    if (locale === "ar") {
+      if (k === "0") return "استوديو";
+      if (k === "4") return "4+ غرف";
+      return `${k} غرف`;
+    }
+    if (k === "0") return "Studio";
+    if (k === "4") return "4+ bed";
+    return `${k} bed`;
+  };
 
   const summaryTiles = [
     stats.medianPrice != null
       ? { label: s.medianPrice, value: formatPrice(Math.round(stats.medianPrice), "AED") }
       : null,
     stats.medianPpsqft != null
-      ? { label: s.medianPpsqft, value: `AED ${stats.medianPpsqft.toLocaleString()}` }
+      ? {
+          label: s.medianPpsqft,
+          value:
+            locale === "ar"
+              ? `${stats.medianPpsqft.toLocaleString(fmtLocale)} درهم`
+              : `AED ${stats.medianPpsqft.toLocaleString(fmtLocale)}`,
+        }
       : null,
-    { label: s.salesRecorded, value: stats.saleSample.toLocaleString() },
+    { label: s.salesRecorded, value: numberFmt(stats.saleSample) },
     stats.grossYieldPct != null
       ? { label: s.grossYield, value: `${stats.grossYieldPct}%` }
       : stats.appreciationPct != null
@@ -97,11 +128,11 @@ export default async function MarketReportPage({ params }: PageProps) {
   ].filter((t): t is { label: string; value: string } => t !== null);
 
   return (
-    <main className="mx-auto max-w-[860px] px-6 py-10 text-text-dark">
+    <main className="mx-auto max-w-[860px] px-6 py-10 text-text-dark" lang={locale}>
       {/* On-screen chrome — hidden when printing */}
       <div className="mb-8 flex flex-wrap items-center justify-between gap-3 print:hidden">
         <Link
-          href={`/communities/${slug}`}
+          href={backHref}
           className="text-sm font-semibold text-brand hover:text-brand-dark"
         >
           ← {interpolate(s.backToCommunity, { name: community.name })}
@@ -149,7 +180,7 @@ export default async function MarketReportPage({ params }: PageProps) {
             points={trend.map((t) => ({
               label: t.month.slice(5, 7),
               value: t.medianPpsqft,
-              title: `${t.month}: AED ${t.medianPpsqft.toLocaleString()}/sqft · ${t.n} ${s.salesCol}`,
+              title: `${t.month}: AED ${t.medianPpsqft.toLocaleString(fmtLocale)}/sqft · ${t.n} ${s.salesCol}`,
             }))}
           />
         </section>
@@ -172,10 +203,9 @@ export default async function MarketReportPage({ params }: PageProps) {
               {Object.entries(stats.beds)
                 .sort(([x], [y]) => Number(x) - Number(y))
                 .map(([k, v]) => {
-                  const label = k === "0" ? "Studio" : k === "4" ? "4+ bed" : `${k} bed`;
                   return (
                     <tr key={k} className="border-t border-border">
-                      <td className="px-3 py-2 font-semibold">{label}</td>
+                      <td className="px-3 py-2 font-semibold">{bedLabel(k)}</td>
                       <td className="px-3 py-2 text-end tabular-nums">
                         {v.medianPrice != null
                           ? formatPrice(Math.round(v.medianPrice), "AED")
@@ -183,11 +213,13 @@ export default async function MarketReportPage({ params }: PageProps) {
                       </td>
                       <td className="px-3 py-2 text-end tabular-nums text-muted">
                         {v.medianPpsqft != null
-                          ? `AED ${v.medianPpsqft.toLocaleString()}`
+                          ? locale === "ar"
+                            ? `${v.medianPpsqft.toLocaleString(fmtLocale)} درهم`
+                            : `AED ${v.medianPpsqft.toLocaleString(fmtLocale)}`
                           : "—"}
                       </td>
                       <td className="px-3 py-2 text-end tabular-nums text-muted-light">
-                        {v.n.toLocaleString()}
+                        {numberFmt(v.n)}
                       </td>
                     </tr>
                   );

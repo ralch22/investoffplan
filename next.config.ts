@@ -84,6 +84,8 @@ const nextConfig: NextConfig = {
       { source: "/reports", destination: "/market-report", permanent: false },
       { source: "/reports/market", destination: "/market-report", permanent: false },
       { source: "/ar/reports", destination: "/ar/market-report", permanent: false },
+      // Index only — keep /ar/reports/market/[slug] for locale-prefixed print reports (#245).
+      { source: "/ar/reports/market", destination: "/ar/market-report", permanent: false },
     ];
     return [
       ...devAliases,

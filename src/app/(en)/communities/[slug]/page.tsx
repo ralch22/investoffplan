@@ -25,7 +25,7 @@ import { areaTagline } from "@/lib/figma-copy";
 import { formatPrice } from "@/lib/format";
 import { getSiteUrl } from "@/lib/site-url";
 import { getDictionary, interpolate } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { localePath, type Locale } from "@/i18n/config";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -188,7 +188,7 @@ export default async function CommunityDetailPage({ params, locale = "en" }: Pag
             <DeepAnalyticsUnlock
               slug={slug}
               areaName={community.name}
-              reportHref={`/reports/market/${slug}`}
+              reportHref={localePath(locale, `/reports/market/${slug}`)}
             />
           </>
         ) : null}
