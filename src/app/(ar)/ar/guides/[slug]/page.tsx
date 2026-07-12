@@ -4,6 +4,7 @@ import { getSiteUrl } from "@/lib/site-url";
 import GuideDetailPage, { generateStaticParams } from "@/app/(en)/guides/[slug]/page";
 
 export { generateStaticParams };
+export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;

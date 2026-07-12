@@ -4,6 +4,7 @@ import { getFaqTopic } from "@/content/faq";
 import FaqTopicPage, { generateStaticParams } from "@/app/(en)/faq/[topic]/page";
 
 export { generateStaticParams };
+export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: Promise<{ topic: string }> }): Promise<Metadata> {
   const { topic } = await params;

@@ -6,6 +6,7 @@ import CommunityDetailPage, { generateStaticParams } from "@/app/(en)/communitie
 // AR mirror — chrome + RTL from the AR layout's LocaleProvider.
 // Passes locale="ar" so all UI strings render in Arabic.
 export { generateStaticParams };
+export const dynamicParams = false;
 
 export default function ArCommunityDetailPage({
   params,

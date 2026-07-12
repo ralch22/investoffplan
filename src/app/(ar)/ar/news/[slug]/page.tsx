@@ -6,6 +6,7 @@ import NewsArticlePage, { generateStaticParams } from "@/app/(en)/news/[slug]/pa
 // AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider;
 // the locale prop localizes internal links and dates.
 export { generateStaticParams };
+export const dynamicParams = false;
 
 export default function ArabicNewsArticlePage({
   params,

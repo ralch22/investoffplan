@@ -7,6 +7,7 @@ import DeveloperDetailPage, { generateStaticParams } from "@/app/(en)/developers
 // AR reuse of the EN page — chrome + RTL from the AR layout's LocaleProvider;
 // the locale prop localizes links, headings, and labels.
 export { generateStaticParams };
+export const dynamicParams = false;
 
 export default function ArabicDeveloperDetailPage(props: {
   params: Promise<{ slug: string }>;
