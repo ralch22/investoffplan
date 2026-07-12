@@ -1131,6 +1131,11 @@ export const ar: Dict = {
       "searchPlaceholder": "ابحث عن مطوّر",
       "emptyState": "لا يوجد مطوّرون يطابقون عوامل التصفية.",
       "allUae": "كل الإمارات"
+    },
+    "guides": {
+      "ctaHeading": "استثمر في عقارك الخاص على الخارطة.",
+      "ctaButton": "تصفّح المشاريع",
+      "backLink": "→ جميع أدلة الاستثمار"
     }
   },
   "developers": {

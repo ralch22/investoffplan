@@ -1129,6 +1129,11 @@ const dict = {
       "searchPlaceholder": "Search developers",
       "emptyState": "No developers match your filters.",
       "allUae": "All UAE"
+    },
+    "guides": {
+      "ctaHeading": "Invest in Your Own Off-Plan Property.",
+      "ctaButton": "Browse Projects",
+      "backLink": "← All investment guides"
     }
   },
   "developers": {

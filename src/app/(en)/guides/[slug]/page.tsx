@@ -139,15 +139,15 @@ export default async function GuideDetailPage({ params, locale = "en" }: PagePro
         </div>
 
         <div className="mt-10 rounded-2xl bg-brand p-8 text-center text-white">
-          <p className="text-xl font-semibold">Invest in Your Own Off-Plan Property.</p>
+          <p className="text-xl font-semibold">{dict.pages.guides.ctaHeading}</p>
           <PrimaryButton href="/projects" className="mt-4 bg-white text-brand hover:bg-white/90">
-            Browse Projects
+            {dict.pages.guides.ctaButton}
           </PrimaryButton>
         </div>
 
         <p className="mt-8 text-center text-sm text-muted">
           <Link href="/guides" className="font-semibold text-brand hover:text-brand-dark">
-            ← All investment guides
+            {dict.pages.guides.backLink}
           </Link>
         </p>
       </main>

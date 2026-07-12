@@ -20,15 +20,27 @@ import { formatPrice } from "@/lib/format";
 
 type T = ReturnType<typeof getDictionary>["marketReport"];
 
-const numberFmt = (n: number) => n.toLocaleString("en-US");
-const typeLabel = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
-const changeLabel = (pct: number) => `${pct > 0 ? "+" : ""}${pct}%`;
 
 export async function MarketReportPage({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.marketReport;
   const data = await getMarketReportData();
   const lp = (href: string) => localePath(locale, href);
+  const fmtLocale = locale === "ar" ? "ar-AE" : "en-US";
+  const numberFmt = (n: number) => n.toLocaleString(fmtLocale);
+  const kf = dict.pdp.keyFacts;
+  const typeLabel = (type: string) => {
+    switch (type.toLowerCase()) {
+      case "apartment": return kf.propertyTypeApartment;
+      case "villa": return kf.propertyTypeVilla;
+      case "townhouse": return kf.propertyTypeTownhouse;
+      case "penthouse": return kf.propertyTypePenthouse;
+      case "duplex": return kf.propertyTypeDuplex;
+      case "land": return kf.propertyTypeLand;
+      default: return type.charAt(0).toUpperCase() + type.slice(1);
+    }
+  };
+  const changeLabel = (pct: number) => `${pct > 0 ? "+" : ""}${pct.toLocaleString(fmtLocale)}%`;
 
   const dateStr = new Date(data.catalogUpdated).toLocaleDateString(
     locale === "ar" ? "ar-AE" : "en-GB",
@@ -200,10 +212,10 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
             </p>
             <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
               {data.gainers.length > 0 ? (
-                <TrendTable title={t.gainersTitle} rows={data.gainers} dict={t} lp={lp} positive />
+                <TrendTable title={t.gainersTitle} rows={data.gainers} dict={t} lp={lp} positive locale={locale} />
               ) : null}
               {data.decliners.length > 0 ? (
-                <TrendTable title={t.declinersTitle} rows={data.decliners} dict={t} lp={lp} positive={false} />
+                <TrendTable title={t.declinersTitle} rows={data.decliners} dict={t} lp={lp} positive={false} locale={locale} />
               ) : null}
             </div>
           </Section>
@@ -443,13 +455,18 @@ function TrendTable({
   dict,
   lp,
   positive,
+  locale,
 }: {
   title: string;
   rows: Array<{ name: string; appreciationPct: number; saleSample: number; slug: string | null }>;
   dict: T;
   lp: (href: string) => string;
   positive: boolean;
+  locale: Locale;
 }) {
+  const fmtLocale = locale === "ar" ? "ar-AE" : "en-US";
+  const numberFmt = (n: number) => n.toLocaleString(fmtLocale);
+  const changeLabel = (pct: number) => `${pct > 0 ? "+" : ""}${pct.toLocaleString(fmtLocale)}%`;
   return (
     <div>
       <h3 className="section-eyebrow mb-3">{title}</h3>
