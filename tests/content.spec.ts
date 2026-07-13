@@ -372,6 +372,32 @@ test.describe("Content routes", () => {
     expect(html).toContain("الاستثمار في");
   });
 
+  // #375 — AR community area editorial body (areas.ts) when AR overlay present.
+  test("AR community area editorial body is Arabic for JVC", async ({
+    page,
+  }) => {
+    const ar = await page.goto("/ar/communities/jumeirah-village-circle", {
+      waitUntil: "commit",
+    });
+    expect(ar?.status()).toBe(200);
+    const arHtml = await ar!.text();
+    // Distinctive EN hand-crafted intro must not leak on AR.
+    expect(arHtml).not.toContain("highest-volume mid-market district");
+    expect(arHtml).not.toContain("JVC trades polish for affordability");
+    // AR overlay from areas-ar.ts
+    expect(arHtml).toContain("أعلى أحياء دبي حجماً");
+    expect(arHtml).toContain("جميرا فيلدج سيركل");
+
+    // EN page still serves EN editorial (byte-identical source).
+    const en = await page.goto("/communities/jumeirah-village-circle", {
+      waitUntil: "commit",
+    });
+    expect(en?.status()).toBe(200);
+    const enHtml = await en!.text();
+    expect(enHtml).toContain("highest-volume mid-market district");
+    expect(enHtml).not.toContain("أعلى أحياء دبي حجماً");
+  });
+
   // #252 — AR FAQ hub hero + topic cards must not stay English.
   test("AR FAQ hub H1 and topic cards are Arabic", async ({ page }) => {
     const res = await page.goto("/ar/faq", { waitUntil: "domcontentloaded" });
