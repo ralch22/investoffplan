@@ -144,6 +144,37 @@ test.describe("Content routes", () => {
     expect(mrBody).not.toContain("Handover pipeline");
     expect(mrBody).toMatch(/variableMeasured|العائد الإيجاري|جدول التسليم/);
   });
+
+  // #363 — AR community DLD trend chart aria-label not bare EN.
+  test("AR community DLD chart aria-label is Arabic", async ({ page }) => {
+    const response = await page.goto(
+      "/ar/communities/jumeirah-village-circle",
+      { waitUntil: "commit" },
+    );
+    expect(response?.status()).toBe(200);
+    const body = await response!.text();
+    expect(body).not.toContain("Median sold price per sqft by month");
+    expect(body).toMatch(/متوسط سعر البيع|وسيط درهم/);
+  });
+
+  // #364 — AR price-map filter summary not bare EN.
+  test("AR price-map filter summary is Arabic chrome", async ({ page }) => {
+    const bare = await page.goto("/ar/tools/price-map", { waitUntil: "commit" });
+    expect(bare?.status()).toBe(200);
+    const bareBody = await bare!.text();
+    expect(bareBody).not.toContain("All unit types");
+    expect(bareBody).toMatch(/كل أنواع الوحدات|مجتمعات/);
+
+    const filtered = await page.goto(
+      "/ar/tools/price-map?beds=1&type=apartment",
+      { waitUntil: "commit" },
+    );
+    expect(filtered?.status()).toBe(200);
+    const filteredBody = await filtered!.text();
+    expect(filteredBody).not.toContain("Filtered by");
+    expect(filteredBody).toMatch(/مُصفّى|غرف/);
+  });
+
   test("compare hub indexes render and favorites is noindex", async ({ page }) => {
     for (const path of ["/compare-projects", "/compare-developers"]) {
       const res = await page.goto(path);

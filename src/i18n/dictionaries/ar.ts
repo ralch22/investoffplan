@@ -1183,7 +1183,12 @@ export const ar: Dict = {
     },
     "priceMapPage": {
       "heroTitle": "خريطة الأسعار",
-      "heroSubtitle": "اكتشف المجتمعات التي تناسب ميزانيتك — أسعار إطلاق في الإمارات."
+      "heroSubtitle": "اكتشف المجتمعات التي تناسب ميزانيتك — أسعار إطلاق في الإمارات.",
+      "allUnitTypes": "كل أنواع الوحدات",
+      "filteredBy": "مُصفّى حسب {filters}",
+      "filterJoin": " · ",
+      "bedBr": "{count} غرف",
+      "summaryLine": "{count} مجتمعات · {filterLabel}. العلامات الخضراء أكثر تكلفة معقولة؛ الحمراء تميل للفاخر. انقر مجتمعاً لاستكشاف المشاريع."
     },
     "rentVsBuyPage": {
       "heroTitle": "آلة حاسبة الإيجار مقابل الشراء",
@@ -1863,6 +1868,8 @@ export const ar: Dict = {
     "medianPriceCol": "وسيط السعر",
     "aedSqftCol": "درهم/قدم²",
     "salesCol": "المبيعات",
-    "monthlyTrendHeading": "وسيط درهم/قدم² حسب الشهر"
+    "monthlyTrendHeading": "وسيط درهم/قدم² حسب الشهر",
+    "trendChartAria": "متوسط سعر البيع للقدم المربعة شهرياً في {area}، 2025",
+    "trendPointTitle": "{month}: {ppsf} درهم/قدم² · {sales} مبيعات"
   }
 };

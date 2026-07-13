@@ -128,11 +128,15 @@ export function DldAreaStatsBand({ stats, areaName, source, locale = "en" }: Pro
           <TrendChart
             className="mt-3"
             height={128}
-            ariaLabel={`Median sold price per sqft by month in ${areaName}, 2025`}
+            ariaLabel={interpolate(dld.trendChartAria, { area: areaName })}
             points={trend.map((t) => ({
               label: MONTH_ABBR[Number(t.month.slice(5, 7))] ?? "",
               value: t.medianPpsqft,
-              title: `${t.month}: AED ${t.medianPpsqft.toLocaleString()}/sqft · ${t.n} sales`,
+              title: interpolate(dld.trendPointTitle, {
+                month: t.month,
+                ppsf: t.medianPpsqft.toLocaleString(),
+                sales: String(t.n),
+              }),
             }))}
           />
         </div>
