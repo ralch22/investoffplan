@@ -3,6 +3,8 @@ import { sanitizeProjectHtml } from "@/lib/sanitize-html";
 import { cityLabel } from "@/lib/format";
 import { FaqAccordion } from "@/components/faq-accordion";
 import { buildFaqPageJsonLd } from "@/lib/faq-json-ld";
+import { getDictionary } from "@/i18n";
+import { interpolate, type Locale } from "@/i18n/config";
 
 interface DeveloperAboutSectionProps {
   slug: string;
@@ -11,6 +13,8 @@ interface DeveloperAboutSectionProps {
   projectCount: number;
   cities: string[];
   foundedYear?: number;
+  /** Set to "ar" by the /ar developer mirror so about chrome + FAQs localize. */
+  locale?: Locale;
 }
 
 export function DeveloperAboutSection({
@@ -20,12 +24,14 @@ export function DeveloperAboutSection({
   projectCount,
   cities,
   foundedYear,
+  locale = "en",
 }: DeveloperAboutSectionProps) {
+  const dict = getDictionary(locale);
   const sanitizedHtml = description ? sanitizeProjectHtml(description) : "";
   const hasRichHtml = sanitizedHtml.length > 80;
   const plainText = developerDescription(slug, description);
   const cityLabels = cities.map((city) => cityLabel(city));
-  const faqs = developerFaqs(name, projectCount, cities, foundedYear);
+  const faqs = developerFaqs(name, projectCount, cityLabels, foundedYear, dict);
 
   if (!hasRichHtml && !plainText) return null;
 
@@ -33,7 +39,7 @@ export function DeveloperAboutSection({
     <section className="border-t border-border bg-surface-alt py-14">
       <div className="mx-auto max-w-[1200px] px-5 md:px-8">
         <h2 className="font-display text-3xl font-semibold text-text-dark md:text-4xl">
-          Know more about {name}
+          {interpolate(dict.developers.knowMoreAbout, { name })}
         </h2>
 
         {hasRichHtml ? (
@@ -49,7 +55,9 @@ export function DeveloperAboutSection({
 
         {cityLabels.length > 0 ? (
           <p className="mt-6 text-sm text-muted">
-            Active communities: {cityLabels.join(" · ")}
+            {interpolate(dict.developers.activeCommunities, {
+              list: cityLabels.join(" · "),
+            })}
           </p>
         ) : null}
 

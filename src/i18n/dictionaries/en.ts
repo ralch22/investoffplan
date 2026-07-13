@@ -1461,7 +1461,8 @@ const dict = {
       "mapSubtitle": "Explore communities with launch-price tiers or project pins — two map views for budget and inventory.",
       "priceMap": "Price map",
       "projectMap": "Project map",
-      "realDldEyebrow": "Real DLD data"
+      "realDldEyebrow": "Real DLD data",
+      "areaTaglineExplore": "Explore off-plan projects in {name}."
     },
     "developers": {
       "heroTitle": "Top Real Estate Developers in UAE",
@@ -1596,6 +1597,21 @@ const dict = {
     "dualPortfolio": "{active} projects on invest off-plan · {portfolio} in developer portfolio",
     "viewAllDevelopers": "View all developers →",
     "noListings": "No listings for this developer right now. Check back soon or contact our team.",
+    "knowMoreAbout": "Know more about {name}",
+    "activeCommunities": "Active communities: {list}",
+    "faqUaeFallback": "the UAE",
+    "faqProjectSingular": "project",
+    "faqProjectPlural": "projects",
+    "faqHowManyQ": "How many off-plan projects does {name} have?",
+    "faqHowManyA": "{name} has {count} off-plan {projects} listed on invest off-plan with unit-level launch pricing and brochures.",
+    "faqFoundedQ": "When was {name} founded?",
+    "faqFoundedA": "{name} was founded in {year} and remains one of the UAE's most active master developers.",
+    "faqWhoQ": "Who is {name}?",
+    "faqWhoA": "{name} is a UAE real estate developer with active off-plan inventory across {cities}.",
+    "faqWhereQ": "Where does {name} build?",
+    "faqWhereA": "Current listings span {cities}. Use the project grid above to filter by location, handover, and launch price.",
+    "faqEnquireQ": "How do I enquire about {name} projects?",
+    "faqEnquireA": "Use WhatsApp on any project card or contact our team via email. We can share brochures, payment plans, and availability for {name} launches.",
     "profile": {
       "heading": "Developer profile",
       "subtitle": "A data-derived profile of this developer's off-plan catalog — not a quality or delivery rating.",

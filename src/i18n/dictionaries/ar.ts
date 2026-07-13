@@ -1463,7 +1463,8 @@ export const ar: Dict = {
       "mapSubtitle": "استكشف المجتمعات بمستويات أسعار الإطلاق أو نقاط المشاريع — طريقتا عرض للميزانية والمخزون.",
       "priceMap": "خريطة الأسعار",
       "projectMap": "خريطة المشاريع",
-      "realDldEyebrow": "بيانات دائرة الأراضي الفعلية"
+      "realDldEyebrow": "بيانات دائرة الأراضي الفعلية",
+      "areaTaglineExplore": "استكشف مشاريع على الخارطة في {name}."
     },
     "developers": {
       "heroTitle": "أبرز المطوّرين العقاريين في الإمارات",
@@ -1598,6 +1599,21 @@ export const ar: Dict = {
     "dualPortfolio": "{active} مشروعاً على invest off-plan · {portfolio} في محفظة المطوّر",
     "viewAllDevelopers": "عرض جميع المطوّرين ←",
     "noListings": "لا توجد مشاريع لهذا المطوّر حالياً. تحقق لاحقاً أو تواصل مع فريقنا.",
+    "knowMoreAbout": "اعرف المزيد عن {name}",
+    "activeCommunities": "المجتمعات النشطة: {list}",
+    "faqUaeFallback": "الإمارات",
+    "faqProjectSingular": "مشروع",
+    "faqProjectPlural": "مشاريع",
+    "faqHowManyQ": "كم مشروعاً على الخارطة لدى {name}؟",
+    "faqHowManyA": "لدى {name} {count} {projects} على الخارطة مدرجة على invest off-plan مع أسعار إطلاق على مستوى الوحدة وبروشورات.",
+    "faqFoundedQ": "متى تأسست {name}؟",
+    "faqFoundedA": "تأسست {name} عام {year} وتبقى من أكثر المطوّرين الرئيسيين نشاطاً في الإمارات.",
+    "faqWhoQ": "من هي {name}؟",
+    "faqWhoA": "{name} مطوّر عقاري إماراتي بمخزون نشط على الخارطة عبر {cities}.",
+    "faqWhereQ": "أين تبني {name}؟",
+    "faqWhereA": "القوائم الحالية تمتد عبر {cities}. استخدم شبكة المشاريع أعلاه للتصفية حسب الموقع والتسليم وسعر الإطلاق.",
+    "faqEnquireQ": "كيف أستفسر عن مشاريع {name}؟",
+    "faqEnquireA": "استخدم واتساب على أي بطاقة مشروع أو تواصل مع فريقنا عبر البريد. يمكننا مشاركة البروشورات وخطط السداد والتوافر لإطلاقات {name}.",
     "profile": {
       "heading": "ملف المطوّر",
       "subtitle": "ملف مبني على البيانات لكتالوج المطوّر على الخارطة — وليس تقييماً للجودة أو التسليم.",

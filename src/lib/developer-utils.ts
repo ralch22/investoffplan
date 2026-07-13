@@ -162,33 +162,42 @@ export function developerFaqs(
   name: string,
   projectCount: number,
   cities: string[],
-  foundedYear?: number,
+  foundedYear: number | undefined,
+  dict: Dict,
 ): Array<{ q: string; a: string }> {
+  const d = dict.developers;
   const cityList =
     cities.length > 0
       ? cities.map((city) => city.replace(/-/g, " ")).join(", ")
-      : "the UAE";
+      : d.faqUaeFallback;
+  const projectsWord =
+    projectCount === 1 ? d.faqProjectSingular : d.faqProjectPlural;
+  const count = projectCount.toLocaleString();
   return [
     {
-      q: `How many off-plan projects does ${name} have?`,
-      a: `${name} has ${projectCount.toLocaleString()} off-plan project${projectCount === 1 ? "" : "s"} listed on invest off-plan with unit-level launch pricing and brochures.`,
+      q: interpolate(d.faqHowManyQ, { name }),
+      a: interpolate(d.faqHowManyA, {
+        name,
+        count,
+        projects: projectsWord,
+      }),
     },
     foundedYear
       ? {
-          q: `When was ${name} founded?`,
-          a: `${name} was founded in ${foundedYear} and remains one of the UAE's most active master developers.`,
+          q: interpolate(d.faqFoundedQ, { name }),
+          a: interpolate(d.faqFoundedA, { name, year: foundedYear }),
         }
       : {
-          q: `Who is ${name}?`,
-          a: `${name} is a UAE real estate developer with active off-plan inventory across ${cityList}.`,
+          q: interpolate(d.faqWhoQ, { name }),
+          a: interpolate(d.faqWhoA, { name, cities: cityList }),
         },
     {
-      q: `Where does ${name} build?`,
-      a: `Current listings span ${cityList}. Use the project grid above to filter by location, handover, and launch price.`,
+      q: interpolate(d.faqWhereQ, { name }),
+      a: interpolate(d.faqWhereA, { name, cities: cityList }),
     },
     {
-      q: `How do I enquire about ${name} projects?`,
-      a: `Use WhatsApp on any project card or contact our team via email. We can share brochures, payment plans, and availability for ${name} launches.`,
+      q: interpolate(d.faqEnquireQ, { name }),
+      a: interpolate(d.faqEnquireA, { name }),
     },
   ];
 }

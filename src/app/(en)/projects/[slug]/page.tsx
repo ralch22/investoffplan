@@ -246,7 +246,10 @@ export default async function ProjectDetailPage({
     .filter((p) => communitySlugFor(p.area) !== community)
     .sort((a, b) => priceDistance(a) - priceDistance(b));
   const related = [...sameCommunity, ...sameCity].slice(0, 3);
-  const areaInsights = await getAreaInsightsForProject(slugify(project.area));
+  const areaInsights = await getAreaInsightsForProject(
+    slugify(project.area),
+    locale,
+  );
   const projectFaqs = buildProjectFaqs(project, locale);
 
   const siteUrl = getSiteUrl();

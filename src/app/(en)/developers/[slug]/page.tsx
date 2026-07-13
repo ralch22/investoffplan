@@ -214,6 +214,7 @@ export default async function DeveloperDetailPage({
         projectCount={developer.projectCount}
         cities={developer.cities}
         foundedYear={developer.foundedYear}
+        locale={locale}
       />
 
       <section className="border-t border-border py-14">
