@@ -72,7 +72,11 @@ const dict = {
       "topYield": "Top yield communities",
       "compareCommunities": "Compare communities →",
       "searchAllFor": "Search everything for “{query}”",
-      "loading": "Loading suggestions…"
+      "loading": "Loading suggestions…",
+      "smartUnder": "under {price}",
+      "smartOver": "over {price}",
+      "smartBy": "by {year}",
+      "smartPostHandover": "post-handover"
     }
   },
   "footer": {

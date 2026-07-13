@@ -74,7 +74,11 @@ export const ar: Dict = {
       "topYield": "أعلى المجتمعات من حيث العائد",
       "compareCommunities": "قارن المجتمعات ←",
       "searchAllFor": "ابحث في كل شيء عن “{query}”",
-      "loading": "جارٍ تحميل الاقتراحات…"
+      "loading": "جارٍ تحميل الاقتراحات…",
+      "smartUnder": "أقل من {price}",
+      "smartOver": "أكثر من {price}",
+      "smartBy": "بحلول {year}",
+      "smartPostHandover": "بعد التسليم"
     }
   },
   "footer": {

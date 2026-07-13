@@ -4,7 +4,7 @@ import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState } fr
 import { useRouter } from "next/navigation";
 import type { Dict } from "@/i18n";
 import { useI18n } from "@/i18n/locale-provider";
-import { interpolate, localePath } from "@/i18n/config";
+import { interpolate, localePath, type Locale } from "@/i18n/config";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
 import { fetchCatalogApi } from "@/lib/catalog-browser";
 import type { CatalogApi, FlatUnit } from "@/lib/catalog-core";
@@ -15,7 +15,7 @@ import {
 } from "@/lib/suggest-index";
 import { parseSmartQuery, type SmartQueryResult } from "@/lib/smart-query";
 import { SEARCH_ALIASES, type AliasKind } from "@/lib/search-aliases";
-import { formatPrice } from "@/lib/format";
+import { formatPrice, propertyTypeLabel } from "@/lib/format";
 import type { ProjectFilters } from "@/lib/types";
 import { cn } from "@/lib/cn";
 
@@ -90,7 +90,16 @@ function titleCase(value: string): string {
     .replace(/\b\p{L}/gu, (c) => c.toUpperCase());
 }
 
-function smartLabel(parse: SmartQueryResult, dict: Dict): string {
+/**
+ * Human label for a smart-query interpretation row.
+ * Exported for pure unit coverage of AR residual chrome (#338).
+ */
+export function smartLabel(
+  parse: SmartQueryResult,
+  dict: Dict,
+  locale: Locale = "en",
+): string {
+  const s = dict.nav.suggest;
   const parts: string[] = parse.matched.map((m) => m.label);
   const f = parse.filters;
   if (f.beds !== undefined) {
@@ -101,16 +110,29 @@ function smartLabel(parse: SmartQueryResult, dict: Dict): string {
         : interpolate(dict.format.beds.compactBr, { count: String(n) }),
     );
   }
-  if (f.propertyType) parts.push(titleCase(f.propertyType));
+  if (f.propertyType) {
+    // EN keeps prior title-case catalog values; AR uses serp.filters nouns.
+    parts.push(
+      locale === "ar"
+        ? propertyTypeLabel(f.propertyType, dict, "ar")
+        : titleCase(f.propertyType),
+    );
+  }
   if (f.minPrice != null && f.maxPrice != null) {
     parts.push(`${formatAedShort(f.minPrice)}–${formatAedShort(f.maxPrice)}`);
   } else if (f.maxPrice != null) {
-    parts.push(`under ${formatAedShort(f.maxPrice)}`);
+    parts.push(
+      interpolate(s.smartUnder, { price: formatAedShort(f.maxPrice) }),
+    );
   } else if (f.minPrice != null) {
-    parts.push(`over ${formatAedShort(f.minPrice)}`);
+    parts.push(
+      interpolate(s.smartOver, { price: formatAedShort(f.minPrice) }),
+    );
   }
-  if (f.handoverBy) parts.push(`by ${f.handoverBy}`);
-  if (f.paymentPlan) parts.push("post-handover");
+  if (f.handoverBy) {
+    parts.push(interpolate(s.smartBy, { year: String(f.handoverBy) }));
+  }
+  if (f.paymentPlan) parts.push(s.smartPostHandover);
   if (parse.residual) parts.push(`“${parse.residual}”`);
   return parts.join(" · ");
 }
@@ -355,8 +377,8 @@ export function SearchSuggest({
       const count = data ? data.api.filterUnits(data.units, serp.filters).length : null;
       const label =
         count === null
-          ? smartLabel(parse, dict)
-          : `${smartLabel(parse, dict)} → ${interpolate(t.results, { count })}`;
+          ? smartLabel(parse, dict, locale)
+          : `${smartLabel(parse, dict, locale)} → ${interpolate(t.results, { count })}`;
       raw.push({
         key: "smart",
         options: [{ kind: "smart", label, href: serp.href }],
@@ -457,7 +479,7 @@ export function SearchSuggest({
       sections.push({ key: section.key, header: section.header, options: withIds });
     }
     return { sections, flat, smartHref };
-  }, [query, parse, data, yieldRows, yieldMap, t, uid]);
+  }, [query, parse, data, yieldRows, yieldMap, t, uid, dict, locale]);
 
   // Clamp at read time — the option list can shrink between renders.
   const active = highlight >= 0 && highlight < flat.length ? highlight : -1;
