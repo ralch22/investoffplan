@@ -185,6 +185,10 @@ test.describe("Content routes", () => {
     const filteredBody = await filtered!.text();
     expect(filteredBody).not.toContain("Filtered by");
     expect(filteredBody).toMatch(/مُصفّى|غرف/);
+    // #367 — property-type token localized (not raw EN catalog string).
+    expect(filteredBody).not.toMatch(/مُصفّى حسب[^<]*\bapartment\b/);
+    expect(filteredBody).not.toContain(" · apartment");
+    expect(filteredBody).toMatch(/شقة/);
   });
 
   test("compare hub indexes render and favorites is noindex", async ({ page }) => {
