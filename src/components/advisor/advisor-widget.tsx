@@ -162,7 +162,7 @@ export function AdvisorWidget() {
           data-testid="advisor-panel"
           aria-label={t.title}
           onClose={() => setOpen(false)}
-          className="fixed end-5 z-[var(--z-modal)] m-0 flex w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white p-0 shadow-elevation-lg bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap)+4rem)] max-h-[min(32rem,calc(100dvh-var(--header-h)-var(--bottom-dock)-var(--consent-h,0px)-var(--fab-gap)-5rem))] backdrop:bg-transparent lg:bottom-[calc(6rem+var(--consent-h,0px))] lg:max-h-[min(32rem,calc(100dvh-8rem-var(--consent-h,0px)))]"
+          className="fixed end-5 top-auto start-auto z-[var(--z-modal)] m-0 flex w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white p-0 shadow-elevation-lg bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap)+4rem)] max-h-[min(32rem,calc(100dvh-var(--header-h)-var(--bottom-dock)-var(--consent-h,0px)-var(--fab-gap)-5rem))] backdrop:bg-transparent lg:bottom-[calc(6rem+var(--consent-h,0px))] lg:max-h-[min(32rem,calc(100dvh-8rem-var(--consent-h,0px)))]"
         >
           <div className="flex items-center justify-between gap-3 bg-surface-darker px-4 py-3 text-white">
             <div>
