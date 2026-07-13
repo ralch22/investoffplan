@@ -119,6 +119,11 @@ export default async function DeveloperDetailPage({
     developerUrl,
     siteUrl,
     limit: DEVELOPER_ITEMLIST_LIMIT,
+    // Locale-honest ItemList: AR must not emit bare EN `/projects/*` (#343).
+    name: interpolate(dict.developers.projectsByHeading, {
+      name: developer.name,
+    }),
+    projectUrlFor: (projectSlug) => abs(`/projects/${projectSlug}`),
   });
   const heroExcerpt = developerDescription(slug, developer.description);
 

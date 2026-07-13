@@ -45,8 +45,22 @@ export function buildProjectJsonLd(opts: {
   minPrice: number;
   description?: string;
   gallery: string[];
+  /**
+   * Localized PropertyValue display names (AR pages). Defaults keep EN schema
+   * strings so existing EN SSR stays byte-stable when omitted.
+   */
+  propertyNames?: {
+    handover?: string;
+    paymentPlan?: string;
+    brochure?: string;
+  };
 }) {
   const { project, projectUrl, siteUrl, minPrice, description, gallery } = opts;
+  const propNames = {
+    handover: opts.propertyNames?.handover ?? "Handover",
+    paymentPlan: opts.propertyNames?.paymentPlan ?? "Payment plan",
+    brochure: opts.propertyNames?.brochure ?? "Brochure",
+  };
   const images = gallery
     .map((src) => absoluteAsset(siteUrl, src))
     .filter((src): src is string => Boolean(src))
@@ -76,18 +90,26 @@ export function buildProjectJsonLd(opts: {
 
   const additionalProperty = [
     project.handover
-      ? { "@type": "PropertyValue", name: "Handover", value: project.handover }
+      ? {
+          "@type": "PropertyValue",
+          name: propNames.handover,
+          value: project.handover,
+        }
       : null,
     // Skip blank / "AED 0" stubs so rich results never show an empty plan.
     hasPaymentPlan(project.paymentPlan)
       ? {
           "@type": "PropertyValue",
-          name: "Payment plan",
+          name: propNames.paymentPlan,
           value: project.paymentPlan.trim(),
         }
       : null,
     brochure
-      ? { "@type": "PropertyValue", name: "Brochure", value: brochure }
+      ? {
+          "@type": "PropertyValue",
+          name: propNames.brochure,
+          value: brochure,
+        }
       : null,
   ].filter(Boolean);
 
@@ -225,14 +247,24 @@ export function buildProjectsItemListJsonLd(opts: {
   pageUrl: string;
   siteUrl: string;
   limit?: number;
+  /** Localized CollectionPage name. */
+  name?: string;
+  /**
+   * Absolute project URL for each list element. Defaults to EN
+   * `${siteUrl}/projects/${slug}`; AR callers must pass locale-prefixed URLs
+   * (e.g. via `localePath`) so ItemList does not leak bare `/projects/*`.
+   */
+  projectUrlFor?: (slug: string) => string;
 }) {
   const { projects, pageUrl, siteUrl, limit = 24 } = opts;
+  const projectUrlFor =
+    opts.projectUrlFor ?? ((slug: string) => `${siteUrl}/projects/${slug}`);
   const items = projects.slice(0, limit);
   if (items.length === 0) return null;
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Off-Plan Projects for Sale in Dubai & the UAE",
+    name: opts.name ?? "Off-Plan Projects for Sale in Dubai & the UAE",
     url: pageUrl,
     mainEntity: {
       "@type": "ItemList",
@@ -241,7 +273,7 @@ export function buildProjectsItemListJsonLd(opts: {
         "@type": "ListItem",
         position: index + 1,
         name: project.name,
-        url: `${siteUrl}/projects/${project.slug}`,
+        url: projectUrlFor(project.slug),
       })),
     },
   };
@@ -254,13 +286,24 @@ export function buildDeveloperItemListJsonLd(opts: {
   siteUrl: string;
   /** Cap list elements for HTML budget; numberOfItems still reflects the full set. */
   limit?: number;
+  /** Localized CollectionPage name (defaults to EN "New & Off-Plan Projects by …"). */
+  name?: string;
+  /**
+   * Absolute project URL for each list element. Defaults to EN
+   * `${siteUrl}/projects/${slug}`; AR developer pages must pass locale-prefixed
+   * URLs so JSON-LD ItemList stays under `/ar/projects/*` (issue #343).
+   */
+  projectUrlFor?: (slug: string) => string;
 }) {
   const { developer, projects, developerUrl, siteUrl, limit = 24 } = opts;
+  const projectUrlFor =
+    opts.projectUrlFor ?? ((slug: string) => `${siteUrl}/projects/${slug}`);
   const items = projects.slice(0, limit);
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: `New & Off-Plan Projects by ${developer.name}`,
+    name:
+      opts.name ?? `New & Off-Plan Projects by ${developer.name}`,
     url: developerUrl,
     mainEntity: {
       "@type": "ItemList",
@@ -269,7 +312,7 @@ export function buildDeveloperItemListJsonLd(opts: {
         "@type": "ListItem",
         position: index + 1,
         name: project.name,
-        url: `${siteUrl}/projects/${project.slug}`,
+        url: projectUrlFor(project.slug),
       })),
     },
   };
