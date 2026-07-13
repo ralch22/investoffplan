@@ -384,7 +384,7 @@ export default async function ProjectDetailPage({
             })()}
           </h1>
           <p className="mt-2 text-white/85">
-            {cityLabel(project.city)}, {dict.pdp.hero.country}
+            {cityLabel(project.city, dict)}, {dict.pdp.hero.country}
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {[
@@ -475,7 +475,7 @@ export default async function ProjectDetailPage({
             <DeveloperAttribution
               name={project.developer}
               logoUrl={project.developerLogo}
-              suffix={` · ${cityLabel(project.city)}, ${project.area}`}
+              suffix={` · ${cityLabel(project.city, dict)}, ${project.area}`}
               uppercase={false}
               className="mt-2"
             />
@@ -638,7 +638,7 @@ export default async function ProjectDetailPage({
         {related.length > 0 ? (
           <section id="related" className="mt-12 scroll-mt-24">
             <h2 className="text-xl font-semibold text-text-dark">
-              {interpolate(dict.pdp.moreInCity, { city: cityLabel(project.city) })}
+              {interpolate(dict.pdp.moreInCity, { city: cityLabel(project.city, dict) })}
             </h2>
             <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (

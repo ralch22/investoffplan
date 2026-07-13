@@ -38,7 +38,7 @@ export function ProjectLocationSection({
       </h2>
       <p className="mt-3 text-muted">
         {interpolate(t.locationLine, {
-          city: cityLabel(project.city),
+          city: cityLabel(project.city, dict),
           area: project.area,
         })}
       </p>

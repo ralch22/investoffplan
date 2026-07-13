@@ -214,7 +214,18 @@ export function sqftLabel(min: number, max: number | undefined, dict: Dict): str
   return interpolate(dict.format.sqft, { value: min.toLocaleString() });
 }
 
-export function cityLabel(city: string): string {
+/**
+ * Emirate/city display label for catalog city slugs.
+ * With `dict`, uses `dict.serp.cities` so AR surfaces show دبي/أبوظبي/… (#374).
+ * EN dict values are byte-identical to the historical hard-coded map.
+ * Without `dict` (server data / EN metadata), keeps the EN map + title-case fallback.
+ */
+export function cityLabel(city: string, dict?: Dict): string {
+  const key = city.toLowerCase();
+  if (dict) {
+    const fromDict = (dict.serp.cities as Record<string, string | undefined>)[key];
+    if (fromDict && key !== "all") return fromDict;
+  }
   const labels: Record<string, string> = {
     dubai: "Dubai",
     "abu-dhabi": "Abu Dhabi",
@@ -225,5 +236,5 @@ export function cityLabel(city: string): string {
     fujairah: "Fujairah",
     "al-ain": "Al Ain",
   };
-  return labels[city] ?? city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  return labels[key] ?? city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }

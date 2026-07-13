@@ -93,6 +93,19 @@ test.describe("Content routes", () => {
     expect(body).toMatch(/Premium-flagged share|حصة المشاريع المميزة/);
   });
 
+  // #374 — AR cityLabel emirate names (not bare EN Dubai).
+  test("AR PDP location line uses Arabic city label", async ({ page }) => {
+    const response = await page.goto("/ar/projects/105-residences", {
+      waitUntil: "commit",
+    });
+    expect(response?.status()).toBe(200);
+    const html = await response!.text();
+    // Emirate chrome from cityLabel(..., dict) — not full area breadcrumb ban.
+    expect(html).toMatch(/دبي/);
+    // Key-facts / location line should not prefer bare EN "Dubai," prefix alone.
+    expect(html).not.toMatch(/>\s*Dubai,\s/);
+  });
+
   // Soft SEO residual (#230) — hub indexes + title/meta hygiene + favorites noindex.
 
   // #350 — AR developer pair decision-layer copy (FAQs/pros) not bare EN.

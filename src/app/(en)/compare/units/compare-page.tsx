@@ -109,7 +109,7 @@ export function ComparePage({
     },
     {
       label: dict.pdp.keyFacts.location,
-      render: (item) => `${cityLabel(item.project.city)}, ${item.project.area}`,
+      render: (item) => `${cityLabel(item.project.city, dict)}, ${item.project.area}`,
     },
     {
       label: dict.compare.aedPerSqft,

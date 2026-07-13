@@ -56,7 +56,7 @@ export function buildFactualSummary(
   // Location: first area segment + city label, collapsing when the area segment
   // is just the city (avoids "Dubai, Dubai").
   const areaName = project.area?.split(",")[0]?.trim() || "";
-  const cityName = cityLabel(project.city);
+  const cityName = cityLabel(project.city, dict);
   const location =
     areaName && areaName.toLowerCase() !== cityName.toLowerCase()
       ? `${areaName}, ${cityName}`
