@@ -10,6 +10,7 @@ import { PriceMapClient } from "./price-map-client";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
 import { interpolate, type Locale } from "@/i18n/config";
+import { propertyTypeLabel } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: "Dubai Property Price Map — Launch Prices by Community",
@@ -60,7 +61,10 @@ export async function PriceMapPageContent({
         : interpolate(t.bedBr, { count: String(beds) }),
     );
   }
-  if (propertyType) filterParts.push(propertyType);
+  if (propertyType) {
+    // #367 — AR filter summary must not leak raw EN catalog tokens (apartment/villa/…).
+    filterParts.push(propertyTypeLabel(propertyType, dict, locale));
+  }
   const filterLabel =
     filterParts.length > 0
       ? interpolate(t.filteredBy, {
