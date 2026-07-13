@@ -1,5 +1,6 @@
 import { LocaleLink } from "@/components/locale-link";
 import { cityLabel } from "@/lib/format";
+import { projectGoogleMapsUrl } from "@/lib/project-maps";
 import { communitySlugFor } from "@/lib/community-slug";
 import type { Project } from "@/lib/types";
 import { getDictionary, interpolate, type Locale } from "@/i18n";
@@ -17,9 +18,8 @@ export function ProjectLocationSection({
   const t = dict.pdp;
   const areaSlug = communitySlugFor(project.area);
   const areaShort = project.area.split(",")[0];
-  const googleMapsUrl = project.coordinates
-    ? `https://www.google.com/maps?q=${project.coordinates.lat},${project.coordinates.lng}`
-    : `https://www.google.com/maps/search/${encodeURIComponent(project.area + " Dubai UAE")}`;
+  // #381 — never force "Dubai UAE"; use cityLabel + area (or lat/lng when present).
+  const googleMapsUrl = projectGoogleMapsUrl(project, dict);
   const osmEmbed = project.coordinates
     ? `https://www.openstreetmap.org/export/embed.html?bbox=${project.coordinates.lng - 0.02}%2C${project.coordinates.lat - 0.015}%2C${project.coordinates.lng + 0.02}%2C${project.coordinates.lat + 0.015}&layer=mapnik&marker=${project.coordinates.lat}%2C${project.coordinates.lng}`
     : null;

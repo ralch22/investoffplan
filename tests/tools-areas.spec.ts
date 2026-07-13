@@ -1,6 +1,37 @@
 import { test, expect } from "./fixtures";
+import { getDictionary } from "@/i18n";
+import { projectGoogleMapsUrl } from "@/lib/project-maps";
 
 test.describe("Mortgage, areas, collections", () => {
+  // #381 — maps fallback must not hardcode "Dubai UAE" for every city.
+  test("projectGoogleMapsUrl uses city label, not forced Dubai UAE", () => {
+    const en = getDictionary("en");
+    const ar = getDictionary("ar");
+    const withCoords = projectGoogleMapsUrl(
+      { city: "rak", area: "Al Marjan Island", coordinates: { lat: 25.7, lng: 55.7 } },
+      en,
+    );
+    expect(withCoords).toContain("25.7,55.7");
+    expect(withCoords).not.toContain("search");
+
+    const rakEn = projectGoogleMapsUrl(
+      { city: "rak", area: "Al Marjan Island" },
+      en,
+    );
+    const decodedEn = decodeURIComponent(rakEn);
+    expect(decodedEn).toContain("Al Marjan Island");
+    expect(decodedEn).toContain("Ras Al Khaimah");
+    expect(decodedEn).not.toContain("Dubai UAE");
+
+    const rakAr = projectGoogleMapsUrl(
+      { city: "rak", area: "Al Marjan Island" },
+      ar,
+    );
+    const decodedAr = decodeURIComponent(rakAr);
+    expect(decodedAr).toContain("رأس الخيمة");
+    expect(decodedAr).not.toContain("Dubai UAE");
+  });
+
   test("mortgage calculator computes a monthly payment", async ({ page }) => {
     await page.goto("/tools/mortgage");
     await expect(
