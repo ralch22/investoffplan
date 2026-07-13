@@ -143,11 +143,12 @@ export default async function CompareAreasPage({ params, locale = "en" }: PagePr
     getComparisonExtras(cmp),
     getRelatedComparisons(cmp),
   ]);
-  const prosA = buildPros(a, b, extras.a);
-  const prosB = buildPros(b, a, extras.b);
-  const suitA = buildSuitability(a, b, extras.a);
-  const suitB = buildSuitability(b, a, extras.b);
-  const faqs = buildComparisonFaqs(cmp);
+  // Decision-layer copy is locale-aware (#357) — pass dict so AR FAQs/pros/suit.
+  const prosA = buildPros(a, b, extras.a, dict);
+  const prosB = buildPros(b, a, extras.b, dict);
+  const suitA = buildSuitability(a, b, extras.a, dict);
+  const suitB = buildSuitability(b, a, extras.b, dict);
+  const faqs = buildComparisonFaqs(cmp, dict);
 
   const money = (n: number | null | undefined) =>
     n != null && n > 0 ? formatPrice(Math.round(n), "AED") : "—";
@@ -362,7 +363,10 @@ export default async function CompareAreasPage({ params, locale = "en" }: PagePr
         {faqs.length > 0 ? (
           <section className="mt-12">
             <h2 className="font-display text-2xl font-semibold text-text-dark">
-              {a.area.name} vs {b.area.name} FAQ
+              {interpolate(dict.pages.compare.faqHeading, {
+                a: a.area.name,
+                b: b.area.name,
+              })}
             </h2>
             <div className="mt-5">
               <FaqAccordion faqs={faqs} />

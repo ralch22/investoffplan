@@ -167,6 +167,27 @@ test.describe("Content routes", () => {
     }
   });
 
+  // #357 — AR area-compare decision layer (FAQs/pros/suit) must not leak EN templates.
+  test("AR area-compare pair FAQs/pros use Arabic decision copy", async ({
+    page,
+  }) => {
+    const res = await page.goto(
+      "/ar/compare/business-bay-vs-jumeirah-village-circle",
+      { waitUntil: "domcontentloaded" },
+    );
+    expect(res?.status()).toBe(200);
+    const html = await page.content();
+    // FAQ H2 + decision templates from dict.pages.compare (not bare EN).
+    expect(html).not.toContain("Which has the better rental yield");
+    expect(html).not.toContain("Higher gross rental yield");
+    expect(html).not.toContain("Yield investors");
+    expect(html).not.toMatch(
+      /Business Bay vs Jumeirah Village Circle FAQ/,
+    );
+    // Localized FAQ heading present (AR dict faqHeading).
+    expect(html).toMatch(/الأسئلة الشائعة/);
+  });
+
   // #243 — reverse pair order must 308 to alphabetical canonical (not 404 / soft-200).
   // Middleware 308s B-vs-A → A-vs-B; page permanentRedirect is a belt-and-braces.
   test("reverse area compare pair redirects to canonical order", async ({
