@@ -380,6 +380,26 @@ test.describe("Content routes", () => {
     }
   });
 
+  // #368 — AR collection long-form intro body must not stay English.
+  test("AR collection intro body uses Arabic (not EN editorial)", async ({
+    page,
+  }) => {
+    const res = await page.goto("/ar/collections/studios", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    // Ban distinctive EN COLLECTION_PAGES intro phrases.
+    expect(html).not.toContain("yield play of the off-plan market");
+    expect(html).not.toContain(
+      "Investors buying purely on numbers usually start here",
+    );
+    expect(html).not.toContain("Studio apartments — ideal for");
+    // Positive: AR intro copy from dict.pages.collections.pages.studios.intro.
+    expect(html).toContain("رهان العائد");
+    expect(html).toContain("الاستوديوهات");
+  });
+
   // FAQ topic detail residual — hub fixed in #252; topic H1/title still EN on main.
   test("AR FAQ topic page H1 and title use Arabic chrome", async ({ page }) => {
     const res = await page.goto("/ar/faq/off-plan-basics", {

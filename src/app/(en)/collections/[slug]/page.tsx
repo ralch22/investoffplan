@@ -29,7 +29,13 @@ export function generateStaticParams() {
   return COLLECTION_PAGES.map((page) => ({ slug: page.slug }));
 }
 
-type CollectionChrome = { title: string; h1: string; description: string };
+type CollectionChrome = {
+  title: string;
+  h1: string;
+  description: string;
+  /** Long-form body paragraphs (#368). Falls back to COLLECTION_PAGES.intro. */
+  intro?: readonly string[];
+};
 
 function collectionChrome(locale: Locale, slug: string): CollectionChrome | null {
   const page = getCollectionPage(slug);
@@ -41,6 +47,8 @@ function collectionChrome(locale: Locale, slug: string): CollectionChrome | null
     title: copy?.title ?? page.title,
     h1: copy?.h1 ?? page.h1,
     description: copy?.description ?? page.description,
+    // Prefer locale dict intro so AR SSR does not leak EN editorial body (#368).
+    intro: copy?.intro?.length ? copy.intro : page.intro,
   };
 }
 
@@ -182,7 +190,7 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
         />
 
         <section className="mt-8 max-w-3xl space-y-4">
-          {page.intro.map((paragraph, index) => (
+          {(chrome.intro ?? page.intro).map((paragraph, index) => (
             <p key={index} className="leading-relaxed text-muted">
               {paragraph}
             </p>
