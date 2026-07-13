@@ -553,21 +553,25 @@ test.describe("Content routes", () => {
       if (html.includes("نوع") || html.includes("استوديو") || html.includes("غرف")) {
         expect(html).not.toMatch(/>\s*Studio\s*</);
         expect(html).not.toMatch(/>\s*4\+ bed\s*</);
+        expect(html).not.toMatch(/>\s*\d+ bed\s*</i);
       }
     }
 
-    // PDP payment selector label (client chrome after hydration — use SSR shell).
+    // PDP payment unit selector — locale prop forces AR dict on SSR (#327).
     const pdp = await page.goto("/ar/projects/105-residences", {
       waitUntil: "commit",
     });
     expect(pdp?.status()).toBe(200);
     const pdpHtml = await pdp!.text();
     expect(pdpHtml).toContain('lang="ar"');
-    // Label is SSR'd as dict.pdp.unitType when multi-unit projects render calculator.
     expect(pdpHtml).not.toContain(">Unit type<");
-    // If selector present, AR label should appear.
-    if (pdpHtml.includes("iop-input") && pdpHtml.includes("unit")) {
-      expect(pdpHtml).toMatch(/نوع الوحدة|أنواع الوحدات/);
+    // Multi-unit projects with a real payment plan render the selector.
+    if (pdpHtml.includes('data-testid="pdp-unit-type-select"')) {
+      expect(pdpHtml).toContain("نوع الوحدة");
+      // Option labels use bedsLabel — no EN Studio / N Bed microcopy in options.
+      expect(pdpHtml).not.toMatch(/<option[^>]*>\s*Studio\b/i);
+      expect(pdpHtml).not.toMatch(/<option[^>]*>[^<]*\b1 Bed\b/i);
+      expect(pdpHtml).not.toMatch(/<option[^>]*>[^<]*\b\d+ Beds\b/i);
     }
   });
 

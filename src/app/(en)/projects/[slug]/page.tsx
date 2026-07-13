@@ -569,7 +569,7 @@ export default async function ProjectDetailPage({
         <ProjectLocationSection project={project} locale={locale} />
 
         <div id="calculator" className="mt-10 scroll-mt-24">
-          <ProjectPaymentCalculator project={project} />
+          <ProjectPaymentCalculator project={project} locale={locale} />
           <p className="mt-4 text-sm text-muted">
             {dict.pdp.financingQuestion}{" "}
             <LocaleLink

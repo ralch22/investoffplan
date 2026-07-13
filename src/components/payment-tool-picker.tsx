@@ -3,12 +3,14 @@
 import { useMemo, useState } from "react";
 import { ProjectPaymentCalculator } from "@/components/project-payment-calculator";
 import type { Project } from "@/lib/types";
+import { useI18n } from "@/i18n/locale-provider";
 
 interface PaymentToolPickerProps {
   projects: Project[];
 }
 
 export function PaymentToolPicker({ projects }: PaymentToolPickerProps) {
+  const { locale } = useI18n();
   const [slug, setSlug] = useState(projects[0]?.slug ?? "");
 
   const selected = useMemo(
@@ -34,7 +36,7 @@ export function PaymentToolPicker({ projects }: PaymentToolPickerProps) {
           ))}
         </select>
       </label>
-      <ProjectPaymentCalculator key={selected.slug} project={selected} />
+      <ProjectPaymentCalculator key={selected.slug} project={selected} locale={locale} />
     </div>
   );
 }
