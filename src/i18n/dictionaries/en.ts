@@ -1720,7 +1720,15 @@ const dict = {
     "highestYield": "Highest yield",
     "earliestHandover": "Earliest handover",
     "lowestEntry": "Lowest entry",
-    "grossPct": "{value}% gross"
+    "grossPct": "{value}% gross",
+    "paymentPlanAria": "Payment plan {plan}: {stages}",
+    "paymentStages": {
+      "down": "down",
+      "during": "during construction",
+      "duringShort": "during",
+      "handover": "on handover",
+      "after": "post-handover"
+    }
   },
   "marketAdvice": {
     "heading": "Not sure which fits your goals?",
