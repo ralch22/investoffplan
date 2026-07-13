@@ -3,6 +3,7 @@ import { resolveBrochureUrl } from "@/lib/brochure";
 import { hasPaymentPlan } from "@/lib/investment-metrics";
 import { parseMedia } from "@/lib/media";
 import type { Project } from "@/lib/types";
+import { localePath, type Locale } from "@/i18n/config";
 
 /**
  * VideoObject for a project's embeddable walkthrough (YouTube/Vimeo embed or
@@ -45,8 +46,22 @@ export function buildProjectJsonLd(opts: {
   minPrice: number;
   description?: string;
   gallery: string[];
+  /**
+   * Localized PropertyValue `name` labels (#343). Defaults keep EN schema
+   * strings byte-identical for callers that omit this (EN PDP).
+   */
+  propertyNames?: {
+    handover?: string;
+    paymentPlan?: string;
+    brochure?: string;
+  };
 }) {
   const { project, projectUrl, siteUrl, minPrice, description, gallery } = opts;
+  const propNames = {
+    handover: opts.propertyNames?.handover ?? "Handover",
+    paymentPlan: opts.propertyNames?.paymentPlan ?? "Payment plan",
+    brochure: opts.propertyNames?.brochure ?? "Brochure",
+  };
   const images = gallery
     .map((src) => absoluteAsset(siteUrl, src))
     .filter((src): src is string => Boolean(src))
@@ -76,18 +91,26 @@ export function buildProjectJsonLd(opts: {
 
   const additionalProperty = [
     project.handover
-      ? { "@type": "PropertyValue", name: "Handover", value: project.handover }
+      ? {
+          "@type": "PropertyValue",
+          name: propNames.handover,
+          value: project.handover,
+        }
       : null,
     // Skip blank / "AED 0" stubs so rich results never show an empty plan.
     hasPaymentPlan(project.paymentPlan)
       ? {
           "@type": "PropertyValue",
-          name: "Payment plan",
+          name: propNames.paymentPlan,
           value: project.paymentPlan.trim(),
         }
       : null,
     brochure
-      ? { "@type": "PropertyValue", name: "Brochure", value: brochure }
+      ? {
+          "@type": "PropertyValue",
+          name: propNames.brochure,
+          value: brochure,
+        }
       : null,
   ].filter(Boolean);
 
@@ -225,14 +248,25 @@ export function buildProjectsItemListJsonLd(opts: {
   pageUrl: string;
   siteUrl: string;
   limit?: number;
+  /** Locale for list-item project URLs (#343). Default EN bare `/projects/*`. */
+  locale?: Locale;
+  /** CollectionPage name; default EN SERP title. */
+  name?: string;
 }) {
-  const { projects, pageUrl, siteUrl, limit = 24 } = opts;
+  const {
+    projects,
+    pageUrl,
+    siteUrl,
+    limit = 24,
+    locale = "en",
+    name = "Off-Plan Projects for Sale in Dubai & the UAE",
+  } = opts;
   const items = projects.slice(0, limit);
   if (items.length === 0) return null;
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Off-Plan Projects for Sale in Dubai & the UAE",
+    name,
     url: pageUrl,
     mainEntity: {
       "@type": "ItemList",
@@ -241,7 +275,7 @@ export function buildProjectsItemListJsonLd(opts: {
         "@type": "ListItem",
         position: index + 1,
         name: project.name,
-        url: `${siteUrl}/projects/${project.slug}`,
+        url: `${siteUrl}${localePath(locale, `/projects/${project.slug}`)}`,
       })),
     },
   };
@@ -254,13 +288,28 @@ export function buildDeveloperItemListJsonLd(opts: {
   siteUrl: string;
   /** Cap list elements for HTML budget; numberOfItems still reflects the full set. */
   limit?: number;
+  /** Locale for list-item project URLs (#343). Default EN bare `/projects/*`. */
+  locale?: Locale;
+  /**
+   * CollectionPage name. Default EN
+   * `New & Off-Plan Projects by ${developer.name}`.
+   */
+  name?: string;
 }) {
-  const { developer, projects, developerUrl, siteUrl, limit = 24 } = opts;
+  const {
+    developer,
+    projects,
+    developerUrl,
+    siteUrl,
+    limit = 24,
+    locale = "en",
+    name,
+  } = opts;
   const items = projects.slice(0, limit);
   return {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: `New & Off-Plan Projects by ${developer.name}`,
+    name: name ?? `New & Off-Plan Projects by ${developer.name}`,
     url: developerUrl,
     mainEntity: {
       "@type": "ItemList",
@@ -269,7 +318,7 @@ export function buildDeveloperItemListJsonLd(opts: {
         "@type": "ListItem",
         position: index + 1,
         name: project.name,
-        url: `${siteUrl}/projects/${project.slug}`,
+        url: `${siteUrl}${localePath(locale, `/projects/${project.slug}`)}`,
       })),
     },
   };

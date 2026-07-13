@@ -51,6 +51,40 @@ test.describe("Developers directory", () => {
       position: 1,
     });
     expect(itemList.mainEntity.itemListElement[0].url).toContain("/projects/");
+    // EN ItemList must stay bare /projects/* (not /ar/projects/*).
+    expect(itemList.mainEntity.itemListElement[0].url).not.toContain(
+      "/ar/projects/",
+    );
+  });
+
+  // #343 — AR developer ItemList project URLs must be locale-prefixed.
+  test("AR developer ItemList JSON-LD uses /ar/projects/* URLs", async ({
+    page,
+  }) => {
+    const response = await page.goto("/ar/developers/emaar-properties", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(response?.status()).toBe(200);
+
+    const blocks = await page
+      .locator('script[type="application/ld+json"]')
+      .allTextContents();
+    const schemas = blocks.map((block) => JSON.parse(block));
+    const itemList = schemas.find(
+      (schema) => schema.mainEntity?.["@type"] === "ItemList",
+    );
+    expect(itemList).toBeTruthy();
+    const urls = itemList.mainEntity.itemListElement.map(
+      (el: { url?: string }) => el.url ?? "",
+    );
+    expect(urls.length).toBeGreaterThan(0);
+    for (const url of urls) {
+      expect(url).toContain("/ar/projects/");
+      // Bare EN path after host (not /ar/projects/).
+      expect(url).not.toMatch(/https?:\/\/[^/]+\/projects\//);
+    }
+    // Localized CollectionPage name (dict.developers.projectsByHeading).
+    expect(itemList.name).toMatch(/مشاريع/);
   });
 
   test("developer detail first page shows project cards", async ({ page }) => {

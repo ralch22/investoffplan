@@ -119,6 +119,9 @@ export default async function DeveloperDetailPage({
     developerUrl,
     siteUrl,
     limit: DEVELOPER_ITEMLIST_LIMIT,
+    // #343 — AR ItemList project URLs under /ar/projects/*; EN bare paths unchanged.
+    locale,
+    name: interpolate(dict.developers.projectsByHeading, { name: developer.name }),
   });
   const heroExcerpt = developerDescription(slug, developer.description);
 
