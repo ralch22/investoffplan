@@ -2,11 +2,16 @@ import type { AreaComparison, AreaComparisonSide } from "@/lib/area-compare";
 import { getSuggestedComparisons } from "@/lib/area-compare";
 import { getProjectsByCommunity } from "@/lib/communities";
 import { formatPrice } from "@/lib/format";
+import type { Dict } from "@/i18n";
+import { getDictionary } from "@/i18n";
+import { interpolate } from "@/i18n/config";
 
 /**
  * Decision-layer content for community comparison pages (SEO-plan spec):
  * programmatic pros/cons, "who is it for" suitability, and data-driven FAQs —
  * all computed from real DLD aggregates + the off-plan catalog, no copywriting.
+ *
+ * Locale-aware (#357): templates from dict.pages.compare.decision.
  */
 
 export interface SideExtras {
@@ -39,22 +44,36 @@ export async function getComparisonExtras(
 
 const money = (n: number) => formatPrice(Math.round(n), "AED");
 
+function decisionDict(dict?: Dict) {
+  return (dict ?? getDictionary("en")).pages.compare.decision;
+}
+
 /** Programmatic pros for one side, relative to the other. */
 export function buildPros(
   side: AreaComparisonSide,
   other: AreaComparisonSide,
   extras: SideExtras,
+  dict?: Dict,
 ): string[] {
+  const t = decisionDict(dict);
   const pros: string[] = [];
   const s = side.stats;
   const o = other.stats;
 
   if (s?.grossYieldPct != null && o?.grossYieldPct != null && s.grossYieldPct > o.grossYieldPct) {
-    pros.push(`Higher gross rental yield — ${s.grossYieldPct}% vs ${o.grossYieldPct}%`);
+    pros.push(
+      interpolate(t.proHigherYield, {
+        yield: String(s.grossYieldPct),
+        otherYield: String(o.grossYieldPct),
+      }),
+    );
   }
   if (s?.medianPpsqft != null && o?.medianPpsqft != null && s.medianPpsqft < o.medianPpsqft) {
     pros.push(
-      `Lower median sold AED/sqft (AED ${s.medianPpsqft.toLocaleString()} vs AED ${o.medianPpsqft.toLocaleString()}) — more built space per dirham`,
+      interpolate(t.proLowerMedianPsf, {
+        ppsf: s.medianPpsqft.toLocaleString(),
+        otherPpsf: o.medianPpsqft.toLocaleString(),
+      }),
     );
   }
   if (
@@ -62,24 +81,41 @@ export function buildPros(
     other.area.minPriceAed > 0 &&
     side.area.minPriceAed < other.area.minPriceAed
   ) {
-    pros.push(`Lower off-plan entry price — launches from ${money(side.area.minPriceAed)}`);
+    pros.push(
+      interpolate(t.proLowerEntry, {
+        price: money(side.area.minPriceAed),
+      }),
+    );
   }
   if (s?.appreciationPct != null && o?.appreciationPct != null && s.appreciationPct > o.appreciationPct) {
-    pros.push(`Stronger 2025 sold-price trend (${s.appreciationPct}% vs ${o.appreciationPct}%)`);
+    pros.push(
+      interpolate(t.proStrongerTrend, {
+        pct: String(s.appreciationPct),
+        otherPct: String(o.appreciationPct),
+      }),
+    );
   }
   if (s != null && o != null && s.saleSample > o.saleSample) {
     pros.push(
-      `Deeper resale market — ${s.saleSample.toLocaleString()} sales recorded in 2025 vs ${o.saleSample.toLocaleString()} (easier exit)`,
+      interpolate(t.proDeeperResale, {
+        sales: s.saleSample.toLocaleString(),
+        otherSales: o.saleSample.toLocaleString(),
+      }),
     );
   }
   if (side.area.projectCount > other.area.projectCount) {
     pros.push(
-      `More live off-plan supply — ${side.area.projectCount} projects and ${side.area.unitCount.toLocaleString()} unit options`,
+      interpolate(t.proMoreSupply, {
+        count: String(side.area.projectCount),
+        units: side.area.unitCount.toLocaleString(),
+      }),
     );
   }
   if (extras.familyStockShare >= 0.3) {
     pros.push(
-      `Substantial villa/townhouse stock (${Math.round(extras.familyStockShare * 100)}% of unit options) — genuine family inventory`,
+      interpolate(t.proFamilyStock, {
+        pct: String(Math.round(extras.familyStockShare * 100)),
+      }),
     );
   }
   return pros;
@@ -90,37 +126,48 @@ export function buildSuitability(
   side: AreaComparisonSide,
   other: AreaComparisonSide,
   extras: SideExtras,
+  dict?: Dict,
 ): { profile: string; reason: string }[] {
+  const t = decisionDict(dict);
   const out: { profile: string; reason: string }[] = [];
   const s = side.stats;
   const o = other.stats;
 
   if (s?.grossYieldPct != null && s.grossYieldPct >= 6.5) {
+    const strongerClause =
+      o?.grossYieldPct != null && s.grossYieldPct > o.grossYieldPct
+        ? t.suitYieldStronger
+        : "";
     out.push({
-      profile: "Yield investors",
-      reason: `${s.grossYieldPct}% gross yield on real 2025 rents and sold prices${
-        o?.grossYieldPct != null && s.grossYieldPct > o.grossYieldPct
-          ? " — the stronger side of this comparison"
-          : ""
-      }.`,
+      profile: t.suitYieldProfile,
+      reason: interpolate(t.suitYieldReason, {
+        yield: String(s.grossYieldPct),
+        strongerClause,
+      }),
     });
   }
   if (side.area.minPriceAed > 0 && side.area.minPriceAed <= 1_000_000) {
     out.push({
-      profile: "First-time buyers",
-      reason: `Off-plan launches from ${money(side.area.minPriceAed)} keep the entry ticket under AED 1M.`,
+      profile: t.suitFirstTimeProfile,
+      reason: interpolate(t.suitFirstTimeReason, {
+        price: money(side.area.minPriceAed),
+      }),
     });
   }
   if (extras.familyStockShare >= 0.3) {
     out.push({
-      profile: "Families / end-users",
-      reason: `${Math.round(extras.familyStockShare * 100)}% of unit options are villas or townhouses.`,
+      profile: t.suitFamilyProfile,
+      reason: interpolate(t.suitFamilyReason, {
+        pct: String(Math.round(extras.familyStockShare * 100)),
+      }),
     });
   }
   if (s != null && s.saleSample >= 1_000) {
     out.push({
-      profile: "Liquidity-focused investors",
-      reason: `${s.saleSample.toLocaleString()} sales in 2025 — a deep market when it's time to exit.`,
+      profile: t.suitLiquidityProfile,
+      reason: interpolate(t.suitLiquidityReason, {
+        sales: s.saleSample.toLocaleString(),
+      }),
     });
   }
   if (
@@ -129,15 +176,24 @@ export function buildSuitability(
     s.medianPpsqft < o.medianPpsqft
   ) {
     out.push({
-      profile: "Value hunters",
-      reason: `Median sold AED/sqft is ${Math.round(((o.medianPpsqft - s.medianPpsqft) / o.medianPpsqft) * 100)}% below ${other.area.name}.`,
+      profile: t.suitValueProfile,
+      reason: interpolate(t.suitValueReason, {
+        pct: String(
+          Math.round(((o.medianPpsqft - s.medianPpsqft) / o.medianPpsqft) * 100),
+        ),
+        otherName: other.area.name,
+      }),
     });
   }
   return out.slice(0, 3);
 }
 
 /** Data-driven FAQ (rendered + FAQPage JSON-LD). */
-export function buildComparisonFaqs(cmp: AreaComparison): Array<{ q: string; a: string }> {
+export function buildComparisonFaqs(
+  cmp: AreaComparison,
+  dict?: Dict,
+): Array<{ q: string; a: string }> {
+  const t = decisionDict(dict);
   const { a, b } = cmp;
   const faqs: Array<{ q: string; a: string }> = [];
 
@@ -145,31 +201,63 @@ export function buildComparisonFaqs(cmp: AreaComparison): Array<{ q: string; a: 
     const hi = a.stats.grossYieldPct >= b.stats.grossYieldPct ? a : b;
     const lo = hi === a ? b : a;
     faqs.push({
-      q: `Which has the better rental yield, ${a.area.name} or ${b.area.name}?`,
-      a: `${hi.area.name} — ${hi.stats!.grossYieldPct}% gross yield vs ${lo.stats!.grossYieldPct}% in ${lo.area.name}, based on median annual rent ÷ median sold price from Dubai Land Department 2025 transactions.`,
+      q: interpolate(t.faqBetterYieldQ, {
+        a: a.area.name,
+        b: b.area.name,
+      }),
+      a: interpolate(t.faqBetterYieldA, {
+        hi: hi.area.name,
+        yield: String(hi.stats!.grossYieldPct),
+        otherYield: String(lo.stats!.grossYieldPct),
+        lo: lo.area.name,
+      }),
     });
   }
   if (a.stats?.medianPrice != null && b.stats?.medianPrice != null) {
     const cheap = a.stats.medianPrice <= b.stats.medianPrice ? a : b;
     const dear = cheap === a ? b : a;
     faqs.push({
-      q: `Is ${a.area.name} or ${b.area.name} cheaper to buy in?`,
-      a: `${cheap.area.name} — the 2025 median sold price was ${money(cheap.stats!.medianPrice!)} vs ${money(dear.stats!.medianPrice!)} in ${dear.area.name}. Off-plan launches start from ${money(cheap.area.minPriceAed)} in ${cheap.area.name} and ${money(dear.area.minPriceAed)} in ${dear.area.name}.`,
+      q: interpolate(t.faqCheaperQ, {
+        a: a.area.name,
+        b: b.area.name,
+      }),
+      a: interpolate(t.faqCheaperA, {
+        cheap: cheap.area.name,
+        price: money(cheap.stats!.medianPrice!),
+        otherPrice: money(dear.stats!.medianPrice!),
+        dear: dear.area.name,
+        cheapLaunch: money(cheap.area.minPriceAed),
+        dearLaunch: money(dear.area.minPriceAed),
+      }),
     });
   }
   if (a.stats != null && b.stats != null) {
     const liq = a.stats.saleSample >= b.stats.saleSample ? a : b;
     const thin = liq === a ? b : a;
     faqs.push({
-      q: `Which is easier to resell, ${a.area.name} or ${b.area.name}?`,
-      a: `${liq.area.name} recorded ${liq.stats!.saleSample.toLocaleString()} sales in 2025 vs ${thin.stats!.saleSample.toLocaleString()} in ${thin.area.name}, so it has the deeper resale market. Transaction depth is a practical proxy for how quickly you can exit at market price.`,
+      q: interpolate(t.faqResellQ, {
+        a: a.area.name,
+        b: b.area.name,
+      }),
+      a: interpolate(t.faqResellA, {
+        liq: liq.area.name,
+        sales: liq.stats!.saleSample.toLocaleString(),
+        otherSales: thin.stats!.saleSample.toLocaleString(),
+        thin: thin.area.name,
+      }),
     });
   }
   const supply = a.area.projectCount >= b.area.projectCount ? a : b;
   const scarce = supply === a ? b : a;
   faqs.push({
-    q: `Where is there more off-plan choice right now?`,
-    a: `${supply.area.name} — ${supply.area.projectCount} live off-plan projects with ${supply.area.unitCount.toLocaleString()} unit options, vs ${scarce.area.projectCount} projects in ${scarce.area.name}. More supply means more negotiating room but also more future competition at handover.`,
+    q: t.faqMoreChoiceQ,
+    a: interpolate(t.faqMoreChoiceA, {
+      supply: supply.area.name,
+      count: String(supply.area.projectCount),
+      units: supply.area.unitCount.toLocaleString(),
+      scarceCount: String(scarce.area.projectCount),
+      scarce: scarce.area.name,
+    }),
   });
   return faqs;
 }
