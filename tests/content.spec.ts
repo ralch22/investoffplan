@@ -93,6 +93,22 @@ test.describe("Content routes", () => {
     expect(body).toMatch(/Premium-flagged share|حصة المشاريع المميزة/);
   });
 
+
+  // #357 — AR area pair decision-layer copy (FAQs/pros) not bare EN.
+  test("AR compare area pair FAQs are Arabic chrome", async ({ page }) => {
+    const response = await page.goto(
+      "/ar/compare/business-bay-vs-jumeirah-village-circle",
+      { waitUntil: "commit" },
+    );
+    expect(response?.status()).toBe(200);
+    const body = await response!.text();
+    expect(body).toMatch(/الأسئلة الشائعة|أيّهما أفضل|مستثمرو العائد|عائد إيجاري/);
+    expect(body).not.toContain("Which has the better rental yield");
+    expect(body).not.toContain("Higher gross rental yield");
+    expect(body).not.toContain("Yield investors");
+    expect(body).not.toMatch(/>\s*Business Bay vs Jumeirah Village Circle FAQ\s*</);
+  });
+
   // Soft SEO residual (#230) — hub indexes + title/meta hygiene + favorites noindex.
   test("compare hub indexes render and favorites is noindex", async ({ page }) => {
     for (const path of ["/compare-projects", "/compare-developers"]) {
