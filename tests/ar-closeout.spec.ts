@@ -59,6 +59,21 @@ test.describe("AR close-out", () => {
     expect(html).not.toContain("What are launch prices at");
   });
 
+  // #332 — residential unit-types column uses bedsLabel, not EN "Studio" / "N BR".
+  test("/ar/tools/residential unit-types column is Arabic bed chrome", async ({
+    page,
+  }) => {
+    const response = await page.goto("/ar/tools/residential", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(response?.ok()).toBeTruthy();
+    const html = await page.content();
+    // Table should prefer dict bed labels (استوديو) when bed bands present.
+    // Must not bake compact EN "1 BR" / "2 BR" server strings.
+    expect(html).not.toMatch(/>\s*\d+\s*BR\s*</);
+    expect(html).not.toMatch(/>Studio</);
+  });
+
   // Residual: residential tools form labels from dict (not hard-coded EN).
   test("/ar/tools/residential residual form chrome is Arabic", async ({ page }) => {
     const response = await page.goto("/ar/tools/residential", {

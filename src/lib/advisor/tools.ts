@@ -81,11 +81,19 @@ export const TOOL_DEFINITIONS = [
   },
 ];
 
-function bedsLabel(project: Project): string | undefined {
-  const beds = [...new Set((project.units ?? []).map((u) => u.beds))].sort((a, b) => a - b);
-  if (!beds.length) return undefined;
+function projectBeds(project: Project): number[] | undefined {
+  const beds = [...new Set((project.units ?? []).map((u) => u.beds))].sort(
+    (a, b) => a - b,
+  );
+  return beds.length ? beds : undefined;
+}
+
+/** EN-only compact bed chip for LLM tool facts (not UI chrome). */
+function bedsFactLabel(beds: number[]): string {
   const label = (b: number) => (b === 0 ? "Studio" : `${b}BR`);
-  return beds.length === 1 ? label(beds[0]) : `${label(beds[0])}–${label(beds[beds.length - 1])}`;
+  return beds.length === 1
+    ? label(beds[0])
+    : `${label(beds[0])}–${label(beds[beds.length - 1])}`;
 }
 
 export function projectToCard(project: Project): AdvisorCard {
@@ -100,7 +108,7 @@ export function projectToCard(project: Project): AdvisorCard {
     imageUrl: project.imageUrl,
     fromPriceAed: prices.length ? Math.min(...prices) : undefined,
     handover: project.handover,
-    bedsLabel: bedsLabel(project),
+    beds: projectBeds(project),
     paymentPlan: project.paymentPlan,
   };
 }
@@ -110,7 +118,7 @@ function projectFacts(project: Project): string {
   return [
     `${project.name} (slug: ${project.slug}) by ${project.developer} in ${project.area}, ${project.city}.`,
     card.fromPriceAed ? `From AED ${card.fromPriceAed.toLocaleString("en-US")}.` : "",
-    card.bedsLabel ? `Bedrooms: ${card.bedsLabel}.` : "",
+    card.beds?.length ? `Bedrooms: ${bedsFactLabel(card.beds)}.` : "",
     project.handover ? `Handover: ${project.handover}.` : "",
     project.paymentPlan ? `Payment plan: ${project.paymentPlan}.` : "",
     project.ownershipType ? `Ownership: ${project.ownershipType}.` : "",

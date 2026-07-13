@@ -15,7 +15,8 @@ export interface ResidentialBuilding {
   avgPriceAed: number;
   avgPpsf: number | null;
   unitCount: number;
-  bedBands: string[];
+  /** Distinct bedroom counts (0 = studio). Format with bedsLabel(dict) at render (#332). */
+  beds: number[];
   handover?: string;
   imageUrl?: string;
 }
@@ -25,11 +26,6 @@ function slugify(value: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
-}
-
-function bedLabel(beds: number): string {
-  if (beds === 0) return "Studio";
-  return `${beds} BR`;
 }
 
 export async function getResidentialBuildings(options?: {
@@ -76,7 +72,7 @@ export async function getResidentialBuildings(options?: {
         ? Math.round(ppsfValues.reduce((s, v) => s + v, 0) / ppsfValues.length)
         : null,
       unitCount: project.units.length,
-      bedBands: beds.map(bedLabel),
+      beds,
       handover: project.handover,
       imageUrl: project.imageUrl,
     });
