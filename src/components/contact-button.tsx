@@ -46,7 +46,7 @@ export function ContactButton({
       )}
     >
       <WhatsAppIcon />
-      WhatsApp
+      {dict.common.whatsapp}
     </a>
   );
 }

@@ -17,10 +17,12 @@ export function DeveloperContactPanel({
   developerName,
 }: DeveloperContactPanelProps) {
   const { dict } = useI18n();
-  const emailSubject = encodeURIComponent(`Enquiry about ${developerName} projects`);
+  const emailSubject = encodeURIComponent(
+    interpolate(dict.developers.emailSubject, { name: developerName }),
+  );
   const emailHref = `mailto:${SITE_EMAIL}?subject=${emailSubject}`;
   const whatsappText = encodeURIComponent(
-    `Hi, I'm interested in off-plan projects by ${developerName} on InvestOffPlan.`,
+    interpolate(dict.developers.whatsappPrefill, { name: developerName }),
   );
   const whatsappHref = withUtm(
     `https://wa.me/${SITE_WHATSAPP}?text=${whatsappText}`,
