@@ -246,3 +246,18 @@ export function cityLabel(city: string, dict?: Dict): string {
   };
   return labels[key] ?? city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
+
+/**
+ * Google Maps search URL when a project has no coordinates (#381).
+ * Uses the project's emirate via {@link cityLabel} — never hard-codes "Dubai UAE".
+ */
+export function googleMapsAreaSearchUrl(
+  area: string,
+  city: string,
+  dict?: Dict,
+): string {
+  const cityName = cityLabel(city, dict);
+  const country = dict?.pdp.hero.country ?? "UAE";
+  const q = [area, cityName, country].filter(Boolean).join(" ");
+  return `https://www.google.com/maps/search/${encodeURIComponent(q)}`;
+}
