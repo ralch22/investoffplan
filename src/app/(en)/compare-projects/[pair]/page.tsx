@@ -140,7 +140,7 @@ export default async function CompareProjectsPage({ params, locale = "en" }: Pag
       <PageHero
         title={`${a.name} vs ${b.name}`}
         italicTitle
-        subtitle={`Two off-plan projects in ${a.area}, side by side.`}
+        subtitle={interpolate(t.pairProjectsSubtitle, { area: a.area })}
       />
       <main className="mx-auto max-w-[1000px] px-5 py-12 md:px-8">
         <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: t.breadcrumb, href: "/compare" }, { label: `${a.name} vs ${b.name}` }]} />
@@ -167,7 +167,11 @@ export default async function CompareProjectsPage({ params, locale = "en" }: Pag
                 aNum={a.unitCount} bNum={b.unitCount} better="higher" />
               <Row label={t.rowAreaYield} aVal={yld(a.areaYield)} bVal={yld(b.areaYield)}
                 aNum={a.areaYield} bNum={b.areaYield} better="higher" />
-              <Row label={t.rowGoldenVisa} aVal={a.goldenVisa ? "Yes" : "No"} bVal={b.goldenVisa ? "Yes" : "No"} />
+              <Row
+                label={t.rowGoldenVisa}
+                aVal={a.goldenVisa ? dict.common.yes : dict.common.no}
+                bVal={b.goldenVisa ? dict.common.yes : dict.common.no}
+              />
             </tbody>
           </table>
         </div>

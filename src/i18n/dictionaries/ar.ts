@@ -182,7 +182,9 @@ export const ar: Dict = {
     "goHome": "العودة للرئيسية",
     "notFoundHeading": "الصفحة غير موجودة",
     "notFoundBody": "تعذّر العثور على الصفحة التي تبحث عنها. ربما نُقلت أو أُزيلت.",
-    "browseProjectsCta": "تصفّح المشاريع"
+    "browseProjectsCta": "تصفّح المشاريع",
+    "yes": "نعم",
+    "no": "لا"
   },
   "errorPage": {
     "label": "خطأ",
@@ -1378,6 +1380,7 @@ export const ar: Dict = {
       "rowAreaYield": "عائد إجمالي للمنطقة (دائرة الأراضي)",
       "rowGoldenVisa": "مؤهل للإقامة الذهبية",
       "viewProjectCta": "عرض {name}",
+      "pairProjectsSubtitle": "مشروعان على الخارطة في {area}، جنباً إلى جنب.",
       "decideWithData": "قرّر بالبيانات",
       "hubHeading": "قارن المجتمعات",
       "hubSubtitle": "مقارنة جنبًا إلى جنب بناءً على أسعار البيع الفعلية لعام 2025، سعر القدم المربعة، والعوائد الإيجارية الإجمالية.",

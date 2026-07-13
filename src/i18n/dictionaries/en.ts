@@ -180,7 +180,9 @@ const dict = {
     "goHome": "Go home",
     "notFoundHeading": "Page not found",
     "notFoundBody": "We couldn't find the page you're looking for. It may have moved or been removed.",
-    "browseProjectsCta": "Browse projects"
+    "browseProjectsCta": "Browse projects",
+    "yes": "Yes",
+    "no": "No"
   },
   "errorPage": {
     "label": "Error",
@@ -1376,6 +1378,7 @@ const dict = {
       "rowAreaYield": "Area gross yield (DLD)",
       "rowGoldenVisa": "Golden Visa eligible",
       "viewProjectCta": "View {name}",
+      "pairProjectsSubtitle": "Two off-plan projects in {area}, side by side.",
       "decideWithData": "Decide with data",
       "hubHeading": "Compare communities",
       "hubSubtitle": "Side-by-side on real 2025 sold prices, price per sqft, and gross rental yields.",
