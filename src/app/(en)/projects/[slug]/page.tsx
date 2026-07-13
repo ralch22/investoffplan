@@ -264,6 +264,12 @@ export default async function ProjectDetailPage({
     minPrice,
     description,
     gallery,
+    // #343 — AR PropertyValue names from dict, not hard-coded EN schema labels.
+    propertyLabels: {
+      handover: dict.pdp.timeline.handover,
+      paymentPlan: dict.pdp.keyFacts.paymentPlan,
+      brochure: dict.common.brochure,
+    },
   });
 
   const breadcrumbLd = buildProjectBreadcrumbJsonLd({

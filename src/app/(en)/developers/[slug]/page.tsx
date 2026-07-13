@@ -119,6 +119,10 @@ export default async function DeveloperDetailPage({
     developerUrl,
     siteUrl,
     limit: DEVELOPER_ITEMLIST_LIMIT,
+    locale,
+    listName: interpolate(dict.developers.projectsByHeading, {
+      name: developer.name,
+    }),
   });
   const heroExcerpt = developerDescription(slug, developer.description);
 
