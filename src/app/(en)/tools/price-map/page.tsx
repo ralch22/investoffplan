@@ -9,7 +9,7 @@ import type { PropertyType } from "@/lib/types";
 import { PriceMapClient } from "./price-map-client";
 import { enMeta } from "@/lib/ar-meta";
 import { getDictionary } from "@/i18n";
-import type { Locale } from "@/i18n/config";
+import { interpolate, type Locale } from "@/i18n/config";
 
 export const metadata: Metadata = {
   title: "Dubai Property Price Map — Launch Prices by Community",
@@ -52,10 +52,21 @@ export async function PriceMapPageContent({
     propertyType: propertyType || undefined,
   });
 
+  const filterParts: string[] = [];
+  if (beds != null && Number.isFinite(beds)) {
+    filterParts.push(
+      beds === 0
+        ? dict.format.beds.studio
+        : interpolate(t.bedBr, { count: String(beds) }),
+    );
+  }
+  if (propertyType) filterParts.push(propertyType);
   const filterLabel =
-    beds != null || propertyType
-      ? `Filtered by ${beds != null ? (beds === 0 ? "studio" : `${beds} BR`) : ""}${beds != null && propertyType ? " · " : ""}${propertyType || ""}`
-      : "All unit types";
+    filterParts.length > 0
+      ? interpolate(t.filteredBy, {
+          filters: filterParts.join(t.filterJoin),
+        })
+      : t.allUnitTypes;
 
   return (
     <PageShell headerVariant="transparent">
@@ -74,8 +85,10 @@ export async function PriceMapPageContent({
           ]}
         />
         <p className="mt-6 text-sm text-muted">
-          {points.length} communities · {filterLabel}. Green markers are more affordable;
-          red markers trend premium. Click a community to explore projects.
+          {interpolate(t.summaryLine, {
+            count: String(points.length),
+            filterLabel,
+          })}
         </p>
         <Suspense fallback={<MapLoading />}>
           <div className="mt-8">

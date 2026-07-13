@@ -1181,7 +1181,12 @@ const dict = {
     },
     "priceMapPage": {
       "heroTitle": "Price map",
-      "heroSubtitle": "See which communities fit your budget — launch prices across the UAE."
+      "heroSubtitle": "See which communities fit your budget — launch prices across the UAE.",
+      "allUnitTypes": "All unit types",
+      "filteredBy": "Filtered by {filters}",
+      "filterJoin": " · ",
+      "bedBr": "{count} BR",
+      "summaryLine": "{count} communities · {filterLabel}. Green markers are more affordable; red markers trend premium. Click a community to explore projects."
     },
     "rentVsBuyPage": {
       "heroTitle": "Rent vs buy calculator",
@@ -1861,7 +1866,9 @@ const dict = {
     "medianPriceCol": "Median price",
     "aedSqftCol": "AED/sqft",
     "salesCol": "Sales",
-    "monthlyTrendHeading": "Median AED/sqft by month"
+    "monthlyTrendHeading": "Median AED/sqft by month",
+    "trendChartAria": "Median sold price per sqft by month in {area}, 2025",
+    "trendPointTitle": "{month}: AED {ppsf}/sqft · {sales} sales"
   }
 } as const;
 
