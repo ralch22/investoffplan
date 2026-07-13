@@ -72,4 +72,4 @@ npm run build && npm run test:e2e
 
 ## PR checks (branch protection)
 
-PRs to `main` must pass the GitHub Actions job **`build and e2e`** (workflow: `.github/workflows/ci.yml`). Configure that check name in branch protection so AO workers cannot merge without a green build + Playwright e2e run.
+PRs to `main` must pass the GitHub Actions job **`build and e2e`** (workflow: `.github/workflows/ci.yml`). That check is a **required status check** on `main` (branch protection, `enforce_admins` on) so AO workers cannot merge without a green build + Playwright e2e run.

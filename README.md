@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# InvestOffPlan
+
+Next.js 16 off-plan property portal (Property Finder / OPR.ae parity), deployed via OpenNext to Cloudflare Workers.
+
+**Production:** https://investoffplan.com
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Verify (local gate)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Same contract as CI:
 
-## Learn More
+```bash
+npm run build && npm run test:e2e
+```
 
-To learn more about Next.js, take a look at the following resources:
+Playwright starts `next start` on port **3010**. Free the port and avoid concurrent e2e runs (see `AGENTS.md` / ship skill).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## CI / PR gate
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Workflow: [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
 
-## Deploy on Vercel
+- Triggers on `pull_request` → `main`
+- Steps: `npm ci` → Playwright browser cache/install → `npm run build` → local D1 migrate/seed → `npm run test:e2e`
+- Required status check name for branch protection: **`build and e2e`**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`main` branch protection requires that check before merge.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Deploy
+
+```bash
+CLOUDFLARE_ACCOUNT_ID=4a75e91d6fca8bc58467fb80ce1b9c2e npm run deploy
+```
+
+Production deploy uses `npm run deploy:production` (authorized only when explicitly requested).
