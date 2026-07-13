@@ -9,7 +9,7 @@ import {
   getProjectsByCommunity,
 } from "@/lib/communities";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
-import { bedKeyLabel, formatPrice } from "@/lib/format";
+import { bedKeyLabel, dldConfidenceLabel, formatPrice } from "@/lib/format";
 import { getDictionary } from "@/i18n";
 import { interpolate, localePath, type Locale } from "@/i18n/config";
 
@@ -124,8 +124,8 @@ export default async function MarketReportPage({
           {interpolate(s.reportTitle, { name: community.name })}
         </h1>
         <p className="mt-2 text-sm text-muted">
-          {community.cityLabel} · {s.dataPeriod}: {sourcePeriod} · {stats.confidence}{" "}
-          {s.confidenceLabel} · {source}
+          {community.cityLabel} · {s.dataPeriod}: {sourcePeriod} ·{" "}
+          {dldConfidenceLabel(stats.confidence, dict)} {s.confidenceLabel} · {source}
         </p>
       </header>
 

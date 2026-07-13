@@ -80,6 +80,25 @@ export function propertyTypeLabel(
   return names[key] ?? propertyType;
 }
 
+/** DLD sample-size confidence tier label (#371). EN matches raw enum values. */
+export function dldConfidenceLabel(
+  confidence: "high" | "medium" | "low" | "none" | string,
+  dict: Dict,
+): string {
+  switch (confidence) {
+    case "high":
+      return dict.dld.confidenceHigh;
+    case "medium":
+      return dict.dld.confidenceMedium;
+    case "low":
+      return dict.dld.confidenceLow;
+    case "none":
+      return dict.dld.confidenceNone;
+    default:
+      return confidence;
+  }
+}
+
 export function formatLaunchPrice(
   minAed: number,
   maxAed: number | undefined,
