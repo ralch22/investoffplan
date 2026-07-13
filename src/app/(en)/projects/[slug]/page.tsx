@@ -267,6 +267,12 @@ export default async function ProjectDetailPage({
     minPrice,
     description,
     gallery,
+    // Localized PropertyValue names on AR PDP (issue #343).
+    propertyNames: {
+      handover: dict.pdp.timeline.handover,
+      paymentPlan: dict.pdp.keyFacts.paymentPlan,
+      brochure: dict.common.brochure,
+    },
   });
 
   const breadcrumbLd = buildProjectBreadcrumbJsonLd({

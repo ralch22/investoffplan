@@ -51,6 +51,34 @@ test.describe("Developers directory", () => {
       position: 1,
     });
     expect(itemList.mainEntity.itemListElement[0].url).toContain("/projects/");
+    // EN must not be double-prefixed.
+    expect(itemList.mainEntity.itemListElement[0].url).not.toContain("/ar/projects/");
+  });
+
+  test("AR developer ItemList uses /ar/projects/* (issue #343)", async ({ page }) => {
+    const response = await page.goto("/ar/developers/emaar-properties", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(response?.status()).toBe(200);
+
+    const blocks = await page
+      .locator('script[type="application/ld+json"]')
+      .allTextContents();
+    const schemas = blocks.map((block) => JSON.parse(block));
+
+    const itemList = schemas.find(
+      (schema) => schema.mainEntity?.["@type"] === "ItemList",
+    );
+    expect(itemList).toBeTruthy();
+    const elements = itemList.mainEntity.itemListElement as Array<{ url: string }>;
+    expect(elements.length).toBeGreaterThan(0);
+    for (const el of elements) {
+      expect(el.url).toContain("/ar/projects/");
+      // No bare EN project URLs in AR ItemList (path must not be /projects/ after host).
+      expect(el.url).not.toMatch(/https?:\/\/[^/]+\/projects\//);
+    }
+    // Localized CollectionPage name (AR dict developers.projectsByHeading).
+    expect(itemList.name).toMatch(/مشاريع/);
   });
 
   test("developer detail first page shows project cards", async ({ page }) => {
