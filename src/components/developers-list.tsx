@@ -44,8 +44,15 @@ export function DevelopersList({ items }: { items: DeveloperSummary[] }) {
               {developerDescription(dev.slug, dev.description)}
             </p>
             <p className="mt-2 text-xs text-muted-light">
-              {dev.projectCount} project{dev.projectCount === 1 ? "" : "s"} ·{" "}
-              {dev.unitCount.toLocaleString()} unit options
+              {interpolate(
+                dev.projectCount === 1
+                  ? dict.developers.listMetaOne
+                  : dict.developers.listMetaMany,
+                {
+                  projects: dev.projectCount.toLocaleString(),
+                  units: dev.unitCount.toLocaleString(),
+                },
+              )}
             </p>
           </div>
           <LocaleLink

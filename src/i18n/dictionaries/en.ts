@@ -1587,6 +1587,13 @@ const dict = {
     "projectsByHeading": "New & Off-Plan Projects by {name}",
     "otherDevelopers": "Other Developers",
     "unitOptionsLabel": "{count} unit options on invest off-plan",
+    "projectCountOne": "{count} project",
+    "projectCountMany": "{count} projects",
+    "listMetaOne": "{projects} project · {units} unit options",
+    "listMetaMany": "{projects} projects · {units} unit options",
+    "heroMetaOne": "{projects} project · {unitOptions}",
+    "heroMetaMany": "{projects} projects · {unitOptions}",
+    "dualPortfolio": "{active} projects on invest off-plan · {portfolio} in developer portfolio",
     "viewAllDevelopers": "View all developers →",
     "noListings": "No listings for this developer right now. Check back soon or contact our team.",
     "profile": {

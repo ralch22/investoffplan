@@ -1589,6 +1589,13 @@ export const ar: Dict = {
     "projectsByHeading": "مشاريع جديدة وعلى الخارطة من {name}",
     "otherDevelopers": "مطوّرون آخرون",
     "unitOptionsLabel": "{count} خيار وحدة على invest off-plan",
+    "projectCountOne": "{count} مشروع",
+    "projectCountMany": "{count} مشاريع",
+    "listMetaOne": "{projects} مشروع · {units} خيار وحدة",
+    "listMetaMany": "{projects} مشاريع · {units} خيار وحدة",
+    "heroMetaOne": "{projects} مشروع · {unitOptions}",
+    "heroMetaMany": "{projects} مشاريع · {unitOptions}",
+    "dualPortfolio": "{active} مشروعاً على invest off-plan · {portfolio} في محفظة المطوّر",
     "viewAllDevelopers": "عرض جميع المطوّرين ←",
     "noListings": "لا توجد مشاريع لهذا المطوّر حالياً. تحقق لاحقاً أو تواصل مع فريقنا.",
     "profile": {
