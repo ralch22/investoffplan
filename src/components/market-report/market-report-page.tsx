@@ -77,10 +77,10 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
         isAccessibleForFree: true,
         creator: { "@type": "Organization", name: "invest off-plan" },
         variableMeasured: [
-          "Gross rental yield",
-          "Median sold price per sqft",
-          "Off-plan launch price",
-          "Handover pipeline",
+          t.variableGrossYield,
+          t.variableMedianSoldPpsf,
+          t.variableOffPlanLaunch,
+          t.variableHandoverPipeline,
         ],
       },
       {

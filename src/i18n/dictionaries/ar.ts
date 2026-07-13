@@ -1649,6 +1649,9 @@ export const ar: Dict = {
     "faqWhereA": "القوائم الحالية تمتد عبر {cities}. استخدم شبكة المشاريع أعلاه للتصفية حسب الموقع والتسليم وسعر الإطلاق.",
     "faqEnquireQ": "كيف أستفسر عن مشاريع {name}؟",
     "faqEnquireA": "استخدم واتساب على أي بطاقة مشروع أو تواصل مع فريقنا عبر البريد. يمكننا مشاركة البروشورات وخطط السداد والتوافر لإطلاقات {name}.",
+    "jsonLdDescriptionOne": "تصفّح {count} مشروعاً على الخارطة{unitsClause} من {name} في الإمارات.",
+    "jsonLdDescriptionMany": "تصفّح {count} مشروعاً على الخارطة{unitsClause} من {name} في الإمارات.",
+    "jsonLdUnitsClause": " و{units} خيار وحدة",
     "profile": {
       "heading": "ملف المطوّر",
       "subtitle": "ملف مبني على البيانات لكتالوج المطوّر على الخارطة — وليس تقييماً للجودة أو التسليم.",
@@ -1757,7 +1760,11 @@ export const ar: Dict = {
     "caveat4": "هذا التقرير معلومات عامة وليس نصيحة مالية أو استثمارية أو قانونية. تحقّق من جميع الأرقام بشكل مستقل قبل اتخاذ أي قرار.",
     "sourceLabel": "المصدر",
     "unitsSuffix": "وحدة",
-    "salesSuffix": "مبيعات"
+    "salesSuffix": "مبيعات",
+    "variableGrossYield": "العائد الإيجاري الإجمالي",
+    "variableMedianSoldPpsf": "السعر الوسيط للبيع للقدم المربعة",
+    "variableOffPlanLaunch": "سعر الإطلاق على الخارطة",
+    "variableHandoverPipeline": "جدول التسليم"
   },
   "compare": {
     "heroTitleLead": "قارن",

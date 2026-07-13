@@ -108,10 +108,26 @@ export default async function DeveloperDetailPage({
   const siteUrl = getSiteUrl();
   const abs = (href: string) => `${siteUrl}${localePath(locale, href)}`;
   const developerUrl = abs(`/developers/${slug}`);
+  const unitsClause = developer.unitCount
+    ? interpolate(dict.developers.jsonLdUnitsClause, {
+        units: developer.unitCount.toLocaleString(),
+      })
+    : "";
+  const agentDescription = interpolate(
+    developer.projectCount === 1
+      ? dict.developers.jsonLdDescriptionOne
+      : dict.developers.jsonLdDescriptionMany,
+    {
+      count: String(developer.projectCount),
+      unitsClause,
+      name: developer.name,
+    },
+  );
   const jsonLd = buildDeveloperJsonLd({
     developer,
     developerUrl,
     siteUrl,
+    description: agentDescription,
   });
   const itemListJsonLd = buildDeveloperItemListJsonLd({
     developer,

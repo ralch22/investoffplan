@@ -109,6 +109,28 @@ test.describe("Content routes", () => {
   });
 
 
+  // #351 — AR RealEstateAgent description + market-report Dataset variableMeasured.
+  test("AR developer + market-report JSON-LD descriptions are Arabic", async ({
+    page,
+  }) => {
+    const devRes = await page.goto("/ar/developers/emaar-properties", {
+      waitUntil: "commit",
+    });
+    expect(devRes?.status()).toBe(200);
+    const devBody = await devRes!.text();
+    expect(devBody).not.toContain("Browse ");
+    expect(devBody).not.toMatch(/Browse \d+ off-plan projects/);
+    expect(devBody).toMatch(/تصفّح|RealEstateAgent/);
+
+    const mrRes = await page.goto("/ar/market-report", { waitUntil: "commit" });
+    expect(mrRes?.status()).toBe(200);
+    const mrBody = await mrRes!.text();
+    expect(mrBody).not.toContain("Gross rental yield");
+    expect(mrBody).not.toContain("Median sold price per sqft");
+    expect(mrBody).not.toContain("Off-plan launch price");
+    expect(mrBody).not.toContain("Handover pipeline");
+    expect(mrBody).toMatch(/variableMeasured|العائد الإيجاري|جدول التسليم/);
+  });
   test("compare hub indexes render and favorites is noindex", async ({ page }) => {
     for (const path of ["/compare-projects", "/compare-developers"]) {
       const res = await page.goto(path);

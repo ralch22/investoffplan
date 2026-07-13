@@ -1647,6 +1647,9 @@ const dict = {
     "faqWhereA": "Current listings span {cities}. Use the project grid above to filter by location, handover, and launch price.",
     "faqEnquireQ": "How do I enquire about {name} projects?",
     "faqEnquireA": "Use WhatsApp on any project card or contact our team via email. We can share brochures, payment plans, and availability for {name} launches.",
+    "jsonLdDescriptionOne": "Browse {count} off-plan project{unitsClause} by {name} in the UAE.",
+    "jsonLdDescriptionMany": "Browse {count} off-plan projects{unitsClause} by {name} in the UAE.",
+    "jsonLdUnitsClause": " and {units} unit options",
     "profile": {
       "heading": "Developer profile",
       "subtitle": "A data-derived profile of this developer's off-plan catalog — not a quality or delivery rating.",
@@ -1755,7 +1758,11 @@ const dict = {
     "caveat4": "This report is general information, not financial, investment or legal advice. Verify all figures independently before deciding.",
     "sourceLabel": "Source",
     "unitsSuffix": "units",
-    "salesSuffix": "sales"
+    "salesSuffix": "sales",
+    "variableGrossYield": "Gross rental yield",
+    "variableMedianSoldPpsf": "Median sold price per sqft",
+    "variableOffPlanLaunch": "Off-plan launch price",
+    "variableHandoverPipeline": "Handover pipeline"
   },
   "compare": {
     "heroTitleLead": "Compare",
