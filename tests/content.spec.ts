@@ -388,16 +388,18 @@ test.describe("Content routes", () => {
       waitUntil: "domcontentloaded",
     });
     expect(res?.ok()).toBeTruthy();
-    const html = await page.content();
+    // Scope to editorial intro section only — project card SSR can still carry
+    // EN catalog description snippets (e.g. "Studio apartments — ideal for").
+    const intro = page.locator("main section").first();
+    const introText = await intro.innerText();
     // Ban distinctive EN COLLECTION_PAGES intro phrases.
-    expect(html).not.toContain("yield play of the off-plan market");
-    expect(html).not.toContain(
+    expect(introText).not.toContain("yield play of the off-plan market");
+    expect(introText).not.toContain(
       "Investors buying purely on numbers usually start here",
     );
-    expect(html).not.toContain("Studio apartments — ideal for");
     // Positive: AR intro copy from dict.pages.collections.pages.studios.intro.
-    expect(html).toContain("رهان العائد");
-    expect(html).toContain("الاستوديوهات");
+    expect(introText).toContain("رهان العائد");
+    expect(introText).toContain("الاستوديوهات");
   });
 
   // FAQ topic detail residual — hub fixed in #252; topic H1/title still EN on main.
