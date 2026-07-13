@@ -108,6 +108,19 @@ test.describe("Content routes", () => {
     expect(body).not.toContain("Which developer has the lower entry price?");
   });
 
+  // #357 — AR area-compare pair decision-layer copy (FAQs/pros) not bare EN.
+  test("AR area-compare pair FAQs are Arabic chrome", async ({ page }) => {
+    const response = await page.goto(
+      "/ar/compare/business-bay-vs-jumeirah-village-circle",
+      { waitUntil: "commit" },
+    );
+    expect(response?.status()).toBe(200);
+    const body = await response!.text();
+    expect(body).toMatch(/الأسئلة الشائعة|أيّهما أفضل|مستثمرو العائد/);
+    expect(body).not.toContain("Which has the better rental yield");
+    expect(body).not.toContain("Higher gross rental yield");
+    expect(body).not.toContain("Yield investors");
+  });
 
   // #351 — AR RealEstateAgent description + market-report Dataset variableMeasured.
   test("AR developer + market-report JSON-LD descriptions are Arabic", async ({
