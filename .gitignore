@@ -52,3 +52,6 @@ next-env.d.ts
 
 # public analytics IDs are committed
 !.env.production
+
+# graphify knowledge graph (generated, auto-refreshed via git hook)
+graphify-out/
