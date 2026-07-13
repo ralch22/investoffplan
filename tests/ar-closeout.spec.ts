@@ -114,7 +114,6 @@ test.describe("AR close-out", () => {
     expect(await response!.text()).toContain('lang="ar"');
   });
 
-
   // #340 — developer contact panel WA/email prefill localized (not hard-coded EN).
   test("/ar/developers PDP contact panel WhatsApp prefill is Arabic", async ({
     page,
@@ -131,6 +130,16 @@ test.describe("AR close-out", () => {
     );
     expect(textParam).toMatch(/مرحباً|مهتم/);
     expect(textParam).not.toMatch(/^Hi, I'm interested/i);
+  });
+
+  // #342 — developer directory/detail project-count chrome not EN "projects" / "unit options".
+  test("/ar/developers directory list meta is Arabic", async ({ page }) => {
+    const res = await page.goto("/ar/developers", { waitUntil: "domcontentloaded" });
+    expect(res?.ok()).toBeTruthy();
+    const html = await page.content();
+    expect(html).not.toMatch(/\d+ projects? ·/i);
+    expect(html).not.toMatch(/unit options/i);
+    expect(html).toMatch(/مشروع|مشاريع/);
   });
 
   test("/ar/favorites returns 200 in-locale", async ({ page }) => {

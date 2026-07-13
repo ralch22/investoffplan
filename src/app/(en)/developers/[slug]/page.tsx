@@ -93,8 +93,16 @@ export default async function DeveloperDetailPage({
   );
   const countLabel =
     developer.numProjectsOnline && developer.numProjectsOnline > developer.projectCount
-      ? `${developer.projectCount.toLocaleString()} projects on invest off-plan · ${developer.numProjectsOnline.toLocaleString()} in developer portfolio`
-      : `${developer.projectCount.toLocaleString()} project${developer.projectCount === 1 ? "" : "s"}`;
+      ? interpolate(dict.developers.dualPortfolio, {
+          active: developer.projectCount.toLocaleString(),
+          portfolio: developer.numProjectsOnline.toLocaleString(),
+        })
+      : interpolate(
+          developer.projectCount === 1
+            ? dict.developers.projectCountOne
+            : dict.developers.projectCountMany,
+          { count: developer.projectCount.toLocaleString() },
+        );
   const allDevelopers = await getDevelopers();
   const others = allDevelopers.filter((dev) => dev.slug !== slug).slice(0, 5);
   const siteUrl = getSiteUrl();
@@ -162,8 +170,17 @@ export default async function DeveloperDetailPage({
                   {heroExcerpt}
                 </p>
                 <p className="mt-3 text-xs text-muted-light">
-                  {developer.projectCount} project{developer.projectCount === 1 ? "" : "s"} ·{" "}
-                  {interpolate(dict.developers.unitOptionsLabel, { count: developer.unitCount.toLocaleString() })}
+                  {interpolate(
+                    developer.projectCount === 1
+                      ? dict.developers.heroMetaOne
+                      : dict.developers.heroMetaMany,
+                    {
+                      projects: developer.projectCount.toLocaleString(),
+                      unitOptions: interpolate(dict.developers.unitOptionsLabel, {
+                        count: developer.unitCount.toLocaleString(),
+                      }),
+                    },
+                  )}
                 </p>
               </div>
             </div>
