@@ -115,6 +115,41 @@ test.describe("AR close-out", () => {
   });
 
 
+  // #343 — AR developer ItemList JSON-LD project URLs stay under /ar/projects/*.
+  test("/ar/developers ItemList JSON-LD uses /ar/projects URLs", async ({
+    page,
+  }) => {
+    const response = await page.goto("/ar/developers/emaar-properties", {
+      waitUntil: "commit",
+    });
+    expect(response?.status()).toBe(200);
+    const html = await response!.text();
+    // ItemList element URLs must be locale-prefixed (not bare EN /projects/*).
+    expect(html).toMatch(/"url"\s*:\s*"https?:\/\/[^"]+\/ar\/projects\//);
+    // Bare EN project paths must not appear as absolute JSON-LD URLs
+    // (host + /projects/ with no /ar segment).
+    expect(html).not.toMatch(
+      /"url"\s*:\s*"https?:\/\/[^"/]+\/projects\//,
+    );
+    // CollectionPage name should not hard-code EN "New & Off-Plan Projects by".
+    expect(html).not.toContain('"name":"New & Off-Plan Projects by');
+  });
+
+  // #343 — AR PDP RealEstateListing PropertyValue names from dict (not EN).
+  test("/ar/projects PDP PropertyValue names are localized", async ({
+    page,
+  }) => {
+    const response = await page.goto("/ar/projects/105-residences", {
+      waitUntil: "commit",
+    });
+    expect(response?.status()).toBe(200);
+    const html = await response!.text();
+    // EN schema labels must not win on AR PDP structured data.
+    expect(html).not.toContain('"name":"Handover"');
+    expect(html).not.toContain('"name":"Payment plan"');
+    expect(html).not.toContain('"name":"Brochure"');
+  });
+
   // #340 — developer contact panel WA/email prefill localized (not hard-coded EN).
   test("/ar/developers PDP contact panel WhatsApp prefill is Arabic", async ({
     page,
