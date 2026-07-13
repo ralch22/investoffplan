@@ -550,8 +550,10 @@ test.describe("Content routes", () => {
     expect(html).not.toMatch(/\bhigh\s+confidence\b/i);
     expect(html).not.toMatch(/\bmedium\s+confidence\b/i);
     expect(html).not.toMatch(/\blow\s+confidence\b/i);
-    // Print report uses "{tier} الثقة" (reports.confidenceLabel); community band uses "ثقة {tier}".
-    expect(html).toMatch(
+    // SSR may insert React `<!-- -->` between text nodes — strip comments for assert.
+    const plain = html.replace(/<!--.*?-->/g, " ");
+    // Print report: "{tier} الثقة"; community DLD band: "ثقة {tier}".
+    expect(plain).toMatch(
       /(?:ثقة\s*(?:عالية|متوسطة|منخفضة|غير متاحة)|(?:عالية|متوسطة|منخفضة|غير متاحة)\s*الثقة)/,
     );
   });
