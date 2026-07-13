@@ -134,6 +134,19 @@ test.describe("Content routes", () => {
     expect(body).not.toContain("Two off-plan projects in");
   });
 
+  // #371 — AR DLD confidence tier not bare EN high/medium/low.
+  test("AR community market report confidence tier is Arabic", async ({ page }) => {
+    const response = await page.goto("/ar/reports/market/dubai-marina", {
+      waitUntil: "commit",
+    });
+    expect(response?.status()).toBe(200);
+    const body = await response!.text();
+    // Confidence chrome: Arabic tier word, not raw EN enum next to trust label.
+    expect(body).toMatch(/عالية|متوسطة|منخفضة|غير متاحة/);
+    expect(body).not.toMatch(/\b(high|medium|low|none)\s+confidence\b/i);
+    expect(body).not.toMatch(/\b(high|medium|low|none)\s+الثقة/);
+  });
+
   // #351 — AR RealEstateAgent description + market-report Dataset variableMeasured.
   test("AR developer + market-report JSON-LD descriptions are Arabic", async ({
     page,
