@@ -388,11 +388,11 @@ test.describe("Content routes", () => {
       waitUntil: "domcontentloaded",
     });
     expect(res?.ok()).toBeTruthy();
-    // Scope to editorial intro section only — project card SSR can still carry
-    // EN catalog description snippets (e.g. "Studio apartments — ideal for").
-    const intro = page.locator("main section").first();
+    // PageShell already provides <main>; intro is the max-w-3xl section under it
+    // (not the PageHero section, which is also inside that shell main).
+    const intro = page.locator("section.max-w-3xl.space-y-4").first();
     const introText = await intro.innerText();
-    // Ban distinctive EN COLLECTION_PAGES intro phrases.
+    // Ban distinctive EN COLLECTION_PAGES intro phrases (not catalog card copy).
     expect(introText).not.toContain("yield play of the off-plan market");
     expect(introText).not.toContain(
       "Investors buying purely on numbers usually start here",
