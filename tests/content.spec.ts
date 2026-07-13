@@ -388,9 +388,10 @@ test.describe("Content routes", () => {
       waitUntil: "domcontentloaded",
     });
     expect(res?.ok()).toBeTruthy();
-    // PageShell already provides <main>; intro is the max-w-3xl section under it
-    // (not the PageHero section, which is also inside that shell main).
-    const intro = page.locator("section.max-w-3xl.space-y-4").first();
+    // PageShell wraps the page in #main-content; PageHero is also a <section>
+    // inside that shell. Prefer the dedicated intro testid (#368 CI).
+    const intro = page.getByTestId("collection-intro");
+    await expect(intro).toBeVisible();
     const introText = await intro.innerText();
     // Ban distinctive EN COLLECTION_PAGES intro phrases (not catalog card copy).
     expect(introText).not.toContain("yield play of the off-plan market");
