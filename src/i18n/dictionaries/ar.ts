@@ -1866,6 +1866,13 @@ export const ar: Dict = {
     "marketDataHeading": "بيانات السوق",
     "marketDataBody": "ما بيعت به {areaName} فعليًا في 2025 — من سجلات دائرة الأراضي الرسمية.",
     "confidenceLine": "ثقة {confidence} · {source}",
+    // #371 — DLD sample-size tiers (not raw EN high/medium/low/none).
+    "confidence": {
+      "high": "عالية",
+      "medium": "متوسطة",
+      "low": "منخفضة",
+      "none": "غير متاحة"
+    },
     "bedTableHeading": "وسيط سعر البيع حسب غرف النوم",
     "typeCol": "النوع",
     "medianPriceCol": "وسيط السعر",

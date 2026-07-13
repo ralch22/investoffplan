@@ -1,5 +1,5 @@
 import type { DldAreaStats } from "@/lib/dld-area-stats";
-import { formatPrice } from "@/lib/format";
+import { confidenceLabel, formatPrice } from "@/lib/format";
 import { TrendChart } from "@/components/trend-chart";
 import { getDictionary, interpolate } from "@/i18n";
 import type { Locale } from "@/i18n/config";
@@ -53,7 +53,8 @@ export function DldAreaStatsBand({ stats, areaName, source, locale = "en" }: Pro
         </h2>
         <span className="text-xs font-medium uppercase tracking-wide text-muted-light">
           {interpolate(dld.confidenceLine, {
-            confidence: stats.confidence,
+            // #371 — localize high/medium/low/none (EN stays raw enum).
+            confidence: confidenceLabel(stats.confidence, dict),
             source,
           })}
         </span>

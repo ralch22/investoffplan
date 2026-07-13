@@ -1864,6 +1864,13 @@ const dict = {
     "marketDataHeading": "Market data",
     "marketDataBody": "What {areaName} actually sold for in 2025 — from official Dubai Land Department records.",
     "confidenceLine": "{confidence} confidence · {source}",
+    // DLD sample-size tiers — EN values stay the raw enum strings (#371).
+    "confidence": {
+      "high": "high",
+      "medium": "medium",
+      "low": "low",
+      "none": "none"
+    },
     "bedTableHeading": "Median sold price by bedroom",
     "typeCol": "Type",
     "medianPriceCol": "Median price",

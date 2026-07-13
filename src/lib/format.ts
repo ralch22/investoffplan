@@ -60,6 +60,22 @@ export function bedKeyLabel(key: string, dict: Dict): string {
 }
 
 /**
+ * Locale-aware DLD sample-size confidence tier.
+ * EN returns the raw enum string (byte-identical); AR uses `dict.dld.confidence.*` (#371).
+ */
+export function confidenceLabel(
+  level: "high" | "medium" | "low" | "none" | string,
+  dict: Dict,
+): string {
+  const map = dict.dld.confidence;
+  if (level === "high") return map.high;
+  if (level === "medium") return map.medium;
+  if (level === "low") return map.low;
+  if (level === "none") return map.none;
+  return level;
+}
+
+/**
  * Locale-aware property-type noun ("apartment"/"villa"/"townhouse"/"penthouse").
  * EN returns the raw catalog value unchanged (byte-identical to prior render);
  * AR maps to the localized noun from `serp.filters`. Unknown types pass through.

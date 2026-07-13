@@ -538,6 +538,24 @@ test.describe("Content routes", () => {
     ).toEqual([]);
   });
 
+  // #371 — AR DLD confidence tier must not print raw EN high/medium/low.
+  test("AR market report confidence tier is Arabic", async ({ page }) => {
+    const report = await page.goto("/ar/reports/market/dubai-marina", {
+      waitUntil: "commit",
+    });
+    expect(report?.status()).toBe(200);
+    const html = await report!.text();
+    expect(html).toContain('lang="ar"');
+    // Ban raw EN enum next to confidence chrome; require an AR tier word.
+    expect(html).not.toMatch(/\bhigh\s+confidence\b/i);
+    expect(html).not.toMatch(/\bmedium\s+confidence\b/i);
+    expect(html).not.toMatch(/\blow\s+confidence\b/i);
+    // Print report uses "{tier} الثقة" (reports.confidenceLabel); community band uses "ثقة {tier}".
+    expect(html).toMatch(
+      /(?:ثقة\s*(?:عالية|متوسطة|منخفضة|غير متاحة)|(?:عالية|متوسطة|منخفضة|غير متاحة)\s*الثقة)/,
+    );
+  });
+
   // #327 — AR bed / unit-type chrome must not hardcode EN Studio / Unit type.
   test("AR PDP unit selector and market report bed labels are Arabic", async ({
     page,
