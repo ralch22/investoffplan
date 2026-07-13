@@ -122,6 +122,18 @@ test.describe("Content routes", () => {
     expect(body).not.toContain("Yield investors");
   });
 
+  // #361 — AR compare-projects pair subtitle + Golden Visa Yes/No.
+  test("AR compare-projects pair subtitle is Arabic chrome", async ({ page }) => {
+    const response = await page.goto(
+      "/ar/compare-projects/1wood-residence-phase-2-by-object-1-vs-norah-residence",
+      { waitUntil: "commit" },
+    );
+    expect(response?.status()).toBe(200);
+    const body = await response!.text();
+    expect(body).toMatch(/مشروعان على الخارطة|جنباً إلى جنب/);
+    expect(body).not.toContain("Two off-plan projects in");
+  });
+
   // #351 — AR RealEstateAgent description + market-report Dataset variableMeasured.
   test("AR developer + market-report JSON-LD descriptions are Arabic", async ({
     page,
