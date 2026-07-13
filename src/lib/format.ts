@@ -214,7 +214,26 @@ export function sqftLabel(min: number, max: number | undefined, dict: Dict): str
   return interpolate(dict.format.sqft, { value: min.toLocaleString() });
 }
 
-export function cityLabel(city: string): string {
+/** Normalize catalog city slug / display name → serp.cities key. */
+function cityKey(city: string): string {
+  const raw = city.trim().toLowerCase().replace(/\s+/g, "-");
+  // Catalog sometimes stores display EN ("Ras Al Khaimah") before slugify.
+  if (raw === "ras-al-khaimah") return "rak";
+  return raw;
+}
+
+/**
+ * Emirate / city display name from a city slug (`dubai`, `abu-dhabi`, …).
+ * Pass `dict` on any AR-reachable surface so labels use `dict.serp.cities`
+ * (دبي / أبوظبي / …). Without dict, EN map is byte-identical to prior output
+ * and safe for data pipelines that key on English labels.
+ */
+export function cityLabel(city: string, dict?: Dict): string {
+  const key = cityKey(city);
+  if (dict) {
+    const fromDict = (dict.serp.cities as Record<string, string | undefined>)[key];
+    if (fromDict) return fromDict;
+  }
   const labels: Record<string, string> = {
     dubai: "Dubai",
     "abu-dhabi": "Abu Dhabi",
@@ -225,5 +244,5 @@ export function cityLabel(city: string): string {
     fujairah: "Fujairah",
     "al-ain": "Al Ain",
   };
-  return labels[city] ?? city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  return labels[key] ?? city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }

@@ -30,7 +30,7 @@ export function DeveloperAboutSection({
   const sanitizedHtml = description ? sanitizeProjectHtml(description) : "";
   const hasRichHtml = sanitizedHtml.length > 80;
   const plainText = developerDescription(slug, description);
-  const cityLabels = cities.map((city) => cityLabel(city));
+  const cityLabels = cities.map((city) => cityLabel(city, dict));
   const faqs = developerFaqs(name, projectCount, cityLabels, foundedYear, dict);
 
   if (!hasRichHtml && !plainText) return null;

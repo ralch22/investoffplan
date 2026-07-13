@@ -156,6 +156,7 @@ export function InvestorMatchQuiz() {
     return (
       <ResultsView
         t={t}
+        dict={dict}
         locale={locale}
         matches={matches}
         computing={computing}
@@ -284,6 +285,7 @@ export function InvestorMatchQuiz() {
 // ---------------------------------------------------------------------------
 
 type InvestorMatchDict = ReturnType<typeof useI18n>["dict"]["tools"]["investorMatch"];
+type AppDict = ReturnType<typeof useI18n>["dict"];
 
 function bedsLabel(beds: number, t: InvestorMatchDict): string {
   if (beds <= 0) return t.options.beds.studio;
@@ -292,7 +294,11 @@ function bedsLabel(beds: number, t: InvestorMatchDict): string {
   return t.options.beds["3-plus"];
 }
 
-function renderReason(reason: MatchReason, t: InvestorMatchDict): string {
+function renderReason(
+  reason: MatchReason,
+  t: InvestorMatchDict,
+  dict: AppDict,
+): string {
   const template = t.reasons[reason.code];
   const values: Record<string, string | number> = { ...(reason.values ?? {}) };
   for (const numKey of ["price", "median", "ppsf"]) {
@@ -304,13 +310,14 @@ function renderReason(reason: MatchReason, t: InvestorMatchDict): string {
     values.beds = bedsLabel(values.beds, t);
   }
   if (reason.code === "location" && typeof values.city === "string") {
-    values.city = cityLabel(values.city);
+    values.city = cityLabel(values.city, dict);
   }
   return interpolate(template, values);
 }
 
 interface ResultsViewProps {
   t: InvestorMatchDict;
+  dict: AppDict;
   locale: string;
   matches: ProjectMatch[] | null;
   computing: boolean;
@@ -323,6 +330,7 @@ interface ResultsViewProps {
 
 function ResultsView({
   t,
+  dict,
   matches,
   computing,
   copied,
@@ -402,7 +410,7 @@ function ResultsView({
                       {match.project.name}
                     </h3>
                     <p className="mt-1 text-sm text-muted">
-                      {[match.project.area, cityLabel(match.project.city)]
+                      {[match.project.area, cityLabel(match.project.city, dict)]
                         .filter(Boolean)
                         .join(" · ")}
                     </p>
@@ -431,7 +439,7 @@ function ResultsView({
                         <span aria-hidden className="mt-0.5 flex-none text-brand">
                           ✓
                         </span>
-                        <span>{renderReason(reason, t)}</span>
+                        <span>{renderReason(reason, t, dict)}</span>
                       </li>
                     ))}
                   </ul>

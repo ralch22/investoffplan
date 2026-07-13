@@ -341,6 +341,21 @@ test.describe("Content routes", () => {
     expect(html).toMatch(/استكشف .+ ←/);
   });
 
+  // #373 — AR PDP city chrome uses dict.serp.cities (not EN cityLabel map).
+  test("AR PDP city label is Arabic emirate name", async ({ page }) => {
+    const res = await page.goto("/ar/projects/105-residences", {
+      waitUntil: "commit",
+    });
+    expect(res?.status()).toBe(200);
+    const html = await res!.text();
+    // Hero line: "{city}, الإمارات" — must be دبي not Dubai.
+    expect(html).toContain("دبي");
+    expect(html).toContain("الإمارات");
+    // Avoid bare EN city noun next to AR country chrome on hero.
+    expect(html).not.toContain("Dubai, الإمارات");
+    expect(html).not.toContain("Dubai,الإمارات");
+  });
+
   // #291 — AR community MarketAdvice CTA must not hardcode EN heading/context.
   test("AR community MarketAdvice heading and WhatsApp context are Arabic", async ({
     page,
