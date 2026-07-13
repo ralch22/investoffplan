@@ -397,6 +397,29 @@ test.describe("Content routes", () => {
     }
   });
 
+  // #368 — AR collection long-form intro body must not stay English.
+  test("AR collection intro body uses Arabic (not EN editorial)", async ({
+    page,
+  }) => {
+    const res = await page.goto("/ar/collections/studios", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(res?.ok()).toBeTruthy();
+    // PageShell wraps the page in #main-content; PageHero is also a <section>
+    // inside that shell. Prefer the dedicated intro testid (#368 CI).
+    const intro = page.getByTestId("collection-intro");
+    await expect(intro).toBeVisible();
+    const introText = await intro.innerText();
+    // Ban distinctive EN COLLECTION_PAGES intro phrases (not catalog card copy).
+    expect(introText).not.toContain("yield play of the off-plan market");
+    expect(introText).not.toContain(
+      "Investors buying purely on numbers usually start here",
+    );
+    // Positive: AR intro copy from dict.pages.collections.pages.studios.intro.
+    expect(introText).toContain("رهان العائد");
+    expect(introText).toContain("الاستوديوهات");
+  });
+
   // FAQ topic detail residual — hub fixed in #252; topic H1/title still EN on main.
   test("AR FAQ topic page H1 and title use Arabic chrome", async ({ page }) => {
     const res = await page.goto("/ar/faq/off-plan-basics", {
