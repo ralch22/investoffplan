@@ -3,6 +3,8 @@ import "server-only";
 import { getArea, getProjectsByArea } from "@/lib/catalog";
 import { areaTagline } from "@/lib/figma-copy";
 import { getAreaImage } from "@/lib/area-images";
+import { getDictionary } from "@/i18n";
+import type { Locale } from "@/i18n/config";
 
 export interface AreaInsights {
   slug: string;
@@ -18,6 +20,7 @@ export interface AreaInsights {
 
 export async function getAreaInsightsForProject(
   areaSlug: string,
+  locale: Locale = "en",
 ): Promise<AreaInsights | null> {
   const area = await getArea(areaSlug);
   if (!area) return null;
@@ -41,12 +44,16 @@ export async function getAreaInsightsForProject(
         : 0;
 
   const heroImage = await getAreaImage(area.name);
+  const dict = getDictionary(locale);
 
   return {
     slug: area.slug,
     name: area.name,
     cityLabel: area.cityLabel,
-    tagline: areaTagline(area.slug, area.name),
+    tagline: areaTagline(area.slug, area.name, {
+      locale,
+      exploreTemplate: dict.pages.communities.areaTaglineExplore,
+    }),
     projectCount: area.projectCount,
     unitCount: area.unitCount,
     minPriceAed,

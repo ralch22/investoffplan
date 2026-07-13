@@ -157,7 +157,10 @@ export default async function CommunityDetailPage({ params, locale = "en" }: Pag
       <PageHero
         title={community.name}
         italicTitle
-        subtitle={areaTagline(slug, community.name)}
+        subtitle={areaTagline(slug, community.name, {
+          locale,
+          exploreTemplate: dict.pages.communities.areaTaglineExplore,
+        })}
         imageUrl={heroImage}
       />
 

@@ -1,3 +1,5 @@
+import { interpolate, type Locale } from "@/i18n/config";
+
 export const DEVELOPER_BLURBS: Record<string, string> = {
   "emaar-properties":
     "Step-by-step guide to purchasing property in Dubai. From finding the home to closing the deal.",
@@ -148,6 +150,22 @@ export function developerBlurb(slug: string): string {
   );
 }
 
-export function areaTagline(slug: string, name: string): string {
-  return AREA_TAGLINES[slug] ?? `Explore off-plan projects in ${name}.`;
+/**
+ * Community card / PDP living-area tagline.
+ * EN keeps hand-crafted `AREA_TAGLINES` where present; AR has no AR map yet
+ * so always uses the localized `exploreTemplate` (avoids EN "Explore off-plan…"
+ * on `/ar/communities*` and AR PDP living-in-area).
+ */
+export function areaTagline(
+  slug: string,
+  name: string,
+  opts?: { locale?: Locale; exploreTemplate?: string },
+): string {
+  const locale = opts?.locale ?? "en";
+  const explore =
+    opts?.exploreTemplate ?? "Explore off-plan projects in {name}.";
+  if (locale === "ar") {
+    return interpolate(explore, { name });
+  }
+  return AREA_TAGLINES[slug] ?? interpolate(explore, { name });
 }

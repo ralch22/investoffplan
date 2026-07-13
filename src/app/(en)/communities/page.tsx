@@ -77,7 +77,10 @@ export async function CommunitiesPageContent({ locale = "en" }: { locale?: Local
                     {community.name}
                   </p>
                   <p className="mt-2 text-sm text-muted">
-                    {areaTagline(community.slug, community.name)}
+                    {areaTagline(community.slug, community.name, {
+                      locale,
+                      exploreTemplate: t.areaTaglineExplore,
+                    })}
                   </p>
                   <p className="mt-1 text-xs text-muted-light">
                     {interpolate(t.communityStats, {
