@@ -207,11 +207,20 @@ export function buildDeveloperJsonLd(opts: {
   };
   developerUrl: string;
   siteUrl: string;
+  /** Locale-aware RealEstateAgent description (#351). Defaults to EN template. */
+  description?: string;
 }) {
   const { developer, developerUrl, siteUrl } = opts;
   const areaServed = (developer.cities ?? [])
     .map((city) => cityLabel(city))
     .filter(Boolean);
+  const description =
+    opts.description ??
+    `Browse ${developer.projectCount} off-plan project${
+      developer.projectCount === 1 ? "" : "s"
+    }${
+      developer.unitCount ? ` and ${developer.unitCount.toLocaleString()} unit options` : ""
+    } by ${developer.name} in the UAE.`;
   return {
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
@@ -229,11 +238,7 @@ export function buildDeveloperJsonLd(opts: {
     areaServed: areaServed.length
       ? areaServed.map((name) => ({ "@type": "City", name }))
       : undefined,
-    description: `Browse ${developer.projectCount} off-plan project${
-      developer.projectCount === 1 ? "" : "s"
-    }${
-      developer.unitCount ? ` and ${developer.unitCount.toLocaleString()} unit options` : ""
-    } by ${developer.name} in the UAE.`,
+    description,
   };
 }
 
