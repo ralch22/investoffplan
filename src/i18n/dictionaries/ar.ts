@@ -1584,6 +1584,8 @@ export const ar: Dict = {
     "contactTitle": "تواصل مع المطوّر",
     "contactBody": "تحدّث مع فريقنا حول إطلاقات {name} والبروشورات وخطط السداد.",
     "email": "البريد الإلكتروني",
+    "emailSubject": "استفسار عن مشاريع {name}",
+    "whatsappPrefill": "مرحباً، أنا مهتم بمشاريع {name} على الخارطة على InvestOffPlan.",
     "projectsByHeading": "مشاريع جديدة وعلى الخارطة من {name}",
     "otherDevelopers": "مطوّرون آخرون",
     "unitOptionsLabel": "{count} خيار وحدة على invest off-plan",

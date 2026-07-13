@@ -1582,6 +1582,8 @@ const dict = {
     "contactTitle": "Contact developer",
     "contactBody": "Speak with our team about {name} launches, brochures, and payment plans.",
     "email": "Email",
+    "emailSubject": "Enquiry about {name} projects",
+    "whatsappPrefill": "Hi, I'm interested in off-plan projects by {name} on InvestOffPlan.",
     "projectsByHeading": "New & Off-Plan Projects by {name}",
     "otherDevelopers": "Other Developers",
     "unitOptionsLabel": "{count} unit options on invest off-plan",

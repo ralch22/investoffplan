@@ -114,6 +114,25 @@ test.describe("AR close-out", () => {
     expect(await response!.text()).toContain('lang="ar"');
   });
 
+
+  // #340 — developer contact panel WA/email prefill localized (not hard-coded EN).
+  test("/ar/developers PDP contact panel WhatsApp prefill is Arabic", async ({
+    page,
+  }) => {
+    const res = await page.goto("/ar/developers/emaar-properties", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(res?.ok()).toBeTruthy();
+    const wa = page.locator('a[href*="wa.me"][href*="text="]').first();
+    await expect(wa).toBeVisible({ timeout: 15_000 });
+    const href = (await wa.getAttribute("href")) ?? "";
+    const textParam = decodeURIComponent(
+      new URL(href, "https://investoffplan.com").searchParams.get("text") ?? "",
+    );
+    expect(textParam).toMatch(/مرحباً|مهتم/);
+    expect(textParam).not.toMatch(/^Hi, I'm interested/i);
+  });
+
   test("/ar/favorites returns 200 in-locale", async ({ page }) => {
     const response = await page.goto("/ar/favorites", { waitUntil: "commit" });
     expect(response?.status()).toBe(200);
