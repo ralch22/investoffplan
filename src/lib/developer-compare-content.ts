@@ -4,7 +4,13 @@
  *
  * KPIs are CATALOG-ONLY. Never invent quality, delivery-timeliness, or
  * track-record claims; every bullet is a measurable portfolio fact.
+ *
+ * Locale-aware (#350): templates from dict.pages.compareDev.decision.
  */
+
+import type { Dict } from "@/i18n";
+import { getDictionary } from "@/i18n";
+import { interpolate } from "@/i18n/config";
 
 export interface DeveloperSide {
   slug: string;
@@ -27,6 +33,10 @@ export interface DeveloperComparison {
 
 const money = (n: number) => `AED ${Math.round(n).toLocaleString()}`;
 
+function decisionDict(dict?: Dict) {
+  return (dict ?? getDictionary("en")).pages.compareDev.decision;
+}
+
 /**
  * Decision-layer pros for one developer relative to the other — catalog KPIs
  * only (mirrors area-compare `buildPros`).
@@ -34,17 +44,25 @@ const money = (n: number) => `AED ${Math.round(n).toLocaleString()}`;
 export function buildDeveloperPros(
   side: DeveloperSide,
   other: DeveloperSide,
+  dict?: Dict,
 ): string[] {
+  const t = decisionDict(dict);
   const pros: string[] = [];
 
   if (side.projectCount > other.projectCount) {
     pros.push(
-      `Larger live off-plan portfolio — ${side.projectCount} projects vs ${other.projectCount}`,
+      interpolate(t.proLargerPortfolio, {
+        count: String(side.projectCount),
+        otherCount: String(other.projectCount),
+      }),
     );
   }
   if (side.unitCount > other.unitCount) {
     pros.push(
-      `More unit options on this portal — ${side.unitCount.toLocaleString()} vs ${other.unitCount.toLocaleString()}`,
+      interpolate(t.proMoreUnits, {
+        units: side.unitCount.toLocaleString(),
+        otherUnits: other.unitCount.toLocaleString(),
+      }),
     );
   }
   if (
@@ -55,7 +73,10 @@ export function buildDeveloperPros(
     side.fromPrice < other.fromPrice
   ) {
     pros.push(
-      `Lower entry price — launches from ${money(side.fromPrice)} vs ${money(other.fromPrice)}`,
+      interpolate(t.proLowerEntry, {
+        price: money(side.fromPrice),
+        otherPrice: money(other.fromPrice),
+      }),
     );
   }
   if (
@@ -66,12 +87,19 @@ export function buildDeveloperPros(
     side.avgPpsf < other.avgPpsf
   ) {
     pros.push(
-      `Lower average launch AED/sqft — AED ${side.avgPpsf.toLocaleString()} vs AED ${other.avgPpsf.toLocaleString()}`,
+      interpolate(t.proLowerPpsf, {
+        ppsf: side.avgPpsf.toLocaleString(),
+        otherPpsf: other.avgPpsf.toLocaleString(),
+      }),
     );
   }
   if (side.communities.length > other.communities.length) {
     pros.push(
-      `Broader geographic reach — ${side.communities.length} communities (led by ${side.communities.slice(0, 3).join(", ")}) vs ${other.communities.length}`,
+      interpolate(t.proBroaderGeo, {
+        count: String(side.communities.length),
+        ledBy: side.communities.slice(0, 3).join(", "),
+        otherCount: String(other.communities.length),
+      }),
     );
   }
   if (
@@ -80,7 +108,10 @@ export function buildDeveloperPros(
     side.premiumShare - other.premiumShare >= 0.05
   ) {
     pros.push(
-      `Higher share of premium-flagged projects (${Math.round(side.premiumShare * 100)}% vs ${Math.round(other.premiumShare * 100)}%)`,
+      interpolate(t.proPremiumShare, {
+        pct: String(Math.round(side.premiumShare * 100)),
+        otherPct: String(Math.round(other.premiumShare * 100)),
+      }),
     );
   }
   const sideEarliest = side.handoverYears[0];
@@ -91,7 +122,10 @@ export function buildDeveloperPros(
     sideEarliest < otherEarliest
   ) {
     pros.push(
-      `Earlier handover pipeline starts in ${sideEarliest} (vs ${otherEarliest})`,
+      interpolate(t.proEarlierHandover, {
+        year: String(sideEarliest),
+        otherYear: String(otherEarliest),
+      }),
     );
   }
   return pros;
@@ -104,7 +138,9 @@ export function buildDeveloperPros(
 export function buildDeveloperSuitability(
   side: DeveloperSide,
   other: DeveloperSide,
+  dict?: Dict,
 ): { profile: string; reason: string }[] {
+  const t = decisionDict(dict);
   const out: { profile: string; reason: string }[] = [];
 
   if (
@@ -113,19 +149,28 @@ export function buildDeveloperSuitability(
     side.fromPrice <= 1_500_000 &&
     (other.fromPrice == null || side.fromPrice <= other.fromPrice)
   ) {
+    const belowClause =
+      other.fromPrice != null && other.fromPrice > side.fromPrice
+        ? interpolate(t.suitBudgetBelow, {
+            otherName: other.name,
+            otherPrice: money(other.fromPrice),
+          })
+        : "";
     out.push({
-      profile: "Budget-conscious buyers",
-      reason: `Live launches start from ${money(side.fromPrice)}${
-        other.fromPrice != null && other.fromPrice > side.fromPrice
-          ? ` — below ${other.name}'s ${money(other.fromPrice)} floor`
-          : ""
-      }.`,
+      profile: t.suitBudgetProfile,
+      reason: interpolate(t.suitBudgetReason, {
+        price: money(side.fromPrice),
+        belowClause,
+      }),
     });
   }
   if (side.projectCount >= other.projectCount && side.projectCount >= 10) {
     out.push({
-      profile: "Buyers who want depth of choice",
-      reason: `${side.projectCount} live off-plan projects and ${side.unitCount.toLocaleString()} unit options on this portal.`,
+      profile: t.suitDepthProfile,
+      reason: interpolate(t.suitDepthReason, {
+        count: String(side.projectCount),
+        units: side.unitCount.toLocaleString(),
+      }),
     });
   }
   if (
@@ -133,14 +178,19 @@ export function buildDeveloperSuitability(
     side.communities.length >= other.communities.length
   ) {
     out.push({
-      profile: "Geographic diversifiers",
-      reason: `Active across ${side.communities.length} communities (led by ${side.communities.slice(0, 3).join(", ")}).`,
+      profile: t.suitGeoProfile,
+      reason: interpolate(t.suitGeoReason, {
+        count: String(side.communities.length),
+        ledBy: side.communities.slice(0, 3).join(", "),
+      }),
     });
   }
   if (side.premiumShare >= 0.25 && side.premiumShare >= other.premiumShare) {
     out.push({
-      profile: "Premium-positioned inventory seekers",
-      reason: `${Math.round(side.premiumShare * 100)}% of listed projects are premium-flagged in the catalog (positioning flag only — not a quality score).`,
+      profile: t.suitPremiumProfile,
+      reason: interpolate(t.suitPremiumReason, {
+        pct: String(Math.round(side.premiumShare * 100)),
+      }),
     });
   }
   const earliest = side.handoverYears[0];
@@ -150,13 +200,18 @@ export function buildDeveloperSuitability(
     (otherEarliest == null || earliest <= otherEarliest) &&
     earliest <= new Date().getFullYear() + 2
   ) {
+    const pipelineClause =
+      side.handoverYears.length > 1
+        ? interpolate(t.suitNearTermPipeline, {
+            lastYear: String(side.handoverYears[side.handoverYears.length - 1]),
+          })
+        : "";
     out.push({
-      profile: "Near-term handover buyers",
-      reason: `Earliest listed handover year is ${earliest}${
-        side.handoverYears.length > 1
-          ? ` (pipeline through ${side.handoverYears[side.handoverYears.length - 1]})`
-          : ""
-      }.`,
+      profile: t.suitNearTermProfile,
+      reason: interpolate(t.suitNearTermReason, {
+        year: String(earliest),
+        pipelineClause,
+      }),
     });
   }
   if (
@@ -166,8 +221,12 @@ export function buildDeveloperSuitability(
     side.avgPpsf < other.avgPpsf
   ) {
     out.push({
-      profile: "Value-per-sqft hunters",
-      reason: `Average launch AED/sqft is AED ${side.avgPpsf.toLocaleString()} vs AED ${other.avgPpsf.toLocaleString()} for ${other.name}.`,
+      profile: t.suitValueProfile,
+      reason: interpolate(t.suitValueReason, {
+        ppsf: side.avgPpsf.toLocaleString(),
+        otherPpsf: other.avgPpsf.toLocaleString(),
+        otherName: other.name,
+      }),
     });
   }
   return out.slice(0, 3);
@@ -176,43 +235,72 @@ export function buildDeveloperSuitability(
 /** Data-driven FAQs for the developer pair (rendered + FAQPage JSON-LD). */
 export function buildDeveloperFaqs(
   cmp: DeveloperComparison,
+  dict?: Dict,
 ): Array<{ q: string; a: string }> {
+  const t = decisionDict(dict);
   const { a, b } = cmp;
   const faqs: Array<{ q: string; a: string }> = [];
   const big = a.projectCount >= b.projectCount ? a : b;
   const small = big === a ? b : a;
   faqs.push({
-    q: `Who has more off-plan projects, ${a.name} or ${b.name}?`,
-    a: `${big.name} — ${big.projectCount} live off-plan projects with ${big.unitCount.toLocaleString()} unit options on this portal, vs ${small.projectCount} projects from ${small.name}.`,
+    q: interpolate(t.faqMoreProjectsQ, { a: a.name, b: b.name }),
+    a: interpolate(t.faqMoreProjectsA, {
+      big: big.name,
+      count: String(big.projectCount),
+      units: big.unitCount.toLocaleString(),
+      smallCount: String(small.projectCount),
+      small: small.name,
+    }),
   });
   if (a.fromPrice != null && b.fromPrice != null) {
     const cheap = a.fromPrice <= b.fromPrice ? a : b;
     const dear = cheap === a ? b : a;
     faqs.push({
-      q: `Which developer has the lower entry price?`,
-      a: `${cheap.name} — launches from ${money(cheap.fromPrice!)}, vs ${money(dear.fromPrice!)} for ${dear.name}.`,
+      q: t.faqLowerEntryQ,
+      a: interpolate(t.faqLowerEntryA, {
+        cheap: cheap.name,
+        price: money(cheap.fromPrice!),
+        otherPrice: money(dear.fromPrice!),
+        dear: dear.name,
+      }),
     });
   }
   const wide = a.communities.length >= b.communities.length ? a : b;
   const narrow = wide === a ? b : a;
   faqs.push({
-    q: `Which developer covers more communities?`,
-    a: `${wide.name} builds across ${wide.communities.length} communities (led by ${wide.communities.slice(0, 3).join(", ") || "n/a"}), vs ${narrow.communities.length} for ${narrow.name}.`,
+    q: t.faqMoreCommunitiesQ,
+    a: interpolate(t.faqMoreCommunitiesA, {
+      wide: wide.name,
+      count: String(wide.communities.length),
+      ledBy: wide.communities.slice(0, 3).join(", ") || t.ledByNa,
+      otherCount: String(narrow.communities.length),
+      narrow: narrow.name,
+    }),
   });
   if (a.avgPpsf != null && b.avgPpsf != null && a.avgPpsf > 0 && b.avgPpsf > 0) {
     const lower = a.avgPpsf <= b.avgPpsf ? a : b;
     const higher = lower === a ? b : a;
     faqs.push({
-      q: `Who has the lower average launch price per sqft?`,
-      a: `${lower.name} averages AED ${lower.avgPpsf!.toLocaleString()}/sqft across catalog units, vs AED ${higher.avgPpsf!.toLocaleString()}/sqft for ${higher.name}. These are launch list prices, not DLD sold prices.`,
+      q: t.faqLowerPpsfQ,
+      a: interpolate(t.faqLowerPpsfA, {
+        lower: lower.name,
+        ppsf: lower.avgPpsf!.toLocaleString(),
+        otherPpsf: higher.avgPpsf!.toLocaleString(),
+        higher: higher.name,
+      }),
     });
   }
   if (a.premiumShare !== b.premiumShare) {
     const hi = a.premiumShare >= b.premiumShare ? a : b;
     const lo = hi === a ? b : a;
     faqs.push({
-      q: `Which developer has more premium-flagged projects?`,
-      a: `${hi.name} — ${Math.round(hi.premiumShare * 100)}% of listed projects are premium-flagged vs ${Math.round(lo.premiumShare * 100)}% for ${lo.name}. Premium is a catalog positioning flag, not a quality or delivery rating.`,
+      q: t.faqPremiumQ,
+      a: interpolate(t.faqPremiumA, {
+        hi: hi.name,
+        pct: String(Math.round(hi.premiumShare * 100)),
+        otherPct: String(Math.round(lo.premiumShare * 100)),
+        lo: lo.name,
+      }),
     });
   }
   return faqs;

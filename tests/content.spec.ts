@@ -94,6 +94,21 @@ test.describe("Content routes", () => {
   });
 
   // Soft SEO residual (#230) — hub indexes + title/meta hygiene + favorites noindex.
+
+  // #350 — AR developer pair decision-layer copy (FAQs/pros) not bare EN.
+  test("AR compare-developers pair FAQs are Arabic chrome", async ({ page }) => {
+    const response = await page.goto(
+      "/ar/compare-developers/damac-properties-vs-emaar-properties",
+      { waitUntil: "commit" },
+    );
+    expect(response?.status()).toBe(200);
+    const body = await response!.text();
+    expect(body).toMatch(/الأسئلة الشائعة|من لديه مشاريع أكثر|أي مطوّر/);
+    expect(body).not.toContain("Who has more off-plan projects");
+    expect(body).not.toContain("Which developer has the lower entry price?");
+  });
+
+
   test("compare hub indexes render and favorites is noindex", async ({ page }) => {
     for (const path of ["/compare-projects", "/compare-developers"]) {
       const res = await page.goto(path);

@@ -130,11 +130,11 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
 
   const dict = getDictionary(locale);
   const { a, b } = cmp;
-  const prosA = buildDeveloperPros(a, b);
-  const prosB = buildDeveloperPros(b, a);
-  const suitA = buildDeveloperSuitability(a, b);
-  const suitB = buildDeveloperSuitability(b, a);
-  const faqs = buildDeveloperFaqs(cmp);
+  const prosA = buildDeveloperPros(a, b, dict);
+  const prosB = buildDeveloperPros(b, a, dict);
+  const suitA = buildDeveloperSuitability(a, b, dict);
+  const suitB = buildDeveloperSuitability(b, a, dict);
+  const faqs = buildDeveloperFaqs(cmp, dict);
   const related = await getRelatedDeveloperComparisons(cmp);
   const money = (n: number | null) =>
     n != null && n > 0 ? formatPrice(Math.round(n), "AED") : "—";
@@ -358,7 +358,10 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
         {faqs.length > 0 ? (
           <section className="mt-12">
             <h2 className="font-display text-2xl font-semibold text-text-dark">
-              {a.name} vs {b.name} FAQ
+              {interpolate(dict.pages.compareDev.faqHeading, {
+                a: a.name,
+                b: b.name,
+              })}
             </h2>
             <div className="mt-5">
               <FaqAccordion faqs={faqs} />
