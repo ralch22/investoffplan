@@ -189,7 +189,10 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
           ]}
         />
 
-        <section className="mt-8 max-w-3xl space-y-4">
+        <section
+          data-testid="collection-intro"
+          className="mt-8 max-w-3xl space-y-4"
+        >
           {(chrome.intro ?? page.intro).map((paragraph, index) => (
             <p key={index} className="leading-relaxed text-muted">
               {paragraph}
