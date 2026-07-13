@@ -10,6 +10,26 @@ test.describe("Mortgage, areas, collections", () => {
     await page.locator("#mtg-price").fill("2000000");
     await expect(page.getByText(/AED [\d,]+/).first()).toBeVisible();
     await expect(page.getByPlaceholder("Full name")).toBeVisible();
+    // EN pre-approval band still byte-identical chrome (#380).
+    const enBand = page.getByTestId("mortgage-preapproval");
+    await expect(enBand).toContainText("Get pre-approved");
+    await expect(enBand).toContainText("Free eligibility check, no obligation");
+  });
+
+  // #380 — AR mortgage pre-approval band must not stay English under AR chrome.
+  test("AR mortgage pre-approval band uses Arabic copy", async ({ page }) => {
+    const res = await page.goto("/ar/tools/mortgage", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(res?.ok()).toBeTruthy();
+    const band = page.getByTestId("mortgage-preapproval");
+    await expect(band).toBeVisible();
+    const text = await band.innerText();
+    expect(text).not.toContain("Get pre-approved");
+    expect(text).not.toContain("Free eligibility check");
+    expect(text).not.toContain("Resident and non-resident options");
+    expect(text).toContain("موافقة مبدئية");
+    expect(text).toContain("فحص أهلية");
   });
 
   test("community page with editorial shows stats band and living section", async ({
