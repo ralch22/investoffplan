@@ -5,10 +5,17 @@ import { PaymentCalculator } from "@/components/payment-calculator";
 import { bedsLabel, formatPrice, propertyTypeLabel, sqftLabel } from "@/lib/format";
 import { parsePaymentPlan } from "@/lib/investment-metrics";
 import type { Project, UnitType } from "@/lib/types";
+import { getDictionary } from "@/i18n";
 import { useI18n } from "@/i18n/locale-provider";
+import type { Locale } from "@/i18n/config";
 
 interface ProjectPaymentCalculatorProps {
   project: Project;
+  /**
+   * Explicit locale from the server page tree. Prefer this over useI18n alone so
+   * AR PDP SSR never falls back to the EN default context (#327 residual).
+   */
+  locale?: Locale;
 }
 
 /**
@@ -23,8 +30,12 @@ interface ProjectPaymentCalculatorProps {
  */
 export function ProjectPaymentCalculator({
   project,
+  locale: localeProp,
 }: ProjectPaymentCalculatorProps) {
-  const { dict, locale } = useI18n();
+  const i18n = useI18n();
+  // Prefer page-prop locale so AR SSR does not flash EN dict defaults.
+  const locale: Locale = localeProp ?? i18n.locale;
+  const dict = localeProp ? getDictionary(localeProp) : i18n.dict;
   const units = project.units;
   const [unitId, setUnitId] = useState(() => {
     if (!units.length) return "";
@@ -61,6 +72,7 @@ export function ProjectPaymentCalculator({
             value={selected?.id ?? ""}
             onChange={(e) => setUnitId(e.target.value)}
             className="iop-input mt-1"
+            data-testid="pdp-unit-type-select"
           >
             {units.map((unit) => (
               <option key={unit.id} value={unit.id}>
