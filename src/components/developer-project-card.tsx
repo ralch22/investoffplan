@@ -28,7 +28,7 @@ export function DeveloperProjectCard({
   const isSoldOut = project.status === "sold-out";
   const location =
     project.locationFull ??
-    [cityLabel(project.city), project.area].filter(Boolean).join(", ");
+    [cityLabel(project.city, dict), project.area].filter(Boolean).join(", ");
   const statusBadge = isSoldOut
     ? dict.common.soldOut
     : project.status === "ready"

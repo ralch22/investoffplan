@@ -34,7 +34,7 @@ export function ProjectKeyFacts({ project, locale = "en" }: ProjectKeyFactsProps
     },
     {
       label: kf.location,
-      value: `${cityLabel(project.city)}, ${project.area}`,
+      value: `${cityLabel(project.city, dict)}, ${project.area}`,
       href: `/communities/${communitySlugFor(project.area)}`,
     },
     {

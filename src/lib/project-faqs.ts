@@ -95,7 +95,7 @@ export function buildProjectFaqs(
       name,
       developer: project.developer,
       area: project.area,
-      city: cityLabel(project.city),
+      city: cityLabel(project.city, dict),
     }),
   });
 
