@@ -47,17 +47,17 @@ export async function MortgagePageContent({ locale = "en" }: { locale?: Locale }
         >
           <div>
             <h2 className="font-display text-3xl font-semibold text-text-dark">
-              Get pre-approved <em className="italic">before</em> you shortlist.
+              {t.preapprovalHeadingBefore}
+              <em className="italic">{t.preapprovalHeadingEm}</em>
+              {t.preapprovalHeadingAfter}
             </h2>
             <p className="mt-4 text-sm leading-relaxed text-muted">
-              Pre-approval tells you exactly what you can borrow — so you can negotiate
-              off-plan payment plans with confidence. Our licensed UAE mortgage partners
-              confirm eligibility, current rates, and off-plan LTV caps at no cost.
+              {t.preapprovalBody}
             </p>
             <ul className="mt-5 space-y-2 text-sm text-muted">
-              <li>• Free eligibility check, no obligation</li>
-              <li>• Off-plan and handover-mortgage guidance</li>
-              <li>• Resident and non-resident options</li>
+              <li>• {t.preapprovalBullet1}</li>
+              <li>• {t.preapprovalBullet2}</li>
+              <li>• {t.preapprovalBullet3}</li>
             </ul>
           </div>
           <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">

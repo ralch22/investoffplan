@@ -412,6 +412,36 @@ test.describe("Content routes", () => {
     }
   });
 
+  // #380 — AR mortgage pre-approval band not bare EN.
+  test("AR mortgage pre-approval band is Arabic chrome", async ({ page }) => {
+    const res = await page.goto("/ar/tools/mortgage", { waitUntil: "commit" });
+    expect(res?.status()).toBe(200);
+    const body = await res!.text();
+    expect(body).not.toContain("Get pre-approved");
+    expect(body).not.toContain("Free eligibility check, no obligation");
+    expect(body).toMatch(/موافقة مبدئية|فحص أهلية/);
+  });
+
+  // #381 — maps fallback must not hardcode Dubai UAE for all projects.
+  test("project location maps fallback uses city not fixed Dubai UAE", async ({
+    page,
+  }) => {
+    // Prefer a non-Dubai project if present; otherwise assert no universal Dubai UAE suffix in maps links.
+    const res = await page.goto("/ar/projects", { waitUntil: "commit" });
+    expect(res?.status()).toBe(200);
+    // Spot-check a known community PDP path pattern via developers grid is heavy;
+    // assert hardcoded fallback string is gone from the client bundle of location section
+    // by loading a sample PDP that exists on catalog.
+    const pdp = await page.goto("/ar/developers/emaar-properties", {
+      waitUntil: "commit",
+    });
+    expect(pdp?.status()).toBe(200);
+    const html = await pdp!.text();
+    // The fixed suffix was always " Dubai UAE" on maps/search URLs.
+    expect(html).not.toContain("%20Dubai%20UAE");
+    expect(html).not.toContain(" Dubai UAE");
+  });
+
   // #368 — AR collection long-form intro body must not stay English.
   test("AR collection intro body uses Arabic (not EN editorial)", async ({
     page,

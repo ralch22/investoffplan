@@ -17,9 +17,11 @@ export function ProjectLocationSection({
   const t = dict.pdp;
   const areaSlug = communitySlugFor(project.area);
   const areaShort = project.area.split(",")[0];
+  const city = cityLabel(project.city, dict);
+  // Prefer coordinates; fallback search uses area + locale-aware emirate (not fixed Dubai) (#381).
   const googleMapsUrl = project.coordinates
     ? `https://www.google.com/maps?q=${project.coordinates.lat},${project.coordinates.lng}`
-    : `https://www.google.com/maps/search/${encodeURIComponent(project.area + " Dubai UAE")}`;
+    : `https://www.google.com/maps/search/${encodeURIComponent(`${project.area} ${city}`)}`;
   const osmEmbed = project.coordinates
     ? `https://www.openstreetmap.org/export/embed.html?bbox=${project.coordinates.lng - 0.02}%2C${project.coordinates.lat - 0.015}%2C${project.coordinates.lng + 0.02}%2C${project.coordinates.lat + 0.015}&layer=mapnik&marker=${project.coordinates.lat}%2C${project.coordinates.lng}`
     : null;
@@ -38,7 +40,7 @@ export function ProjectLocationSection({
       </h2>
       <p className="mt-3 text-muted">
         {interpolate(t.locationLine, {
-          city: cityLabel(project.city, dict),
+          city,
           area: project.area,
         })}
       </p>
