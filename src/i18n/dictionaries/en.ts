@@ -1159,7 +1159,15 @@ const dict = {
     },
     "mortgagePage": {
       "heroTitle": "Mortgage calculator",
-      "heroSubtitle": "Repayments, fees, and stress-tested affordability — then get pre-approved."
+      "heroSubtitle": "Repayments, fees, and stress-tested affordability — then get pre-approved.",
+      // #380 — pre-approval band (EN byte-identical; italic wraps headingEm).
+      "preApprovalHeadingPrefix": "Get pre-approved ",
+      "preApprovalHeadingEm": "before",
+      "preApprovalHeadingSuffix": " you shortlist.",
+      "preApprovalBody": "Pre-approval tells you exactly what you can borrow — so you can negotiate off-plan payment plans with confidence. Our licensed UAE mortgage partners confirm eligibility, current rates, and off-plan LTV caps at no cost.",
+      "preApprovalBullet1": "Free eligibility check, no obligation",
+      "preApprovalBullet2": "Off-plan and handover-mortgage guidance",
+      "preApprovalBullet3": "Resident and non-resident options"
     },
     "roiPage": {
       "heroTitle": "ROI & yield estimator",
