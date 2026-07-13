@@ -246,3 +246,15 @@ export function cityLabel(city: string, dict?: Dict): string {
   };
   return labels[key] ?? city.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 }
+
+/**
+ * Google Maps text-search query when a project has no coordinates (#381).
+ * Uses emirate from {@link cityLabel} — never hardcodes "Dubai UAE".
+ */
+export function googleMapsSearchQuery(
+  area: string,
+  city: string,
+  dict?: Dict,
+): string {
+  return [area, cityLabel(city, dict), "UAE"].filter(Boolean).join(" ");
+}
