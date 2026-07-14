@@ -151,10 +151,7 @@ export function AdvisorWidget() {
         aria-label={open ? t.close : t.launcher}
         aria-expanded={open}
         aria-haspopup="dialog"
-        className={cn(
-          "iop-btn-press focus-ring fixed end-5 z-[var(--z-sticky)] flex h-14 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-elevation-lg transition-all duration-300 hover:bg-brand-dark bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap))] lg:bottom-[calc(1.25rem+var(--consent-h,0px))]",
-          scrollDir === "down" && !open ? "max-lg:translate-y-[calc(100%+var(--fab-gap)+var(--bottom-dock))] max-lg:opacity-0" : "max-lg:translate-y-0 max-lg:opacity-100"
-        )}
+        className="iop-btn-press focus-ring fixed end-5 z-[var(--z-sticky)] flex h-14 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-elevation-lg transition-all duration-300 hover:bg-brand-dark bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap))] lg:bottom-[calc(1.25rem+var(--consent-h,0px))]"
       >
         <ChatIcon />
         <span className="hidden sm:inline">{t.launcher}</span>
@@ -170,7 +167,7 @@ export function AdvisorWidget() {
           className="fixed inset-0 z-[var(--z-modal)] m-0 h-full w-full max-w-none bg-transparent p-0 flex flex-col justify-end items-end p-5 backdrop:bg-transparent"
         >
           {/* Inner container for the actual chat panel */}
-          <div className="flex w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-elevation-lg mb-[calc(var(--bottom-dock)+var(--consent-h,0px)+3rem)] lg:mb-[calc(6rem+var(--consent-h,0px))] max-h-[min(32rem,calc(100dvh-var(--header-h)-var(--bottom-dock)-var(--consent-h,0px)-var(--fab-gap)-5rem))] lg:max-h-[min(32rem,calc(100dvh-8rem-var(--consent-h,0px)))]">
+          <div className="flex w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-elevation-lg mb-[calc(var(--bottom-dock)+var(--consent-h,0px)+5rem)] lg:mb-[calc(6rem+var(--consent-h,0px))] max-h-[min(32rem,calc(100dvh-var(--header-h)-var(--bottom-dock)-var(--consent-h,0px)-var(--fab-gap)-5rem))] lg:max-h-[min(32rem,calc(100dvh-8rem-var(--consent-h,0px)))]">
             <div className="flex shrink-0 items-center justify-between gap-3 bg-surface-darker px-4 py-3 text-white">
             <div>
               <p className="text-sm font-semibold">{t.title}</p>
