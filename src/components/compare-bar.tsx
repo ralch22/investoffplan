@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/cn";
 import { serializeCompareIds } from "@/lib/compare";
 import type { CompareUnitId } from "@/lib/compare";
@@ -32,7 +33,9 @@ export function CompareBar({
     : undefined;
 
   return (
-    <div
+    <motion.div
+      layout
+      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
       data-hydrated={hydrated ? "true" : "false"}
       className={cn(
         "flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3 text-sm shadow-elevation-sm",
@@ -77,7 +80,7 @@ export function CompareBar({
         {dict.common.compareHint}
       </span>
       <input type="hidden" data-compare-ids={selectedIds.join(",")} />
-    </div>
+    </motion.div>
   );
 }
 

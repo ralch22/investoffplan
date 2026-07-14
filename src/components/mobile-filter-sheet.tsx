@@ -66,8 +66,13 @@ export function MobileFilterSheet({
           data-testid="mobile-filter-sheet"
           className="absolute inset-x-0 bottom-0 flex max-h-[85vh] flex-col rounded-t-2xl bg-white shadow-elevation-lg"
         >
+          {/* Drag handle pill */}
+          <div className="flex w-full items-center justify-center pt-3 pb-1">
+            <div className="h-1 w-10 rounded-full bg-border-strong" />
+          </div>
+
           {/* Header — stays put while filters scroll. */}
-          <div className="flex shrink-0 items-center justify-between border-b border-border px-5 py-4">
+          <div className="flex shrink-0 items-center justify-between border-b border-border px-5 pb-4">
             <h2
               id="mobile-filter-sheet-title"
               className="text-lg font-semibold text-text-dark"

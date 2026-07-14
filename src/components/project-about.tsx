@@ -71,7 +71,7 @@ export function ProjectAbout({
           <ExpandableRichText
             html={sanitizedHtml}
             truncate={sanitizedHtml.length > DESCRIPTION_TRUNCATE_CHARS}
-            className="prose-balance mt-4 max-w-none space-y-4 text-base leading-relaxed text-text-dark/85 [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-semibold [&_li]:ms-4 [&_li]:list-disc [&_p]:mt-3 [&_ul]:mt-3 [&_ul]:space-y-1"
+            className="prose-balance mt-4 max-w-none space-y-4 text-base leading-relaxed text-text-dark/90 [&_h2]:mt-10 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-text-dark [&_h3]:mt-8 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-text-dark [&_li]:ms-5 [&_li]:list-disc [&_li]:pl-1 [&_li]:marker:text-brand [&_p]:mt-4 [&_ul]:mt-4 [&_ul]:space-y-2"
           />
         </div>
       ) : proseText ? (
@@ -97,7 +97,7 @@ export function ProjectAbout({
             {amenities.map((a) => (
               <li
                 key={a}
-                className="rounded-full bg-surface-alt px-4 py-1.5 text-sm font-medium text-text-dark transition-colors duration-300 hover:bg-surface-dark hover:text-white"
+                className="rounded-full bg-surface-alt px-4 py-1.5 text-sm font-medium text-text-dark transition-all duration-300 hover:-translate-y-0.5 hover:bg-surface-dark hover:text-white hover:shadow-elevation-sm cursor-default"
               >
                 {a}
               </li>
