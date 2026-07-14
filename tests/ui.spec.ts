@@ -5,9 +5,6 @@ test.describe("UI Polish Components", () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/projects");
 
-    // Wait for hydration
-    await page.waitForLoadState('networkidle');
-
     // The filter button on mobile
     const filterButton = page.locator('button[data-testid="mobile-filter-trigger"], button:has-text("Filters")').first();
     if (await filterButton.isVisible()) {
