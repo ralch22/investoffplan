@@ -26,9 +26,9 @@
      over any catalog image, including light photos (a11y audit P4). */
   --hero-overlay: linear-gradient(
     180deg,
-    rgba(18, 19, 18, 0.65) 0%,
-    rgba(18, 19, 18, 0.82) 55%,
-    rgba(18, 19, 18, 0.94) 100%
+    rgba(18, 19, 18, 0.70) 0%,
+    rgba(18, 19, 18, 0.85) 55%,
+    rgba(18, 19, 18, 0.96) 100%
   );
   --footer-overlay: rgba(18, 19, 18, 0.97);
   --shadow-sm: 0 1px 2px rgba(23, 23, 23, 0.04), 0 4px 12px rgba(23, 23, 23, 0.04);

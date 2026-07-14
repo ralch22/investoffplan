@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
 import { cn } from "@/lib/cn";
 import { serializeCompareIds } from "@/lib/compare";
 import type { CompareUnitId } from "@/lib/compare";
@@ -21,9 +23,18 @@ export function CompareBar({
 }: CompareBarProps) {
   const { dict, locale } = useI18n();
   const [hydrated, setHydrated] = useState(false);
+  const scrollDir = useScrollDirection();
+  const [scrolled, setScrolled] = useState(false);
+
   useEffect(() => {
     setHydrated(true);
+    const onScroll = () => setScrolled(window.scrollY > 48);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const hideTabBar = scrollDir === "down" && scrolled;
 
   const active = selectedIds.length > 0;
   // Keep the AR browse loop under /ar (hub redirects ?units= → /compare/units).
@@ -32,13 +43,16 @@ export function CompareBar({
     : undefined;
 
   return (
-    <div
+    <motion.div
+      layout
+      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
       data-hydrated={hydrated ? "true" : "false"}
       className={cn(
-        "flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3 text-sm shadow-elevation-sm",
+        "flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3 text-sm shadow-elevation-sm transition-transform duration-300",
         active &&
           // Lift above cookie banner (--consent-h measured by CookieConsentBanner).
           "max-lg:fixed max-lg:inset-x-4 max-lg:bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+0.5rem)] max-lg:z-[var(--z-sticky)] max-lg:shadow-elevation-lg",
+        active && hideTabBar ? "max-lg:translate-y-[calc(var(--bottom-bar-h)+var(--consent-h,0px))]" : "max-lg:translate-y-0",
         active && "lg:sticky lg:bottom-4 lg:z-[var(--z-sticky)]",
         className,
       )}
@@ -77,7 +91,7 @@ export function CompareBar({
         {dict.common.compareHint}
       </span>
       <input type="hidden" data-compare-ids={selectedIds.join(",")} />
-    </div>
+    </motion.div>
   );
 }
 

@@ -1,13 +1,14 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LocaleLink } from "@/components/locale-link";
 import { MobileSearchSheet } from "@/components/nav/mobile-search-sheet";
 import { useFavoritesCount } from "@/hooks/use-favorites-count";
 import { useI18n } from "@/i18n/locale-provider";
 import { localePath } from "@/i18n/config";
 import { cn } from "@/lib/cn";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
 
 type IconProps = { className?: string };
 
@@ -52,6 +53,17 @@ export function BottomTabBar() {
   const { locale, dict } = useI18n();
   const favoritesCount = useFavoritesCount();
   const [searchOpen, setSearchOpen] = useState(false);
+  const scrollDir = useScrollDirection();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 48);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const hideTabBar = scrollDir === "down" && scrolled && !searchOpen;
 
   const t = dict.nav.tabs;
   const active = (href: string) => {
@@ -71,7 +83,10 @@ export function BottomTabBar() {
       <nav
         aria-label={t.aria}
         // Sit above the cookie banner when --consent-h is published (issue #228).
-        className="fixed inset-x-0 bottom-[var(--consent-h,0px)] z-[var(--z-bottom-bar)] h-[var(--bottom-bar-h)] border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden"
+        className={cn(
+          "fixed inset-x-0 bottom-[var(--consent-h,0px)] z-[var(--z-bottom-bar)] h-[var(--bottom-bar-h)] border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl lg:hidden transition-transform duration-300",
+          hideTabBar ? "translate-y-[calc(100%+var(--consent-h,0px))]" : "translate-y-0"
+        )}
       >
         <div className="mx-auto flex h-[3.75rem] max-w-md items-stretch">
           <LocaleLink href="/projects" aria-current={active("/projects") ? "page" : undefined} className={tabCls(active("/projects"))}>

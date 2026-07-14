@@ -85,7 +85,7 @@ function normaliseHtmlEntities(input: string): string {
 
 function stripEmptyElements(html: string): string {
   const emptyEl = new RegExp(
-    `<(${EMPTY_STRIPPABLE})>(?:\\s|<br\\s*/?>)*</\\1>`,
+    `<(${EMPTY_STRIPPABLE})>(?:\\s|<br\\s*/?>|&nbsp;|&#160;)*</\\1>`,
     "gi",
   );
   let out = html;
