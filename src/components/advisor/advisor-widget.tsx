@@ -9,8 +9,9 @@ import { submitLead } from "@/lib/leads-client";
 import { TurnstileField } from "@/components/turnstile-field";
 import { WHATSAPP_PRIMARY } from "@/lib/contact-info";
 import { bedsLabel, formatPrice } from "@/lib/format";
+import { motion, AnimatePresence } from "framer-motion";
+import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/cn";
-import { useScrollDirection } from "@/hooks/use-scroll-direction";
 import type {
   AdvisorCard,
   AdvisorMessage,
@@ -26,7 +27,7 @@ export function AdvisorWidget() {
   const { locale, dict } = useI18n();
   const t = dict.advisor;
   const [open, setOpen] = useState(false);
-  const scrollDir = useScrollDirection();
+
   const [entries, setEntries] = useState<ChatEntry[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [input, setInput] = useState("");
@@ -39,31 +40,18 @@ export function AdvisorWidget() {
   const [leadToken, setLeadToken] = useState("");
   const [leadTokenReset, setLeadTokenReset] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const handleOpen = () => setOpen(true);
+    window.addEventListener("open-advisor", handleOpen);
+    return () => window.removeEventListener("open-advisor", handleOpen);
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [entries, busy]);
 
-  // Mount the panel only while open so a closed <dialog> never dual-matches
-  // gallery/brochure dialogs in a11y tests (strict getByRole('dialog')).
-  // showModal on mount = focus trap + Escape + focus restore (residual O1).
-  useEffect(() => {
-    if (!open) return;
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    if (!dialog.open) dialog.showModal();
-    const handleCancel = (e: Event) => {
-      e.preventDefault();
-      setOpen(false);
-    };
-    dialog.addEventListener("cancel", handleCancel);
-    return () => {
-      dialog.removeEventListener("cancel", handleCancel);
-      if (dialog.open) dialog.close();
-    };
-  }, [open]);
-
+  // Removed dialog modal handling since we are using AnimatePresence instead.
   const starters = [t.starterProjects, t.starterAreas, t.starterProcess];
 
   async function send(text: string) {
@@ -157,170 +145,189 @@ export function AdvisorWidget() {
         <span className="hidden sm:inline">{t.launcher}</span>
       </button>
 
-      {open ? (
-        <dialog
-          ref={dialogRef}
-          data-advisor-dialog
-          aria-label={t.title}
-          onClose={() => setOpen(false)}
-          className="fixed inset-0 z-[var(--z-modal)] m-0 h-full w-full max-w-none bg-transparent p-0 flex flex-col justify-end items-end p-5 backdrop:bg-transparent"
-        >
-          {/* Inner container for the actual chat panel */}
-          <div 
-            data-testid="advisor-panel"
-            className="flex w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-elevation-lg mb-[calc(var(--bottom-dock)+var(--consent-h,0px)+4rem)] lg:mb-[calc(6rem+var(--consent-h,0px))] max-h-[min(32rem,calc(100dvh-var(--header-h)-var(--bottom-dock)-var(--consent-h,0px)-var(--fab-gap)-5rem))] lg:max-h-[min(32rem,calc(100dvh-8rem-var(--consent-h,0px)))]"
-          >
-            <div className="flex shrink-0 items-center justify-between gap-3 bg-surface-darker px-4 py-3 text-white">
-            <div>
-              <p className="text-sm font-semibold">{t.title}</p>
-              <p className="text-xs text-white/70">{t.subtitle}</p>
-            </div>
-            <div className="flex items-center gap-1">
-              <a
-                href={`https://wa.me/${WHATSAPP_PRIMARY}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={t.whatsapp}
-                className="focus-ring-light rounded-full border border-white/25 px-3 py-1.5 text-xs font-semibold text-white/90 hover:bg-white/10"
-              >
-                {t.whatsapp}
-              </a>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label={t.close}
-                className="focus-ring-light flex h-8 w-8 items-center justify-center rounded-full text-white/80 hover:bg-white/10"
-              >
-                ✕
-              </button>
-            </div>
-          </div>
-
-          <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto p-4">
-            {entries.length === 0 ? (
-              <div className="space-y-2">
-                {starters.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => send(s)}
-                    className="iop-btn-press focus-ring block w-full rounded-xl border border-border bg-surface-alt px-4 py-2.5 text-start text-sm text-text-dark hover:border-brand"
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            ) : null}
-
-            {entries.map((entry, i) => (
-              <div key={i}>
-                <div
-                  className={cn(
-                    "max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed",
-                    entry.role === "user"
-                      ? "ms-auto bg-brand text-white"
-                      : "bg-surface-alt text-text-dark",
-                  )}
-                >
-                  {entry.content}
+      <AnimatePresence>
+        {open ? (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setOpen(false)}
+              className="fixed inset-0 z-[var(--z-modal)] bg-black/40 backdrop-blur-sm"
+              aria-hidden="true"
+            />
+            {/* Drawer */}
+            <motion.div
+              initial={{ x: "100%", opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: "100%", opacity: 0 }}
+              transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+              data-testid="advisor-panel"
+              data-advisor-panel
+              className="fixed inset-0 z-[var(--z-modal)] flex flex-col overflow-hidden bg-surface sm:start-auto sm:w-[500px] lg:w-[600px] sm:rounded-l-3xl shadow-elevation-2xl"
+              role="dialog"
+              aria-label={t.title}
+            >
+              <div className="flex shrink-0 items-center justify-between gap-3 bg-surface-darker px-4 py-4 text-white sm:px-6">
+                <div>
+                  <p className="font-semibold">{t.title}</p>
+                  <p className="text-xs text-white/70">{t.subtitle}</p>
                 </div>
-                {entry.cards?.length ? (
-                  <div className="mt-2 space-y-2">
-                    {entry.cards.map((card) => (
-                      <AdvisorCardView key={card.slug} card={card} />
+                <div className="flex items-center gap-2">
+                  <a
+                    href={`https://wa.me/${WHATSAPP_PRIMARY}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={t.whatsapp}
+                    className="focus-ring-light rounded-full border border-white/25 px-3 py-1.5 text-xs font-semibold text-white/90 hover:bg-white/10"
+                  >
+                    {t.whatsapp}
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    aria-label={t.close}
+                    className="focus-ring-light flex h-8 w-8 items-center justify-center rounded-full text-white/80 hover:bg-white/10"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-4 sm:p-6">
+                {entries.length === 0 ? (
+                  <div className="space-y-2">
+                    {starters.map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => send(s)}
+                        className="iop-btn-press focus-ring block w-full rounded-xl border border-border bg-surface-alt px-4 py-3 text-start text-sm text-text-dark hover:border-brand"
+                      >
+                        {s}
+                      </button>
                     ))}
                   </div>
                 ) : null}
-                {entry.showLeadForm && !leadDone ? (
-                  <div className="mt-2 space-y-2 rounded-2xl border border-border bg-white p-3">
-                    <p className="text-xs font-semibold text-text-dark">{t.leadTitle}</p>
-                    <input
-                      value={leadName}
-                      onChange={(e) => setLeadName(e.target.value)}
-                      placeholder={t.leadName}
-                      aria-label={t.leadName}
-                      autoComplete="name"
-                      className="iop-input h-10 text-sm"
-                    />
-                    <input
-                      value={leadPhone}
-                      onChange={(e) => setLeadPhone(e.target.value)}
-                      placeholder={t.leadPhone}
-                      aria-label={t.leadPhone}
-                      autoComplete="tel"
-                      type="tel"
-                      className="iop-input h-10 text-sm"
-                    />
-                    <TurnstileField
-                      onToken={setLeadToken}
-                      action="advisor-callback"
-                      resetSignal={leadTokenReset}
-                    />
-                    {leadError ? (
-                      <p className="text-xs font-medium text-brand" role="alert">
-                        {leadError}
-                      </p>
-                    ) : null}
-                    <button
-                      type="button"
-                      onClick={sendLead}
-                      disabled={leadBusy}
-                      className="iop-btn-press focus-ring w-full rounded-full bg-brand py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
+
+                {entries.map((entry, i) => (
+                  <div key={i} className={cn("flex flex-col", entry.role === "user" ? "items-end" : "items-start")}>
+                    <div
+                      className={cn(
+                        "max-w-[90%] rounded-2xl px-4 py-3 text-sm leading-relaxed overflow-hidden",
+                        entry.role === "user"
+                          ? "bg-brand text-white"
+                          : "bg-surface-alt text-text-dark",
+                      )}
                     >
-                      {leadBusy ? t.leadSending : t.leadSubmit}
-                    </button>
+                      {entry.role === "user" ? (
+                        <p>{entry.content}</p>
+                      ) : (
+                        <div className="prose prose-sm prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0 prose-headings:my-2 prose-a:text-brand max-w-none break-words text-text-dark">
+                          <ReactMarkdown>{entry.content}</ReactMarkdown>
+                        </div>
+                      )}
+                    </div>
+                    {entry.cards?.length ? (
+                      <div className="mt-3 w-full space-y-2">
+                        {entry.cards.map((card) => (
+                          <AdvisorCardView key={card.slug} card={card} />
+                        ))}
+                      </div>
+                    ) : null}
+                    {entry.showLeadForm && !leadDone ? (
+                      <div className="mt-3 w-full space-y-3 rounded-2xl border border-border bg-white p-4 shadow-sm">
+                        <p className="text-sm font-semibold text-text-dark">{t.leadTitle}</p>
+                        <input
+                          value={leadName}
+                          onChange={(e) => setLeadName(e.target.value)}
+                          placeholder={t.leadName}
+                          aria-label={t.leadName}
+                          autoComplete="name"
+                          className="iop-input h-11 text-sm"
+                        />
+                        <input
+                          value={leadPhone}
+                          onChange={(e) => setLeadPhone(e.target.value)}
+                          placeholder={t.leadPhone}
+                          aria-label={t.leadPhone}
+                          autoComplete="tel"
+                          type="tel"
+                          className="iop-input h-11 text-sm"
+                        />
+                        <TurnstileField
+                          onToken={setLeadToken}
+                          action="advisor-callback"
+                          resetSignal={leadTokenReset}
+                        />
+                        {leadError ? (
+                          <p className="text-xs font-medium text-brand" role="alert">
+                            {leadError}
+                          </p>
+                        ) : null}
+                        <button
+                          type="button"
+                          onClick={sendLead}
+                          disabled={leadBusy}
+                          className="iop-btn-press focus-ring w-full rounded-full bg-brand py-3 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
+                        >
+                          {leadBusy ? t.leadSending : t.leadSubmit}
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
+
+                {busy ? (
+                  <p className="text-xs text-muted" role="status">
+                    {t.thinking}
+                  </p>
+                ) : null}
+
+                {!busy && entries.length > 0 && suggestions.length > 0 ? (
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    {suggestions.map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => send(s)}
+                        className="focus-ring rounded-full border border-border bg-white px-3 py-1.5 text-xs text-muted hover:border-brand hover:text-brand"
+                      >
+                        {s}
+                      </button>
+                    ))}
                   </div>
                 ) : null}
               </div>
-            ))}
 
-            {busy ? (
-              <p className="text-xs text-muted" role="status">
-                {t.thinking}
-              </p>
-            ) : null}
-
-            {!busy && entries.length > 0 && suggestions.length > 0 ? (
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {suggestions.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => send(s)}
-                    className="focus-ring rounded-full border border-border bg-white px-3 py-1 text-xs text-muted hover:border-brand hover:text-brand"
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            ) : null}
-          </div>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              send(input);
-            }}
-            className="flex gap-2 border-t border-border p-3"
-          >
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={t.placeholder}
-              aria-label={t.placeholder}
-              className="iop-input h-11 flex-1 text-sm"
-            />
-            <button
-              type="submit"
-              disabled={busy || !input.trim()}
-              className="iop-btn-press focus-ring rounded-full bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50"
-            >
-              {t.send}
-            </button>
-          </form>
-          </div>
-        </dialog>
-      ) : null}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  send(input);
+                }}
+                className="flex gap-2 border-t border-border bg-surface p-4"
+              >
+                <input
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder={t.placeholder}
+                  aria-label={t.placeholder}
+                  className="iop-input h-12 flex-1 text-sm"
+                />
+                <button
+                  type="submit"
+                  disabled={busy || !input.trim()}
+                  className="iop-btn-press focus-ring rounded-full bg-brand px-5 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-50"
+                >
+                  {t.send}
+                </button>
+              </form>
+            </motion.div>
+          </>
+        ) : null}
+      </AnimatePresence>
     </>
   );
 }
@@ -329,29 +336,31 @@ function AdvisorCardView({ card }: { card: AdvisorCard }) {
   const { locale, dict } = useI18n();
   const t = dict.advisor;
   return (
-    <div className="flex gap-3 rounded-2xl border border-border bg-white p-3">
+    <div className="flex gap-4 rounded-2xl border border-border bg-white p-3 shadow-sm transition-colors hover:border-brand-muted">
       {card.imageUrl ? (
-        <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-surface-alt">
-          <Image src={card.imageUrl} alt="" fill className="object-cover" sizes="80px" />
+        <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-xl bg-surface-alt">
+          <Image src={card.imageUrl} alt="" fill className="object-cover" sizes="96px" />
         </div>
       ) : null}
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 py-0.5">
         <p className="truncate text-sm font-semibold text-text-dark">{card.name}</p>
         <p className="truncate text-xs text-muted">
           {card.developer} · {card.area}
         </p>
-        <p className="text-xs text-muted">
+        <p className="mt-1 text-xs font-medium text-text-dark">
           {card.fromPriceAed
             ? `${t.from} ${formatPrice(card.fromPriceAed, "AED")}`
             : ""}
           {card.handover ? ` · ${card.handover}` : ""}
+        </p>
+        <p className="text-xs text-muted">
           {card.beds?.length
-            ? ` · ${card.beds.map((n) => bedsLabel(n, dict)).join("–")}`
+            ? `${card.beds.map((n) => bedsLabel(n, dict)).join("–")}`
             : ""}
         </p>
         <Link
           href={localePath(locale, `/projects/${card.slug}`)}
-          className="focus-ring mt-1 inline-block rounded-sm text-xs font-semibold text-brand hover:text-brand-dark"
+          className="focus-ring mt-2 inline-block rounded-sm text-xs font-semibold text-brand hover:text-brand-dark"
         >
           {t.viewProject} →
         </Link>

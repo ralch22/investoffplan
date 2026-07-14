@@ -4,9 +4,10 @@ import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { ShowcaseProjectCard } from "@/components/showcase-project-card";
-import { PrimaryButton } from "@/components/ui/primary-button";
-import { getCatalogApi } from "@/lib/catalog";
+import { getCatalogApi, getDevelopers, getTopAmenities } from "@/lib/catalog";
+import { PAGE_SIZE } from "@/lib/catalog-core";
+import { getMapProjectsFromList } from "@/lib/map-data";
+import { ProjectsPage } from "@/app/(en)/projects/projects-page";
 import { COLLECTION_PAGES, getCollectionPage } from "@/lib/collections";
 import { getHeroImage } from "@/lib/area-images";
 import { buildBreadcrumbListJsonLd } from "@/lib/project-json-ld";
@@ -100,24 +101,21 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
     items = items.filter(page.predicate);
   }
 
-  // Dedupe to projects, keep catalog order (featured-ish), cap the grid.
-  const seen = new Set<string>();
-  const projects: Project[] = [];
-  for (const item of api.sortUnits(items, "featured")) {
-    if (seen.has(item.project.id)) continue;
-    seen.add(item.project.id);
-    projects.push(item.project);
-    if (projects.length >= MAX_PROJECTS) break;
+  // Calculate total number of unique projects
+  const uniqueProjectIds = new Set<string>();
+  for (const item of items) {
+    uniqueProjectIds.add(item.project.id);
   }
+  const fullProjectCount = uniqueProjectIds.size;
+  const initialResultCount = fullProjectCount;
+
+  const initialPageItems = api.aggregateProjectView(api.sortUnits(items, "featured")).slice(0, PAGE_SIZE);
 
   const heroImage = await getHeroImage();
   const siteUrl = getSiteUrl();
   const fmtLocale = locale === "ar" ? "ar-AE" : "en-US";
   const unitsLabel = items.length.toLocaleString(fmtLocale);
-  const projectsLabel =
-    seen.size >= MAX_PROJECTS
-      ? `${MAX_PROJECTS.toLocaleString(fmtLocale)}+`
-      : projects.length.toLocaleString(fmtLocale);
+  const projectsLabel = fullProjectCount.toLocaleString(fmtLocale);
   // Locale-aware site origin for AR JSON-LD when mirrored under /ar.
   const pageUrl =
     locale === "ar"
@@ -131,12 +129,12 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
     url: pageUrl,
     mainEntity: {
       "@type": "ItemList",
-      numberOfItems: projects.length,
-      itemListElement: projects.map((project, index) => ({
+      numberOfItems: initialPageItems.length,
+      itemListElement: initialPageItems.map((item, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        name: project.name,
-        url: `${siteUrl}${localePath(locale, `/projects/${project.slug}`)}`,
+        name: item.project.name,
+        url: `${siteUrl}${localePath(locale, `/projects/${item.project.slug}`)}`,
       })),
     },
   };
@@ -146,8 +144,21 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
   ).slice(0, 6);
   const pagesCopy = t.pages as Record<string, CollectionChrome>;
 
-  return (
-    <PageShell headerVariant="transparent">
+  const initialCityCounts = api.getCityCounts();
+  // Generate map pins for all projects in this collection
+  const initialMapProjects = getMapProjectsFromList(
+    Array.from(new Set(items.map((i) => i.project)))
+  );
+  const [developersList, amenityOptions] = await Promise.all([
+    getDevelopers(),
+    getTopAmenities(18),
+  ]);
+  const developerOptions = developersList
+    .slice(0, 60)
+    .map((dev) => ({ slug: dev.slug, name: dev.name }));
+
+  const headerOverride = (
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -180,7 +191,7 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
         imageUrl={heroImage}
       />
 
-      <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
+      <section className="mx-auto max-w-[1200px] px-5 py-8 pb-0 md:px-8">
         <Breadcrumbs
           items={[
             { label: dict.common.home, href: "/" },
@@ -188,8 +199,7 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
             { label: chrome.h1 },
           ]}
         />
-
-        <section
+        <div
           data-testid="collection-intro"
           className="mt-8 max-w-3xl space-y-4"
         >
@@ -198,59 +208,32 @@ export default async function CollectionsSlugPage({ params, locale = "en" }: Pag
               {paragraph}
             </p>
           ))}
-        </section>
-
-        {projects.length === 0 ? (
-          <p className="mt-10 text-muted">{t.emptyState}</p>
-        ) : (
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, index) => (
-              <ShowcaseProjectCard
-                key={project.id}
-                project={project}
-                featured={index === 0}
-              />
-            ))}
-          </div>
-        )}
-
-        <div className="mt-12 rounded-2xl bg-brand p-8 text-center text-white">
-          <p className="text-xl font-semibold">{t.refineCta}</p>
-          <PrimaryButton
-            href={localePath(locale, `/projects?${page.serpQuery}`)}
-            className="mt-4 bg-white text-brand hover:bg-white/90"
-          >
-            {t.openInProjects}
-          </PrimaryButton>
         </div>
+      </section>
+    </>
+  );
 
-        <section className="mt-12">
-          <h2 className="font-display text-2xl font-semibold text-text-dark">
-            {t.moreCollections}
-          </h2>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {otherCollections.map((other) => {
-              const otherChrome = pagesCopy[other.slug] ?? {
-                title: other.title,
-                h1: other.h1,
-                description: other.description,
-              };
-              return (
-                <Link
-                  key={other.slug}
-                  href={localePath(locale, `/collections/${other.slug}`)}
-                  className="rounded-full border border-border bg-white px-4 py-2 text-sm font-semibold text-muted transition hover:border-brand hover:text-brand"
-                >
-                  {otherChrome.h1}
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      </main>
-    </PageShell>
+  return (
+    <ProjectsPage
+      initialMeta={{
+        unitCount: api.meta.unitCount,
+        projectCount: api.meta.projectCount,
+        scrapedAt: api.meta.scrapedAt,
+      }}
+      initialPageItems={initialPageItems}
+      initialCityCounts={initialCityCounts}
+      initialResultCount={initialResultCount}
+      initialMapProjects={initialMapProjects}
+      developerOptions={developerOptions}
+      amenityOptions={amenityOptions}
+      collectionSlug={page.slug}
+      fixedCollection={page.collection}
+      disableApi={true}
+      headerOverride={headerOverride}
+    />
   );
 }
+
 
 /** Shared by AR mirror for locale-aware title/description (#253). */
 export { collectionChrome };

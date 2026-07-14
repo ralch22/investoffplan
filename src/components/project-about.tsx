@@ -3,6 +3,7 @@ import { htmlToPlainText, sanitizeProjectHtml } from "@/lib/sanitize-html";
 import { ExpandableRichText } from "@/components/expandable-rich-text";
 import { getDictionary } from "@/i18n";
 import type { Locale } from "@/i18n/config";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 // Descriptions past this render clamped behind a "Read more" toggle.
 const DESCRIPTION_TRUNCATE_CHARS = 4000;
@@ -59,7 +60,7 @@ export function ProjectAbout({
   }
 
   return (
-    <section aria-labelledby="about-heading" className="mt-10 space-y-6">
+    <ScrollReveal as="section" aria-labelledby="about-heading" className="mt-10 space-y-6">
       {hasRichHtml ? (
         <div>
           <h2
@@ -128,6 +129,6 @@ export function ProjectAbout({
           ) : null}
         </div>
       )}
-    </section>
+    </ScrollReveal>
   );
 }

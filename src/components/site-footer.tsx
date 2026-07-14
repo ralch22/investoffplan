@@ -60,7 +60,7 @@ export function SiteFooter() {
             <div className="absolute inset-0 bg-gradient-to-br from-surface-darker/70 to-surface-dark/90" />
             <div className="relative">
               <BrandLogo
-                variant="stacked-white-arlo"
+                variant="horizontal-white"
                 className="h-auto w-[10rem] max-w-full"
               />
               <nav className="mt-8 flex flex-wrap gap-x-6 gap-y-2">

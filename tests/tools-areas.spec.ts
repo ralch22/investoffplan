@@ -114,7 +114,8 @@ test.describe("Mortgage, areas, collections", () => {
       .locator('script[type="application/ld+json"]')
       .allTextContents();
     expect(jsonLd.some((s) => s.includes('"CollectionPage"'))).toBe(true);
-    await expect(page.getByRole("link", { name: "Open in Projects" })).toBeVisible();
+    // The page now embeds the full Projects SERP, so we can check for a filter button
+    await expect(page.getByRole("button", { name: /view/i }).first()).toBeVisible();
   });
 
   test("emirate collection filters by city", async ({ page }) => {

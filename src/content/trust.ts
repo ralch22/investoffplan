@@ -36,11 +36,7 @@ export const TESTIMONIALS: Testimonial[] = [];
 /** Real RERA ORN / DED license numbers only — never invented.
  * Source: official documents ingested 2026-07-11 (DED Commercial License +
  * RERA Office Registration card). Public broker-disclosure facts only. */
-export const LICENSE: { orn?: string; ded?: string; label?: string } = {
-  label: "ARLO PROPERTIES L.L.C",
-  orn: "50276",
-  ded: "1493767",
-};
+export const LICENSE: { orn?: string; ded?: string; label?: string } = {};
 
 /** Real people with real bios and consent to be listed. */
 export const TEAM: TeamMember[] = [];

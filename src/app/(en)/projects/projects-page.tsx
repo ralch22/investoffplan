@@ -13,7 +13,6 @@ import { LocaleLink } from "@/components/locale-link";
 import { Pagination } from "@/components/pagination";
 import { MobileFilterSheet } from "@/components/mobile-filter-sheet";
 import { DeveloperSpotlight } from "@/components/developer-spotlight";
-import { KnownDevelopers } from "@/components/known-developers";
 import { ProjectMap } from "@/components/project-map";
 import { CollectionChips } from "@/components/collection-chips";
 import { ProjectsSearchSync } from "@/components/projects-search-sync";
@@ -39,6 +38,7 @@ import type {
 import { interpolate } from "@/i18n";
 import { useI18n } from "@/i18n/locale-provider";
 import { unoptimizedProp } from "@/lib/asset-image";
+import { COLLECTION_PAGES } from "@/lib/collections";
 
 const isApiMode = process.env.NEXT_PUBLIC_CATALOG_API === "1";
 
@@ -130,6 +130,10 @@ interface ProjectsPageProps {
   initialMapProjects?: MapProject[];
   developerOptions?: Array<{ slug: string; name: string }>;
   amenityOptions?: string[];
+  fixedCollection?: CollectionFilter;
+  collectionSlug?: string;
+  disableApi?: boolean;
+  headerOverride?: React.ReactNode;
 }
 
 export function ProjectsPage({
@@ -140,7 +144,12 @@ export function ProjectsPage({
   initialMapProjects = [],
   developerOptions = [],
   amenityOptions = [],
+  fixedCollection,
+  collectionSlug,
+  disableApi = false,
+  headerOverride,
 }: ProjectsPageProps) {
+  const isApiActive = isApiMode && !disableApi;
   const { api, loading, error } = useCatalog();
   const currency = useCurrency();
 
@@ -151,7 +160,7 @@ export function ProjectsPage({
   const [sort, setSort] = useState<SortOption>(() => parseUrlFilters().sort);
   const [page, setPage] = useState<number>(() => parseUrlFilters().page);
   const [collection, setCollection] = useState<CollectionFilter>(
-    () => parseUrlFilters().collection,
+    () => fixedCollection ?? parseUrlFilters().collection,
   );
 
   const handleSync = useCallback(
@@ -179,6 +188,18 @@ export function ProjectsPage({
 
   const [apiData, setApiData] = useState<{ items: FlatUnit[], meta: any } | null>(null);
   const [apiLoading, setApiLoading] = useState(false);
+  const [headerScrolled, setHeaderScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      // The hero section on collections (if headerOverride exists) or normal header
+      // We just need a simple threshold to add shadow. 
+      // If we're past the initial position, we can just use 10px or similar.
+      setHeaderScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Save scroll position when navigating away (e.g. clicking into a PDP), so
   // back-navigation can restore it once the correct page data has loaded.
@@ -208,7 +229,7 @@ export function ProjectsPage({
   }, [page]);
 
   useEffect(() => {
-    if (!isApiMode) return;
+    if (!isApiActive) return;
     setApiLoading(true);
     const url = new URL("/api/catalog/projects", window.location.origin);
     url.searchParams.set("page", page.toString());
@@ -269,10 +290,22 @@ export function ProjectsPage({
 
   const filtered = useMemo(() => {
     if (!api) return [];
-    const base = api.applyCollectionFilter(api.filterUnits(allUnits, filters), collection);
+    let base = api.filterUnits(allUnits, filters);
+    
+    if (collectionSlug) {
+      const c = COLLECTION_PAGES.find(p => p.slug === collectionSlug);
+      if (c) {
+        if (c.city) base = base.filter((item) => (item.catalog?.citySlug ?? item.project.city) === c.city);
+        if (c.collection) base = api.applyCollectionFilter(base, c.collection);
+        if (c.predicate) base = base.filter(c.predicate);
+      }
+    } else {
+      base = api.applyCollectionFilter(base, collection);
+    }
+    
     const sorted = api.sortUnits(base, sort);
     return viewMode === "project" ? api.aggregateProjectView(sorted) : sorted;
-  }, [api, allUnits, filters, sort, viewMode, collection]);
+  }, [api, allUnits, filters, sort, viewMode, collection, collectionSlug]);
 
   // True when any SERP filter/collection narrows the catalog (ignore layout/sort/page).
   // Used so the Map view does not flash every pin while the client catalog hydrates
@@ -308,7 +341,7 @@ export function ProjectsPage({
   const catalogReady = Boolean(api);
   // Before the first API response lands (and in the SSR HTML), fall back to
   // the server-provided defaults so the page never paints "0 results".
-  const resultCount = isApiMode
+  const resultCount = isApiActive
     ? (apiData?.meta?.total ?? (isDefaultView ? initialResultCount : 0))
     : catalogReady
       ? filtered.length
@@ -316,7 +349,7 @@ export function ProjectsPage({
         ? initialResultCount
         : 0;
 
-  const totalPages = isApiMode
+  const totalPages = isApiActive
     ? (apiData?.meta?.totalPages ??
       (isDefaultView ? Math.max(1, Math.ceil(initialResultCount / PAGE_SIZE)) : 1))
     : catalogReady
@@ -326,7 +359,7 @@ export function ProjectsPage({
         : 1;
   const currentPage = Math.min(page, totalPages);
 
-  const pageItems = isApiMode
+  const pageItems = isApiActive
     ? (apiData?.items ?? (isDefaultView ? initialPageItems : []))
     : catalogReady
       ? filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
@@ -401,7 +434,7 @@ export function ProjectsPage({
 
   // Suppress the skeleton on first load in the default view — the SSR-provided
   // cards are already on screen and the first API response only confirms them.
-  const showCardSkeleton = isApiMode
+  const showCardSkeleton = isApiActive
     ? apiLoading && !(isDefaultView && !apiData && initialPageItems.length > 0)
     : loading && !catalogReady && (!isDefaultView || initialPageItems.length === 0);
 
@@ -443,9 +476,13 @@ export function ProjectsPage({
           collection={collection}
           page={page}
           sort={sort}
+          fixedCollection={fixedCollection}
           onSync={handleSync}
         />
       </Suspense>
+      {headerOverride ? (
+        headerOverride
+      ) : (
       <section className="relative overflow-hidden bg-surface-dark text-white">
         {heroImage ? (
           <Image
@@ -475,14 +512,10 @@ export function ProjectsPage({
           </p>
         </div>
       </section>
+      )}
 
       {/* PageShell owns the single <main> landmark — avoid nested mains (WCAG 1.3.1). */}
-      <section
-        className={cn(
-          "mx-auto max-w-[1200px] px-5 py-8 md:px-8",
-          compareIds.length > 0 && "max-md:pb-28",
-        )}
-      >
+      <section className="mx-auto max-w-[1200px] px-5 pt-8 md:px-8">
         <div className="-mt-10 hidden md:block">
           <div className="rounded-2xl border border-border bg-white p-4 shadow-lg">
             <ProjectFilters
@@ -493,8 +526,18 @@ export function ProjectsPage({
             />
           </div>
         </div>
+      </section>
 
-        <div className="-mx-5 border-b border-border bg-white/95 px-5 py-4 md:mx-0 md:mt-8 md:border-0 md:bg-transparent md:p-0">
+      {/* Sticky Secondary Bar */}
+      <div 
+        className={cn(
+          "sticky top-[var(--header-h)] z-[15] transition-all duration-300",
+          headerScrolled 
+            ? "bg-white/95 backdrop-blur-xl shadow-md border-b border-border/50 py-4" 
+            : "bg-white/95 border-b border-border py-4 md:bg-transparent md:border-0 md:pt-8 md:pb-4"
+        )}
+      >
+        <div className="mx-auto max-w-[1200px] px-5 md:px-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-3 md:hidden">
               <button
@@ -528,7 +571,7 @@ export function ProjectsPage({
 
             <div className="flex flex-wrap items-center gap-3">
               <div
-                className="inline-flex rounded-full border border-border p-0.5"
+                className="inline-flex rounded-full border border-border p-0.5 bg-white"
                 role="group"
                 aria-label={dict.a11y.viewMode}
               >
@@ -575,33 +618,45 @@ export function ProjectsPage({
                   setViewMode((v) => (v === "unit" ? "project" : "unit"));
                   setPage(1);
                 }}
-                className="iop-btn-press focus-ring rounded-full border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
+                className="iop-btn-press focus-ring rounded-full border border-brand bg-white px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
               >
                 {viewMode === "unit" ? s.view.showProjectView : s.view.showUnitView}
               </button>
-              <SortSelect
-                value={sort}
-                onChange={(next) => {
-                  setSort(next);
+              <div className="bg-white rounded-full">
+                <SortSelect
+                  value={sort}
+                  onChange={(next) => {
+                    setSort(next);
+                    setPage(1);
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 space-y-4">
+            <CityChips cities={cities} value={filters.city} onChange={updateCity} />
+            {!fixedCollection && (
+              <CollectionChips
+                value={collection}
+                onChange={(v) => {
+                  setCollection(v);
                   setPage(1);
                 }}
               />
-            </div>
+            )}
           </div>
-        </div>
 
-        <div className="mt-5 space-y-4">
-          <CityChips cities={cities} value={filters.city} onChange={updateCity} />
-          <CollectionChips
-            value={collection}
-            onChange={(v) => {
-              setCollection(v);
-              setPage(1);
-            }}
-          />
         </div>
+      </div>
 
-        <div className="mt-4">
+      <section
+        className={cn(
+          "mx-auto max-w-[1200px] px-5 pb-8 pt-4 md:px-8",
+          compareIds.length > 0 && "max-md:pb-28",
+        )}
+      >
+        <div className="mb-4">
           <CompareBar
             selectedIds={compareIds}
             onClear={() => {
@@ -632,17 +687,26 @@ export function ProjectsPage({
               <div className="w-full rounded-2xl border border-dashed border-border bg-surface-alt p-10 text-center">
                 <p className="text-lg font-medium text-text-dark">{s.empty.title}</p>
                 <p className="mt-2 text-sm text-muted">{s.empty.body}</p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFilters(DEFAULT_FILTERS);
-                    setCollection("all");
-                    setPage(1);
-                  }}
-                  className="iop-btn-press mt-6 rounded-full border border-brand px-6 py-2.5 text-sm font-semibold text-brand hover:bg-brand hover:text-white"
-                >
-                  {s.empty.clearAllFilters}
-                </button>
+                <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFilters(DEFAULT_FILTERS);
+                      setCollection("all");
+                      setPage(1);
+                    }}
+                    className="iop-btn-press rounded-full border border-border px-6 py-2.5 text-sm font-semibold text-text-dark hover:border-text-dark"
+                  >
+                    {s.empty.clearAllFilters}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => window.dispatchEvent(new Event("open-advisor"))}
+                    className="iop-btn-press rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
+                  >
+                    Ask the Off-Plan Advisor
+                  </button>
+                </div>
                 <p className="mt-6 text-sm">
                   <LocaleLink
                     href="/tools/investor-match"
@@ -678,7 +742,6 @@ export function ProjectsPage({
         {!showCardSkeleton ? (
           <>
             <DeveloperSpotlight />
-            <KnownDevelopers />
           </>
         ) : null}
       </section>

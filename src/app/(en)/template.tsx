@@ -11,13 +11,13 @@ import { useRef } from "react";
 // SPA navigations get initial={opacity:0} → animate to 1 (the intended fade).
 export default function Template({ children }: { children: React.ReactNode }) {
   const firstRender = useRef(true);
-  const initial = firstRender.current ? { opacity: 1 } : { opacity: 0 };
+  const initial = firstRender.current ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 };
   firstRender.current = false;
 
   return (
     <motion.div
       initial={initial}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
     >

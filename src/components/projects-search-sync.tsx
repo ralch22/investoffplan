@@ -27,6 +27,7 @@ interface ProjectsSearchSyncProps {
   collection: CollectionFilter;
   page: number;
   sort: SortOption;
+  fixedCollection?: CollectionFilter;
   onSync: (
     filters: Filters,
     collection: CollectionFilter,
@@ -40,6 +41,7 @@ export function ProjectsSearchSync({
   collection,
   page,
   sort,
+  fixedCollection,
   onSync,
 }: ProjectsSearchSyncProps) {
   const searchParams = useSearchParams();
@@ -63,7 +65,7 @@ export function ProjectsSearchSync({
     if (q) { newFilters.query = q; hasUpdates = true; }
 
     const c = searchParams.get("collection");
-    if (c) { newCollection = c as CollectionFilter; hasUpdates = true; }
+    if (!fixedCollection && c) { newCollection = c as CollectionFilter; hasUpdates = true; }
     
     const city = searchParams.get("city");
     if (city) { newFilters.city = city as CitySlug; hasUpdates = true; }
@@ -131,7 +133,7 @@ export function ProjectsSearchSync({
     if (hasUpdates) {
       onSync(newFilters, newCollection, newPage, newSort);
     }
-  }, [searchParams, filters, collection, page, sort, onSync]);
+  }, [searchParams, filters, collection, page, sort, fixedCollection, onSync]);
 
   // Write to URL on changes
   useEffect(() => {
@@ -147,7 +149,7 @@ export function ProjectsSearchSync({
     }
     const params = new URLSearchParams();
     if (filters.query) params.set("q", filters.query);
-    if (collection !== "all") params.set("collection", collection);
+    if (!fixedCollection && collection !== "all") params.set("collection", collection);
     if (filters.city !== "all") params.set("city", filters.city);
     if (filters.beds !== "all") params.set("beds", String(filters.beds));
     if (filters.propertyType !== "all") params.set("type", filters.propertyType);
@@ -170,7 +172,7 @@ export function ProjectsSearchSync({
     if (newSearch !== new URLSearchParams(window.location.search).toString()) {
       router.replace(`${pathname}${newSearch ? `?${newSearch}` : ""}`, { scroll: false });
     }
-  }, [filters, collection, page, sort, pathname, router]);
+  }, [filters, collection, page, sort, pathname, router, fixedCollection]);
 
   return null;
 }
