@@ -48,7 +48,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   // Soft metadata titles ("Community not found") with HTTP 200 are banned (#241 /
   // #305 content.spec). Prefer a real notFound() even if dynamicParams is skipped.
   if (!community) notFound();
-  const editorial = getAreaEditorial(slug);
+  // Metadata stays EN for the EN route (AR route has its own generateMetadata).
+  const editorial = getAreaEditorial(slug, "en");
   return {
     title: `Off-Plan Projects in ${community.name}, ${community.cityLabel}`,
     description:
@@ -111,7 +112,8 @@ export default async function CommunityDetailPage({ params, locale = "en" }: Pag
 
   const projects = await getProjectsByCommunity(slug);
   const communities = await getCommunities();
-  const editorial = getAreaEditorial(slug);
+  // Locale-aware editorial body (#375) — AR overlays when present.
+  const editorial = getAreaEditorial(slug, locale);
   const stats = computeCommunityStats(projects);
   const dldStats = getAreaStats(community.name);
   const dldSource = getDldSource();

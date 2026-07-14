@@ -1,4 +1,10 @@
 // AI-drafted, human-editable area editorial — rendered on /areas/[slug] when present.
+// EN body lives here; optional AR overlays live in `areas-ar.ts` (#375) so EN
+// strings stay byte-identical and AR can grow community-by-community.
+
+import type { Locale } from "@/i18n/config";
+import { AREA_EDITORIAL_AR } from "@/content/areas-ar";
+
 export interface AreaEditorial {
   slug: string;
   name: string;
@@ -10,6 +16,14 @@ export interface AreaEditorial {
   whoItSuits: string[];
   faq?: Array<{ q: string; a: string }>;
 }
+
+/** Locale-specific body sections (omit nearbyAreas — proper nouns stay shared). */
+export type AreaEditorialArOverlay = Partial<
+  Pick<
+    AreaEditorial,
+    "intro" | "lifestyle" | "transport" | "schools" | "whoItSuits" | "faq"
+  >
+>;
 
 export const AREA_EDITORIALS: AreaEditorial[] = [
   {
@@ -1143,6 +1157,27 @@ const BY_SLUG = new Map<string, AreaEditorial>();
 for (const area of GENERATED) BY_SLUG.set(area.slug, area);
 for (const area of AREA_EDITORIALS) BY_SLUG.set(area.slug, area);
 
-export function getAreaEditorial(slug: string): AreaEditorial | undefined {
-  return BY_SLUG.get(slug);
+/**
+ * Resolve area editorial for a locale. EN returns the catalog entry unchanged.
+ * AR prefers `AREA_EDITORIAL_AR[slug]` section overlays when present; missing
+ * AR sections fall back to EN so partial translations still render.
+ */
+export function getAreaEditorial(
+  slug: string,
+  locale: Locale = "en",
+): AreaEditorial | undefined {
+  const base = BY_SLUG.get(slug);
+  if (!base) return undefined;
+  if (locale !== "ar") return base;
+  const ar = AREA_EDITORIAL_AR[slug];
+  if (!ar) return base;
+  return {
+    ...base,
+    intro: ar.intro ?? base.intro,
+    lifestyle: ar.lifestyle ?? base.lifestyle,
+    transport: ar.transport ?? base.transport,
+    schools: ar.schools ?? base.schools,
+    whoItSuits: ar.whoItSuits ?? base.whoItSuits,
+    faq: ar.faq ?? base.faq,
+  };
 }
