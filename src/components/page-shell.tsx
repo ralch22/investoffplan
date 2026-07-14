@@ -8,6 +8,7 @@ import { useFavoritesSync } from "@/hooks/use-favorites-sync";
 import { useCurrency } from "@/hooks/use-currency";
 import { setCurrency } from "@/lib/currency";
 import { useI18n } from "@/i18n/locale-provider";
+import { cn } from "@/lib/cn";
 
 /** Which fixture owns the mobile bottom edge (exactly one). */
 export type MobileDock = "tabs" | "cta" | "none";
@@ -76,7 +77,10 @@ export function PageShell({
       <main
         id="main-content"
         tabIndex={-1}
-        className="flex-1 outline-none max-lg:pb-[var(--bottom-dock)]"
+        className={cn(
+          "flex-1 outline-none max-lg:pb-[var(--bottom-dock)]",
+          headerVariant !== "transparent" ? "pt-[var(--header-h)]" : ""
+        )}
       >
         {children}
       </main>

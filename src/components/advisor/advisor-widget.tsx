@@ -10,6 +10,7 @@ import { TurnstileField } from "@/components/turnstile-field";
 import { WHATSAPP_PRIMARY } from "@/lib/contact-info";
 import { bedsLabel, formatPrice } from "@/lib/format";
 import { cn } from "@/lib/cn";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
 import type {
   AdvisorCard,
   AdvisorMessage,
@@ -25,6 +26,7 @@ export function AdvisorWidget() {
   const { locale, dict } = useI18n();
   const t = dict.advisor;
   const [open, setOpen] = useState(false);
+  const scrollDir = useScrollDirection();
   const [entries, setEntries] = useState<ChatEntry[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [input, setInput] = useState("");
@@ -149,7 +151,7 @@ export function AdvisorWidget() {
         aria-label={open ? t.close : t.launcher}
         aria-expanded={open}
         aria-haspopup="dialog"
-        className="iop-btn-press focus-ring fixed end-5 z-[var(--z-sticky)] flex h-14 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-elevation-lg transition hover:bg-brand-dark bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap))] lg:bottom-[calc(1.25rem+var(--consent-h,0px))]"
+        className="iop-btn-press focus-ring fixed end-5 z-[var(--z-sticky)] flex h-14 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-elevation-lg transition-all duration-300 hover:bg-brand-dark bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap))] lg:bottom-[calc(1.25rem+var(--consent-h,0px))]"
       >
         <ChatIcon />
         <span className="hidden sm:inline">{t.launcher}</span>
@@ -159,12 +161,16 @@ export function AdvisorWidget() {
         <dialog
           ref={dialogRef}
           data-advisor-dialog
-          data-testid="advisor-panel"
           aria-label={t.title}
           onClose={() => setOpen(false)}
-          className="fixed end-5 top-auto start-auto z-[var(--z-modal)] m-0 flex w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white p-0 shadow-elevation-lg bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap)+4rem)] max-h-[min(32rem,calc(100dvh-var(--header-h)-var(--bottom-dock)-var(--consent-h,0px)-var(--fab-gap)-5rem))] backdrop:bg-transparent lg:bottom-[calc(6rem+var(--consent-h,0px))] lg:max-h-[min(32rem,calc(100dvh-8rem-var(--consent-h,0px)))]"
+          className="fixed inset-0 z-[var(--z-modal)] m-0 h-full w-full max-w-none bg-transparent p-0 flex flex-col justify-end items-end p-5 backdrop:bg-transparent"
         >
-          <div className="flex items-center justify-between gap-3 bg-surface-darker px-4 py-3 text-white">
+          {/* Inner container for the actual chat panel */}
+          <div 
+            data-testid="advisor-panel"
+            className="flex w-[min(26rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-elevation-lg mb-[calc(var(--bottom-dock)+var(--consent-h,0px)+4rem)] lg:mb-[calc(6rem+var(--consent-h,0px))] max-h-[min(32rem,calc(100dvh-var(--header-h)-var(--bottom-dock)-var(--consent-h,0px)-var(--fab-gap)-5rem))] lg:max-h-[min(32rem,calc(100dvh-8rem-var(--consent-h,0px)))]"
+          >
+            <div className="flex shrink-0 items-center justify-between gap-3 bg-surface-darker px-4 py-3 text-white">
             <div>
               <p className="text-sm font-semibold">{t.title}</p>
               <p className="text-xs text-white/70">{t.subtitle}</p>
@@ -312,6 +318,7 @@ export function AdvisorWidget() {
               {t.send}
             </button>
           </form>
+          </div>
         </dialog>
       ) : null}
     </>

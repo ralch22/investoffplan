@@ -53,9 +53,8 @@ export function SiteHeader({
       <header
         className={cn(
           "inset-x-0 top-0 z-[var(--z-header)] transition-all duration-300",
-          // fixed (not absolute) keeps the header reachable on scroll —
-          // out-of-flow like absolute, so heroes need no padding changes.
-          isTransparent ? "fixed" : "sticky",
+          // always fixed so it doesn't leave a layout gap when translated away
+          "fixed",
           hideHeader ? "max-lg:-translate-y-full" : "max-lg:translate-y-0",
           showSolidHeader
             ? "border-b border-border/80 bg-surface/95 shadow-elevation-sm backdrop-blur-xl"
