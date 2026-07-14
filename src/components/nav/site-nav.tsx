@@ -5,6 +5,7 @@ import Image from "next/image";
 import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/i18n/locale-provider";
 import { localePath } from "@/i18n/config";
 import { useNavData } from "@/components/nav/nav-data-provider";
@@ -160,34 +161,42 @@ export function SiteNav({ solid, onOpenChange }: SiteNavProps) {
 
       {/* Portaled to <body> so the fixed panel is viewport-anchored regardless
           of any transformed/will-change ancestor (route template, framer). */}
-      {open && mounted
+      {mounted
         ? createPortal(
-            <div
-              ref={panelRef}
-              tabIndex={-1}
-              id={`meganav-${open}`}
-              role="region"
-              aria-label={
-                open === "communities" ? dict.nav.areas
-                  : open === "tools" ? dict.nav.groups.tools
-                    : dict.nav.groups.insights
-              }
-              // Panel only mounts when open, and SiteNav itself is `hidden lg:flex`
-              // — do not use `hidden lg:block` here: that combo flakes Playwright
-              // visibility on CI (#325/#329) even at desktop viewport.
-              className="mega-in focus:outline-none fixed inset-x-0 top-[var(--header-h)] z-[var(--z-header)] block border-b border-border bg-surface/98 shadow-elevation-lg backdrop-blur-xl"
-              onPointerEnter={cancelClose}
-              onPointerLeave={scheduleClose}
-              onKeyDown={onKeyDown}
-            >
-              <div className="mx-auto max-w-[1200px] px-8 py-7">
-                {open === "communities" && (
-                  <CommunitiesPanel lp={lp} dict={dict} locale={locale} />
-                )}
-                {open === "tools" && <ToolsPanel lp={lp} dict={dict} />}
-                {open === "insights" && <InsightsPanel lp={lp} dict={dict} />}
-              </div>
-            </div>,
+            <AnimatePresence>
+              {open && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  ref={panelRef as any}
+                  tabIndex={-1}
+                  id={`meganav-${open}`}
+                  role="region"
+                  aria-label={
+                    open === "communities" ? dict.nav.areas
+                      : open === "tools" ? dict.nav.groups.tools
+                        : dict.nav.groups.insights
+                  }
+                  // Panel only mounts when open, and SiteNav itself is `hidden lg:flex`
+                  // — do not use `hidden lg:block` here: that combo flakes Playwright
+                  // visibility on CI (#325/#329) even at desktop viewport.
+                  className="focus:outline-none fixed inset-x-0 top-[var(--header-h)] z-[var(--z-header)] block border-b border-border bg-surface/98 shadow-elevation-lg backdrop-blur-xl"
+                  onPointerEnter={cancelClose}
+                  onPointerLeave={scheduleClose}
+                  onKeyDown={onKeyDown}
+                >
+                  <div className="mx-auto max-w-[1200px] px-8 py-7">
+                    {open === "communities" && (
+                      <CommunitiesPanel lp={lp} dict={dict} locale={locale} />
+                    )}
+                    {open === "tools" && <ToolsPanel lp={lp} dict={dict} />}
+                    {open === "insights" && <InsightsPanel lp={lp} dict={dict} />}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>,
             document.body,
           )
         : null}

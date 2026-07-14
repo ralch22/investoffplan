@@ -5,7 +5,6 @@ import { unoptimizedProp } from "@/lib/asset-image";
 export type BrandLogoVariant =
   | "horizontal-dark"
   | "horizontal-white"
-  | "stacked-white-arlo"
   | "icon-red";
 
 const LOGOS: Record<
@@ -24,12 +23,7 @@ const LOGOS: Record<
     height: 41,
     sizes: "180px",
   },
-  "stacked-white-arlo": {
-    src: "/brand/stacked-white-arlo.svg",
-    width: 200,
-    height: 102,
-    sizes: "200px",
-  },
+
   "icon-red": {
     src: "/brand/icon-red.svg",
     width: 48,
