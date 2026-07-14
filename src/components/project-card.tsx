@@ -258,11 +258,11 @@ function ListCard({
             sizes="(max-width: 768px) 100vw, 320px"
             className="h-full rounded-none md:rounded-s-2xl"
           />
-          <span className="pointer-events-none absolute start-4 top-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark">
+          <span className="pointer-events-none absolute start-4 top-4 z-10 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-text-dark">
             {unitCountLabel(dict, locale, unitCount, unit.propertyType)}
           </span>
           {paymentLabel ? (
-            <span className="pointer-events-none absolute bottom-4 start-4 z-30 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
+            <span className="pointer-events-none absolute bottom-4 start-4 z-10 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand">
               {paymentLabel}
             </span>
           ) : null}
