@@ -48,6 +48,17 @@ export function SiteHeader({
     return () => window.removeEventListener("scroll", onScroll);
   }, [isTransparent]);
 
+  useEffect(() => {
+    if (hideHeader) {
+      document.body.classList.add("header-hidden");
+    } else {
+      document.body.classList.remove("header-hidden");
+    }
+    return () => {
+      document.body.classList.remove("header-hidden");
+    };
+  }, [hideHeader]);
+
   return (
     <>
       <header

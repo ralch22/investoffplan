@@ -531,10 +531,10 @@ export function ProjectsPage({
       {/* Sticky Secondary Bar */}
       <div 
         className={cn(
-          "sticky top-[var(--header-h)] z-[15] transition-all duration-300",
+          "sticky sticky-under-header z-[15] transition-all duration-300",
           headerScrolled 
-            ? "bg-white/95 backdrop-blur-xl shadow-md border-b border-border/50 py-4" 
-            : "bg-white/95 border-b border-border py-4 md:bg-transparent md:border-0 md:pt-8 md:pb-4"
+            ? "bg-surface/95 backdrop-blur-xl shadow-md border-b border-border py-4" 
+            : "bg-surface/95 backdrop-blur-xl border-b border-border py-4 md:pt-8 md:pb-4"
         )}
       >
         <div className="mx-auto max-w-[1200px] px-5 md:px-8">
