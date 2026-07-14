@@ -6,9 +6,9 @@ import {
 import { executeTool, TOOL_DEFINITIONS, type ToolContext } from "./tools";
 import type { AdvisorCard, AdvisorMessage, AdvisorResponse } from "./types";
 
-const MODEL = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
+const MODEL = "@cf/meta/llama-3.1-8b-instruct";
 const MAX_STEPS = 4;
-const MAX_HISTORY = 12;
+const MAX_HISTORY = 6;
 
 const SYSTEM_PROMPT = `You are the Off-Plan Advisor for invest off-plan (investoffplan.com), a UAE off-plan property intelligence platform run by Aria Properties LLC, a licensed Dubai brokerage (DRN 20678).
 
