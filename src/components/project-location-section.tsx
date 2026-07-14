@@ -1,5 +1,5 @@
 import { LocaleLink } from "@/components/locale-link";
-import { cityLabel } from "@/lib/format";
+import { cityLabel, googleMapsSearchQuery } from "@/lib/format";
 import { communitySlugFor } from "@/lib/community-slug";
 import type { Project } from "@/lib/types";
 import { getDictionary, interpolate, type Locale } from "@/i18n";
@@ -17,9 +17,12 @@ export function ProjectLocationSection({
   const t = dict.pdp;
   const areaSlug = communitySlugFor(project.area);
   const areaShort = project.area.split(",")[0];
+  // #381 — fallback search must use the project's emirate, not hardcoded Dubai.
   const googleMapsUrl = project.coordinates
     ? `https://www.google.com/maps?q=${project.coordinates.lat},${project.coordinates.lng}`
-    : `https://www.google.com/maps/search/${encodeURIComponent(project.area + " Dubai UAE")}`;
+    : `https://www.google.com/maps/search/${encodeURIComponent(
+        googleMapsSearchQuery(project.area, project.city, dict),
+      )}`;
   const osmEmbed = project.coordinates
     ? `https://www.openstreetmap.org/export/embed.html?bbox=${project.coordinates.lng - 0.02}%2C${project.coordinates.lat - 0.015}%2C${project.coordinates.lng + 0.02}%2C${project.coordinates.lat + 0.015}&layer=mapnik&marker=${project.coordinates.lat}%2C${project.coordinates.lng}`
     : null;
