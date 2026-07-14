@@ -19,7 +19,7 @@ export function PaymentRibbon({ label, className }: PaymentRibbonProps) {
   return (
     <div
       className={cn(
-        "pointer-events-none absolute -start-2 top-4 z-30 flex select-none flex-col items-start",
+        "pointer-events-none absolute -start-2 top-4 z-10 flex select-none flex-col items-start",
         className,
       )}
     >

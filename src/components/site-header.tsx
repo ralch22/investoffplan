@@ -14,6 +14,7 @@ import { useI18n } from "@/i18n/locale-provider";
 import { interpolate, localePath } from "@/i18n/config";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { UserMenu } from "@/components/auth/user-menu";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
 
 interface SiteHeaderProps {
   currency: CurrencyCode;
@@ -31,9 +32,12 @@ export function SiteHeader({
   const [megaOpen, setMegaOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const favoritesCount = useFavoritesCount();
+  const scrollDir = useScrollDirection();
   const isTransparent = variant === "transparent";
   // An open mega panel forces the header solid so panel + header read as one.
   const showSolidHeader = !isTransparent || scrolled || megaOpen;
+  // Hide on scroll down past the header height to save screen real estate on mobile
+  const hideHeader = scrollDir === "down" && scrolled && !megaOpen && !mobileOpen;
 
   useEffect(() => {
     if (!isTransparent) return;
@@ -48,10 +52,11 @@ export function SiteHeader({
     <>
       <header
         className={cn(
-          "inset-x-0 top-0 z-[var(--z-header)] transition-[background-color,box-shadow,border-color] duration-300",
+          "inset-x-0 top-0 z-[var(--z-header)] transition-all duration-300",
           // fixed (not absolute) keeps the header reachable on scroll —
           // out-of-flow like absolute, so heroes need no padding changes.
           isTransparent ? "fixed" : "sticky",
+          hideHeader ? "max-lg:-translate-y-full" : "max-lg:translate-y-0",
           showSolidHeader
             ? "border-b border-border/80 bg-surface/95 shadow-elevation-sm backdrop-blur-xl"
             : isTransparent
