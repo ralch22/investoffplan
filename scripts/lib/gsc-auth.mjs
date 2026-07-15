@@ -18,12 +18,28 @@ const TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token";
 export const SITE_URL = "sc-domain:investoffplan.com";
 export const SCOPE_READONLY = "https://www.googleapis.com/auth/webmasters.readonly";
 
+// JSON that parses but isn't a key (an OAuth client file, say) otherwise dies
+// deep in crypto with "No key provided to sign", which names neither the
+// credential nor the problem. Fail where the mistake actually is.
+function validated(sa, source) {
+  for (const field of ["client_email", "private_key"]) {
+    if (!sa?.[field]) {
+      throw new Error(
+        `${source} is not a service-account key — no "${field}". ` +
+          `Expected the JSON produced by \`gcloud iam service-accounts keys create\`.`,
+      );
+    }
+  }
+  return sa;
+}
+
 function loadKey() {
   if (process.env.GSC_SA_KEY) {
     try {
-      return JSON.parse(process.env.GSC_SA_KEY);
-    } catch {
-      throw new Error("GSC_SA_KEY is set but is not valid JSON");
+      return validated(JSON.parse(process.env.GSC_SA_KEY), "GSC_SA_KEY");
+    } catch (e) {
+      if (e instanceof SyntaxError) throw new Error("GSC_SA_KEY is set but is not valid JSON");
+      throw e;
     }
   }
   let size = 0;
@@ -39,7 +55,7 @@ function loadKey() {
   }
   // A 0-byte file reads as "absent" to a naive try/catch. Say what's actually wrong.
   if (size === 0) throw new Error(`${SA_KEY_PATH} exists but is EMPTY (0 bytes) — the key was never written.`);
-  return JSON.parse(readFileSync(SA_KEY_PATH, "utf8"));
+  return validated(JSON.parse(readFileSync(SA_KEY_PATH, "utf8")), SA_KEY_PATH);
 }
 
 export async function getAccessToken(scope = SCOPE_READONLY) {
