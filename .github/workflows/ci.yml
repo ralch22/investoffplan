@@ -27,6 +27,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Cheapest gate first — runs in ~1s, needs no browser and no build. Covers
+      # the catalog merge rules, where a regression silently deletes content
+      # that no scraper can reproduce.
+      - name: Unit tests
+        run: npm run test:unit
+
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         id: playwright-cache
