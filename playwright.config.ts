@@ -12,6 +12,28 @@ export default defineConfig({
     trace: "off",
   },
 
+  // Two projects share ONE webServer (webServer is top-level, started once).
+  // Split by path so the existing suite keeps its own per-test viewports and
+  // the mobile suite gets real phone emulation without touching either.
+  // Explicit chromium emulation rather than devices["iPhone 14"]: the device
+  // presets set defaultBrowserType "webkit", and CI installs chromium only.
+  projects: [
+    {
+      name: "desktop",
+      testIgnore: /tests\/mobile\//,
+    },
+    {
+      name: "mobile",
+      testMatch: /tests\/mobile\/.*\.spec\.ts/,
+      use: {
+        viewport: { width: 390, height: 844 },
+        deviceScaleFactor: 3,
+        isMobile: true,
+        hasTouch: true,
+      },
+    },
+  ],
+
   webServer: {
     // Production server — avoids Turbopack dev-cache corruption during e2e.
     // CI already runs `npm run build` + D1 migrate/seed in workflow steps, so only

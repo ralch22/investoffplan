@@ -65,7 +65,7 @@ export default async function Page() {
         }}
         initialPageItems={initialPageItems}
         initialCityCounts={initialCityCounts}
-        initialResultCount={api.meta.projectCount}
+        initialResultCount={api.projects.length}
         initialMapProjects={initialMapProjects}
         developerOptions={developerOptions}
         amenityOptions={amenityOptions}

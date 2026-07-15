@@ -43,7 +43,7 @@ export default async function ArabicProjectsPage() {
       }}
       initialPageItems={initialPageItems}
       initialCityCounts={initialCityCounts}
-      initialResultCount={api.meta.projectCount}
+      initialResultCount={api.projects.length}
       initialMapProjects={initialMapProjects}
       developerOptions={developerOptions}
       amenityOptions={amenityOptions}

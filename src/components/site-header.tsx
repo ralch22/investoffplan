@@ -146,6 +146,8 @@ export function SiteHeader({
               )}
               aria-label={dict.nav.openMenu}
               aria-expanded={mobileOpen}
+              aria-haspopup="dialog"
+              aria-controls="mobile-nav-dialog"
               onClick={() => setMobileOpen(true)}
             >
               <svg viewBox="0 0 20 20" className="h-5 w-5" aria-hidden>

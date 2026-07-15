@@ -98,6 +98,7 @@ export function MobileNav({ open, onClose, currency, onCurrencyChange }: MobileN
   return (
     <dialog
       ref={dialogRef}
+      id="mobile-nav-dialog"
       aria-label={dict.a11y.mobileNav}
       onClose={onClose}
       onClick={(e) => {

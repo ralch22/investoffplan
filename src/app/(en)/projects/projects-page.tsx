@@ -528,10 +528,13 @@ export function ProjectsPage({
         </div>
       </section>
 
-      {/* Sticky Secondary Bar */}
-      <div 
+      {/* Secondary bar: sticky on md+ only. On phones the stacked block
+          (filter trigger + heading + count + toggles) is ~300px tall — pinned
+          it permanently covered a third of the viewport and swallowed taps on
+          content scrolling beneath it. */}
+      <div
         className={cn(
-          "sticky top-[var(--header-h)] z-[15] transition-all duration-300",
+          "md:sticky md:top-[var(--header-h)] z-[15] transition-all duration-300",
           headerScrolled 
             ? "bg-white/95 backdrop-blur-xl shadow-md border-b border-border/50 py-4" 
             : "bg-white/95 border-b border-border py-4 md:bg-transparent md:border-0 md:pt-8 md:pb-4"
@@ -579,7 +582,7 @@ export function ProjectsPage({
                   type="button"
                   onClick={() => setCardLayout("grid")}
                   aria-pressed={cardLayout === "grid"}
-                  className={`iop-btn-press focus-ring rounded-full px-3 py-1.5 text-xs font-semibold ${
+                  className={`iop-btn-press focus-ring min-h-11 items-center inline-flex rounded-full px-3 py-1.5 text-xs font-semibold ${
                     cardLayout === "grid"
                       ? "bg-brand text-white"
                       : "text-muted hover:text-brand"
@@ -591,7 +594,7 @@ export function ProjectsPage({
                   type="button"
                   onClick={() => setCardLayout("list")}
                   aria-pressed={cardLayout === "list"}
-                  className={`iop-btn-press focus-ring rounded-full px-3 py-1.5 text-xs font-semibold ${
+                  className={`iop-btn-press focus-ring min-h-11 items-center inline-flex rounded-full px-3 py-1.5 text-xs font-semibold ${
                     cardLayout === "list"
                       ? "bg-brand text-white"
                       : "text-muted hover:text-brand"
@@ -603,7 +606,7 @@ export function ProjectsPage({
                   type="button"
                   onClick={() => setCardLayout("map")}
                   aria-pressed={cardLayout === "map"}
-                  className={`iop-btn-press focus-ring rounded-full px-3 py-1.5 text-xs font-semibold ${
+                  className={`iop-btn-press focus-ring min-h-11 items-center inline-flex rounded-full px-3 py-1.5 text-xs font-semibold ${
                     cardLayout === "map"
                       ? "bg-brand text-white"
                       : "text-muted hover:text-brand"

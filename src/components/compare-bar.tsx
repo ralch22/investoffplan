@@ -47,6 +47,7 @@ export function CompareBar({
       layout
       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
       data-hydrated={hydrated ? "true" : "false"}
+      data-compare-active={active || undefined}
       className={cn(
         "flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface px-4 py-3 text-sm shadow-elevation-sm transition-transform duration-300",
         active &&

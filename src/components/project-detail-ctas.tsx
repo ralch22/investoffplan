@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BrochureButton } from "@/components/brochure-button";
 import { BrochureModal } from "@/components/brochure-modal";
 import { ContactButton } from "@/components/contact-button";
@@ -28,6 +28,29 @@ export function ProjectDetailCtas({
 }: ProjectDetailCtasProps) {
   const [brochureOpen, setBrochureOpen] = useState(false);
   const { dict } = useI18n();
+  const barRef = useRef<HTMLDivElement>(null);
+
+  // Publish the bar's MEASURED height to :root --dock-cta-h (stylesheet 5.25rem
+  // stays the SSR fallback). PageShell maps it into --bottom-dock, so main
+  // padding / FAB / compare bar auto-track 2-line labels (AR) instead of
+  // trusting a hardcoded approximation. Mirrors setConsentHeightPx.
+  useEffect(() => {
+    const bar = barRef.current;
+    if (!bar) return;
+    const root = document.documentElement;
+    const publish = () => {
+      const h = bar.offsetHeight;
+      if (h > 0) root.style.setProperty("--dock-cta-h", `${Math.ceil(h)}px`);
+      else root.style.removeProperty("--dock-cta-h");
+    };
+    publish();
+    const ro = new ResizeObserver(publish);
+    ro.observe(bar);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty("--dock-cta-h");
+    };
+  }, []);
   const cta = dict.pdp.cta;
 
   const whatsappHref = withUtm(`https://wa.me/${whatsapp.replace(/\D/g, "")}`, {
@@ -94,7 +117,8 @@ export function ProjectDetailCtas({
       </div>
 
       <div
-        className="fixed inset-x-0 bottom-0 z-[var(--z-sticky)] border-t border-border bg-surface/95 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-elevation-lg backdrop-blur-xl lg:hidden"
+        ref={barRef}
+        className="fixed inset-x-0 bottom-[var(--consent-h,0px)] z-[var(--z-bottom-bar)] border-t border-border bg-surface/95 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-elevation-lg backdrop-blur-xl lg:hidden"
         role="region"
         aria-label={dict.a11y.quickActions}
       >

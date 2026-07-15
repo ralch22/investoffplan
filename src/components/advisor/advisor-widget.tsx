@@ -40,12 +40,29 @@ export function AdvisorWidget() {
   const [leadToken, setLeadToken] = useState("");
   const [leadTokenReset, setLeadTokenReset] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleOpen = () => setOpen(true);
     window.addEventListener("open-advisor", handleOpen);
     return () => window.removeEventListener("open-advisor", handleOpen);
   }, []);
+
+  // The panel is a framer-motion drawer, not a native <dialog> — restore the
+  // keyboard contract showModal used to give us: Escape closes, focus returns
+  // to the launcher.
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setOpen(false);
+        launcherRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
@@ -132,6 +149,7 @@ export function AdvisorWidget() {
           is open (gallery lightbox, etc.) so the FAB never covers gallery
           controls. Bottom offset reads --bottom-dock from PageShell. */}
       <button
+        ref={launcherRef}
         type="button"
         data-advisor-chrome
         data-testid="advisor-launcher"
@@ -139,7 +157,7 @@ export function AdvisorWidget() {
         aria-label={open ? t.close : t.launcher}
         aria-expanded={open}
         aria-haspopup="dialog"
-        className="iop-btn-press focus-ring fixed end-5 z-[var(--z-sticky)] flex h-14 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-elevation-lg transition-all duration-300 hover:bg-brand-dark bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap))] lg:bottom-[calc(1.25rem+var(--consent-h,0px))]"
+        className="iop-btn-press focus-ring fixed end-5 z-[var(--z-sticky)] flex h-14 items-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white shadow-elevation-lg transition-all duration-300 hover:bg-brand-dark bottom-[calc(var(--bottom-dock)+var(--consent-h,0px)+var(--fab-gap)+var(--compare-bar-clearance,0px))] lg:bottom-[calc(1.25rem+var(--consent-h,0px))]"
       >
         <ChatIcon />
         <span className="hidden sm:inline">{t.launcher}</span>
@@ -168,6 +186,7 @@ export function AdvisorWidget() {
               data-advisor-panel
               className="fixed inset-0 z-[var(--z-modal)] flex flex-col overflow-hidden bg-surface sm:start-auto sm:w-[500px] lg:w-[600px] sm:rounded-l-3xl shadow-elevation-2xl"
               role="dialog"
+              aria-modal="true"
               aria-label={t.title}
             >
               <div className="flex shrink-0 items-center justify-between gap-3 bg-surface-darker px-4 py-4 text-white sm:px-6">

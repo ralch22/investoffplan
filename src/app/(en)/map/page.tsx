@@ -57,11 +57,12 @@ export async function MapPageContent({
         imageUrl={heroImage}
       />
 
-      <main className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
+      {/* div, not <main> — PageShell already renders main#main-content. */}
+      <div className="mx-auto max-w-[1200px] px-5 py-10 md:px-8">
         <Suspense fallback={<MapLoading />}>
           <ProjectMap initialProjects={mapProjects} initialSelected={initialSelected} />
         </Suspense>
-      </main>
+      </div>
 
       <section className="border-t border-border bg-white py-14">
         <div className="mx-auto grid grid-cols-1 max-w-[1200px] gap-8 px-5 md:grid-cols-2 md:items-center md:px-8">
