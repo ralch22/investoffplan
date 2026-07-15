@@ -42,11 +42,14 @@ that was done, and it changed nothing.
 ## What actually moved the needle
 
 Submitting the sitemap. On 2026-07-15 Google was sitting on a stale crawl of
-the homepage from **July 4** — back when the domain still served the
-pre-DNS-cutover placeholder — and reporting
+the homepage from **July 4** and reporting
 `coverageState: "Excluded by 'noindex' tag"` even though the live site has no
-`noindex` anywhere and no `X-Robots-Tag`. That single stale verdict suppressed
-crawl priority for everything behind it.
+`noindex` anywhere and no `X-Robots-Tag` — verified on the live HTML, and the
+codebase only sets `noindex` where it should (thin sold-prices pages). The
+likely explanation is that on July 4 the domain was still serving the
+pre-DNS-cutover placeholder, but that was never confirmed and no longer
+matters. That single stale verdict suppressed crawl priority for everything
+behind it.
 
 Google downloaded the sitemap at `11:04:51Z` and re-crawled the homepage at
 `14:03:13Z` the same day — `PASS`, `robotsTxtState: ALLOWED`,
