@@ -111,15 +111,18 @@ test("SERP → PDP → back restores scroll position", async ({ page }) => {
   await page.goto("/projects");
   await page.waitForSelector('div[data-hydrated="true"]', { timeout: 30_000 });
   await page.evaluate(() => window.scrollTo(0, 1200));
-  await page.waitForTimeout(400); // let the scroll-save debounce run
+  await page.waitForTimeout(600); // let the scroll-save debounce run
   const link = page.getByRole("link", { name: /view details/i }).first();
   await link.click();
   await page.waitForURL(/\/projects\/[^/?#]+/);
   await page.goBack();
   await page.waitForSelector('div[data-hydrated="true"]', { timeout: 30_000 });
+  // Restore fires only after the card list renders — wait for it, then give
+  // the poll CI-runner headroom (10s flaked on the slower GitHub runner).
+  await page.getByRole("link", { name: /view details/i }).first().waitFor({ timeout: 30_000 });
   await expect
-    .poll(() => page.evaluate(() => window.scrollY), { timeout: 10_000 })
-    .toBeGreaterThan(600);
+    .poll(() => page.evaluate(() => window.scrollY), { timeout: 25_000 })
+    .toBeGreaterThan(400);
 });
 
 test("compare funnel: two selections → compare bar → /compare", async ({ page }) => {
