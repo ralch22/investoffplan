@@ -1,7 +1,7 @@
 #!/usr/bin/env npx tsx
 /**
  * Ingest Property Finder new-projects unit view into InvestOffPlan catalog.
- * Source: __NEXT_DATA__.props.pageProps.unitLevelListings (24/page, ~63 pages).
+ * Source: __NEXT_DATA__.props.pageProps.unitLevelListings (24/page).
  *
  *   npx tsx scripts/scrape-pf-catalog.ts
  *   npx tsx scripts/scrape-pf-catalog.ts --pages 3   # smoke test — never writes
@@ -24,36 +24,16 @@ import {
   MIN_PROJECT_RETENTION,
   MIN_UNIT_COMPLETENESS,
 } from "./lib/catalog-merge";
+import {
+  parsePagePayload,
+  type PfPageResult,
+  type PfUnit,
+} from "./lib/pf-page-payload";
 
 const BASE =
   "https://www.propertyfinder.ae/en/new-projects?view=unit_types";
 const OUT = join(process.cwd(), "data", "catalog.json");
 const PAGE_DELAY_MS = 1200;
-
-interface PfUnit {
-  id: string;
-  projectId: string;
-  slug: string;
-  title: string;
-  propertyType: string;
-  bedrooms: number;
-  area: { min: number; max: number };
-  location: { fullName: string; coordinates?: { lat: number; lng: number } };
-  startingPrice: { min: number; max: number };
-  paymentPlan: Array<{
-    downPayment: number;
-    duringConstruction: number;
-    handover: number;
-    afterHandover: number;
-  }>;
-  images: Array<{ small?: string; medium?: string; large?: string }>;
-  videoAvailable?: boolean;
-  developer: { name: string; logo?: string; slug?: string };
-  completionDate?: string;
-  contactOptions?: Array<{ type: string; value?: string }>;
-  listingLevel?: string;
-  stockStatus?: string;
-}
 
 function parseArgs() {
   const pagesIdx = process.argv.indexOf("--pages");
@@ -115,76 +95,64 @@ function initials(name: string): string {
     .toUpperCase();
 }
 
-function parsePagePayload(payload: string) {
-  const data = JSON.parse(payload);
-  const props = data?.props?.pageProps ?? {};
-  const units = (props.unitLevelListings ?? []) as PfUnit[];
-  const meta = props.searchResult?.meta ?? {};
-  const devList = props.devList ?? [];
-  const developerSerpLinks =
-    props.seoData?.developerSerpPages?.links?.map(
-      (l: { title: string; path: string }) => ({
-        title: l.title,
-        path: l.path,
-      }),
-    ) ?? [];
-
-  return {
-    units,
-    total: meta?.count?.total ?? units.length,
-    totalPages: meta?.pagination?.total ?? 1,
-    devList,
-    developerSerpLinks,
-  };
-}
-
+/**
+ * Fetch one page of the unit view, retrying only what is worth retrying: a
+ * navigation or render failure. A page that renders and reports no unit view
+ * (`units: null`) is an answer, not a failure — see parsePagePayload — and the
+ * caller reads it differently depending on which page asked.
+ */
 async function fetchPageUnits(
   browserPage: import("playwright").Page,
   pageNum: number,
-): Promise<{
-  units: PfUnit[];
-  total: number;
-  totalPages: number;
-  devList: unknown[];
-  developerSerpLinks: Array<{ title: string; path: string }>;
-}> {
+): Promise<PfPageResult> {
   const url = pageNum === 1 ? BASE : `${BASE}&page=${pageNum}`;
+  let lastError: Error | undefined;
 
   for (let attempt = 0; attempt < 3; attempt++) {
-    await browserPage.goto(url, {
-      waitUntil: attempt === 0 ? "networkidle" : "domcontentloaded",
-      timeout: 120000,
-    });
-    await browserPage.waitForFunction(
-      () => {
-        const el = document.getElementById("__NEXT_DATA__");
-        if (!el?.textContent) return false;
-        try {
-          const data = JSON.parse(el.textContent);
-          const listings = data?.props?.pageProps?.unitLevelListings;
-          return Array.isArray(listings) && listings.length > 0;
-        } catch {
-          return false;
-        }
-      },
-      { timeout: 90000 },
-    );
+    try {
+      await browserPage.goto(url, {
+        waitUntil: attempt === 0 ? "networkidle" : "domcontentloaded",
+        timeout: 120000,
+      });
 
-    const payload = await browserPage.evaluate(() => {
-      const el = document.getElementById("__NEXT_DATA__");
-      return el?.textContent || "";
-    });
+      // Wait for the page to render, not for it to have results. __NEXT_DATA__
+      // is server-rendered, so its presence is the entire signal; waiting on
+      // listings instead means a page that legitimately has none costs a full
+      // timeout and then throws.
+      await browserPage.waitForFunction(
+        () => {
+          const el = document.getElementById("__NEXT_DATA__");
+          if (!el?.textContent) return false;
+          try {
+            return !!JSON.parse(el.textContent)?.props?.pageProps;
+          } catch {
+            return false;
+          }
+        },
+        // waitForFunction(pageFunction, arg, options): options passed in the
+        // second slot become the callback's argument and are never applied, so
+        // the timeout below silently used to be Playwright's 30s default.
+        undefined,
+        { timeout: 90000 },
+      );
 
-    const parsed = parsePagePayload(payload);
-    if (parsed.units.length > 0) return parsed;
-
-    console.warn(
-      `[scrape-pf] page ${pageNum} empty (attempt ${attempt + 1}/3), retrying…`,
-    );
-    await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+      const payload = await browserPage.evaluate(
+        () => document.getElementById("__NEXT_DATA__")?.textContent || "",
+      );
+      return parsePagePayload(payload);
+    } catch (err) {
+      lastError = err as Error;
+      console.warn(
+        `[scrape-pf] page ${pageNum} failed (attempt ${attempt + 1}/3): ` +
+          `${lastError.message.split("\n")[0]}`,
+      );
+      await new Promise((r) => setTimeout(r, 2000 * (attempt + 1)));
+    }
   }
 
-  throw new Error(`[scrape-pf] page ${pageNum} returned 0 unitLevelListings`);
+  throw new Error(
+    `[scrape-pf] page ${pageNum} failed after 3 attempts: ${lastError?.message}`,
+  );
 }
 
 async function main() {
@@ -192,7 +160,7 @@ async function main() {
   console.log("[scrape-pf] starting unit-view ingest…");
 
   // Read the catalog we have to merge onto before touching the network: if it
-  // is unreadable, say so in 10ms rather than after ~90 minutes of politely
+  // is unreadable, say so in 10ms rather than after ~20 minutes of politely
   // rate-limited pagination.
   const previous = loadPreviousCatalog(OUT);
   console.log(
@@ -205,16 +173,20 @@ async function main() {
 
   try {
     const first = await fetchPageUnits(browserPage, 1);
-    if (first.units.length === 0) {
-      throw new Error("[scrape-pf] page 1 returned no units — aborting");
-    }
-    const unitViewPages = first.totalPages;
-    if (unitViewPages > 70) {
+    // No unit view on page 1 means the view itself is gone — PF ignoring
+    // view=unit_types, or the payload moving. Nothing later can recover from
+    // that, so say which it is rather than paginating through all of it.
+    if (!first.units?.length) {
       throw new Error(
-        `[scrape-pf] expected ~63 unit-view pages, got ${unitViewPages} (project view?)`,
+        first.units === null
+          ? "[scrape-pf] page 1 has no unitLevelListings — PF did not serve the " +
+            `unit view for ${BASE} (its answer describes ${first.total} results ` +
+            `over ${first.totalPages} pages)`
+          : "[scrape-pf] page 1 returned an empty unit view — aborting",
       );
     }
-    const totalPages = maxPages ?? unitViewPages;
+
+    const totalPages = maxPages ?? first.totalPages;
     const allUnits: PfUnit[] = [...first.units];
     let devList = first.devList;
     let developerSerpLinks = first.developerSerpLinks;
@@ -225,7 +197,31 @@ async function main() {
 
     for (let p = 2; p <= totalPages; p++) {
       await new Promise((r) => setTimeout(r, PAGE_DELAY_MS));
-      const res = await fetchPageUnits(browserPage, p);
+      let res = await fetchPageUnits(browserPage, p);
+
+      // Out of results — but confirm before believing it. PF's count is a
+      // snapshot taken at page 1 and this scrape runs for ~20 minutes, so the
+      // tail legitimately moves: pages it promised may stop existing, and PF
+      // answers those by dropping the unit view rather than by returning an
+      // empty one. That is the expected way to finish. A single bad answer
+      // mid-run looks identical and would truncate the catalog quietly, so pay
+      // one re-fetch to tell them apart.
+      if (!res.units?.length) {
+        await new Promise((r) => setTimeout(r, PAGE_DELAY_MS * 3));
+        res = await fetchPageUnits(browserPage, p);
+      }
+
+      // Still nothing: stop and keep what we have. MIN_UNIT_COMPLETENESS below
+      // decides whether it is enough to write. Treating this as an error is
+      // what used to discard a whole run at the last page.
+      if (!res.units?.length) {
+        console.log(
+          `[scrape-pf] page ${p}/${totalPages} — no listings on two attempts, ` +
+            `stopping (${allUnits.length}/${first.total} units collected)`,
+        );
+        break;
+      }
+
       allUnits.push(...res.units);
       if (res.devList?.length) devList = res.devList;
       if (res.developerSerpLinks?.length)
