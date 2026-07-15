@@ -1,6 +1,6 @@
 import { asc, count, eq, inArray } from "drizzle-orm";
-import { createCatalogApi, type CatalogFile, type FlatUnit, PAGE_SIZE } from "@/lib/catalog-core";
-import { fetchActivePlacements } from "@/lib/placements";
+import { createCatalogApi, type CatalogApi, type CatalogFile, type FlatUnit, PAGE_SIZE } from "@/lib/catalog-core";
+import { fetchActivePlacements, type Placement } from "@/lib/placements";
 import {
   catalogQueryKey,
   decodeCatalogCursor,
@@ -20,10 +20,17 @@ import {
   projects,
 } from "./schema";
 
+// Memoize TRUE only: a seeded DB never becomes unseeded mid-flight, but a
+// failed check must stay retryable. Saves one D1 query on EVERY catalog API
+// request after the first.
+let seededMemo = false;
+
 export async function isCatalogDbSeeded(db: CatalogDatabase): Promise<boolean> {
+  if (seededMemo) return true;
   try {
     const meta = await db.select().from(catalogMeta).where(eq(catalogMeta.id, 1)).get();
-    return Boolean(meta);
+    seededMemo = Boolean(meta);
+    return seededMemo;
   } catch {
     // Table may not exist in this environment (e.g. plain `next start` in e2e/CI without D1 bindings + migrations)
     return false;
@@ -258,7 +265,11 @@ function slimUnitForLite(u: any) {
 export async function fetchCatalogLite(db: CatalogDatabase): Promise<CatalogFile | null> {
   const full = await fetchCatalogFile(db);
   if (!full) return null;
+  return buildLiteFromCatalogFile(full);
+}
 
+/** Pure lite-payload builder over an ALREADY-LOADED catalog (no D1 reads). */
+export function buildLiteFromCatalogFile(full: CatalogFile): CatalogFile {
   const locMap = new Map<string, string>();
   (full.units || []).forEach((u: any) => {
     if (u.locationFull && !locMap.has(u.projectId)) {
@@ -398,8 +409,23 @@ export async function queryCatalogProjects(
 ) {
   const catalog = await fetchCatalogFile(db);
   if (!catalog) return null;
+  const boosts =
+    (query.sort ?? "featured") === "featured"
+      ? await fetchActivePlacements(db, "serp-boost")
+      : [];
+  return runCatalogQuery(createCatalogApi(catalog), query, boosts);
+}
 
-  const api = createCatalogApi(catalog);
+/**
+ * Pure query over an ALREADY-CONSTRUCTED CatalogApi (no D1 reads). The API
+ * route feeds it the isolate-cached getCatalogApi() so a SERP filter change
+ * costs zero D1 queries instead of a full ~13k-row catalog rebuild.
+ */
+export function runCatalogQuery(
+  api: CatalogApi,
+  query: CatalogProjectsQuery,
+  boosts: Placement[] = [],
+) {
   const pageSize = Math.min(Math.max(query.pageSize ?? PAGE_SIZE, 1), 100);
   const page = Math.max(query.page ?? 1, 1);
 
@@ -438,7 +464,6 @@ export async function queryCatalogProjects(
   // badge. fetchActivePlacements returns [] on any error (or before the
   // placements migration exists), leaving ordering exactly as today.
   if (sort === "featured") {
-    const boosts = await fetchActivePlacements(db, "serp-boost");
     if (boosts.length > 0) {
       const rankBySlug = new Map<string, number>();
       for (const boost of boosts) {
@@ -479,7 +504,7 @@ export async function queryCatalogProjects(
     sort,
     collection,
     filters,
-    scrapedAt: catalog.scrapedAt,
+    scrapedAt: api.meta.scrapedAt,
   });
   const decodedCursor = decodeCatalogCursor(query.cursor);
   const cursorApplied = decodedCursor !== null && decodedCursor.key === queryKey;
@@ -507,7 +532,7 @@ export async function queryCatalogProjects(
       sort,
       collection,
       filters,
-      scrapedAt: catalog.scrapedAt,
+      scrapedAt: api.meta.scrapedAt,
     },
     items: items.slice(offset, offset + pageSize),
   };

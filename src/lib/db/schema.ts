@@ -347,3 +347,20 @@ export const userFavorites = sqliteTable(
   },
   (table) => [primaryKey({ columns: [table.userId, table.projectSlug] })],
 );
+
+// Site-wide daily counters (spend guardrails — e.g. advisor Workers-AI budget).
+// key = "<scope>:<YYYY-MM-DD>"; incremented atomically via UPSERT.
+export const dailyCounters = sqliteTable("daily_counters", {
+  key: text("key").primaryKey(),
+  count: integer("count").notNull().default(0),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// better-auth durable rate-limit storage (storage: "database"); field names
+// must match better-auth's rateLimit model exactly (key/count/lastRequest).
+export const rateLimits = sqliteTable("rate_limits", {
+  id: text("id").primaryKey(),
+  key: text("key"),
+  count: integer("count"),
+  lastRequest: integer("last_request"),
+});

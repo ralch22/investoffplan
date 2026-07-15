@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { runAdvisor } from "@/lib/advisor/loop";
+import { consumeAdvisorBudget } from "@/lib/advisor/budget";
 import { WHATSAPP_PRIMARY_DISPLAY } from "@/lib/contact-info";
 import type { AdvisorRequestBody, AdvisorResponse } from "@/lib/advisor/types";
 
@@ -19,6 +21,22 @@ function rateLimited(ip: string): boolean {
   return list.length > MAX_PER_WINDOW;
 }
 
+// Cloudflare Rate Limiting binding (wrangler `ratelimits`); per-colo but
+// native and zero-latency. Layered: binding → in-memory Map → daily budget.
+type RateLimitBinding = { limit(opts: { key: string }): Promise<{ success: boolean }> };
+
+async function boundRateLimited(ip: string): Promise<boolean> {
+  try {
+    const { env } = await getCloudflareContext({ async: true });
+    const limiter = (env as { ADVISOR_RATE_LIMIT?: RateLimitBinding }).ADVISOR_RATE_LIMIT;
+    if (!limiter) return false;
+    const { success } = await limiter.limit({ key: ip });
+    return !success;
+  } catch {
+    return false; // not on Workers (next start / e2e) — binding absent
+  }
+}
+
 export async function POST(request: Request) {
   let body: AdvisorRequestBody;
   try {
@@ -33,15 +51,36 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Empty message" }, { status: 400 });
   }
 
+  const locale = body.locale === "ar" ? "ar" : "en";
   const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
-  if (rateLimited(ip)) {
+  if ((await boundRateLimited(ip)) || rateLimited(ip)) {
     return NextResponse.json(
-      { error: "Too many messages — please slow down." },
+      {
+        error:
+          locale === "ar"
+            ? "رسائل كثيرة — انتظر دقيقة من فضلك."
+            : "Too many messages — please wait a minute.",
+      },
       { status: 429 },
     );
   }
 
-  const locale = body.locale === "ar" ? "ar" : "en";
+  // Site-wide daily Workers-AI budget: when exhausted, degrade to the human
+  // channel with a friendly 200 (the widget renders the WhatsApp CTA), never
+  // an error screen.
+  if (!(await consumeAdvisorBudget())) {
+    const capped: AdvisorResponse = {
+      reply:
+        locale === "ar"
+          ? `المستشار وصل إلى حده اليومي — تواصل معنا مباشرة عبر واتساب ${WHATSAPP_PRIMARY_DISPLAY}.`
+          : `The advisor has reached today's capacity — reach our team directly on WhatsApp ${WHATSAPP_PRIMARY_DISPLAY}.`,
+      cards: [],
+      suggestions: [],
+      cta: "whatsapp",
+    };
+    return NextResponse.json(capped);
+  }
+
   try {
     const response = await runAdvisor(messages, locale);
     return NextResponse.json(response);

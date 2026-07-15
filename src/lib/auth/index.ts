@@ -3,7 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { memoryAdapter } from "better-auth/adapters/memory";
 import { magicLink } from "better-auth/plugins/magic-link";
 import { getDb } from "@/lib/db/client";
-import { accounts, sessions, users, verifications } from "@/lib/db/schema";
+import { accounts, rateLimits, sessions, users, verifications } from "@/lib/db/schema";
 import { getSiteUrl } from "@/lib/site-url";
 
 // Cloudflare Workers: D1 bindings are per-request (getCloudflareContext), so
@@ -92,6 +92,7 @@ export async function getAuth() {
             session: sessions,
             account: accounts,
             verification: verifications,
+            rateLimit: rateLimits,
           },
         })
       : memoryAdapter({}),
@@ -99,6 +100,18 @@ export async function getAuth() {
       cookieCache: {
         enabled: true,
         maxAge: 300,
+      },
+    },
+    // Durable, D1-backed throttle (memory storage is per-isolate on Workers —
+    // nearly useless). Tightest caps on the endpoints that send real email.
+    rateLimit: {
+      enabled: true,
+      window: 60,
+      max: 30,
+      storage: db ? ("database" as const) : ("memory" as const),
+      customRules: {
+        "/sign-in/magic-link": { window: 60, max: 5 },
+        "/magic-link/verify": { window: 60, max: 10 },
       },
     },
     user: {

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { withCatalogDb } from "@/lib/db/api-response";
-import { queryCatalogProjects } from "@/lib/db/catalog-queries";
+import { runCatalogQuery } from "@/lib/db/catalog-queries";
+import { getCatalogApi } from "@/lib/catalog";
+import { fetchActivePlacements } from "@/lib/placements";
 import type {
   CitySlug,
   CollectionFilter,
@@ -53,13 +55,23 @@ function parseAmenities(value: string | null): string[] {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
-  return withCatalogDb(async (db) => {
-    const result = await queryCatalogProjects(db, {
+  return withCatalogDb(
+    async (db) => {
+      // Isolate-cached CatalogApi: a filter/sort/page change costs zero D1
+      // reads when warm (the old path rebuilt the full ~13k-row catalog per
+      // request). Placements stay a live 1-small-table read so paid boosts
+      // appear without waiting out the catalog cache.
+      const sort = (searchParams.get("sort") as SortOption | null) ?? "featured";
+      const [api, boosts] = await Promise.all([
+        getCatalogApi(),
+        sort === "featured" ? fetchActivePlacements(db, "serp-boost") : Promise.resolve([]),
+      ]);
+      const result = runCatalogQuery(api, {
       page: Math.min(parseIntParam(searchParams.get("page"), 1), 500),
       pageSize: parseIntParam(searchParams.get("pageSize"), 24),
       cursor: searchParams.get("cursor") ?? undefined,
-      view: (searchParams.get("view") as ViewMode | null) ?? "project",
-      sort: (searchParams.get("sort") as SortOption | null) ?? "featured",
+        view: (searchParams.get("view") as ViewMode | null) ?? "project",
+        sort,
       collection: (searchParams.get("collection") as CollectionFilter | null) ?? "all",
       filters: {
         query: (searchParams.get("q") ?? "").slice(0, 500),
@@ -73,12 +85,14 @@ export async function GET(request: Request) {
         handoverBy: parseHandoverBy(searchParams.get("handoverBy")),
         amenities: parseAmenities(searchParams.get("amenities")),
       },
-    });
+      }, boosts);
 
-    if (!result) {
-      return NextResponse.json({ error: "catalog_unavailable" }, { status: 503 });
-    }
+      if (!result) {
+        return NextResponse.json({ error: "catalog_unavailable" }, { status: 503 });
+      }
 
-    return result;
-  });
+      return result;
+    },
+    { request },
+  );
 }

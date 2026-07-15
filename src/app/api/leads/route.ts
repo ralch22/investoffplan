@@ -8,6 +8,23 @@ import { isTurnstileEnabled, verifyTurnstileToken } from "@/lib/turnstile";
 import { forwardLeadToGhl } from "@/lib/ghl";
 import { getPlacementLeadBoost } from "@/lib/placements";
 import { sendGa4GenerateLead } from "@/lib/ga4-mp";
+import { isWorkersRuntime } from "@/lib/runtime-env";
+
+// Cloudflare Rate Limiting binding — each accepted lead costs a D1 insert +
+// 2 GHL API calls + a GA4 hit, so bound the inflow per IP.
+type RateLimitBinding = { limit(opts: { key: string }): Promise<{ success: boolean }> };
+
+async function leadsRateLimited(ip: string): Promise<boolean> {
+  try {
+    const { env } = await getCloudflareContext({ async: true });
+    const limiter = (env as { LEADS_RATE_LIMIT?: RateLimitBinding }).LEADS_RATE_LIMIT;
+    if (!limiter) return false;
+    const { success } = await limiter.limit({ key: ip });
+    return !success;
+  } catch {
+    return false; // not on Workers (next start / e2e)
+  }
+}
 
 export const dynamic = "force-dynamic";
 
@@ -54,6 +71,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true });
   }
 
+  const clientIp = request.headers.get("cf-connecting-ip") ?? "unknown";
+  if (await leadsRateLimited(clientIp)) {
+    return NextResponse.json(
+      { ok: false, error: "Too many submissions — please wait a minute and try again." },
+      { status: 429 },
+    );
+  }
+
   const formType = clean(body.formType, 40) ?? "";
   if (!FORM_TYPES.has(formType)) {
     return NextResponse.json({ ok: false, error: "Unknown form type" }, { status: 400 });
@@ -72,22 +97,40 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: "Invalid email" }, { status: 400 });
   }
 
-  // Enforce only when the server can actually verify (TURNSTILE_SECRET_KEY
-  // present, i.e. deployed workers). Without the secret, verifyTurnstileToken
-  // passes any non-empty string — rejecting empty tokens there is security
-  // theater that only breaks local/e2e, where the domain-locked widget can't
-  // issue tokens at all.
-  if (isTurnstileEnabled() && process.env.TURNSTILE_SECRET_KEY) {
-    const token = clean(body.turnstileToken, 4000) ?? "";
-    const remoteIp = request.headers.get("cf-connecting-ip") ?? undefined;
-    const verify = token
-      ? await verifyTurnstileToken(token, remoteIp)
-      : { success: false as const };
-    if (!verify.success) {
-      return NextResponse.json(
-        { ok: false, error: "Security verification failed. Please try again." },
-        { status: 403 },
-      );
+  // Verify when the server can (TURNSTILE_SECRET_KEY present). On a DEPLOYED
+  // worker with the site key configured but the secret missing, FAIL CLOSED —
+  // silently skipping verification there turns a misconfig into an open lead
+  // pipe (D1 writes + GHL calls per bot POST). Local next start/e2e has no
+  // Workers context and no secret: the domain-locked widget can't issue
+  // tokens at all, so verification is skipped (no bypass flag needed).
+  let turnstileVerified = false;
+  if (isTurnstileEnabled()) {
+    if (!process.env.TURNSTILE_SECRET_KEY) {
+      if (isWorkersRuntime()) {
+        console.error(
+          "[leads] TURNSTILE_SECRET_KEY missing on a deployed worker — failing closed",
+        );
+        return NextResponse.json(
+          {
+            ok: false,
+            error: "Security verification is temporarily unavailable. Please try again shortly.",
+          },
+          { status: 503 },
+        );
+      }
+    } else {
+      const token = clean(body.turnstileToken, 4000) ?? "";
+      const remoteIp = request.headers.get("cf-connecting-ip") ?? undefined;
+      const verify = token
+        ? await verifyTurnstileToken(token, remoteIp)
+        : { success: false as const };
+      if (!verify.success) {
+        return NextResponse.json(
+          { ok: false, error: "Security verification failed. Please try again." },
+          { status: 403 },
+        );
+      }
+      turnstileVerified = true;
     }
   }
 
@@ -111,7 +154,9 @@ export async function POST(request: Request) {
     projectSlug: clean(body.projectSlug, 200) ?? null,
     pagePath: clean(body.pagePath, 300) ?? null,
     payload: body.extra ? JSON.stringify(body.extra).slice(0, 4000) : null,
-    turnstileOk: isTurnstileEnabled(),
+    // Record whether verification actually HAPPENED, not whether it was merely
+    // enabled — the lead row is the audit trail.
+    turnstileOk: turnstileVerified,
     ghlStatus: "pending",
     ghlAttempts: 0,
   };

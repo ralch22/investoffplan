@@ -88,6 +88,13 @@ export function AdvisorWidget() {
         }),
       });
       const data = (await res.json()) as AdvisorResponse & { error?: string };
+      if (res.status === 429 && data.error) {
+        // Rate-limited: surface the server's "slow down" line as a normal
+        // assistant message — a throttled human must not see "advisor broken".
+        setEntries((prev) => [...prev, { role: "assistant", content: data.error! }]);
+        setSuggestions([]);
+        return;
+      }
       if (!res.ok) throw new Error(data.error ?? "advisor error");
       setEntries((prev) => [
         ...prev,
