@@ -106,7 +106,7 @@ export async function POST(request: Request) {
   let turnstileVerified = false;
   if (isTurnstileEnabled()) {
     if (!process.env.TURNSTILE_SECRET_KEY) {
-      if (await isWorkersRuntime()) {
+      if (isWorkersRuntime()) {
         console.error(
           "[leads] TURNSTILE_SECRET_KEY missing on a deployed worker — failing closed",
         );

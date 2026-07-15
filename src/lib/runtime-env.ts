@@ -1,18 +1,16 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
-
 /**
- * True only on a deployed/simulated Cloudflare Workers runtime — false under
- * plain `next start` (the e2e server) and `next dev`.
+ * True only on the real Cloudflare Workers runtime (deployed worker or
+ * `wrangler dev`), false under Node (`next start` — the e2e server — and
+ * `next dev`).
  *
- * This is the ONLY reliable "am I production-shaped?" discriminator here:
- * `.env.production` (NEXT_PUBLIC_SITE_URL etc.) is loaded by local
- * `next start` too, so URL/NODE_ENV checks misclassify local e2e.
+ * NOTE: getCloudflareContext() is NOT a valid discriminator — OpenNext's dev
+ * initialization provides a working context (with real local D1 bindings)
+ * under plain `next start` too, which is exactly how local e2e reaches D1.
+ * The workerd runtime instead identifies itself via navigator.userAgent
+ * (https://developers.cloudflare.com/workers/runtime-apis/web-standards/).
  */
-export async function isWorkersRuntime(): Promise<boolean> {
-  try {
-    await getCloudflareContext({ async: true });
-    return true;
-  } catch {
-    return false;
-  }
+export function isWorkersRuntime(): boolean {
+  return (
+    typeof navigator !== "undefined" && navigator.userAgent === "Cloudflare-Workers"
+  );
 }
