@@ -47,6 +47,11 @@
       "remote": true
     }
   ],
+  // Native per-IP rate limits (keep in lockstep with wrangler.production.jsonc).
+  "ratelimits": [
+    { "name": "ADVISOR_RATE_LIMIT", "namespace_id": "1001", "simple": { "limit": 10, "period": 60 } },
+    { "name": "LEADS_RATE_LIMIT", "namespace_id": "1002", "simple": { "limit": 6, "period": 60 } }
+  ],
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
@@ -67,6 +72,8 @@
     "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADxyqgdGGZ6sArrC",
     "NEXT_PUBLIC_CATALOG_API": "1",
     "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-7GDZWYG4N2",
-    "NEXT_PUBLIC_GTM_ID": "GTM-PJPK4GP6"
+    "NEXT_PUBLIC_GTM_ID": "GTM-PJPK4GP6",
+    // Site-wide daily Workers-AI budget for the advisor (hard spend ceiling).
+    "ADVISOR_DAILY_CAP": "300"
   }
 }

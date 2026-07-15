@@ -47,6 +47,12 @@
       "remote": true
     }
   ],
+  // Native per-IP rate limits (per-colo; the D1 daily budget in
+  // src/lib/advisor/budget.ts is the global spend ceiling).
+  "ratelimits": [
+    { "name": "ADVISOR_RATE_LIMIT", "namespace_id": "1001", "simple": { "limit": 10, "period": 60 } },
+    { "name": "LEADS_RATE_LIMIT", "namespace_id": "1002", "simple": { "limit": 6, "period": 60 } }
+  ],
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
@@ -74,6 +80,9 @@
     "GHL_PIPELINE_ID": "cGvlBKG1EBoj47Cg5v5K",
     // Lead owner = Jad Elcheikh (jad@arlo.properties) — every website lead's
     // contact + opportunity is assigned to him. Not a secret (user id).
-    "GHL_LEAD_OWNER_ID": "Mu8BNwI3XA8vxM59C3iE"
+    "GHL_LEAD_OWNER_ID": "Mu8BNwI3XA8vxM59C3iE",
+    // Site-wide daily Workers-AI budget for the advisor (hard spend ceiling;
+    // exhaustion degrades to the WhatsApp CTA). 0 disables the guard.
+    "ADVISOR_DAILY_CAP": "300"
   }
 }

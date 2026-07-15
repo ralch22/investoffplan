@@ -10,7 +10,45 @@ import { fetchCatalogMeta, isCatalogDbSeeded, verifyCatalogSeed } from "@/lib/db
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+/**
+ * Two-tier health endpoint.
+ *
+ * Public (no token): constant-time `{status:"ok"}` with zero D1 queries —
+ * keeps uptime monitors working while denying anonymous bots free D1 reads
+ * and a config-posture recon surface (seed counts, binding names, security /
+ * email booleans).
+ *
+ * Full diagnostics: requires `x-health-token` matching the HEALTH_TOKEN
+ * secret (same pattern as LEADS_RETRY_TOKEN). Without the secret set, the
+ * detailed view stays off on deployed workers and ON locally (next start has
+ * no secrets — keeps local debugging painless).
+ */
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+export async function GET(request: Request) {
+  const secret = process.env.HEALTH_TOKEN;
+  const token = request.headers.get("x-health-token") ?? "";
+
+  let onWorkers = true;
+  try {
+    await getCloudflareContext({ async: true });
+  } catch {
+    onWorkers = false;
+  }
+
+  const authorized = secret ? timingSafeEqual(token, secret) : !onWorkers;
+  if (!authorized) {
+    return NextResponse.json(
+      { status: "ok" },
+      { headers: { "Cache-Control": "public, max-age=60" } },
+    );
+  }
+
   const analytics = await getCatalogAnalytics();
   const enrichment = getEnrichmentMeta();
   const db = await getDb();
