@@ -11,7 +11,7 @@
 const KEY = "investoffplan-indexnow-2026";
 const HOST = "investoffplan.com";
 const SITEMAP_INDEX = `https://${HOST}/sitemap.xml`;
-const INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow";
+const INDEXNOW_ENDPOINT = "https://www.bing.com/indexnow";
 const BATCH_SIZE = 10_000;
 
 async function fetchText(url) {
