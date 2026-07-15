@@ -17,6 +17,8 @@ function parseArgs() {
   return {
     skipScrape: process.argv.includes("--skip-scrape"),
     skipBrochures: process.argv.includes("--skip-brochures"),
+    skipFloorplans: process.argv.includes("--skip-floorplans"),
+    skipMasterplans: process.argv.includes("--skip-masterplans"),
     skipDevPortfolio: process.argv.includes("--skip-dev-portfolio"),
     skipDb: process.argv.includes("--skip-db"),
     smoke: process.argv.includes("--smoke"),
@@ -30,6 +32,8 @@ async function main() {
   const {
     skipScrape,
     skipBrochures,
+    skipFloorplans,
+    skipMasterplans,
     skipDevPortfolio,
     skipDb,
     smoke,
@@ -56,6 +60,37 @@ async function main() {
   if (!skipBrochures) {
     const limitFlag = smoke ? " --limit 5" : " --resume";
     run(`npx tsx scripts/scrape-pf-brochures.ts${limitFlag}`);
+  }
+
+  // Floor plans and master plans are PF data that the listing scrape does not
+  // return — they live on the project's own PF page and need a per-project
+  // visit. Nothing scheduled fetched them, so the catalog has been carrying
+  // whatever a manual run last left behind: 1,021 of 1,746 projects have never
+  // been checked for floor plans at all (2026-07-16). Both stages read and
+  // rewrite data/catalog.json, so they belong after the scrape that rebuilds it
+  // and before the slices and the D1 upsert that publish it.
+  //
+  // The two look asymmetric on purpose:
+  //
+  // scrape-pf-floorplans.ts self-limits to projects whose floorPlans is
+  // undefined and writes [] for a project it checked and found none, so the
+  // first scheduled run works through the ~1,021 backlog (~20 min) and later
+  // runs cost almost nothing. --force is how you re-check.
+  //
+  // scrape-pf-masterplans.ts has no such memo: it retries all 240 projects
+  // still missing a master plan every week. That is the point — a master plan
+  // PF publishes after launch is only ever picked up by re-asking, and re-
+  // asking is 240 fetches at concurrency 4, about 5 minutes of the workflow's
+  // 180. Memoizing it would buy back those 5 minutes by freezing 240 projects
+  // as permanent misses.
+  if (!skipFloorplans) {
+    const limitFlag = smoke ? " --limit 5" : "";
+    run(`npx tsx scripts/scrape-pf-floorplans.ts${limitFlag}`);
+  }
+
+  if (!skipMasterplans) {
+    const limitFlag = smoke ? " --limit 5" : "";
+    run(`npx tsx scripts/scrape-pf-masterplans.ts${limitFlag}`);
   }
 
   // PF scrape re-writes bare colliding slugs for known twins. Pin + rewrite
