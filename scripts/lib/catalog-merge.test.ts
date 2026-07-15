@@ -13,9 +13,11 @@ import { join } from "node:path";
 import {
   loadPreviousCatalog,
   mergeCatalogProjects,
+  mergeCatalogUnits,
   mergeProject,
   enrichmentSummary,
   type CatalogProject,
+  type CatalogUnit,
 } from "./catalog-merge";
 
 const tmp = () => mkdtempSync(join(tmpdir(), "catalog-merge-"));
@@ -92,17 +94,90 @@ test("mergeCatalogProjects reports new projects as unmatched", () => {
   assert.equal(projects[1].masterPlanUrl, undefined);
 });
 
-test("mergeCatalogProjects drops projects PF no longer lists", () => {
-  // Long-standing behaviour — PF delists a project when it completes.
-  // MIN_PROJECT_RETENTION in the caller is what stops this becoming a cliff.
-  const previous: CatalogProject[] = [{ id: "p1" }, { id: "gone" }];
-  const scraped: CatalogProject[] = [{ id: "p1" }];
+test("mergeCatalogProjects carries forward projects the scrape never saw", () => {
+  // This used to assert the opposite, on the theory that an absent project is a
+  // completed one. Measured on 2026-07-16: a full 77-page run saw 627 of the
+  // catalog's 1,746 projects. The missing 1,178 came from
+  // scrape-pf-developer-portfolio.ts, which the scheduled pipeline never runs —
+  // so dropping them deleted 67% of the catalog every Monday with nothing to put
+  // it back. The unit view is one source; it does not get to delete another's rows.
+  const previous: CatalogProject[] = [
+    { id: "p1", name: "Alpha" },
+    { id: "from-dev-portfolio", name: "Beta", masterPlanUrl: "https://cdn/m.jpg" },
+  ];
+  const scraped: CatalogProject[] = [{ id: "p1", name: "Alpha" }];
+
+  const { projects, carried } = mergeCatalogProjects(previous, scraped);
+
+  assert.equal(carried, 1);
+  assert.deepEqual(
+    projects.map((p) => p.id),
+    ["p1", "from-dev-portfolio"],
+  );
+  assert.equal(
+    projects[1].masterPlanUrl,
+    "https://cdn/m.jpg",
+    "a carried project keeps its enrichment intact",
+  );
+});
+
+test("mergeCatalogProjects sorts the union by name", () => {
+  // Carried projects must not simply pile up behind scraped ones: the weekly
+  // committed catalog.json diff is the only human check before production D1,
+  // and a reshuffling tail buries the week's real price changes.
+  const previous: CatalogProject[] = [
+    { id: "z", name: "Zephyr Tower" },
+    { id: "a", name: "Acacia Villas" },
+  ];
+  const scraped: CatalogProject[] = [{ id: "m", name: "Marina Vista" }];
 
   const { projects } = mergeCatalogProjects(previous, scraped);
 
   assert.deepEqual(
-    projects.map((p) => p.id),
-    ["p1"],
+    projects.map((p) => p.name),
+    ["Acacia Villas", "Marina Vista", "Zephyr Tower"],
+  );
+});
+
+test("mergeCatalogUnits keeps units of projects the scrape never mentioned", () => {
+  // The dangerous half: catalog.units is rebuilt from the scrape wholesale, so
+  // on 2026-07-16 a complete run would have cut 5,534 units to 1,813 — and
+  // MIN_UNIT_COMPLETENESS reports 100% throughout, because it only compares the
+  // scrape to PF's own advertised total.
+  const previous: CatalogUnit[] = [
+    { id: "u1", projectId: "p1", launchPriceAed: 1_000_000 },
+    { id: "u2", projectId: "from-dev-portfolio", launchPriceAed: 2_000_000 },
+  ];
+  const scraped: CatalogUnit[] = [
+    { id: "u1", projectId: "p1", launchPriceAed: 1_100_000 },
+  ];
+
+  const { units, carried } = mergeCatalogUnits(previous, scraped);
+
+  assert.equal(carried, 1);
+  assert.deepEqual(
+    units.map((u) => u.id),
+    ["u1", "u2"],
+  );
+  assert.equal(units[0].launchPriceAed, 1_100_000, "PF's fresh price wins");
+});
+
+test("mergeCatalogUnits lets a scraped project lose a unit", () => {
+  // PF is authoritative for what it served: its units are replaced, not merged,
+  // so a unit that genuinely sold out disappears. Carrying these forward would
+  // make sold-out inventory immortal.
+  const previous: CatalogUnit[] = [
+    { id: "u1", projectId: "p1" },
+    { id: "u2", projectId: "p1" },
+  ];
+  const scraped: CatalogUnit[] = [{ id: "u1", projectId: "p1" }];
+
+  const { units, carried } = mergeCatalogUnits(previous, scraped);
+
+  assert.equal(carried, 0);
+  assert.deepEqual(
+    units.map((u) => u.id),
+    ["u1"],
   );
 });
 
@@ -174,8 +249,42 @@ test("loadPreviousCatalog reads a real catalog", () => {
   const dir = tmp();
   const path = join(dir, "catalog.json");
   try {
+    writeFileSync(
+      path,
+      JSON.stringify({
+        version: 2,
+        projects: [{ id: "p1" }],
+        units: [{ id: "u1", projectId: "p1" }],
+      }),
+    );
+    const prev = loadPreviousCatalog(path);
+    assert.deepEqual(prev?.projects, [{ id: "p1" }]);
+    assert.deepEqual(prev?.units, [{ id: "u1", projectId: "p1" }]);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("loadPreviousCatalog treats absent units[] as none, not as an error", () => {
+  // A catalog can predate the field; there is then nothing to carry forward.
+  const dir = tmp();
+  const path = join(dir, "catalog.json");
+  try {
     writeFileSync(path, JSON.stringify({ version: 2, projects: [{ id: "p1" }] }));
-    assert.deepEqual(loadPreviousCatalog(path)?.projects, [{ id: "p1" }]);
+    assert.deepEqual(loadPreviousCatalog(path)?.units, []);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("loadPreviousCatalog refuses a units[] that is not an array", () => {
+  // Reading an unfamiliar shape as "no units" would carry none forward and
+  // delete every one of them — the same trade as the projects[] check above.
+  const dir = tmp();
+  const path = join(dir, "catalog.json");
+  try {
+    writeFileSync(path, JSON.stringify({ version: 2, projects: [{ id: "p1" }], units: {} }));
+    assert.throws(() => loadPreviousCatalog(path), /units\[\] that is not an array/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

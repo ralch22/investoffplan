@@ -21,8 +21,10 @@ import {
   enrichmentSummary,
   loadPreviousCatalog,
   mergeCatalogProjects,
+  mergeCatalogUnits,
   MIN_PROJECT_RETENTION,
   MIN_UNIT_COMPLETENESS,
+  MIN_UNIT_RETENTION,
 } from "./lib/catalog-merge";
 import {
   parsePagePayload,
@@ -164,8 +166,8 @@ async function main() {
   // rate-limited pagination.
   const previous = loadPreviousCatalog(OUT);
   console.log(
-    `[scrape-pf] merging onto ${previous?.projects.length ?? 0} existing projects — ` +
-      `${enrichmentSummary(previous?.projects ?? [])}`,
+    `[scrape-pf] merging onto ${previous?.projects.length ?? 0} existing projects / ` +
+      `${previous?.units.length ?? 0} units — ${enrichmentSummary(previous?.projects ?? [])}`,
   );
 
   const browser = await chromium.launch({ headless: true });
@@ -341,27 +343,12 @@ async function main() {
 
   // PF owns pricing, media and availability. Everything else in the catalog was
   // put there by someone else and has no producer in this pipeline.
-  const { projects, matched } = mergeCatalogProjects(previous?.projects ?? [], scrapedProjects);
+  const { projects, matched, carried } = mergeCatalogProjects(
+    previous?.projects ?? [],
+    scrapedProjects,
+  );
 
-  const cityCounts = new Map<string, { slug: string; label: string; count: number }>();
-  for (const u of allUnits) {
-    const { city, citySlug } = parseCity(u.location.fullName);
-    const existing = cityCounts.get(citySlug);
-    if (existing) existing.count++;
-    else cityCounts.set(citySlug, { slug: citySlug, label: city, count: 1 });
-  }
-
-  const catalog = {
-    version: 2 as const,
-    source: "propertyfinder-unit-view",
-    scrapedAt: new Date().toISOString(),
-    unitCount: allUnits.length,
-    projectCount: projects.length,
-    cityCounts: [...cityCounts.values()].sort((a, b) => b.count - a.count),
-    developerSerpLinks,
-    devList,
-    projects,
-    units: allUnits.map((u) => {
+  const scrapedUnits = allUnits.map((u) => {
       const { city, citySlug, area } = parseCity(u.location.fullName);
       const pay = formatPaymentPlan(u.paymentPlan);
       const size = normalizeUnitSize({
@@ -405,18 +392,52 @@ async function main() {
         whatsapp: DEFAULT_WHATSAPP,
         status: u.stockStatus === "sold_out" ? "sold-out" : "off-plan",
       };
-    }),
+  });
+
+  const { units, carried: carriedUnits } = mergeCatalogUnits(
+    previous?.units ?? [],
+    scrapedUnits,
+  );
+
+  // Counted off the merged units rather than the scrape: these drive the city
+  // facets, and counting only what PF served this run would undercount every
+  // city by whatever the developer-portfolio runs contributed.
+  const cityCounts = new Map<string, { slug: string; label: string; count: number }>();
+  for (const u of units) {
+    const citySlug = String(u.citySlug);
+    const existing = cityCounts.get(citySlug);
+    if (existing) existing.count++;
+    else cityCounts.set(citySlug, { slug: citySlug, label: String(u.city), count: 1 });
+  }
+
+  const catalog = {
+    version: 2 as const,
+    source: "propertyfinder-unit-view",
+    scrapedAt: new Date().toISOString(),
+    unitCount: units.length,
+    projectCount: projects.length,
+    cityCounts: [...cityCounts.values()].sort((a, b) => b.count - a.count),
+    developerSerpLinks,
+    devList,
+    projects,
+    units,
   };
 
-    // A partial run holds, by construction, only a slice of the catalog —
-    // writing it would delete every project on the pages we never fetched.
-    // --pages is a smoke test: it proves the scrape/parse chain still survives
-    // PF's markup, and stops there. (The workflow's smoke button reaches the
-    // commit step, so this is the difference between validating an ingest and
-    // pushing a 48-unit catalog to production.)
+    // A partial run refreshes only the pages it fetched — every other project
+    // rides through on the carry-forward, stale. --pages is a smoke test: it
+    // proves the scrape/parse/merge chain still survives PF's markup, and stops
+    // there. (The workflow's smoke button reaches the commit step, so this is
+    // the difference between validating an ingest and committing a catalog in
+    // which 95% of the prices are last week's.)
+    //
+    // The merge above has already run, so these numbers are what a full run
+    // would write — which makes this the cheapest honest check on the merge.
     if (maxPages !== null) {
       console.log(
-        `[scrape-pf] --pages ${maxPages}: parsed ${catalog.unitCount} units / ${catalog.projectCount} projects. Partial run — not writing ${OUT}.`,
+        `[scrape-pf] --pages ${maxPages}: parsed ${allUnits.length} units / ` +
+          `${scrapedProjects.length} projects from PF; would write ${units.length} units / ` +
+          `${projects.length} projects (${carriedUnits} units, ${carried} projects carried ` +
+          `forward). Partial run — not writing ${OUT}.`,
       );
       return;
     }
@@ -431,10 +452,22 @@ async function main() {
           `(${Math.round((allUnits.length / first.total) * 100)}%) — refusing to write a short scrape`,
       );
     }
+    // Both retention guards compare against what the catalog already held, which
+    // is the comparison MIN_UNIT_COMPLETENESS above cannot make. With the merge
+    // carrying rows forward, neither should ever fire — which is exactly why
+    // they stay: if a future change starts dropping rows again, these are what
+    // stops it reaching production D1, and the log line below is what explains
+    // it. The projects guard has already earned its keep once.
     if (previous && projects.length < previous.projects.length * MIN_PROJECT_RETENTION) {
       throw new Error(
         `[scrape-pf] ${projects.length} projects vs ${previous.projects.length} in the existing catalog — ` +
           `refusing to write a ${Math.round((1 - projects.length / previous.projects.length) * 100)}% drop`,
+      );
+    }
+    if (previous && units.length < previous.units.length * MIN_UNIT_RETENTION) {
+      throw new Error(
+        `[scrape-pf] ${units.length} units vs ${previous.units.length} in the existing catalog — ` +
+          `refusing to write a ${Math.round((1 - units.length / previous.units.length) * 100)}% drop`,
       );
     }
 
@@ -444,8 +477,12 @@ async function main() {
       `[scrape-pf] Wrote ${catalog.unitCount} units, ${catalog.projectCount} projects → data/catalog.json`,
     );
     console.log(
-      `[scrape-pf] merged onto ${previous?.projects.length ?? 0} existing projects ` +
-        `(${matched} matched, ${projects.length - matched} new)`,
+      `[scrape-pf] projects: ${matched} matched, ${scrapedProjects.length - matched} new, ` +
+        `${carried} carried forward (PF's unit view listed ${scrapedProjects.length} of ` +
+        `${previous?.projects.length ?? 0})`,
+    );
+    console.log(
+      `[scrape-pf] units: ${scrapedUnits.length} from PF, ${carriedUnits} carried forward`,
     );
     console.log(`[scrape-pf] enrichment carried forward: ${enrichmentSummary(projects)}`);
   } finally {
