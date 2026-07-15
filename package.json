@@ -10,6 +10,7 @@
     "lint": "eslint",
     "test:e2e": "playwright test",
     "test:e2e:fast": "PW_REUSE_SERVER=1 playwright test",
+    "test:unit": "tsx --test \"scripts/**/*.test.ts\"",
     "screenshots": "node scripts/capture-screenshots.mjs",
     "preview": "NEXT_PUBLIC_CATALOG_API=1 NEXT_IS_BUILD=1 opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy:verify": "node scripts/verify-deploy-env.mjs preview",

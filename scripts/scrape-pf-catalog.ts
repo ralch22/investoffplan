@@ -4,12 +4,26 @@
  * Source: __NEXT_DATA__.props.pageProps.unitLevelListings (24/page, ~63 pages).
  *
  *   npx tsx scripts/scrape-pf-catalog.ts
- *   npx tsx scripts/scrape-pf-catalog.ts --pages 3   # smoke test
+ *   npx tsx scripts/scrape-pf-catalog.ts --pages 3   # smoke test — never writes
+ *
+ * This script MERGES onto data/catalog.json; it must never replace it. PF is the
+ * source of truth for pricing, media and availability — and for nothing else.
+ * Everything an editor or another script added (unique descriptions, floor
+ * plans, master plans, FAQs) exists only in the catalog, and most of it has no
+ * other producer in the weekly pipeline. A wholesale overwrite is unrecoverable
+ * short of a git revert, and it auto-commits and upserts to production D1.
  */
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { chromium } from "playwright";
 import { normalizeUnitSize } from "./lib/pf-ingest-helpers";
+import {
+  enrichmentSummary,
+  loadPreviousCatalog,
+  mergeCatalogProjects,
+  MIN_PROJECT_RETENTION,
+  MIN_UNIT_COMPLETENESS,
+} from "./lib/catalog-merge";
 
 const BASE =
   "https://www.propertyfinder.ae/en/new-projects?view=unit_types";
@@ -177,6 +191,15 @@ async function main() {
   const { maxPages } = parseArgs();
   console.log("[scrape-pf] starting unit-view ingest…");
 
+  // Read the catalog we have to merge onto before touching the network: if it
+  // is unreadable, say so in 10ms rather than after ~90 minutes of politely
+  // rate-limited pagination.
+  const previous = loadPreviousCatalog(OUT);
+  console.log(
+    `[scrape-pf] merging onto ${previous?.projects.length ?? 0} existing projects — ` +
+      `${enrichmentSummary(previous?.projects ?? [])}`,
+  );
+
   const browser = await chromium.launch({ headless: true });
   const browserPage = await browser.newPage();
 
@@ -316,9 +339,13 @@ async function main() {
     });
   }
 
-  const projects = [...projectsMap.values()].sort((a, b) =>
+  const scrapedProjects = [...projectsMap.values()].sort((a, b) =>
     a.name.localeCompare(b.name),
   );
+
+  // PF owns pricing, media and availability. Everything else in the catalog was
+  // put there by someone else and has no producer in this pipeline.
+  const { projects, matched } = mergeCatalogProjects(previous?.projects ?? [], scrapedProjects);
 
   const cityCounts = new Map<string, { slug: string; label: string; count: number }>();
   for (const u of allUnits) {
@@ -385,11 +412,46 @@ async function main() {
     }),
   };
 
+    // A partial run holds, by construction, only a slice of the catalog —
+    // writing it would delete every project on the pages we never fetched.
+    // --pages is a smoke test: it proves the scrape/parse chain still survives
+    // PF's markup, and stops there. (The workflow's smoke button reaches the
+    // commit step, so this is the difference between validating an ingest and
+    // pushing a 48-unit catalog to production.)
+    if (maxPages !== null) {
+      console.log(
+        `[scrape-pf] --pages ${maxPages}: parsed ${catalog.unitCount} units / ${catalog.projectCount} projects. Partial run — not writing ${OUT}.`,
+      );
+      return;
+    }
+
+    // Being throttled at page 40 and writing what we got would delete ~40% of
+    // the site, and the workflow would commit it and upsert it to production D1
+    // before a human saw the log. Failing red is always the better trade here:
+    // the cost of a missed refresh is a week of stale prices.
+    if (allUnits.length < first.total * MIN_UNIT_COMPLETENESS) {
+      throw new Error(
+        `[scrape-pf] only ${allUnits.length}/${first.total} units ` +
+          `(${Math.round((allUnits.length / first.total) * 100)}%) — refusing to write a short scrape`,
+      );
+    }
+    if (previous && projects.length < previous.projects.length * MIN_PROJECT_RETENTION) {
+      throw new Error(
+        `[scrape-pf] ${projects.length} projects vs ${previous.projects.length} in the existing catalog — ` +
+          `refusing to write a ${Math.round((1 - projects.length / previous.projects.length) * 100)}% drop`,
+      );
+    }
+
     mkdirSync(join(process.cwd(), "data"), { recursive: true });
     writeFileSync(OUT, `${JSON.stringify(catalog, null, 2)}\n`, "utf8");
     console.log(
       `[scrape-pf] Wrote ${catalog.unitCount} units, ${catalog.projectCount} projects → data/catalog.json`,
     );
+    console.log(
+      `[scrape-pf] merged onto ${previous?.projects.length ?? 0} existing projects ` +
+        `(${matched} matched, ${projects.length - matched} new)`,
+    );
+    console.log(`[scrape-pf] enrichment carried forward: ${enrichmentSummary(projects)}`);
   } finally {
     await browser.close();
   }

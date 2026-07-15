@@ -70,8 +70,13 @@ jobs:
           fi
           npx tsx scripts/catalog-ingest-pipeline.ts $ARGS
 
+      # Never on a smoke run. Smoke scrapes 2 of ~70 PF pages, so its catalog is
+      # a slice of the real one — committing it would delete every project on
+      # the pages it never fetched. scrape-pf-catalog.ts also refuses to write
+      # at all under --pages; this is the second lock on the same door, because
+      # the cost of getting it wrong is the whole catalog.
       - name: Commit catalog snapshot
-        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.smoke != 'true')
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
