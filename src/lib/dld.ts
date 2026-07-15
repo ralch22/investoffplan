@@ -74,6 +74,8 @@ export interface DldSale {
   amount: number; // AED sale price
   sizeSqm: number; // m²
   date: string; // ISO transaction date (YYYY-MM-DD)
+  /** DLD IS_OFFPLAN_EN: "Off-Plan" | "Ready" → registration type at sale. */
+  regType?: 'off-plan' | 'ready' | null;
 }
 
 export interface DldRent {
@@ -328,6 +330,7 @@ export function mapSaleRow(r: Record<string, string>): DldSale | null {
   const sizeSqm = Number(r.ACTUAL_AREA || r.PROCEDURE_AREA);
   const date = (r.INSTANCE_DATE || '').slice(0, 10);
   if (!area || !(amount > 0) || !(sizeSqm > 0) || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+  const offplanFlag = (r.IS_OFFPLAN_EN || '').trim().toLowerCase();
   return {
     area,
     project: (r.PROJECT_EN || '').trim() || null,
@@ -336,6 +339,8 @@ export function mapSaleRow(r: Record<string, string>): DldSale | null {
     amount,
     sizeSqm,
     date,
+    regType:
+      offplanFlag === 'off-plan' ? 'off-plan' : offplanFlag === 'ready' ? 'ready' : null,
   };
 }
 
