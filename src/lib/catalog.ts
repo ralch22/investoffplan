@@ -38,11 +38,38 @@ export interface InsightStat {
 }
 
 let cachedApi: CatalogApi | null = null;
+let cachedRaw: CatalogFile | null = null;
+let cachedAt = 0;
 // Promise-singleton prevents thundering-herd: concurrent callers on a cold
 // isolate all await the same in-flight load instead of firing N parallel fetches.
 let loadingPromise: Promise<CatalogApi> | null = null;
 
+// Isolate-lifetime caching matches the site's freshness contract (pages serve
+// hour-stale ISR; /api/catalog/* advertises s-maxage=3600). The probe bounds
+// reseed staleness: past this age, ONE 1-row catalog_meta query per request
+// decides whether to rebuild — instead of the old behavior where the API
+// routes re-read the full ~13k rows on EVERY request.
+const FRESHNESS_PROBE_MS = 15 * 60_000;
+
+async function maybeRefresh(): Promise<void> {
+  if (!cachedRaw || Date.now() - cachedAt < FRESHNESS_PROBE_MS) return;
+  cachedAt = Date.now(); // probe at most once per window even if it fails
+  try {
+    const db = await getDb();
+    if (!db) return;
+    const { fetchCatalogMeta } = await import("@/lib/db/catalog-queries");
+    const meta = await fetchCatalogMeta(db);
+    if (meta && meta.scrapedAt !== cachedRaw.scrapedAt) {
+      cachedApi = null;
+      cachedRaw = null;
+    }
+  } catch {
+    // Probe failure must never take down serving — keep the cached catalog.
+  }
+}
+
 export async function getCatalogApi(): Promise<CatalogApi> {
+  await maybeRefresh();
   if (cachedApi) return cachedApi;
   if (loadingPromise) return loadingPromise;
 
@@ -53,7 +80,9 @@ export async function getCatalogApi(): Promise<CatalogApi> {
       if (db) {
         const raw = await fetchCatalogFile(db);
         if (raw) {
+          cachedRaw = raw;
           cachedApi = createCatalogApi(raw);
+          cachedAt = Date.now();
           loadingPromise = null;
           return cachedApi;
         }
@@ -62,6 +91,7 @@ export async function getCatalogApi(): Promise<CatalogApi> {
 
     try {
       const raw = JSON.parse(readFileSync(join(process.cwd(), "data/catalog.json"), "utf8")) as CatalogFile;
+      cachedRaw = raw;
       cachedApi = createCatalogApi(raw);
     } catch {
       // Apex fallback — a missing env var must not point data fetches at the
@@ -70,13 +100,25 @@ export async function getCatalogApi(): Promise<CatalogApi> {
       // catalog.json is excluded from CF assets (>25 MB); use the lite mirror instead.
       const res = await fetch(`${base}/data/catalog-lite.json`, { next: { revalidate: 3600 } });
       const raw = (await res.json()) as CatalogFile;
+      cachedRaw = raw;
       cachedApi = createCatalogApi(raw);
     }
+    cachedAt = Date.now();
     loadingPromise = null;
     return cachedApi!;
   })();
 
   return loadingPromise;
+}
+
+/**
+ * The raw CatalogFile behind getCatalogApi(), sharing the same in-isolate
+ * cache + thundering-herd guard. The /api/catalog/* routes use this instead
+ * of re-reading ~13k D1 rows per request (the pre-hardening behavior).
+ */
+export async function getCatalogFile(): Promise<CatalogFile | null> {
+  await getCatalogApi();
+  return cachedRaw;
 }
 
 export async function getDevelopers(): Promise<DeveloperSummary[]> {
