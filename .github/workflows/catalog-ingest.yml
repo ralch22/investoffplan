@@ -12,6 +12,18 @@ name: Catalog ingest
 #       Include the target account resource.
 #   - CLOUDFLARE_ACCOUNT_ID
 #       Value: 4a75e91d6fca8bc58467fb80ce1b9c2e
+#       (Emerge Digital — verified 2026-07-15 as the account holding D1
+#       investoffplan-catalog e5aa2877-4359-4c28-8499-0c149200c6a4. Matches
+#       wrangler.jsonc. Not really a secret; it is committed there too.)
+#   - INGEST_HEARTBEAT_URL
+#       Better Stack heartbeat "IOP weekly catalog ingest" (id 472431, period
+#       7d, grace 12h). The last two steps report this run's outcome to it.
+#       Recreate via POST https://uptime.betterstack.com/api/v2/heartbeats.
+#
+# Both CLOUDFLARE_* secrets were MISSING until 2026-07-15 — run 29230268222
+# logged them as empty strings, so the --remote D1 upsert had never once been
+# able to authenticate. If the upsert starts failing on auth, check that
+# CLOUDFLARE_API_TOKEN still exists before debugging anything else.
 #
 # Optional GitHub repository variables:
 #   - IOP_WHATSAPP  (default contact number injected into catalog rows when PF has none)
@@ -41,6 +53,17 @@ jobs:
     timeout-minutes: 180
     permissions:
       contents: write
+
+    env:
+      # "Was this a real ingest?" — mirrors the Commit catalog snapshot gate
+      # below. A smoke run scrapes 2 of PF's ~76 pages, so it neither commits
+      # nor counts as the weekly refresh having happened.
+      #
+      # Deliberately NOT wired into the commit step itself. The two conditions
+      # must agree, but the commit gate gets no refactor from me, however
+      # obviously equivalent — if these ever drift the cost here is a mistimed
+      # heartbeat ping, and the cost there is the whole catalog.
+      REAL_INGEST: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.smoke != 'true') }}
 
     steps:
       - name: Checkout
@@ -111,3 +134,43 @@ jobs:
             fi
             echo "Continuing dispatch loop — $remaining searches remaining"
           done
+
+      # Liveness for the weekly refresh, reported to a Better Stack heartbeat.
+      #
+      # This exists because of what happened without it: the 2026-07-13 run —
+      # the only run in this workflow's history — failed at two independent
+      # steps, the site's catalog stopped refreshing, and nobody found out until
+      # someone went looking days later. GitHub does email the owner when a
+      # scheduled workflow fails; that is the status quo being replaced, not an
+      # alternative to it.
+      #
+      # A heartbeat is used rather than an on-failure hook because there are two
+      # failure modes and only one of them involves a failure:
+      #   1. the run failed
+      #   2. the run never happened
+      # (2) is not hypothetical — GitHub disables scheduled workflows in repos
+      # with no activity for 60 days. An on-failure hook is silent in exactly
+      # that case, because there is no run to fire it. To Better Stack both look
+      # the same: no ping arrived, so the heartbeat lapses and it alerts.
+      #
+      # Only a real ingest pings. A smoke run that pinged would reset the timer
+      # and buy another week of silence for a weekly refresh that never ran —
+      # which is the precise failure this step is here to catch.
+      - name: Report ingest success
+        if: success() && env.REAL_INGEST == 'true'
+        run: curl -fsS -m 20 "${{ secrets.INGEST_HEARTBEAT_URL }}" || true
+
+      # /fail flips the heartbeat down in seconds instead of waiting out the 12h
+      # grace. It is undocumented — verified by experiment 2026-07-15 against
+      # the live heartbeat: ping -> up, POST /fail -> down, ping -> up.
+      #
+      # Safe to depend on precisely because nothing depends on it: it only buys
+      # latency. The period+grace is the actual guarantee. If Better Stack drops
+      # /fail, this 404s on a job that has already failed, and the heartbeat
+      # still lapses on its own and still alerts — just 12h later instead of
+      # instantly. `|| true` keeps a flaky alerting call from being the thing
+      # that fails an otherwise-fine run; a ping that silently never lands
+      # lapses the heartbeat, which is the safe direction to fail.
+      - name: Report ingest failure
+        if: failure() && env.REAL_INGEST == 'true'
+        run: curl -fsS -m 20 -X POST "${{ secrets.INGEST_HEARTBEAT_URL }}/fail" || true
