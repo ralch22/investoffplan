@@ -1,3 +1,14 @@
+## codebase-memory (MCP)
+
+`.mcp.json` registers the `codebase-memory` MCP server (binary at `~/.local/bin/codebase-memory-mcp`; teammates: download from github.com/DeusData/codebase-memory-mcp releases, verify checksums). Complements graphify:
+- **Semantic/structural search**: `search_graph` (BM25+semantic over symbols), `search_code` (pattern with signatures).
+- **Call-graph tracing**: `trace_path` (callers/callees/data_flow) — use for blast-radius before changing a function.
+- **Architecture**: `get_architecture`, dead-code detection, `detect_changes`.
+- Re-index after large changes: `codebase-memory-mcp cli index_repository --repo-path . --mode full --persistence true` (~seconds; graph in `.codebase-memory/`, gitignored).
+- No CLI session? Every tool also runs headless: `codebase-memory-mcp cli <tool> --flag value`.
+
+Rule of thumb: graphify for quick concept/community lookups and the committed GRAPH_REPORT; codebase-memory for call-graph tracing, semantic search, and per-function blast radius.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
