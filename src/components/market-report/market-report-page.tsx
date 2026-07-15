@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { MarketPulseBand } from "@/components/market-pulse-band";
 import { TrendChart } from "@/components/trend-chart";
 import { getMarketReportData } from "@/lib/market-report-data";
+import type { MarketReportEdition } from "@/lib/market-report-editions";
 import { getDictionary } from "@/i18n";
 import { interpolate, localePath, type Locale } from "@/i18n/config";
 import { getSiteUrl } from "@/lib/site-url";
@@ -22,7 +24,13 @@ import { formatPrice } from "@/lib/format";
 type T = ReturnType<typeof getDictionary>["marketReport"];
 
 
-export async function MarketReportPage({ locale }: { locale: Locale }) {
+export async function MarketReportPage({
+  locale,
+  edition,
+}: {
+  locale: Locale;
+  edition?: MarketReportEdition;
+}) {
   const dict = getDictionary(locale);
   const t = dict.marketReport;
   const data = await getMarketReportData();
@@ -48,16 +56,23 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
     { day: "numeric", month: "long", year: "numeric" },
   );
 
-  const canonical = `${getSiteUrl()}${lp("/market-report")}`;
+  const isEditionPage = edition != null;
+  const pageTitle = isEditionPage ? `${t.title} ${edition.label}` : `${t.title} ${data.year}`;
+  const canonical = isEditionPage
+    ? `${getSiteUrl()}${lp(`/market-report/${edition.slug}`)}`
+    : `${getSiteUrl()}${lp("/market-report")}`;
+  const publishedAt = isEditionPage ? edition.publishedAt : data.catalogUpdated;
+
+  const archiveUrl = `${getSiteUrl()}${lp("/market-report/archive")}`;
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "Article",
-        headline: `${t.title} ${data.year}`,
+        headline: pageTitle,
         description: t.subtitle,
         inLanguage: locale,
-        datePublished: data.catalogUpdated,
+        datePublished: publishedAt,
         dateModified: data.catalogUpdated,
         mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
         author: { "@type": "Organization", name: "invest off-plan" },
@@ -66,10 +81,19 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
           name: "invest off-plan",
           logo: { "@type": "ImageObject", url: `${getSiteUrl()}/brand/icon-red.png` },
         },
+        ...(isEditionPage
+          ? {
+              isPartOf: {
+                "@type": "Periodical",
+                name: t.title,
+                url: archiveUrl,
+              },
+            }
+          : {}),
       },
       {
         "@type": "Dataset",
-        name: `${t.title} ${data.year}`,
+        name: pageTitle,
         description: t.subtitle,
         url: canonical,
         dateModified: data.catalogUpdated,
@@ -86,10 +110,17 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
       },
       {
         "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: dict.common.home, item: `${getSiteUrl()}${lp("/")}` },
-          { "@type": "ListItem", position: 2, name: t.title, item: canonical },
-        ],
+        itemListElement: isEditionPage
+          ? [
+              { "@type": "ListItem", position: 1, name: dict.common.home, item: `${getSiteUrl()}${lp("/")}` },
+              { "@type": "ListItem", position: 2, name: t.title, item: `${getSiteUrl()}${lp("/market-report")}` },
+              { "@type": "ListItem", position: 3, name: t.archiveBreadcrumb, item: archiveUrl },
+              { "@type": "ListItem", position: 4, name: edition!.label },
+            ]
+          : [
+              { "@type": "ListItem", position: 1, name: dict.common.home, item: `${getSiteUrl()}${lp("/")}` },
+              { "@type": "ListItem", position: 2, name: t.title, item: canonical },
+            ],
       },
     ],
   };
@@ -103,7 +134,7 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <PageHero title={`${t.title} ${data.year}`} italicTitle subtitle={t.subtitle}>
+      <PageHero title={pageTitle} italicTitle subtitle={t.subtitle}>
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-white/80">
           <span>{interpolate(t.dataAsOf, { date: dateStr })}</span>
           <span aria-hidden>·</span>
@@ -114,6 +145,16 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
       <MarketPulseBand locale={locale} />
 
       <main className="mx-auto max-w-[1100px] px-5 py-12 md:px-8">
+        {isEditionPage ? (
+          <Breadcrumbs
+            items={[
+              { label: dict.common.home, href: "/" },
+              { label: t.title, href: "/market-report" },
+              { label: t.archiveBreadcrumb, href: "/market-report/archive" },
+              { label: edition!.label },
+            ]}
+          />
+        ) : null}
         {/* 1 — Market overview */}
         <Section title={t.overviewTitle}>
           <p className="max-w-3xl text-muted">
@@ -382,6 +423,14 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
             <ExploreLink href={lp("/developers")} label={t.exploreDevelopers} />
             <ExploreLink href={lp("/tools")} label={t.exploreTools} />
             <ExploreLink href={lp("/projects")} label={t.exploreProjects} />
+          </div>
+          <div className="mt-4">
+            <Link
+              href={lp("/market-report/archive")}
+              className="text-sm font-semibold text-brand hover:text-brand-dark"
+            >
+              {t.archiveLink}
+            </Link>
           </div>
         </Section>
 

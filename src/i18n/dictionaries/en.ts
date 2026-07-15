@@ -1843,7 +1843,15 @@ const dict = {
     "variableGrossYield": "Gross rental yield",
     "variableMedianSoldPpsf": "Median sold price per sqft",
     "variableOffPlanLaunch": "Off-plan launch price",
-    "variableHandoverPipeline": "Handover pipeline"
+    "variableHandoverPipeline": "Handover pipeline",
+    "archiveLink": "All editions →",
+    "archiveNavLabel": "Previous editions",
+    "archiveTitle": "Market Report Archive",
+    "archiveSubtitle": "Every edition of the UAE Off-Plan Market Report — DLD-grounded data, published quarterly.",
+    "archiveBreadcrumb": "Archive",
+    "currentEditionBadge": "Current",
+    "viewEdition": "View edition →",
+    "editionOf": "Edition of {label}"
   },
   "compare": {
     "heroTitleLead": "Compare",
