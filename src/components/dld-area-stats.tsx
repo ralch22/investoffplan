@@ -1,4 +1,5 @@
 import type { DldAreaStats } from "@/lib/dld-area-stats";
+import type { OffplanVsReadySpread } from "@/lib/dld-recent-sales";
 import { dldConfidenceLabel, formatPrice } from "@/lib/format";
 import { TrendChart } from "@/components/trend-chart";
 import { getDictionary, interpolate } from "@/i18n";
@@ -8,6 +9,7 @@ interface Props {
   stats: DldAreaStats;
   areaName: string;
   source: string;
+  spread?: OffplanVsReadySpread | null;
   locale?: Locale;
 }
 
@@ -18,7 +20,7 @@ const MONTH_ABBR = ["", "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "
  * transaction volume, gross rental yield, and a price-per-sqft trend. Aggregates
  * only (Dubai Land Department open data); no purchase-level or owner data.
  */
-export function DldAreaStatsBand({ stats, areaName, source, locale = "en" }: Props) {
+export function DldAreaStatsBand({ stats, areaName, source, spread, locale = "en" }: Props) {
   const dict = getDictionary(locale);
   const dld = dict.dld;
 
@@ -73,6 +75,26 @@ export function DldAreaStatsBand({ stats, areaName, source, locale = "en" }: Pro
           </div>
         ))}
       </div>
+
+      {spread ? (
+        <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-1 rounded-xl border border-border bg-white px-5 py-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+            {dld.offplanVsReadyHeading}
+          </p>
+          <p className="text-sm text-muted">
+            {interpolate(dld.offplanVsReadyLine, {
+              op: spread.offplanPpsqft.toLocaleString(),
+              rd: spread.readyPpsqft.toLocaleString(),
+              n: (spread.nOffplan + spread.nReady).toLocaleString(),
+            })}
+          </p>
+          <p className={`text-sm font-semibold ${spread.spreadPct >= 0 ? "text-brand" : "text-muted"}`}>
+            {spread.spreadPct >= 0
+              ? interpolate(dld.offplanVsReadyPremium, { pct: Math.abs(spread.spreadPct).toFixed(1) })
+              : interpolate(dld.offplanVsReadyDiscount, { pct: Math.abs(spread.spreadPct).toFixed(1) })}
+          </p>
+        </div>
+      ) : null}
 
       {stats.beds && Object.keys(stats.beds).length > 0 ? (
         <div className="mt-6">

@@ -1967,6 +1967,10 @@ export const ar: Dict = {
     "salesCol": "المبيعات",
     "monthlyTrendHeading": "وسيط درهم/قدم² حسب الشهر",
     "trendChartAria": "متوسط سعر البيع للقدم المربعة شهرياً في {area}، 2025",
-    "trendPointTitle": "{month}: {ppsf} درهم/قدم² · {sales} مبيعات"
+    "trendPointTitle": "{month}: {ppsf} درهم/قدم² · {sales} مبيعات",
+    "offplanVsReadyHeading": "على الخارطة مقابل الجاهز (2025)",
+    "offplanVsReadyLine": "على الخارطة {op} درهم/قدم² · جاهز {rd} درهم/قدم² · {n} صفقة",
+    "offplanVsReadyPremium": "على الخارطة بعلاوة +{pct}٪ مقارنة بالجاهز",
+    "offplanVsReadyDiscount": "على الخارطة بخصم {pct}٪ مقارنة بالجاهز"
   }
 };

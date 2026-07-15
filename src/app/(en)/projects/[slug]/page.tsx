@@ -38,6 +38,7 @@ import { normalizeGalleryUrls } from "@/lib/project-gallery-images";
 import { getEnrichment } from "@/lib/enrichments";
 import { DldAreaStatsBand } from "@/components/dld-area-stats";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
+import { getOffplanVsReady } from "@/lib/dld-recent-sales";
 import { getProjectComparisonLinks } from "@/lib/project-compare";
 import {
   cityLabel,
@@ -200,6 +201,7 @@ export default async function ProjectDetailPage({
   const enrichment = getEnrichment(slug);
   const dldStats = getAreaStats(project.area);
   const dldSource = getDldSource();
+  const dldSpread = getOffplanVsReady(project.area);
   const pfFaqs = project.pfFaqs ?? [];
   // Stated prices only — 8 live projects carry 0-price units and rendered
   // "FROM AED 0" in the hero, key facts, sticky bar, and JSON-LD offers.
@@ -598,6 +600,7 @@ export default async function ProjectDetailPage({
               stats={dldStats}
               areaName={project.area.split(",")[0]}
               source={dldSource.source}
+              spread={dldSpread}
               locale={locale}
             />
           </div>
