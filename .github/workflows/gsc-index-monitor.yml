@@ -1,0 +1,74 @@
+name: GSC index monitor
+
+# Daily crawl/index health check against Search Console. Answers the one
+# question that matters after a sitemap submit: is Google actually crawling and
+# indexing us? Fails (and so emails) when the homepage isn't indexed, a
+# should-be-indexable page carries noindex, or the sitemap errors.
+#
+# There is no API to request indexing — Google's Indexing API only accepts
+# JobPosting/BroadcastEvent (see docs/seo-indexing.md). This job watches; the
+# fix is a human clicking Request Indexing in GSC.
+#
+# Required GitHub repository secret:
+#   - GSC_SA_KEY  (the full JSON key for
+#     iop-indexing@corded-pivot-502106-u8.iam.gserviceaccount.com, which must be
+#     added to the sc-domain:investoffplan.com property in Search Console)
+#
+#     gh secret set GSC_SA_KEY --body "$(cat ~/.iop-indexing-sa.json)"
+#
+# Quota: URL Inspection allows 2,000/day. This uses ~20.
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # 10:00 Dubai
+  workflow_dispatch: {}
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      # Carries the previous run's snapshot forward so the job can tell that a
+      # page fell OUT of the index — the rolling key never hits, so the
+      # restore-keys prefix always resolves to the most recent snapshot.
+      - name: Restore previous snapshot
+        uses: actions/cache@v4
+        with:
+          path: prev/gsc-index-health.json
+          key: gsc-index-health-${{ github.run_number }}
+          restore-keys: gsc-index-health-
+
+      # No npm ci — the monitor uses only Node built-ins and global fetch.
+      - name: Check index health
+        env:
+          GSC_SA_KEY: ${{ secrets.GSC_SA_KEY }}
+        run: |
+          mkdir -p prev
+          set +e
+          node scripts/gsc-index-monitor.mjs \
+            --prev prev/gsc-index-health.json \
+            --out gsc-index-health.json
+          status=$?
+          set -e
+          # Save this run's state even when it failed — a red run is exactly
+          # when the next run most needs to know the previous state.
+          if [ -f gsc-index-health.json ]; then
+            cp gsc-index-health.json prev/gsc-index-health.json
+          fi
+          exit $status
+
+      - name: Upload snapshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gsc-index-health-${{ github.run_number }}
+          path: gsc-index-health.json
+          retention-days: 90
