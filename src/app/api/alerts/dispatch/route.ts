@@ -10,6 +10,7 @@ import {
 } from "@/lib/alerts/match";
 import { sendEmail, isEmailConfigured } from "@/lib/email/resend";
 import { alertDigestEmail, type AlertDigestSearch } from "@/lib/email/templates";
+import { chunkIds, isImplausibleLaunchWave } from "@/lib/alerts/dispatch-limits";
 import { SITE_URL } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
@@ -119,17 +120,44 @@ export async function POST(request: Request) {
     .from(projects)
     .where(gt(projects.firstSeenAt, newSince));
 
+  // A launch window holding this much of the catalog is an import artifact, not
+  // 1,700 simultaneous launches — see dispatch-limits. Bail before the unit
+  // lookup and before any send: nothing is emailed and nothing is stamped, so a
+  // later run re-evaluates these searches honestly. Reported as a normal 200
+  // with remaining=0 so the caller's loop ends instead of retrying 20 times.
+  if (isImplausibleLaunchWave(newProjects.length)) {
+    return NextResponse.json({
+      ok: true,
+      processed: 0,
+      remaining: 0,
+      sent: 0,
+      newProjects: newProjects.length,
+      skipped: "implausible-new-launch-window",
+    });
+  }
+
   const alertProjects: Array<AlertProject & { slug: string; minPriceAed: number | null }> = [];
   if (newProjects.length > 0) {
-    const unitRows = await db
-      .select({
-        projectId: projectUnits.projectId,
-        beds: projectUnits.beds,
-        propertyType: projectUnits.propertyType,
-        launchPriceAed: projectUnits.launchPriceAed,
-      })
-      .from(projectUnits)
-      .where(inArray(projectUnits.projectId, newProjects.map((p) => p.id)));
+    // Chunked because D1 caps a statement at 100 bound parameters and this
+    // binds one per project. Unchunked, it threw for every window over 100.
+    const unitRows: Array<{
+      projectId: string;
+      beds: number;
+      propertyType: string;
+      launchPriceAed: number;
+    }> = [];
+    for (const batch of chunkIds(newProjects.map((p) => p.id))) {
+      const rows = await db
+        .select({
+          projectId: projectUnits.projectId,
+          beds: projectUnits.beds,
+          propertyType: projectUnits.propertyType,
+          launchPriceAed: projectUnits.launchPriceAed,
+        })
+        .from(projectUnits)
+        .where(inArray(projectUnits.projectId, batch));
+      unitRows.push(...rows);
+    }
 
     const unitsByProject = new Map<string, AlertProject["units"]>();
     for (const unit of unitRows) {
@@ -229,10 +257,15 @@ export async function POST(request: Request) {
 
   if (stampedIds.length > 0) {
     const stamp = new Date().toISOString();
-    await db
-      .update(savedSearches)
-      .set({ lastAlertAt: stamp, updatedAt: stamp })
-      .where(inArray(savedSearches.id, stampedIds));
+    // Same D1 bound-parameter ceiling as the unit lookup. Only one saved search
+    // exists today so this could not yet throw, but it is the identical bug and
+    // it would first bite on the run where the product finally has users.
+    for (const batch of chunkIds(stampedIds)) {
+      await db
+        .update(savedSearches)
+        .set({ lastAlertAt: stamp, updatedAt: stamp })
+        .where(inArray(savedSearches.id, batch));
+    }
   }
 
   return NextResponse.json({
