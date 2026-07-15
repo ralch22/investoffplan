@@ -71,6 +71,9 @@
   //   (plus TURNSTILE_SECRET_KEY, GHL_*, LEADS_RETRY_TOKEN, etc.)
   "vars": {
     "NEXT_PUBLIC_SITE_URL": "https://investoffplan.com",
+    // GSC HTML-tag verification — set to the content= value from Search Console
+    // (e.g. "abc123def456..."). Remove the leading google-site-verification= prefix.
+    // "NEXT_PUBLIC_GSC_VERIFICATION": "",
     "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADxyqgdGGZ6sArrC",
     "NEXT_PUBLIC_CATALOG_API": "1",
     "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-7GDZWYG4N2",

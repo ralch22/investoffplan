@@ -72,6 +72,12 @@ export const metadata: Metadata = {
     ],
     apple: "/brand/icon-red.png",
   },
+  // GSC: set NEXT_PUBLIC_GSC_VERIFICATION in wrangler.production.jsonc vars
+  // to the content= value from the Google HTML-tag verification snippet.
+  // IndexNow key lives at /investoffplan-indexnow-2026.txt (see scripts/indexnow-submit.mjs).
+  ...(process.env.NEXT_PUBLIC_GSC_VERIFICATION
+    ? { verification: { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } }
+    : {}),
 };
 
 export default async function RootLayout({
