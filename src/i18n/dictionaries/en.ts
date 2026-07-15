@@ -1965,7 +1965,11 @@ const dict = {
     "salesCol": "Sales",
     "monthlyTrendHeading": "Median AED/sqft by month",
     "trendChartAria": "Median sold price per sqft by month in {area}, 2025",
-    "trendPointTitle": "{month}: AED {ppsf}/sqft · {sales} sales"
+    "trendPointTitle": "{month}: AED {ppsf}/sqft · {sales} sales",
+    "offplanVsReadyHeading": "Off-plan vs ready (2025)",
+    "offplanVsReadyLine": "Off-plan AED {op}/sqft · Ready AED {rd}/sqft · {n} sales",
+    "offplanVsReadyPremium": "Off-plan trades at a +{pct}% premium over ready",
+    "offplanVsReadyDiscount": "Off-plan trades at a {pct}% discount to ready"
   }
 } as const;
 

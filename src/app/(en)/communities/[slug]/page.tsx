@@ -18,6 +18,7 @@ import {
 import { DldAreaStatsBand } from "@/components/dld-area-stats";
 import { DeepAnalyticsUnlock } from "@/components/deep-analytics-unlock";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
+import { getOffplanVsReady } from "@/lib/dld-recent-sales";
 import { getSuggestedComparisons } from "@/lib/area-compare";
 import { MarketAdviceCta } from "@/components/market-advice-cta";
 import { getAreaEditorial } from "@/content/areas";
@@ -115,6 +116,7 @@ export default async function CommunityDetailPage({ params, locale = "en" }: Pag
   const stats = computeCommunityStats(projects);
   const dldStats = getAreaStats(community.name);
   const dldSource = getDldSource();
+  const dldSpread = getOffplanVsReady(community.name);
   const comparisons = await getSuggestedComparisons(slug);
   const similar = communities
     .filter((c) => c.slug !== slug && c.city === community.city)
@@ -192,7 +194,7 @@ export default async function CommunityDetailPage({ params, locale = "en" }: Pag
         {/* DLD market data (anonymized aggregates; renders only where we have it) */}
         {dldStats ? (
           <>
-            <DldAreaStatsBand stats={dldStats} areaName={community.name} source={dldSource.source} locale={locale} />
+            <DldAreaStatsBand stats={dldStats} areaName={community.name} source={dldSource.source} spread={dldSpread} locale={locale} />
             {/* Interaction-gated deep analytics + printable report entry point.
                 Static HTML identical for all users — the deep data only ever
                 arrives via the session-guarded API after a click. */}
