@@ -1,0 +1,47 @@
+keyword,geo,location_code,search_volume_mo,keyword_difficulty,cpc_usd,intent,priority_tier,page_opportunity
+invest in dubai,UAE,2784,46955,22,,commercial,T1,homepage + /invest
+invest in dubai,India,2356,1188,24,1.20,commercial,T1,/invest-from-india
+invest in dubai,UK,2826,476,10,10.38,commercial,T1,/invest-from-uk
+buy property in dubai,India,2356,816,36,2.70,transactional,T1,/invest-from-india
+buy property in dubai,UK,2826,876,5,5.34,transactional,T1,/invest-from-uk
+rightmove dubai,UK,2826,1372,0,2.02,navigational,T3,n/a (brand competitor)
+dubai flat price,India,2356,440,3,0.99,commercial,T1,/invest-from-india
+dubai flat price in indian rupees,India,2356,590,0,1.19,commercial,T1,/invest-from-india (INR)
+flat price in dubai in indian rupees,India,2356,480,0,1.13,commercial,T1,/invest-from-india (INR)
+house price in dubai in rupees,India,2356,320,0,1.25,informational,T1,/invest-from-india (INR)
+buy flat in dubai,India,2356,344,15,2.07,transactional,T1,/projects filter
+dubai real estate investment,India,2356,380,29,,commercial,T1,/invest-from-india
+2 bedroom apartment dubai for sale,India,2356,210,0,1.05,transactional,T2,/projects filter
+dubai flat price 2 bhk in indian rupees,India,2356,210,0,0.92,transactional,T1,/invest-from-india (INR)
+1 bhk flat price in dubai in indian rupees,India,2356,210,0,1.03,commercial,T1,/invest-from-india (INR)
+buy property in dubai from india,India,2356,175,15,2.54,transactional,T1,/invest-from-india
+dubai villa price in indian rupees,India,2356,170,1,1.40,commercial,T1,/invest-from-india (INR)
+off-plan property meaning,India,2356,140,,,,T2,/guides/what-is-off-plan
+risks of buying property in dubai,India,2356,140,,,,informational,T1,/guides/risks
+property in dubai under 50 lakhs,India,2356,140,0,1.43,commercial,T1,/invest-from-india
+risks of buying property in dubai,UK,2826,70,0,3.46,informational,T1,/guides/risks
+off plan dubai,UAE,2784,778,27,,commercial,T1,/projects
+new projects in dubai,UAE,2784,566,8,,commercial,T1,/projects
+new off plan projects in dubai,UAE,2784,165,,,,commercial,T2,/projects
+new developers in dubai,UAE,2784,319,27,,commercial,T2,/developers
+best areas to invest in dubai,UAE,2784,35,,,,commercial,T2,/communities
+dubai property capital appreciation,UAE,2784,,,,,commercial,T1,/sold-prices + communities
+property valuation dubai,UAE,2784,345,10,,commercial,T2,/tools
+off plan property dubai,UK,2826,104,13,11.60,commercial,T1,/invest-from-uk
+dubai property for rent,UK,2826,292,17,1.02,commercial,T3,n/a
+cheap houses for sale in dubai,UK,2826,269,0,2.35,transactional,T3,/projects
+dubai property for sale in pounds,UK,2826,140,0,2.17,transactional,T1,/invest-from-uk (GBP)
+how much are houses in dubai in pounds,UK,2826,30,,1.96,commercial,T1,/invest-from-uk (GBP)
+property investment in dubai for foreigners,UK,2826,40,20,,commercial,T1,/invest-from-uk
+property investment in dubai for foreigners,India,2356,40,,,,commercial,T1,/invest-from-india
+is it worth buying property in dubai,UK,2826,30,,5.33,informational,T1,/guides/worth-investing
+is buying property in dubai a good investment,UK,2826,30,,,,informational,T1,/guides/worth-investing
+buy property in dubai on installments,UK,2826,15,,6.71,transactional,T1,/guides/payment-plans
+buy property in dubai from uk,UK,2826,1,,8.33,transactional,T1,/invest-from-uk
+off-plan property meaning,UK,2826,17,11,,informational,T2,/guides/what-is-off-plan
+what is off plan property in dubai,India,2356,70,,2.46,informational,T2,/guides/what-is-off-plan
+dubai off plan property for sale,India,2356,70,,,,transactional,T2,/projects
+off plan property for sale in dubai,India,2356,50,,,,transactional,T2,/projects
+off plan vs ready property dubai,India,2356,20,,,,commercial,T2,/guides/off-plan-vs-ready
+property prices in dubai falling,UK,2826,30,,2.04,commercial,T2,/market-report
+distressed property for sale dubai,UK,2826,40,,2.29,commercial,T3,n/a
