@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getDevelopers, getCatalogApi } from "@/lib/catalog";
 import { videoSitemapEntry } from "@/lib/media";
 import { getCommunities } from "@/lib/communities";
+import { getRecentSales } from "@/lib/dld-recent-sales";
 import { getComparablePairSlugs } from "@/lib/area-compare";
 import { getComparableProjectSlugs } from "@/lib/project-compare";
 import { getComparableDeveloperSlugs } from "@/lib/developer-compare";
@@ -35,6 +36,7 @@ export async function buildGroups(): Promise<Entry[][]> {
 
   const staticRoutes: Entry[] = [
     "", "/projects", "/developers", "/communities", "/market-report", "/compare",
+    "/sold-prices",
     "/compare-projects", "/compare-developers",
     "/locations", "/guides", "/faq", "/map", "/contact", "/about", "/news",
     // /favorites is user-state (noindex) — omit from sitemap.
@@ -214,6 +216,25 @@ export async function buildGroups(): Promise<Entry[][]> {
     };
   });
 
+  // 6 sold prices (EN only in v1 — AR added once EN indexing proves healthy).
+  // Sample-gated: only communities clearing the 8-transaction floor are listed,
+  // matching the per-page noindex rule (thin-page protection).
+  const soldPricesCommunities = await getCommunities();
+  const soldPricesRoutes: Entry[] = soldPricesCommunities
+    .filter((c) => (getRecentSales(c.name)?.length ?? 0) >= 8)
+    .map((c) => ({
+      url: `${BASE}/sold-prices/${c.slug}`,
+      lastModified: catalogUpdated,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+      alternates: {
+        languages: {
+          en: `${BASE}/sold-prices/${c.slug}`,
+          ar: `${BASE}/ar/sold-prices/${c.slug}`,
+        },
+      },
+    }));
+
   GROUPS = [
     // 0 core: static EN + AR static (with hreflang)
     [...staticRoutes, ...arStaticRoutes],
@@ -227,11 +248,13 @@ export async function buildGroups(): Promise<Entry[][]> {
     [...locationGuideRoutes, ...guideRoutes, ...newsRoutes, ...collectionRoutes, ...faqRoutes],
     // 5 Arabic detail mirror
     arDetailRoutes,
+    // 6 sold prices (EN, sample-gated)
+    soldPricesRoutes,
   ];
   return GROUPS;
 }
 
 /** Number of child sitemap groups. Consumed by the sitemap index route so it
  * never goes out of sync with the GROUPS array above. */
-export const SITEMAP_GROUP_COUNT = 6;
+export const SITEMAP_GROUP_COUNT = 7;
 

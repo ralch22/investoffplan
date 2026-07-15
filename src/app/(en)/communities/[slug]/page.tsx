@@ -196,6 +196,14 @@ export default async function CommunityDetailPage({ params, locale = "en" }: Pag
             {/* Interaction-gated deep analytics + printable report entry point.
                 Static HTML identical for all users — the deep data only ever
                 arrives via the session-guarded API after a click. */}
+            <p className="mt-3">
+              <LocaleLink
+                href={`/sold-prices/${slug}`}
+                className="focus-ring text-sm font-semibold text-brand hover:text-brand-dark"
+              >
+                {interpolate(dict.soldPrices.communityLink, { community: community.name })}
+              </LocaleLink>
+            </p>
             <DeepAnalyticsUnlock
               slug={slug}
               areaName={community.name}

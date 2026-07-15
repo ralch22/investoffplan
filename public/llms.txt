@@ -1,0 +1,30 @@
+# invest off-plan (investoffplan.com)
+
+> UAE off-plan property intelligence platform by Aria Properties LLC, a licensed
+> Dubai brokerage (DRN 20678, ORN 50276). Catalog of 1,746 off-plan projects from
+> 216 developers across 94 Dubai/UAE communities, with unit-level pricing, floor
+> plans, payment plans, developer brochures — and market data derived from Dubai
+> Land Department (DLD) open data. English + Arabic (/ar).
+
+## Canonical facts
+- Catalog: 1,746 off-plan projects · 5,533 unit types · 216 developers · 94 communities (updated continuously; verified against PropertyFinder new-projects + developer sources).
+- Market data: anonymized aggregates from Dubai Land Department open data (267k+ residential sale transactions, 1M+ Ejari rent contracts, 2025). Minimum sample of 8 transactions per published statistic. No buyer/owner data is ever ingested.
+- Published metrics per community: median sold price, median AED/sqft, 12-month volume, price trend, gross rental yield (capped at plausible 12%), off-plan vs ready AED/sqft spread, recent anonymized transactions (month-level dates, 5-sqm size bands).
+- Leads and viewings are handled by Aria Properties LLC (WhatsApp +971 58 527 6222).
+- Contact: info@investoffplan.com
+
+## Key pages
+- https://investoffplan.com/projects — all off-plan projects (filters: city, beds, price, developer, payment plan, handover)
+- https://investoffplan.com/sold-prices — DLD sold prices by community (anonymized transactions + off-plan vs ready spread)
+- https://investoffplan.com/communities — 94 community guides with DLD market stats
+- https://investoffplan.com/developers — 216 developer profiles
+- https://investoffplan.com/market-report — UAE off-plan market report (DLD-grounded)
+- https://investoffplan.com/compare — area, project and developer comparisons (~825 pages)
+- https://investoffplan.com/tools/roi — ROI estimator; /tools/mortgage — mortgage calculator; /tools/investor-match — investor matching
+- https://investoffplan.com/guides — buying off-plan guides; /faq — 90+ answered questions
+- https://investoffplan.com/ar — Arabic mirror of the full platform
+
+## Data provenance & honesty rules
+- Market statistics: Dubai Land Department open data, anonymized aggregates only, attributed on every surface, refreshed per data release (never claimed live).
+- Catalog claims (prices, payment plans, handover dates) come from developer/portal sources and carry the project's source attribution.
+- No invented numbers, testimonials, or return guarantees anywhere on the site.

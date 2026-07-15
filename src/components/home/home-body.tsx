@@ -6,6 +6,7 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 import { HomeFeaturedGrid } from "@/components/home-featured-grid";
 import { CountUp } from "@/components/count-up";
 import { HomeYields } from "@/components/home-yields";
+import { MarketPulseBand } from "@/components/market-pulse-band";
 import { DeveloperLogo } from "@/components/developer-logo";
 import {
   getFeaturedProjects,
@@ -263,6 +264,8 @@ export async function HomeBody({ locale }: { locale: Locale }) {
           </div>
         </div>
       </section>
+
+      <MarketPulseBand locale={locale} />
 
       <HomeFeaturedGrid latest={latest} featured={featured} />
 

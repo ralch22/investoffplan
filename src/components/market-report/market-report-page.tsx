@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PageShell } from "@/components/page-shell";
 import { PageHero } from "@/components/page-hero";
+import { MarketPulseBand } from "@/components/market-pulse-band";
 import { TrendChart } from "@/components/trend-chart";
 import { getMarketReportData } from "@/lib/market-report-data";
 import { getDictionary } from "@/i18n";
@@ -109,6 +110,8 @@ export async function MarketReportPage({ locale }: { locale: Locale }) {
           <span>{interpolate(t.dldPeriodLabel, { period: data.dldPeriod })}</span>
         </div>
       </PageHero>
+
+      <MarketPulseBand locale={locale} />
 
       <main className="mx-auto max-w-[1100px] px-5 py-12 md:px-8">
         {/* 1 — Market overview */}
