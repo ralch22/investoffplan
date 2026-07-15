@@ -12,6 +12,7 @@ import { getNewsArticles } from "@/content/articles";
 import { FAQ_TOPICS } from "@/content/faq";
 import { COLLECTION_PAGES } from "@/lib/collections";
 import { getSiteUrl } from "@/lib/site-url";
+import { MARKET_REPORT_EDITIONS } from "@/lib/market-report-editions";
 
 // Apex default via getSiteUrl(); the preview scrub stays so an env var that is
 // EXPLICITLY set to the preview Worker never leaks into sitemap URLs either.
@@ -35,7 +36,7 @@ export async function buildGroups(): Promise<Entry[][]> {
   const catalogUpdated = new Date(api.meta.scrapedAt);
 
   const staticRoutes: Entry[] = [
-    "", "/projects", "/developers", "/communities", "/market-report", "/compare",
+    "", "/projects", "/developers", "/communities", "/market-report", "/market-report/archive", "/compare",
     "/sold-prices",
     "/compare-projects", "/compare-developers",
     "/locations", "/guides", "/faq", "/map", "/contact", "/about", "/news",
@@ -177,7 +178,7 @@ export async function buildGroups(): Promise<Entry[][]> {
 
   const arStaticPaths = [
     "/ar", "/ar/about", "/ar/contact", "/ar/projects", "/ar/communities",
-    "/ar/market-report",
+    "/ar/market-report", "/ar/market-report/archive",
     "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/compare",
     "/ar/compare-projects", "/ar/compare-developers",
     "/ar/locations", "/ar/map",
@@ -235,6 +236,21 @@ export async function buildGroups(): Promise<Entry[][]> {
       },
     }));
 
+  // 7 market report editions (quarterly; EN + AR hreflang).
+  const editionRoutes: Entry[] = MARKET_REPORT_EDITIONS.map((e) => ({
+    url: `${BASE}/market-report/${e.slug}`,
+    lastModified: new Date(`${e.publishedAt}T00:00:00Z`),
+    changeFrequency: "yearly" as const,
+    priority: 0.8,
+    alternates: {
+      languages: {
+        "x-default": `${BASE}/market-report/${e.slug}`,
+        en: `${BASE}/market-report/${e.slug}`,
+        ar: `${BASE}/ar/market-report/${e.slug}`,
+      },
+    },
+  }));
+
   GROUPS = [
     // 0 core: static EN + AR static (with hreflang)
     [...staticRoutes, ...arStaticRoutes],
@@ -250,11 +266,13 @@ export async function buildGroups(): Promise<Entry[][]> {
     arDetailRoutes,
     // 6 sold prices (EN, sample-gated)
     soldPricesRoutes,
+    // 7 market report editions (EN + AR hreflang)
+    editionRoutes,
   ];
   return GROUPS;
 }
 
 /** Number of child sitemap groups. Consumed by the sitemap index route so it
  * never goes out of sync with the GROUPS array above. */
-export const SITEMAP_GROUP_COUNT = 7;
+export const SITEMAP_GROUP_COUNT = 8;
 

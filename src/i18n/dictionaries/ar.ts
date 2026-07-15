@@ -1845,7 +1845,15 @@ export const ar: Dict = {
     "variableGrossYield": "العائد الإيجاري الإجمالي",
     "variableMedianSoldPpsf": "السعر الوسيط للبيع للقدم المربعة",
     "variableOffPlanLaunch": "سعر الإطلاق على الخارطة",
-    "variableHandoverPipeline": "جدول التسليم"
+    "variableHandoverPipeline": "جدول التسليم",
+    "archiveLink": "جميع الإصدارات ←",
+    "archiveNavLabel": "الإصدارات السابقة",
+    "archiveTitle": "أرشيف تقارير السوق",
+    "archiveSubtitle": "جميع إصدارات تقرير سوق العقارات على الخارطة في الإمارات — بيانات مستندة إلى دائرة الأراضي والأملاك، تُنشر فصلياً.",
+    "archiveBreadcrumb": "الأرشيف",
+    "currentEditionBadge": "الحالي",
+    "viewEdition": "عرض الإصدار ←",
+    "editionOf": "إصدار {label}"
   },
   "compare": {
     "heroTitleLead": "قارن",
