@@ -43,7 +43,7 @@ export function ProjectDetailNav({
             <a
               href={`#${section.id}`}
               className={cn(
-                "iop-btn-press focus-ring inline-flex whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold transition",
+                "iop-btn-press focus-ring inline-flex min-h-11 items-center whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold transition",
                 "text-muted hover:bg-brand-muted hover:text-brand",
               )}
             >

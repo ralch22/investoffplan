@@ -62,11 +62,17 @@
    */
   --fab-gap: 0.875rem;
   --z-subheader: 30;
+  /* Consent banner sits BELOW everything that lifts by --consent-h (docks,
+     FAB, compare bar at z-sticky/z-bottom-bar) but above page subheaders. */
+  --z-consent: 35;
   --z-sticky: 40;
   --z-bottom-bar: 45;
   --z-header: 50;
   --z-overlay: 60;
   --z-modal: 70;
+  /* Lifts the advisor FAB/panel above the active compare bar on <lg (set by
+     body:has([data-compare-active]) below). */
+  --compare-bar-clearance: 0px;
   --map-surface: #e8f4fa;
   --map-water: #dceef6;
   --guide-hero-from: #dce9f5;
@@ -319,6 +325,16 @@ h3 {
 body:has(dialog[open]:not([data-advisor-dialog])) [data-advisor-chrome] {
   visibility: hidden;
   pointer-events: none;
+}
+
+/*
+ * While the compare bar is active on <lg it occupies the same bottom band as
+ * the advisor FAB (both above the dock). Lift the FAB/panel clear of it.
+ */
+@media (max-width: 1023.98px) {
+  body:has([data-compare-active]) {
+    --compare-bar-clearance: 4.25rem;
+  }
 }
 
 .skip-link {

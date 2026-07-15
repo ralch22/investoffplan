@@ -117,7 +117,7 @@ export function CookieConsentBanner() {
       data-testid="cookie-consent-banner"
       aria-label={isAr ? "موافقة ملفات تعريف الارتباط" : "Cookie consent"}
       aria-live="polite"
-      className="fixed bottom-0 start-0 end-0 z-50 border-t border-border bg-white px-5 py-4 shadow-elevation-md sm:px-8"
+      className="fixed bottom-0 start-0 end-0 z-[var(--z-consent)] border-t border-border bg-white px-5 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-elevation-md sm:px-8"
     >
       <div className="mx-auto flex max-w-[1200px] flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-muted">
@@ -148,14 +148,14 @@ export function CookieConsentBanner() {
           <button
             type="button"
             onClick={decline}
-            className="iop-btn-press focus-ring rounded-full border border-[var(--input-border)] px-4 py-2 text-sm font-semibold text-muted transition hover:border-brand hover:text-brand"
+            className="iop-btn-press focus-ring min-h-11 rounded-full border border-[var(--input-border)] px-4 py-2 text-sm font-semibold text-muted transition hover:border-brand hover:text-brand"
           >
             {isAr ? "رفض" : "Decline"}
           </button>
           <button
             type="button"
             onClick={accept}
-            className="iop-btn-press focus-ring rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark"
+            className="iop-btn-press focus-ring min-h-11 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-dark"
           >
             {isAr ? "قبول الكل" : "Accept all"}
           </button>

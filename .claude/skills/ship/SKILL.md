@@ -37,6 +37,7 @@ p=$(lsof -ti :3010); [ -n "$p" ] && kill -9 $p; rm -rf .next/dev; sleep 2
 - `pkill "next start"` does NOT kill `next-server` children — zombies answer :3010 with stale pages → phantom failures.
 - `.next/dev/lock` from a dev server blocks `next build` ("Another next build process is already running").
 - **NEVER two e2e runs or two builds concurrently** (subagents included — tell worktree agents NOT to run playwright; the orchestrator gates). Two builds in one `.next` corrupt each other's `_buildManifest.js.tmp.*`.
+- **`deploy:production` IS a build** (opennextjs-cloudflare build → bundle → upload). Do not start an e2e run (its webServer builds too) or any `next build` until the deploy command has fully exited — and the e2e port-hygiene `pkill` will kill a deploy mid-bundle (this exact collision killed a prod deploy 2026-07-15). Wait for "Current Version ID" before touching the repo.
 - ECONNREFUSED-only e2e failures = the server died / port collision, not real regressions — clear and re-run.
 
 ## Worktree subagent pattern

@@ -42,9 +42,24 @@ export function MediaGalleryLightbox({
     if (!open) return;
     const dialog = dialogRef.current;
     if (!dialog) return;
+    // Native close() normally restores focus, but this dialog UNMOUNTS on
+    // close (see comment above) and React may have re-rendered the opener —
+    // restore focus explicitly or it drops to <body>.
+    const opener =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
     if (!dialog.open) dialog.showModal();
     return () => {
       if (dialog.open) dialog.close();
+      if (opener && opener.isConnected) opener.focus();
+      else if (opener) {
+        // React swapped the node; refocus its re-rendered twin by aria-label.
+        const label = opener.getAttribute("aria-label");
+        if (label) {
+          document
+            .querySelector<HTMLElement>(`[aria-label="${CSS.escape(label)}"]`)
+            ?.focus();
+        }
+      }
     };
   }, [open]);
 

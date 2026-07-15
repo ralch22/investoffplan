@@ -55,3 +55,4 @@ next-env.d.ts
 
 # graphify knowledge graph (generated, auto-refreshed via git hook)
 graphify-out/
+test-results/

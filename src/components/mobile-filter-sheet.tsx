@@ -29,15 +29,37 @@ export function MobileFilterSheet({
   const { dict } = useI18n();
   const f = dict.serp.filters;
   const dialogRef = useRef<HTMLDialogElement>(null);
+  // Filters as they were when the sheet opened. Edits inside the sheet apply
+  // live (nice preview behind the backdrop), but Close/Escape/backdrop must
+  // DISCARD them — only "Show results" commits.
+  const snapshotRef = useRef<Filters | null>(null);
+  const onChangeRef = useRef(onChange);
+  onChangeRef.current = onChange;
 
   // Native <dialog>.showModal() gives focus trap, Escape, and focus restore
-  // for free (a11y audit O2).
+  // for free (a11y audit O2). showModal makes the page inert but does NOT stop
+  // scroll chaining — lock body scroll while open.
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-    if (open && !dialog.open) dialog.showModal();
-    else if (!open && dialog.open) dialog.close();
+    if (open && !dialog.open) {
+      snapshotRef.current = filters;
+      dialog.showModal();
+      document.body.style.overflow = "hidden";
+    } else if (!open && dialog.open) {
+      dialog.close();
+    }
+    if (!open) document.body.style.overflow = "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- snapshot only on the closed→open transition
   }, [open]);
+
+  const cancel = () => {
+    if (snapshotRef.current) onChangeRef.current(snapshotRef.current);
+    onClose();
+  };
 
   // Escape fires native `cancel`; sync to React so the open-effect doesn't re-open.
   useEffect(() => {
@@ -45,6 +67,7 @@ export function MobileFilterSheet({
     if (!dialog) return;
     const handleCancel = (e: Event) => {
       e.preventDefault();
+      if (snapshotRef.current) onChangeRef.current(snapshotRef.current);
       onClose();
     };
     dialog.addEventListener("cancel", handleCancel);
@@ -57,7 +80,7 @@ export function MobileFilterSheet({
       aria-labelledby="mobile-filter-sheet-title"
       onClose={onClose}
       onClick={(e) => {
-        if (e.target === dialogRef.current) onClose();
+        if (e.target === dialogRef.current) cancel();
       }}
       className="fixed inset-0 z-[var(--z-overlay)] m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-surface-darker/60 backdrop:backdrop-blur-sm md:hidden"
     >
@@ -81,7 +104,7 @@ export function MobileFilterSheet({
             </h2>
             <button
               type="button"
-              onClick={onClose}
+              onClick={cancel}
               aria-label={f.closeFilters}
               className="focus-ring inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg px-3 text-sm font-semibold text-muted hover:text-text-dark"
             >
@@ -90,7 +113,7 @@ export function MobileFilterSheet({
           </div>
 
           {/* Scrollable filter body — primary CTA is sticky below, not in this stream. */}
-          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto px-5 py-4">
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-5 py-4">
             <label className="block text-sm font-semibold text-text-dark">
               {f.search}
               <input
