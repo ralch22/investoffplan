@@ -42,9 +42,11 @@ The GitHub Actions workflow (`.github/workflows/catalog-ingest.yml`) always pass
 The pipeline runs:
 1. `scrape-pf-catalog.ts` — Property Finder unit-view ingest
 2. `scrape-pf-brochures.ts --resume` — enrich brochures/metadata (skips existing PDFs)
-3. `apply-slug-disambiguation-to-catalog.ts` — pin/rewrite twin project slugs in `data/catalog.json` (seed source = D1)
-4. `sync-catalog-public.mjs` — refresh static JSON slices (fallback CDN)
-5. `upsert-catalog-to-d1.ts --remote` — merge into D1 without full wipe
+3. `scrape-pf-floorplans.ts` — per-project floor plans (only projects never checked; writes `[]` for checked-and-none)
+4. `scrape-pf-masterplans.ts` — per-project master plans (re-tries every project still missing one)
+5. `apply-slug-disambiguation-to-catalog.ts` — pin/rewrite twin project slugs in `data/catalog.json` (seed source = D1)
+6. `sync-catalog-public.mjs` — refresh static JSON slices (fallback CDN)
+7. `upsert-catalog-to-d1.ts --remote` — merge into D1 without full wipe
 
 Successful scheduled runs commit `data/catalog.json` + `public/data/*` back to the repo.
 
@@ -262,9 +264,23 @@ npm run ingest:catalog:smoke # 2-page scrape smoke test + remote upsert (safe ca
 Pipeline stages (`scripts/catalog-ingest-pipeline.ts`; `--remote` propagates to the final upsert only):
 1. `scrape-pf-catalog.ts` — Property Finder unit-view ingest (`--pages 2` under `--smoke`).
 2. `scrape-pf-brochures.ts --resume` — enrich brochures/metadata (skips existing PDFs).
-3. `apply-slug-disambiguation-to-catalog.ts` — rewrite twin slugs in seed JSON (idempotent).
-4. `sync-catalog-public.mjs` — refresh static JSON fallback slices.
-5. `upsert-catalog-to-d1.ts [--remote]` — merge into D1 without a wipe.
+3. `scrape-pf-floorplans.ts` — floor plans for projects whose `floorPlans` is unset (`--limit 5` under `--smoke`).
+4. `scrape-pf-masterplans.ts` — master plans for projects with no `masterPlanUrl` (`--limit 5` under `--smoke`).
+5. `apply-slug-disambiguation-to-catalog.ts` — rewrite twin slugs in seed JSON (idempotent).
+6. `sync-catalog-public.mjs` — refresh static JSON fallback slices.
+7. `upsert-catalog-to-d1.ts [--remote]` — merge into D1 without a wipe.
+
+Stages 3 and 4 fetch one PF project page each and are the only scheduled source
+of floor plans and master plans — the listing scrape in stage 1 does not return
+them. Skip either with `--skip-floorplans` / `--skip-masterplans`.
+
+They cost different amounts on purpose. Stage 3 only visits projects it has
+never checked and records `[]` when a project genuinely has none, so its first
+scheduled run clears a ~1,000-project backlog (~20 min) and subsequent runs are
+near-free; re-check with `scrape-pf-floorplans.ts --force`. Stage 4 keeps no
+such record and re-asks for all ~240 projects still missing a master plan every
+week (~5 min at concurrency 4), because a master plan PF publishes after launch
+is only picked up by asking again.
 
 ### 3b. Re-sync seed source after duplicate-slug recovery (no prod wipe)
 
