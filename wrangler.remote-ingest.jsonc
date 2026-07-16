@@ -1,0 +1,36 @@
+/**
+ * Config for scripts/upsert-catalog-to-d1.ts --remote ONLY. Nothing else may
+ * load this file, and the "remote": true below may NEVER move into
+ * wrangler.jsonc — there it would hand every local `next dev` and e2e run a
+ * live wire to production D1.
+ *
+ * Why this file exists: getPlatformProxy({ remoteBindings: true }) is only
+ * half of wrangler's remote-bindings opt-in. Each binding must ALSO carry
+ * "remote": true, or it is silently simulated locally — an empty in-memory
+ * D1 when persist is false. That silent fallback is exactly how ingest run
+ * 29469509082 authenticated fine and then died with "no such table:
+ * catalog_meta": the table was missing from the shim, not from production.
+ * Verified empirically against wrangler 4.107.0 (probe DB, three config
+ * variants: no flag → empty shim; "remote": true → real remote tables;
+ * "experimental_remote" → rejected as an unknown field). The config schema
+ * does not list "remote" yet — the schema lags the implementation; wrangler
+ * accepts it without warning.
+ *
+ * The upsert script pairs this with a fail-closed guard: before writing, it
+ * checks catalog_meta exists through the binding and aborts if not, so any
+ * future silent-fallback regression dies loudly before touching a row.
+ */
+{
+  "name": "investoffplan-remote-ingest",
+  "compatibility_date": "2026-07-01",
+  "account_id": "4a75e91d6fca8bc58467fb80ce1b9c2e",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "investoffplan-catalog",
+      "database_id": "e5aa2877-4359-4c28-8499-0c149200c6a4",
+      "migrations_dir": "drizzle/migrations",
+      "remote": true
+    }
+  ]
+}
