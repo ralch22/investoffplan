@@ -179,19 +179,42 @@ async function main() {
   );
 
   const browser = await chromium.launch({ headless: true });
-  const browserPage = await browser.newPage();
+  let browserPage = await browser.newPage();
 
   try {
-    const first = await fetchPageUnits(browserPage, 1);
+    // PF serves the unit view probabilistically to datacenter IPs: CI run
+    // 29438625593 got it, run 29467959477 got the project view instead
+    // ("no unitLevelListings … 2889 results over 121 pages" is PF answering
+    // a different question, not an outage), and a residential run between
+    // them got the unit view fine. A wrong-view answer renders cleanly, so
+    // fetchPageUnits' own retry — which only covers navigation/render
+    // failures — never fires for it. Re-ask with a fresh page each time
+    // (browser.newPage() = fresh context = fresh cookies/session, re-rolling
+    // whatever pins PF's bucket) before declaring the view gone. This is the
+    // mid-run confirm at :219-222 with more patience, because page 1 gates
+    // the entire weekly refresh.
+    const VIEW_ATTEMPTS = 4;
+    let first = await fetchPageUnits(browserPage, 1);
+    for (let attempt = 1; first.units === null && attempt < VIEW_ATTEMPTS; attempt++) {
+      console.warn(
+        `[scrape-pf] page 1 served without the unit view ` +
+          `(attempt ${attempt}/${VIEW_ATTEMPTS}) — retrying with a fresh context`,
+      );
+      await browserPage.close();
+      await new Promise((r) => setTimeout(r, 20_000 * attempt));
+      browserPage = await browser.newPage();
+      first = await fetchPageUnits(browserPage, 1);
+    }
     // No unit view on page 1 means the view itself is gone — PF ignoring
     // view=unit_types, or the payload moving. Nothing later can recover from
     // that, so say which it is rather than paginating through all of it.
     if (!first.units?.length) {
       throw new Error(
         first.units === null
-          ? "[scrape-pf] page 1 has no unitLevelListings — PF did not serve the " +
-            `unit view for ${BASE} (its answer describes ${first.total} results ` +
-            `over ${first.totalPages} pages)`
+          ? `[scrape-pf] page 1 has no unitLevelListings after ${VIEW_ATTEMPTS} ` +
+            `attempts in fresh contexts — PF did not serve the unit view for ` +
+            `${BASE} (its answer describes ${first.total} results over ` +
+            `${first.totalPages} pages)`
           : "[scrape-pf] page 1 returned an empty unit view — aborting",
       );
     }
