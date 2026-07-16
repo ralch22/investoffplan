@@ -6,6 +6,7 @@ import { drizzle } from "drizzle-orm/d1";
 import { getPlatformProxy } from "wrangler";
 import type { CatalogFile } from "../src/lib/catalog-core";
 import { upsertCatalogFile } from "../src/lib/db/catalog-upsert";
+import { withTransientRetry } from "../src/lib/db/d1-transient";
 import * as schema from "../src/lib/db/schema";
 
 async function main() {
@@ -35,9 +36,11 @@ async function main() {
   // catalog_meta since migration 0000, so its absence can only mean the
   // shim. Local runs keep the guard too — a local D1 without migrations
   // applied should be told to migrate, not be silently seeded row-less.
-  const tables = await d1
-    .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='catalog_meta'")
-    .all();
+  const tables = await withTransientRetry("binding sanity check", () =>
+    d1
+      .prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='catalog_meta'")
+      .all(),
+  );
   if (tables.results.length === 0) {
     throw new Error(
       `[db:upsert] binding "DB" from ${configName} has no catalog_meta table — ` +

@@ -1,6 +1,7 @@
-import { eq } from "drizzle-orm";
+import { sql, type SQL } from "drizzle-orm";
 import type { CatalogFile } from "@/lib/catalog-core";
 import type { CatalogDatabase } from "./client";
+import { withTransientRetry } from "./d1-transient";
 import {
   catalogUnitToInsertValues,
   prepareCatalogRows,
@@ -27,6 +28,66 @@ export interface UpsertStats {
 }
 
 const UNIT_BATCH = 50;
+// D1 caps bound parameters at 100 per statement; 90 leaves headroom
+// (same bound as the alerts dispatcher's D1_ID_BATCH).
+const DELETE_ID_BATCH = 90;
+
+/**
+ * Enrichment columns other pipelines own (brochures, description passes,
+ * media). The scrape sends null for these when it has nothing; the upsert
+ * must keep whatever production already holds. Previously done with a
+ * SELECT-then-merge per project — 2 sequential round-trips × 1,747 projects
+ * was most of a 17-minute window in which run 29470437050 caught one 502
+ * and died. COALESCE(excluded.col, col) is the same rule, applied atomically
+ * inside the statement, which makes the whole projects pass batchable.
+ */
+const PRESERVE_WHEN_INCOMING_NULL = new Set([
+  "brochureUrl",
+  "description",
+  "amenities",
+  "masterPlanUrl",
+  "videoUrl",
+  "imageGallery",
+]);
+
+/**
+ * Build the single-statement upsert for one project. first_seen_at is
+ * INSERT-ONLY: present in values so brand-new projects get stamped, absent
+ * from the DO UPDATE set so existing rows keep their original date — it is
+ * what "new launch this week" alerts key off.
+ *
+ * Exported for the unit test that pins these semantics; production callers
+ * go through upsertCatalogFile.
+ */
+export function buildProjectUpsertSql(
+  db: CatalogDatabase,
+  project: Parameters<typeof projectToInsertValues>[0],
+  updatedAt: string,
+): { sql: string; params: unknown[] } {
+  const values = projectToInsertValues(project, updatedAt);
+  const set: Record<string, SQL> = {};
+  for (const key of Object.keys(values)) {
+    if (key === "id") continue;
+    const column = (projects as unknown as Record<string, { name?: string }>)[key];
+    if (!column?.name) {
+      throw new Error(`[db:upsert] no schema column for values key "${key}"`);
+    }
+    set[key] = PRESERVE_WHEN_INCOMING_NULL.has(key)
+      ? sql.raw(`coalesce(excluded."${column.name}", "projects"."${column.name}")`)
+      : sql.raw(`excluded."${column.name}"`);
+  }
+  const query = db
+    .insert(projects)
+    .values({ ...values, firstSeenAt: updatedAt })
+    .onConflictDoUpdate({ target: projects.id, set })
+    .toSQL();
+  return { sql: query.sql, params: query.params };
+}
+
+/** D1's JS bindings take null/number/string; booleans must be 0/1. */
+function toD1Params(params: unknown[]): unknown[] {
+  return params.map((p) => (typeof p === "boolean" ? (p ? 1 : 0) : p));
+}
 
 function chunk<T>(items: T[], size: number): T[][] {
   const out: T[][] = [];
@@ -48,126 +109,118 @@ export async function upsertCatalogFile(
   const projectCount = prepared.projects.length;
   const unitCount = prepared.catalogUnits.length;
 
-  await db
-    .insert(catalogMeta)
-    .values({
-      id: 1,
-      version: raw.version,
-      unitCount,
-      projectCount,
-      scrapedAt: raw.scrapedAt,
-    })
-    .onConflictDoUpdate({
-      target: catalogMeta.id,
-      set: {
+  await withTransientRetry("catalog_meta", () =>
+    db
+      .insert(catalogMeta)
+      .values({
+        id: 1,
         version: raw.version,
         unitCount,
         projectCount,
         scrapedAt: raw.scrapedAt,
-      },
-    });
-
-  await db.delete(cityCounts);
-  if (prepared.cityCounts.length) {
-    await db.insert(cityCounts).values(
-      prepared.cityCounts.map((city, index) => ({
-        slug: city.slug,
-        label: city.label,
-        count: city.count,
-        sortOrder: index,
-      })),
-    );
-  }
-
-  await db.delete(developerSerpLinks);
-  if (prepared.developerSerpLinks.length) {
-    await db.insert(developerSerpLinks).values(
-      prepared.developerSerpLinks.map((link, index) => ({
-        title: link.title,
-        path: link.path,
-        sortOrder: index,
-      })),
-    );
-  }
-
-  if (prepared.devList.length) {
-    for (const dev of prepared.devList) {
-      await db
-        .insert(developers)
-        .values({
-          id: dev.id,
-          name: dev.name,
-          slug: dev.slug,
-          logoUrl: dev.logoUrl ?? null,
-          description: dev.description ?? null,
-          establishedSince: dev.establishedSince ?? null,
-          numProjectsOnline: dev.numProjectsOnline ?? null,
-          devPageEnabled: dev.devPageEnabled ?? null,
-        })
-        .onConflictDoUpdate({
-          target: developers.id,
-          set: {
-            name: dev.name,
-            slug: dev.slug,
-            logoUrl: dev.logoUrl ?? null,
-            description: dev.description ?? null,
-            establishedSince: dev.establishedSince ?? null,
-            numProjectsOnline: dev.numProjectsOnline ?? null,
-            devPageEnabled: dev.devPageEnabled ?? null,
-          },
-        });
-    }
-  }
-
-  for (const project of prepared.projects) {
-    const values = projectToInsertValues(project, prepared.updatedAt);
-    const existing = await db
-      .select({
-        brochureUrl: projects.brochureUrl,
-        description: projects.description,
-        amenities: projects.amenities,
-        masterPlanUrl: projects.masterPlanUrl,
-        videoUrl: projects.videoUrl,
-        imageGallery: projects.imageGallery,
       })
-      .from(projects)
-      .where(eq(projects.id, project.id))
-      .get();
-
-    const merged = {
-      ...values,
-      brochureUrl: values.brochureUrl ?? existing?.brochureUrl ?? null,
-      description: values.description ?? existing?.description ?? null,
-      amenities: values.amenities ?? existing?.amenities ?? null,
-      masterPlanUrl: values.masterPlanUrl ?? existing?.masterPlanUrl ?? null,
-      videoUrl: values.videoUrl ?? existing?.videoUrl ?? null,
-      imageGallery: values.imageGallery ?? existing?.imageGallery ?? null,
-    };
-
-    // first_seen_at is INSERT-ONLY (this ingest run's date): it must be
-    // present in values so brand-new projects get stamped, but EXCLUDED from
-    // the onConflictDoUpdate set so existing rows keep their original date —
-    // it is what "new launch this week" alerts key off.
-    await db
-      .insert(projects)
-      .values({ ...merged, firstSeenAt: prepared.updatedAt })
       .onConflictDoUpdate({
-        target: projects.id,
-        set: merged,
-      });
+        target: catalogMeta.id,
+        set: {
+          version: raw.version,
+          unitCount,
+          projectCount,
+          scrapedAt: raw.scrapedAt,
+        },
+      }),
+  );
+
+  await withTransientRetry("city_counts clear", () => db.delete(cityCounts));
+  if (prepared.cityCounts.length) {
+    await withTransientRetry("city_counts insert", () =>
+      db.insert(cityCounts).values(
+        prepared.cityCounts.map((city, index) => ({
+          slug: city.slug,
+          label: city.label,
+          count: city.count,
+          sortOrder: index,
+        })),
+      ),
+    );
+  }
+
+  await withTransientRetry("developer_serp_links clear", () =>
+    db.delete(developerSerpLinks),
+  );
+  if (prepared.developerSerpLinks.length) {
+    await withTransientRetry("developer_serp_links insert", () =>
+      db.insert(developerSerpLinks).values(
+        prepared.developerSerpLinks.map((link, index) => ({
+          title: link.title,
+          path: link.path,
+          sortOrder: index,
+        })),
+      ),
+    );
+  }
+
+  // Developers, projects and the unit-table clears below all follow the same
+  // shape: idempotent single-row statements, grouped through d1.batch so one
+  // round-trip carries a chunk instead of one row. Run 29470437050 spent 17
+  // minutes on ~7,000 sequential round-trips and died to a single transient
+  // 502 — batching cuts the trips ~25x and the retry wrapper absorbs the
+  // stragglers. Statement-level idempotency is what makes retrying a whole
+  // batch safe: replaying an upsert or delete converges to the same state.
+  for (const batch of chunk(prepared.devList, UNIT_BATCH)) {
+    const statements = batch.map((dev) =>
+      d1
+        .prepare(
+          `INSERT INTO developers (id, name, slug, logo_url, description, established_since, num_projects_online, dev_page_enabled)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+           ON CONFLICT(id) DO UPDATE SET
+             name = excluded.name,
+             slug = excluded.slug,
+             logo_url = excluded.logo_url,
+             description = excluded.description,
+             established_since = excluded.established_since,
+             num_projects_online = excluded.num_projects_online,
+             dev_page_enabled = excluded.dev_page_enabled`,
+        )
+        .bind(
+          dev.id,
+          dev.name,
+          dev.slug,
+          dev.logoUrl ?? null,
+          dev.description ?? null,
+          dev.establishedSince ?? null,
+          dev.numProjectsOnline ?? null,
+          ...toD1Params([dev.devPageEnabled ?? null]),
+        ),
+    );
+    await withTransientRetry(`developers batch (${batch.length})`, () =>
+      d1.batch(statements),
+    );
+  }
+
+  for (const batch of chunk(prepared.projects, UNIT_BATCH)) {
+    const statements = batch.map((project) => {
+      const query = buildProjectUpsertSql(db, project, prepared.updatedAt);
+      return d1.prepare(query.sql).bind(...toD1Params(query.params));
+    });
+    await withTransientRetry(`projects batch (${batch.length})`, () =>
+      d1.batch(statements),
+    );
   }
 
   const activeProjectIds = prepared.projects.map((p) => p.id);
 
-  for (const projectId of activeProjectIds) {
-    await d1
-      .prepare("DELETE FROM project_units WHERE project_id = ?")
-      .bind(projectId)
-      .run();
-    await d1
-      .prepare("DELETE FROM catalog_units WHERE project_id = ?")
-      .bind(projectId)
-      .run();
+  for (const idBatch of chunk(activeProjectIds, DELETE_ID_BATCH)) {
+    const placeholders = idBatch.map(() => "?").join(", ");
+    await withTransientRetry(`unit clears (${idBatch.length} projects)`, () =>
+      d1.batch([
+        d1
+          .prepare(`DELETE FROM project_units WHERE project_id IN (${placeholders})`)
+          .bind(...idBatch),
+        d1
+          .prepare(`DELETE FROM catalog_units WHERE project_id IN (${placeholders})`)
+          .bind(...idBatch),
+      ]),
+    );
   }
 
   for (const batch of chunk(prepared.projectUnits, UNIT_BATCH)) {
@@ -198,7 +251,9 @@ export async function upsertCatalogFile(
           unit.sortOrder,
         ),
     );
-    await d1.batch(statements);
+    await withTransientRetry(`project_units batch (${batch.length})`, () =>
+      d1.batch(statements),
+    );
   }
 
   for (const batch of chunk(prepared.catalogUnits, UNIT_BATCH)) {
@@ -275,7 +330,9 @@ export async function upsertCatalogFile(
           values.status,
         );
     });
-    await d1.batch(statements);
+    await withTransientRetry(`catalog_units batch (${batch.length})`, () =>
+      d1.batch(statements),
+    );
   }
 
   return {
