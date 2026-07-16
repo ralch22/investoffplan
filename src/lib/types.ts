@@ -91,6 +91,15 @@ export interface Project {
   ownershipType?: string;
   constructionProgress?: number;
   pfFaqs?: Array<{ q: string; a: string }>;
+  /**
+   * ISO timestamp of the last weekly unit-view scrape that actually observed
+   * this project on PF (equals that run's catalog-level scrapedAt). Absent =
+   * never seen since tracking began (2026-07) — typically rows added by the
+   * developer-portfolio scrape, whose surface the weekly run doesn't cover.
+   * Do not backfill: absence is the datum. catalog.json-only; the D1 upsert
+   * ignores it by design.
+   */
+  lastSeenAt?: string;
   whatsapp: string;
   units: UnitType[];
 }
@@ -132,6 +141,12 @@ export interface CatalogUnit {
   projectUnitCount: number;
   whatsapp: string;
   status: string;
+  /**
+   * See Project.lastSeenAt. Unit freshness is keyed on projectId — a scraped
+   * project's units are replaced as a set — so a unit's stamp always equals
+   * its project's stamp for scraped projects.
+   */
+  lastSeenAt?: string;
 }
 
 export interface DeveloperSummary {

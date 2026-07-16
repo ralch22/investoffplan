@@ -181,6 +181,64 @@ test("mergeCatalogUnits lets a scraped project lose a unit", () => {
   );
 });
 
+test("mergeCatalogProjects gives a re-scraped project the fresh lastSeenAt", () => {
+  // The stamp is scraper-produced (set on every row the run observed), so on a
+  // re-scraped project the fresh value must overwrite last week's — that
+  // overwrite IS the observation being recorded.
+  const previous: CatalogProject[] = [
+    { id: "p1", name: "Alpha", lastSeenAt: "2026-07-20T04:00:00.000Z" },
+  ];
+  const scraped: CatalogProject[] = [
+    { id: "p1", name: "Alpha", lastSeenAt: "2026-07-27T04:00:00.000Z" },
+  ];
+
+  const { projects } = mergeCatalogProjects(previous, scraped);
+
+  assert.equal(projects[0].lastSeenAt, "2026-07-27T04:00:00.000Z");
+});
+
+test("mergeCatalogProjects keeps a carried project's stamp — or its absence", () => {
+  // A carried row keeps whatever observation history it has. Crucially an
+  // unstamped row must STAY unstamped: absent means "never seen since tracking
+  // began", and backfilling it would erase the one distinction (seen-then-lost
+  // vs never-covered) this field exists to make.
+  const previous: CatalogProject[] = [
+    { id: "p1", name: "Alpha" },
+    { id: "seen-once", name: "Beta", lastSeenAt: "2026-07-20T04:00:00.000Z" },
+    { id: "from-dev-portfolio", name: "Gamma" },
+  ];
+  const scraped: CatalogProject[] = [
+    { id: "p1", name: "Alpha", lastSeenAt: "2026-07-27T04:00:00.000Z" },
+  ];
+
+  const { projects } = mergeCatalogProjects(previous, scraped);
+  const byId = new Map(projects.map((p) => [p.id, p]));
+
+  assert.equal(byId.get("seen-once")?.lastSeenAt, "2026-07-20T04:00:00.000Z");
+  assert.equal(byId.get("from-dev-portfolio")?.lastSeenAt, undefined);
+});
+
+test("mergeCatalogUnits stamps a scraped project's replaced units, keeps carried stamps", () => {
+  // Unit freshness is keyed on projectId: a scraped project's units are
+  // replaced as a set (all fresh stamps), everything else rides through with
+  // its history — stamped or not — intact.
+  const previous: CatalogUnit[] = [
+    { id: "u1", projectId: "p1", lastSeenAt: "2026-07-20T04:00:00.000Z" },
+    { id: "u2", projectId: "seen-once", lastSeenAt: "2026-07-20T04:00:00.000Z" },
+    { id: "u3", projectId: "from-dev-portfolio" },
+  ];
+  const scraped: CatalogUnit[] = [
+    { id: "u1", projectId: "p1", lastSeenAt: "2026-07-27T04:00:00.000Z" },
+  ];
+
+  const { units } = mergeCatalogUnits(previous, scraped);
+  const byId = new Map(units.map((u) => [u.id, u]));
+
+  assert.equal(byId.get("u1")?.lastSeenAt, "2026-07-27T04:00:00.000Z");
+  assert.equal(byId.get("u2")?.lastSeenAt, "2026-07-20T04:00:00.000Z");
+  assert.equal(byId.get("u3")?.lastSeenAt, undefined);
+});
+
 test("mergeCatalogProjects preserves enrichment across a realistic scrape", () => {
   const previous: CatalogProject[] = Array.from({ length: 100 }, (_, i) => ({
     id: `p${i}`,
