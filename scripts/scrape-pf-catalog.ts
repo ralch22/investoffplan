@@ -161,6 +161,14 @@ async function main() {
   const { maxPages } = parseArgs();
   console.log("[scrape-pf] starting unit-view ingest…");
 
+  // One timestamp for the whole run, stamped as lastSeenAt on every row this
+  // scrape actually observed and reused as the catalog-level scrapedAt. The
+  // shared value is the contract: a row was seen by run R iff its lastSeenAt
+  // equals R's scrapedAt, so each weekly commit partitions the catalog into
+  // seen/carried with one comparison — no per-row clock skew across a
+  // 20-minute paginated run to reason about.
+  const runTimestamp = new Date().toISOString();
+
   // Read the catalog we have to merge onto before touching the network: if it
   // is unreadable, say so in 10ms rather than after ~20 minutes of politely
   // rate-limited pagination.
@@ -262,6 +270,7 @@ async function main() {
       coordinates?: { lat: number; lng: number };
       whatsapp: string;
       status: string;
+      lastSeenAt: string;
       units: Array<{
         id: string;
         beds: number;
@@ -312,6 +321,7 @@ async function main() {
         coordinates: u.location.coordinates,
         whatsapp: DEFAULT_WHATSAPP,
         status,
+        lastSeenAt: runTimestamp,
         units: [],
       };
       projectsMap.set(u.projectId, project);
@@ -391,12 +401,32 @@ async function main() {
         projectUnitCount: projectUnitCounts.get(u.projectId) ?? 1,
         whatsapp: DEFAULT_WHATSAPP,
         status: u.stockStatus === "sold_out" ? "sold-out" : "off-plan",
+        lastSeenAt: runTimestamp,
       };
   });
 
   const { units, carried: carriedUnits } = mergeCatalogUnits(
     previous?.units ?? [],
     scrapedUnits,
+  );
+
+  // The weekly staleness readout. Absent = never seen since tracking began
+  // (2026-07); "carried w/ earlier stamp" rows flapped out of PF's unit view
+  // after being seen at least once. Task #31's refresh/prune decision reads
+  // these three numbers off a few Monday logs instead of guessing.
+  const partition = (rows: Array<Record<string, unknown>>) => {
+    let seen = 0;
+    let stale = 0;
+    let never = 0;
+    for (const r of rows) {
+      if (r.lastSeenAt === runTimestamp) seen++;
+      else if (r.lastSeenAt) stale++;
+      else never++;
+    }
+    return `${seen} seen this run / ${stale} carried w/ earlier stamp / ${never} never stamped`;
+  };
+  console.log(
+    `[scrape-pf] lastSeenAt — projects: ${partition(projects)}; units: ${partition(units)}`,
   );
 
   // Counted off the merged units rather than the scrape: these drive the city
@@ -413,7 +443,7 @@ async function main() {
   const catalog = {
     version: 2 as const,
     source: "propertyfinder-unit-view",
-    scrapedAt: new Date().toISOString(),
+    scrapedAt: runTimestamp,
     unitCount: units.length,
     projectCount: projects.length,
     cityCounts: [...cityCounts.values()].sort((a, b) => b.count - a.count),
