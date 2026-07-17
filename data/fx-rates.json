@@ -1,0 +1,9 @@
+{
+  "base": "AED",
+  "source": "open.er-api.com (ECB-derived reference rates)",
+  "asOf": "2026-07-17",
+  "rates": {
+    "INR": 26.250159,
+    "GBP": 0.201897
+  }
+}
