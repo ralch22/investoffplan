@@ -20,6 +20,7 @@ function parseArgs() {
     skipFloorplans: process.argv.includes("--skip-floorplans"),
     skipMasterplans: process.argv.includes("--skip-masterplans"),
     skipDevPortfolio: process.argv.includes("--skip-dev-portfolio"),
+    skipMirror: process.argv.includes("--skip-mirror"),
     skipDb: process.argv.includes("--skip-db"),
     smoke: process.argv.includes("--smoke"),
     remote: process.argv.includes("--remote"),
@@ -35,6 +36,7 @@ async function main() {
     skipFloorplans,
     skipMasterplans,
     skipDevPortfolio,
+    skipMirror,
     skipDb,
     smoke,
     remote,
@@ -91,6 +93,25 @@ async function main() {
   if (!skipMasterplans) {
     const limitFlag = smoke ? " --limit 5" : "";
     run(`npx tsx scripts/scrape-pf-masterplans.ts${limitFlag}`);
+  }
+
+  // Take ownership of every asset the scrapes just pointed at a third party.
+  //
+  // This MUST run every ingest, not once: scrape-pf-catalog rebuilds imageUrl/
+  // imageGallery from PropertyFinder and mergeProject takes fresh defined
+  // values, so a /cdn URL written by a previous run is overwritten by a PF
+  // hotlink here. Mirroring once would silently revert next Monday.
+  //
+  // It is cheap on steady state: keys are content-addressed on the source URL
+  // (src/lib/assets/mirror-plan.ts), so a re-scraped image costs one HEAD and
+  // nothing transfers. Only genuinely new assets are fetched.
+  //
+  // Placed BEFORE the public slices and the D1 upsert so /cdn URLs are what
+  // actually reach the site; after it, no external asset URL should survive
+  // (src/lib/assets/no-hotlinks.test.ts enforces that in CI).
+  if (!skipMirror) {
+    const limitFlag = smoke ? " --limit=5" : "";
+    run(`npx tsx scripts/mirror-assets.ts${limitFlag}`);
   }
 
   // PF scrape re-writes bare colliding slugs for known twins. Pin + rewrite
