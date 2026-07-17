@@ -18,6 +18,9 @@ import {
   type DeveloperSide,
 } from "@/lib/developer-compare";
 import { formatPrice } from "@/lib/format";
+import { developerDescription } from "@/lib/developer-utils";
+import { getAreaStats } from "@/lib/dld-area-stats";
+import { communityDldRows } from "@/lib/developer-compare-dld";
 import { enMeta } from "@/lib/ar-meta";
 import { comparePairTitle } from "@/lib/seo-title";
 import { getDictionary } from "@/i18n";
@@ -195,6 +198,50 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Per-developer depth: existing profile text (reflowed via
+            developerDescription — nothing generated) + DLD sold-price context
+            aggregated ONLY through the communities each developer builds in.
+            developer-name × DLD joins stay forbidden (see developer-compare.ts
+            header); communityDldRows takes community keys and nothing else. */}
+        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+          {[a, b].map((side) => {
+            const about = developerDescription(side.slug, side.description);
+            const dldRows = communityDldRows(side.communities, (name) => {
+              const s = getAreaStats(name);
+              return s ? { medianPpsqft: s.medianPpsqft, saleSample: s.saleSample } : null;
+            });
+            return (
+              <section key={side.slug} className="rounded-2xl border border-border bg-white p-6 shadow-sm">
+                <h2 className="font-display text-xl font-semibold text-text-dark">
+                  {interpolate(dict.pages.compareDev.aboutHeading, { name: side.name })}
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted line-clamp-6">{about}</p>
+                {dldRows.length > 0 ? (
+                  <div className="mt-5">
+                    <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">
+                      {interpolate(dict.pages.compareDev.dldContextHeading, { name: side.name })}
+                    </h3>
+                    <ul className="mt-2 space-y-1.5">
+                      {dldRows.map((row) => (
+                        <li key={row.community} className="text-sm text-muted">
+                          {interpolate(dict.pages.compareDev.dldMedianLine, {
+                            community: row.community,
+                            ppsf: row.medianPpsqft.toLocaleString(),
+                            n: row.saleSample.toLocaleString(),
+                          })}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-light">
+                      {dict.pages.compareDev.dldContextHint}
+                    </p>
+                  </div>
+                ) : null}
+              </section>
+            );
+          })}
         </div>
 
         <div className="mt-8 overflow-x-auto rounded-2xl border border-border bg-white shadow-elevation-sm">

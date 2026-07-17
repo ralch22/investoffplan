@@ -1438,6 +1438,10 @@ const dict = {
       "kpiUnits": "Unit options",
       "kpiFromPrice": "From price",
       "kpiCommunities": "Communities",
+      "aboutHeading": "About {name}",
+      "dldContextHeading": "Sold-price context where {name} builds",
+      "dldMedianLine": "{community} — AED {ppsf}/sqft median · {n} DLD sales (2025)",
+      "dldContextHint": "Community-level DLD medians for the areas this developer builds in — area aggregates, not this developer's own sales.",
       "verdictDisclaimer": "All figures come from our live off-plan catalog (project and unit-level launch data). We do not join developer names against DLD transaction records, so sold-price aggregates remain community-level only.",
       "whereBuilds": "Where {name} builds",
       "projectsCta": "{name} projects",
@@ -1977,7 +1981,8 @@ const dict = {
     "offplanVsReadyHeading": "Off-plan vs ready (2025)",
     "offplanVsReadyLine": "Off-plan AED {op}/sqft · Ready AED {rd}/sqft · {n} sales",
     "offplanVsReadyPremium": "Off-plan trades at a +{pct}% premium over ready",
-    "offplanVsReadyDiscount": "Off-plan trades at a {pct}% discount to ready"
+    "offplanVsReadyDiscount": "Off-plan trades at a {pct}% discount to ready",
+    "offplanVsReadyCaveat": "Estimated from anonymized DLD sale aggregates for this area (minimum 8 sales per side). An area-level comparison — not a repeat-sales index tracking the same units."
   }
 } as const;
 

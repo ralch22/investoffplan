@@ -16,6 +16,8 @@ export interface DeveloperSide {
   slug: string;
   name: string;
   logoUrl?: string;
+  /** Catalog-scraped developer description (HTML-ish) — reflowed on pages via developerDescription(). */
+  description?: string;
   projectCount: number;
   unitCount: number;
   fromPrice: number | null;

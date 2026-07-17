@@ -186,6 +186,11 @@ export async function SoldPricesCommunityPage({ params, locale = "en" }: PagePro
                 nReady: spread.nReady.toLocaleString(),
               })}
             </p>
+            {/* Same methodology caveat as the stats band — the spread must
+                never appear without it. */}
+            <p className="mt-1 text-xs leading-relaxed text-muted-light">
+              {dict.dld.offplanVsReadyCaveat}
+            </p>
           </section>
         ) : null}
 
