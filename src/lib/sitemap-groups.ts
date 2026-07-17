@@ -38,6 +38,7 @@ export async function buildGroups(): Promise<Entry[][]> {
   const staticRoutes: Entry[] = [
     "", "/projects", "/developers", "/communities", "/market-report", "/market-report/archive", "/compare",
     "/sold-prices",
+    "/invest-from-india", "/invest-from-uk",
     "/compare-projects", "/compare-developers",
     "/locations", "/guides", "/faq", "/map", "/contact", "/about", "/news",
     // /favorites is user-state (noindex) — omit from sitemap.
