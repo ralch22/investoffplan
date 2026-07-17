@@ -204,7 +204,9 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
             developerDescription — nothing generated) + DLD sold-price context
             aggregated ONLY through the communities each developer builds in.
             developer-name × DLD joins stay forbidden (see developer-compare.ts
-            header); communityDldRows takes community keys and nothing else. */}
+            header); communityDldRows takes community keys and nothing else.
+            DLD rows follow the scorecards' data idiom above (justify-between +
+            tabular-nums) — numbers align, prose doesn't repeat. */}
         <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
           {[a, b].map((side) => {
             const about = developerDescription(side.slug, side.description);
@@ -213,36 +215,44 @@ export default async function CompareDevelopersPage({ params, locale = "en" }: P
               return s ? { medianPpsqft: s.medianPpsqft, saleSample: s.saleSample } : null;
             });
             return (
-              <section key={side.slug} className="rounded-2xl border border-border bg-white p-6 shadow-sm">
+              <section key={side.slug} className="flex flex-col rounded-2xl border border-border bg-white p-6 shadow-sm">
                 <h2 className="font-display text-xl font-semibold text-text-dark">
                   {interpolate(dict.pages.compareDev.aboutHeading, { name: side.name })}
                 </h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted line-clamp-6">{about}</p>
+                <Link
+                  href={localePath(locale, `/developers/${side.slug}`)}
+                  className="mt-2 inline-block text-sm font-semibold text-brand hover:text-brand-dark"
+                >
+                  {interpolate(dict.pages.compareDev.aboutMoreCta, { name: side.name })} →
+                </Link>
                 {dldRows.length > 0 ? (
-                  <div className="mt-5">
+                  <div className="mt-auto pt-5">
                     <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">
                       {interpolate(dict.pages.compareDev.dldContextHeading, { name: side.name })}
                     </h3>
                     <ul className="mt-2 space-y-1.5">
                       {dldRows.map((row) => (
-                        <li key={row.community} className="text-sm text-muted">
-                          {interpolate(dict.pages.compareDev.dldMedianLine, {
-                            community: row.community,
-                            ppsf: row.medianPpsqft.toLocaleString(),
-                            n: row.saleSample.toLocaleString(),
-                          })}
+                        <li key={row.community} className="flex items-baseline justify-between gap-3 text-sm">
+                          <span className="truncate text-muted-light">{row.community}</span>
+                          <span className="shrink-0 font-semibold tabular-nums text-text-dark">
+                            {interpolate(dict.pages.compareDev.dldRowValue, {
+                              ppsf: row.medianPpsqft.toLocaleString(),
+                              n: row.saleSample.toLocaleString(),
+                            })}
+                          </span>
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-2 text-xs leading-relaxed text-muted-light">
-                      {dict.pages.compareDev.dldContextHint}
-                    </p>
                   </div>
                 ) : null}
               </section>
             );
           })}
         </div>
+        <p className="mt-3 text-xs leading-relaxed text-muted-light">
+          {dict.pages.compareDev.dldContextHint}
+        </p>
 
         <div className="mt-8 overflow-x-auto rounded-2xl border border-border bg-white shadow-elevation-sm">
           <table className="w-full">
