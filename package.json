@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "CLOUDFLARE_ACCOUNT_ID=4a75e91d6fca8bc58467fb80ce1b9c2e next dev",
-    "prebuild": "node scripts/sync-catalog-public.mjs",
+    "prebuild": "node scripts/check-public-assets.mjs && node scripts/sync-catalog-public.mjs",
     "build": "NEXT_IS_BUILD=1 next build",
     "start": "next start",
     "lint": "eslint",
