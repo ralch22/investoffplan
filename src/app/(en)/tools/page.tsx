@@ -34,7 +34,7 @@ export async function ToolsHubPageContent({ locale = "en" }: { locale?: Locale }
 
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <p className="max-w-2xl text-sm leading-relaxed text-muted">
-          {interpolate(t.dataguruIntro, { count: analytics.unitCount.toLocaleString() })}
+          {interpolate(t.toolsIntro, { count: analytics.unitCount.toLocaleString() })}
         </p>
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -43,32 +43,6 @@ export async function ToolsHubPageContent({ locale = "en" }: { locale?: Locale }
           ))}
           <InvestorMatchToolCard />
         </div>
-
-        <section className="mt-14 rounded-2xl border border-border bg-surface-alt p-8">
-          <h2 className="font-display text-2xl font-semibold text-text-dark">
-            {t.dataguruHeading}
-          </h2>
-          <ul className="mt-4 space-y-2 text-sm text-muted">
-            <li>
-              <strong className="text-text-dark">{t.dataguruPriceMap}</strong> — {t.dataguruPriceMapDesc}
-            </li>
-            <li>
-              <strong className="text-text-dark">{t.dataguruCommunity}</strong> — {t.dataguruCommunityDesc}
-            </li>
-            <li>
-              <strong className="text-text-dark">{t.dataguruRentVsBuy}</strong> — {t.dataguruRentVsBuyDesc}
-            </li>
-            <li>
-              <strong className="text-text-dark">{t.dataguruResidential}</strong> — {t.dataguruResidentialDesc}
-            </li>
-            <li>
-              <strong className="text-text-dark">{t.dataguruNewProjects}</strong> —{" "}
-              <LocaleLink href="/projects" className="text-brand underline">
-                {t.dataguruNewProjectsDesc}
-              </LocaleLink>
-            </li>
-          </ul>
-        </section>
       </main>
     </PageShell>
   );

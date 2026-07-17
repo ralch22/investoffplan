@@ -13,16 +13,12 @@ export function DataGuruToolCard({ tool }: DataGuruToolCardProps) {
   const card = dict.tools.cards[tool.slug as keyof typeof dict.tools.cards];
   const title = card?.title ?? tool.title;
   const description = card?.description ?? tool.description;
-  const pfFeature = card?.pfFeature ?? tool.pfFeature;
 
   return (
     <LocaleLink
       href={tool.href}
       className="group flex flex-col rounded-2xl border border-border bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-brand hover:shadow-md"
     >
-      <p className="text-xs font-semibold uppercase tracking-wide text-brand">
-        {pfFeature}
-      </p>
       <h2 className="mt-2 text-xl font-semibold text-text-dark group-hover:text-brand">
         {title}
       </h2>

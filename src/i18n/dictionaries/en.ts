@@ -1175,18 +1175,8 @@ const dict = {
     },
     "hubPage": {
       "heroTitle": "Know your next move",
-      "heroSubtitle": "Five data tools for smarter off-plan decisions — parity with Property Finder DataGuru, tuned for launch inventory.",
-      "dataguruIntro": "DataGuru on Property Finder covers rental heatmaps and resale towers. invest off-plan mirrors the same five-tool structure using our catalog of {count} launch units — plus brochures, compare, and payment calculators they do not offer on new projects.",
-      "dataguruHeading": "How this maps to Property Finder DataGuru",
-      "dataguruPriceMap": "Price Map",
-      "dataguruPriceMapDesc": "community launch-price tiers instead of rental heatmaps (same budget-fit workflow).",
-      "dataguruCommunity": "Community Insights",
-      "dataguruCommunityDesc": "lifestyle clusters with off-plan project counts per area.",
-      "dataguruRentVsBuy": "Rent vs Buy",
-      "dataguruRentVsBuyDesc": "full calculator with mortgage, rent growth, and equity modelling.",
-      "dataguruResidential": "Residential Insights",
-      "dataguruResidentialDesc": "per-project launch pricing and sqft benchmarks (resale trends require a licensed feed).",
-      "dataguruNewProjects": "New Projects",
+      "heroSubtitle": "Six data tools for smarter off-plan decisions — launch prices, community data, and calculators built on our live catalog.",
+      "toolsIntro": "Every tool here runs on our own data: a live catalog of {count} launch units plus Dubai Land Department sold-price records — with brochures, comparisons, and payment calculators built in.",
       "dataguruNewProjectsDesc": "unit-level SERP with compare and brochures."
     },
     "priceMapPage": {

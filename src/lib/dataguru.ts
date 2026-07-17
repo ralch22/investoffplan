@@ -3,9 +3,6 @@ export interface DataGuruTool {
   title: string;
   description: string;
   href: string;
-  pfHref: string;
-  /** PF DataGuru feature name for parity tracking */
-  pfFeature: string;
 }
 
 export const DATAGURU_TOOLS: DataGuruTool[] = [
@@ -15,8 +12,6 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     description:
       "See which communities fit your budget — launch prices by area, bedroom count, and property type.",
     href: "/tools/price-map",
-    pfHref: "https://www.propertyfinder.ae/en/area-insights/explore-prices/dubai",
-    pfFeature: "Price Map",
   },
   {
     slug: "communities",
@@ -24,8 +19,6 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     description:
       "Explore communities grouped by lifestyle — family-friendly, waterfront, urban, golf, and more.",
     href: "/tools/communities",
-    pfHref: "https://www.propertyfinder.ae/en/area-insights/dubai",
-    pfFeature: "Community Insights",
   },
   {
     slug: "rent-vs-buy",
@@ -33,8 +26,6 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     description:
       "Compare monthly payments and long-term costs of renting versus buying off-plan in the UAE.",
     href: "/tools/rent-vs-buy",
-    pfHref: "https://www.propertyfinder.ae/en/rent-vs-buy-calculator",
-    pfFeature: "Rent vs Buy Calculator",
   },
   {
     slug: "residential",
@@ -42,8 +33,6 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     description:
       "Launch-price intelligence per project — average prices, price per sqft, and nearby comparisons.",
     href: "/tools/residential",
-    pfHref: "https://www.propertyfinder.ae/en/area-insights/dubai/compounds-and-towers",
-    pfFeature: "Residential Insights",
   },
   {
     slug: "mortgage",
@@ -51,8 +40,6 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     description:
       "Model repayments, cash-to-close with DLD fees, and stress-tested affordability — then request pre-approval.",
     href: "/tools/mortgage",
-    pfHref: "https://www.propertyfinder.ae/en/mortgages",
-    pfFeature: "Mortgage tools",
   },
   {
     slug: "payment",
@@ -60,8 +47,6 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     description:
       "Break any payment plan (60/40, 80/20, post-handover) into dirham amounts per phase at your purchase price.",
     href: "/tools/payment",
-    pfHref: "https://www.propertyfinder.ae/en/new-projects",
-    pfFeature: "Payment plans",
   },
   {
     slug: "new-projects",
@@ -69,8 +54,6 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     description:
       "Browse 2,000+ off-plan unit options with brochures, compare, and payment calculators.",
     href: "/projects",
-    pfHref: "https://www.propertyfinder.ae/en/new-projects",
-    pfFeature: "New Projects",
   },
   {
     slug: "roi",
@@ -78,8 +61,6 @@ export const DATAGURU_TOOLS: DataGuruTool[] = [
     description:
       "Estimate off-plan rental yield, capital appreciation, and total return — prefilled with 2025 DLD market data and shareable via link.",
     href: "/tools/roi",
-    pfHref: "https://www.propertyfinder.ae/en/mortgages",
-    pfFeature: "Investment ROI",
   },
 ];
 
