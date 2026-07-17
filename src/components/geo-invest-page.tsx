@@ -179,7 +179,7 @@ export async function GeoInvestPage({ config }: { config: GeoConfig }) {
         </p>
         <ul className="mt-6 grid gap-3 sm:grid-cols-2">
           {topCommunities.map((c) => (
-            <li key={c.areaLabel} className="flex items-baseline justify-between gap-3 rounded-xl border border-border bg-white px-5 py-4">
+            <li key={c.areaLabel} className="flex min-w-0 items-baseline justify-between gap-3 rounded-xl border border-border bg-white px-5 py-4">
               <div className="min-w-0">
                 <p className="truncate font-semibold text-text-dark">{c.areaLabel}</p>
                 <p className="text-sm text-muted tabular-nums">
