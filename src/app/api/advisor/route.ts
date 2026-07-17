@@ -84,8 +84,19 @@ export async function POST(request: Request) {
   try {
     const response = await runAdvisor(messages, locale);
     return NextResponse.json(response);
-  } catch {
+  } catch (error) {
     // Any AI failure degrades to the human channel — never a 500 to the widget.
+    // But LOG it: this fallback is user-invisible-as-an-error, so a silent
+    // model/backend change (e.g. the 2026-07 vLLM tools-schema migration) can
+    // take the advisor fully offline with every response still a clean 200.
+    // This line is what makes that show up in `wrangler tail`.
+    console.error(
+      JSON.stringify({
+        advisor_offline_fallback: {
+          message: error instanceof Error ? error.message : String(error),
+        },
+      }),
+    );
     const fallback: AdvisorResponse = {
       reply:
         locale === "ar"
