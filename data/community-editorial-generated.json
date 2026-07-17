@@ -3333,5 +3333,823 @@
         "a": "Zabeel benefits from metro access via Rashidiya and MAX Fashion stations, plus multiple bus stops including Wasl Club 1. Sheikh Zayed Road and Al Khail Road provide direct road connectivity to Downtown Dubai and DIFC."
       }
     ]
+  },
+  {
+    "slug": "town-square",
+    "name": "Town Square",
+    "intro": [
+      "Town Square is a Nshama-developed community with 36 live off-plan projects offering 114 unit options. The property mix is predominantly apartments (90%), with townhouses (5%) and duplexes (4%) completing the residential offering. Handovers span 2023 through 2029, providing buyers with flexible entry points for both owner-occupiers and investors seeking established or emerging phases.",
+      "Launch prices range from AED 395,000 to AED 2,800,000, accommodating diverse buyer profiles. DLD 2025 data shows 937 recorded sales with a median transaction price of AED 1,150,000 and AED/sqft median of 1,275, indicating stable market activity in this maturing Dubai location."
+    ],
+    "lifestyle": [
+      "Town Square is engineered as a family-friendly, pet-friendly community centred on active living and outdoor recreation. Extensive green spaces, parks, and trails support active lifestyles, whilst the gated, secure neighbourhood and community-driven atmosphere appeal to residents seeking both amenity-rich environments and genuine neighbourhood character. Central Park and local retail at Town Square Mall reinforce this appeal."
+    ],
+    "transport": [
+      "The community connects via Al Qudra Road (D63), Emirates Road (E611), and Sheikh Mohammed Bin Zayed Road (E311). Mall of the Emirates and EQUITI metro stations provide Dubai Metro access. RTA feeder bus F32 and bus link J02 offer local transit options, with taxi services and ride-hailing also available, supporting multiple commute preferences."
+    ],
+    "schools": [
+      "Town Square and its immediate vicinity host Numu Nursery, Maple Bear Nursery, Cherry Tree Nursery, Blossom Nursery, Fairgreen International School, GEMS Metropole School Al Waha, Ranches Primary School, Jebel Ali School, and Renaissance School, providing families with established educational options from early years through secondary provision."
+    ],
+    "nearbyAreas": [
+      "Cherrywoods",
+      "Mudon",
+      "DAMAC Islands",
+      "Damac Hills"
+    ],
+    "whoItSuits": [
+      "Town Square's family-friendly positioning, secure gated environment, and extensive schools (from nurseries through secondary) appeal to households prioritising education access. The proximity to employment hubs via Al Qudra, Emirates, and Sheikh Mohammed Bin Zayed Roads, plus metro stations, suits commuters. Community amenities, parks, and healthcare options at Medcare Medical Centre Town Square reinforce residential appeal."
+    ],
+    "faq": [
+      {
+        "q": "What price range should I expect?",
+        "a": "Launch prices span AED 395,000 to AED 2,800,000. DLD 2025 data shows a median transaction price of AED 1,150,000 with AED/sqft median of 1,275, reflecting the mix of apartments (90%), townhouses (5%), and duplexes (4%) across the portfolio."
+      },
+      {
+        "q": "When are handovers happening?",
+        "a": "Nshama projects span handovers from 2023 through 2029. Earlier phases completed in 2023–2024, whilst mid-stage units target 2025–2026, and later phases extend to 2028–2029, allowing buyers to select by phase maturity and personal timeline."
+      },
+      {
+        "q": "What schools are available?",
+        "a": "Multiple schools operate nearby, including Fairgreen International, GEMS Metropole Al Waha, Jebel Ali School, Renaissance School, and nurseries (Maple Bear, Cherry Tree, Blossom, Numu), providing families with established early-years through secondary provision."
+      }
+    ]
+  },
+  {
+    "slug": "aljada",
+    "name": "Aljada",
+    "intro": [
+      "Aljada is ARADA's master-planned community in Sharjah, featuring 24 off-plan projects with 24 unit options. Launch prices range from AED 299,000 to AED 16,160,000, dominated by apartments (96%) with some townhouses (4%). Handover timelines span 2023 to 2027, accommodating different investment and occupancy preferences.",
+      "The community integrates living, working, entertainment, and shopping into one self-contained urban hub. Built around principles of walkability and integrated green space, Aljada reflects a modern master-planned approach to residential development in Sharjah, designed to create a cohesive neighbourhood experience."
+    ],
+    "lifestyle": [
+      "Aljada prioritises walkability with ample green spaces and a car-free zone, encouraging an active outdoor lifestyle. The community offers resident access to restaurants, cafes, gyms, wellness spas, and board game venues within a self-contained setting that balances tranquility with urban amenity."
+    ],
+    "transport": [
+      "The community connects via major highways including Sheikh Mohammed Bin Zayed Road (E311) and Al Dhaid Road (E88), complemented by well-maintained internal streets. Al Muweilah Bus Terminal provides bus access, and a future metro link is planned to further enhance regional connectivity."
+    ],
+    "schools": [
+      "Aljada hosts Maple Bear Nursery Aljada and SABIS International School Aljada. Nearby options include GEMS Westminster School Sharjah, Delhi Private School Sharjah, GEMS Millennium School, PACE British School, and Sharjah Ambassador School, offering families diverse curriculum choices across early years through secondary levels."
+    ],
+    "nearbyAreas": [
+      "Muwaileh",
+      "Muwaileh Commercial",
+      "Sharjah",
+      "Sharjah Sustainable City"
+    ],
+    "whoItSuits": [
+      "Aljada appeals to families with its schools, parks, and safe play areas; professionals seeking walkable urban living; and long-term investors drawn to ARADA's portfolio. The price range from AED 299,000 accommodates varied buyer profiles and investment strategies within a self-contained, master-planned environment."
+    ],
+    "faq": [
+      {
+        "q": "What's the price range at Aljada?",
+        "a": "Launch prices range from AED 299,000 to AED 16,160,000 across 24 projects, with 96% apartments and 4% townhouses."
+      },
+      {
+        "q": "When will units be delivered?",
+        "a": "Handover timelines span 2023 to 2027 across different projects, allowing buyers to select based on their preferred timeline."
+      },
+      {
+        "q": "Is Aljada suitable for families?",
+        "a": "Yes—the community includes multiple schools, parks, safe play areas, and amenities like gyms and wellness facilities within a walkable, integrated environment."
+      }
+    ]
+  },
+  {
+    "slug": "damac-hills",
+    "name": "Damac Hills",
+    "intro": [
+      "Damac Hills comprises 22 off-plan projects with 61 unit options. Prices span AED 978,000 to AED 24,557,000 via Damac Properties. Handover dates range from 2023 to 2030, accommodating various investment and occupancy timelines.",
+      "Villas dominate at 62%, with apartments (20%) and townhouses (18%). DLD 2025 data shows 1,434 recorded sales, a median price of AED 1,177,000, and AED 1,471 per square foot. This indicates a mature secondary market alongside the off-plan inventory."
+    ],
+    "lifestyle": [],
+    "transport": [],
+    "schools": [],
+    "nearbyAreas": [
+      "Mudon",
+      "Dubai Studio City",
+      "Damac Lagoons",
+      "Tilal Al Ghaf"
+    ],
+    "whoItSuits": [
+      "The diverse property mix and price range serve various investors. Villas (62%) appeal to family buyers; apartments and townhouses attract portfolio investors. Secondary-market activity—1,434 sales in 2025 at AED 1.177m median—signals liquidity for both end-users and those scaling investments."
+    ],
+    "faq": [
+      {
+        "q": "What property types are available?",
+        "a": "Villas comprise 62% of the portfolio, with apartments (20%) and townhouses (18%). Prices range from AED 978,000 to AED 24,557,000 across Damac Properties' 22 active off-plan projects."
+      },
+      {
+        "q": "When can I expect handovers?",
+        "a": "Handover dates span 2023 through 2030. Early projects are already completed; later phases extend into 2029–2030, allowing investors to align acquisitions with their financial planning horizons."
+      },
+      {
+        "q": "Is there a secondary market?",
+        "a": "Yes. DLD 2025 recorded 1,434 sales with a median price of AED 1,177,000 (AED 1,471/sqft), demonstrating substantial resale activity alongside the off-plan inventory."
+      }
+    ]
+  },
+  {
+    "slug": "umm-suqeim",
+    "name": "Umm Suqeim",
+    "intro": [
+      "Umm Suqeim offers 86 apartment units across 11 live off-plan projects, developed by Meraas Holding and Dubai Properties. Launch prices span AED 219,795 to AED 19,370,000, providing options across the market spectrum. The 100% apartment composition attracts both owner-occupiers and investors seeking exposure to this established community.",
+      "Handover dates staggered between 2023 and 2029 allow buyers to align acquisition with their timeline. This extended delivery window means properties at varying stages of construction are available, from near-completion to early-stage developments."
+    ],
+    "lifestyle": [],
+    "transport": [],
+    "schools": [],
+    "nearbyAreas": [
+      "Al Sufouh",
+      "Al Barsha",
+      "Palm Jumeirah",
+      "Dubai Media City"
+    ],
+    "whoItSuits": [],
+    "faq": [
+      {
+        "q": "What is the price range for off-plan apartments in Umm Suqeim?",
+        "a": "Launch prices range from AED 219,795 to AED 19,370,000 across the 11 active projects, reflecting a diverse mix of unit sizes and specifications."
+      },
+      {
+        "q": "Which developers are building in Umm Suqeim?",
+        "a": "Meraas Holding and Dubai Properties are the active developers currently offering off-plan apartments in the community."
+      },
+      {
+        "q": "When will off-plan units be handed over?",
+        "a": "Handover dates span 2023 through 2029, with units available at various construction stages to suit different investment and occupancy timelines."
+      }
+    ]
+  },
+  {
+    "slug": "dubai-sports-city",
+    "name": "Dubai Sports City",
+    "intro": [
+      "Dubai Sports City has eight active off-plan projects offering 26 apartment units, with launch prices ranging from AED 598,317 to AED 2,500,000. The community attracts young professionals, couples, and families seeking value without compromising on amenities. Recent DLD data shows a median transaction price of AED 850,000 with a gross rental yield of 6.3%, reflecting strong market demand and rental potential.",
+      "Developers including Danube Properties, Samana Developers, Object 1, Azizi Developments, and Binghatti Developers are delivering apartments with completion dates spanning 2025, 2026, and 2028. This staggered handover schedule offers flexibility for buyers and investors. The apartment-focused portfolio at a median rate of AED 1,271 per square foot positions Dubai Sports City as a value-focused destination for property investment."
+    ],
+    "lifestyle": [
+      "Dubai Sports City is designed around sports and active living, featuring parks and sports facilities that appeal to those prioritising dynamic lifestyles. The integrated community emphasises wellness with dedicated facilities whilst serving families seeking a balance of recreation and community amenities. Its well-connected status and focus on fitness make it particularly attractive to young professionals and families valuing an active lifestyle."
+    ],
+    "transport": [
+      "Dubai Sports City benefits from multiple transport connections. The community is served by Discovery Gardens Metro Station 1 and Dubai Internet City Metro Station, alongside RTA buses and the Arena Tower Bus Stop. Access to Sheikh Mohammed Bin Zayed Road (E311), Mohammed Bin Zayed Road, and Al Khail Road (E44) ensures convenient links to central Dubai and outlying areas, supporting easy commuting for residents."
+    ],
+    "schools": [
+      "The community is well-served by educational institutions including GEMS Metropole School, Victory Heights Primary School, and foundational care options such as The Wonder Years Nursery, Kinder Castle Nursery, and Victory Heights Foundation Stage. These choices cater to families with young children and offer both primary education and early-years care within or near the community."
+    ],
+    "nearbyAreas": [
+      "Jumeirah Village Circle",
+      "Jumeirah Golf Estates",
+      "Dubai Production City (IMPZ)",
+      "Tilal Al Ghaf"
+    ],
+    "whoItSuits": [
+      "Dubai Sports City suits young professionals and couples valuing affordability alongside modern amenities, as well as families seeking a family-friendly community with active-living infrastructure. The combination of competitive pricing, sports and wellness facilities, and integrated community design makes it attractive for investors and owner-occupiers alike, appealing to those prioritising value, active lifestyles, and convenience."
+    ],
+    "faq": [
+      {
+        "q": "What is the rental yield in Dubai Sports City?",
+        "a": "DLD 2025 data indicates a gross rental yield of 6.3%, based on 3,605 recorded transactions with a median sold price of AED 850,000. This reflects strong rental demand relative to property values."
+      },
+      {
+        "q": "When will new off-plan projects be handed over?",
+        "a": "Eight active projects show completion dates spanning 2025, 2026, and 2028, delivered by Danube Properties, Samana Developers, Object 1, Azizi Developments, and Binghatti Developers. This timeline offers flexibility for buyers."
+      },
+      {
+        "q": "What sports and lifestyle facilities does Dubai Sports City offer?",
+        "a": "The community features the Dubai International Stadium, Els Club Golf Course, ICC Academy, parks, and integrated wellness facilities. Nearby attractions include Dubai Miracle Garden, Dubai Butterfly Garden, Me'aisem City Centre, and Motor City retail outlets."
+      }
+    ]
+  },
+  {
+    "slug": "villanova",
+    "name": "Villanova",
+    "intro": [
+      "Villanova offers eight live off-plan townhouse projects comprising 16 unit options, launched by Dubai Properties. Prices span AED 1.28M to AED 3.1M, appealing to investors and families seeking contemporary townhouse living. Handover dates range from 2023 through 2028, offering both near-term and medium-term completion windows.",
+      "DLD data from 2025 records 334 completed transactions in Villanova with a median sale price of AED 3M and median price per sqft of AED 1,497. This transactional volume and pricing indicate established buyer confidence in the community's appeal."
+    ],
+    "lifestyle": [
+      "Villanova is a family-oriented community favouring those seeking affordable luxury with a slow-paced suburban feel. Residents benefit from proximity to shopping at Cityland Mall and Villanova Marketplace, plus entertainment at IMG Worlds of Adventure and Global Village. The neighbourhood offers measured residential comfort distinct from denser urban areas."
+    ],
+    "transport": [
+      "Key transport links include Business Bay, Dubai Creek Harbour, and Downtown Dubai, with access to Dubai International Airport. The proximity to major commercial hubs facilitates commuting for working professionals."
+    ],
+    "schools": [
+      "Villanova and surrounding areas serve families with nurseries including Jumeirah International Nurseries and Emirates British Nursery, as well as primary schools such as GEMS FirstPoint School, The Aquila School, and GEMS Wellington Academy. International options like Dubai English Speaking College and GEMS Winchester School cater to families prioritising international curricula."
+    ],
+    "nearbyAreas": [
+      "Arabian Ranches 3",
+      "Falcon City of Wonders",
+      "City of Arabia",
+      "Dubai Land"
+    ],
+    "whoItSuits": [
+      "Ideal for families prioritising suburban residential comfort and affordable luxury over urban density. The townhouse format and community amenities appeal to long-term residents and investors seeking stable, family-focused residential environments with manageable price entry points."
+    ],
+    "faq": [
+      {
+        "q": "When do off-plan units in Villanova complete?",
+        "a": "Handover years span 2023 to 2028. Eight active projects offer a range of completion timelines suited to different investor and occupier timescales."
+      },
+      {
+        "q": "What types of properties are available?",
+        "a": "All 16 units across live projects are townhouses, offering family-oriented architectural form with private outdoor space typical of suburban Dubai communities."
+      },
+      {
+        "q": "What is the price range for Villanova off-plan properties?",
+        "a": "Launch prices range from AED 1.28M to AED 3.1M, with DLD data showing median sale prices around AED 3M in recent transactions."
+      }
+    ]
+  },
+  {
+    "slug": "dubai-studio-city",
+    "name": "Dubai Studio City",
+    "intro": [
+      "Dubai Studio City is a purpose-built hub for media and production industries, evolving into a residential community. With 7 active off-plan projects offering 26 apartment units from AED 450,000 to AED 1.98 million, developed by Azizi Developments and Samana Developers, it appeals to creative professionals and investors. The community balances commercial vibrancy with residential convenience in a relaxed atmosphere distinct from busier urban centres.",
+      "DLD 2025 data shows strong market confidence: 2,462 recorded sales with a median price of AED 1,051,650 (AED 1,565/sqft) and a gross rental yield of 6.2%. Handover dates span 2023 through 2026, providing staggered entry opportunities for investors and owner-occupiers seeking exposure to this emerging residential district within a thriving creative hub."
+    ],
+    "lifestyle": [
+      "Studio City offers a family-friendly, pet-friendly atmosphere that appeals to creative professionals, young families, and investors. The community maintains a relaxed, less congested environment compared to central Dubai, with fitness centres and parks encouraging an active lifestyle. Residents—predominantly freelancers and media/tech professionals—enjoy a vibrant, innovative district designed around creative industries, fostering a distinct professional and residential culture."
+    ],
+    "transport": [
+      "Studio City benefits from multiple connectivity options. Dubai Internet City Metro Station and Mall of the Emirates Metro Station provide easy access to Dubai's metro network. The F30 RTA bus connects the community, whilst Al Qudra Road and Sheikh Zayed Bin Hamdan Al Nahyan Street offer direct road access. Residents enjoy proximity to both the commercial district and well-connected arterial routes enabling efficient commutes across Dubai."
+    ],
+    "schools": [
+      "The area hosts a range of educational institutions serving different age groups. GEMS Metropole School and Jumeirah English Speaking School offer primary and secondary education, whilst GEMS United School and Renaissance International School provide further options. For younger children, nurseries including Jebel Ali Village Nursery, Kinder Castle Nursery, and Step By Step Nursery are accessible. The educational diversity supports families with varying schooling preferences and ages."
+    ],
+    "nearbyAreas": [
+      "Motor City",
+      "Tilal Al Ghaf",
+      "Damac Hills",
+      "Damac Lagoons"
+    ],
+    "whoItSuits": [
+      "Studio City appeals primarily to creative professionals—filmmakers, media workers, and tech entrepreneurs—seeking residential proximity to their workplace. Young families benefit from the family-friendly infrastructure, accessible schools, and relaxed community atmosphere. Investors appreciate the 6.2% gross rental yield and strong market performance: 2,462 recorded sales in 2025 at a median of AED 1,051,650. All demographics are served by projects with handovers spanning 2023–2026."
+    ],
+    "faq": [
+      {
+        "q": "What transport links serve Studio City?",
+        "a": "Dubai Internet City Metro Station and Mall of the Emirates Metro Station connect the community to Dubai's metro network. The F30 RTA bus provides direct local connectivity. Major roads include Al Qudra Road and Sheikh Zayed Bin Hamdan Al Nahyan Street, enabling commutes across Dubai and the wider emirates."
+      },
+      {
+        "q": "What schools are available for families?",
+        "a": "The area includes GEMS Metropole School, Jumeirah English Speaking School, GEMS United School, and Renaissance International School for older children. Nurseries serving younger ages include Jebel Ali Village Nursery, Kinder Castle Nursery, Step By Step Nursery, and The Wonder Years Nursery, offering families multiple education options."
+      },
+      {
+        "q": "What is the rental yield outlook for investors?",
+        "a": "DLD 2025 data recorded a 6.2% gross rental yield on Studio City properties, with 2,462 sales at a median price of AED 1,051,650 (AED 1,565/sqft). This yield, combined with the district's emerging residential evolution and creative-industry foundation, presents a compelling investment case for income-focused buyers."
+      }
+    ]
+  },
+  {
+    "slug": "al-safa",
+    "name": "Al Safa",
+    "intro": [
+      "Al Safa is a residential community in Dubai with four live off-plan projects offering 15 unit options. Damac Properties is actively developing here, with handovers scheduled for 2025 and 2026. The community offers a diverse property mix comprising 73% apartments, 20% duplexes, and 7% penthouses, catering to varied investor and resident preferences.",
+      "Launch prices range from AED 21.9 million to AED 41.3 million, positioning Al Safa in the upper-mid segment of Dubai's off-plan market. With 15 unit options currently available and scheduled handovers in 2025 and 2026, the community presents both near-term and medium-term investment opportunities for buyers seeking established, central-location properties."
+    ],
+    "lifestyle": [
+      "Al Safa is a vibrant, family-friendly residential area with proximity to key Dubai attractions. Residents benefit from direct access to Safa Park, major shopping destinations including Dubai Mall and Mall of the Emirates, and Kite Beach for outdoor pursuits. This eventful lifestyle appeal, combined with central positioning, makes the community attractive to families and professionals seeking balanced urban living."
+    ],
+    "transport": [
+      "Al Safa's location on Sheikh Zayed Road ensures strong connectivity to Dubai's main axis. Both Noor Bank Metro Station and Business Bay Metro Station provide public transport access to central areas including Downtown Dubai and Business Bay. This infrastructure positioning supports practical daily commuting and swift access to key business districts and destinations."
+    ],
+    "schools": [
+      "Al Safa's proximity to established educational institutions is a key feature for families. Jumeirah English Speaking School (JESS) and Horizon English School serve the area, providing British curriculum options. Families relocating to Dubai will find these schools accessible, supporting the community's position as a family-oriented environment with educational infrastructure in place."
+    ],
+    "nearbyAreas": [
+      "Al Wasl",
+      "Business Bay",
+      "City Walk",
+      "Downtown Dubai"
+    ],
+    "whoItSuits": [
+      "Al Safa appeals to investor buyers and families seeking established central-location properties with strong amenities and education. The diverse property mix—apartments, duplexes, and penthouses—accommodates different household sizes and investment strategies. Its Sheikh Zayed Road positioning, metro accessibility, and proximity to retail and recreation make it particularly attractive to professionals, growing families, and those prioritising location convenience."
+    ],
+    "faq": [
+      {
+        "q": "Who is developing Al Safa?",
+        "a": "Damac Properties is delivering four projects in Al Safa with handovers scheduled for 2025 and 2026."
+      },
+      {
+        "q": "What are the price points?",
+        "a": "Launch prices range from AED 21.9 million to AED 41.3 million across 15 available units, including apartments, duplexes, and penthouses."
+      },
+      {
+        "q": "Is there good schooling in the area?",
+        "a": "Al Safa has proximity to Jumeirah English Speaking School (JESS) and Horizon English School, both offering British curriculum options for families."
+      }
+    ]
+  },
+  {
+    "slug": "bur-dubai",
+    "name": "Bur Dubai",
+    "intro": [
+      "Bur Dubai is one of Dubai's oldest and most historically significant districts, home to 3 live off-plan projects offering 13 units from Wasl Properties. The portfolio balances 85% apartments with 15% duplexes, priced from AED 1.5m to AED 11.7m. Handovers span 2025–2028, appealing to investors and residents seeking established infrastructure within Dubai's cultural heartland.",
+      "As the historic core of Dubai Creek, Bur Dubai has evolved into a vibrant residential community blending traditional charm with modern development. Its location—adjacent to DIFC, Al Satwa, and Zabeel—maintains distinctive character whilst offering accessibility. The district attracts a diverse demographic seeking walkable urban living with strong cultural roots, verified transport connectivity, and an established expat community."
+    ],
+    "lifestyle": [
+      "Bur Dubai is a cultural hub and melting pot of economic and cultural influences, historically popular among expat residents. The district preserves the Grand Mosque, Meena Bazaar, and Al Seef waterfront alongside modern amenities. Zabeel Park, Al Nasr Leisureland, and Dubai Creek Golf & Yacht Club serve residents seeking recreation. The mix of traditional architecture with contemporary mid-rises creates a distinctive living environment with diverse dining, retail, and community spaces."
+    ],
+    "transport": [
+      "Bur Dubai's transport infrastructure is among Dubai's strongest. Dubai Metro stations at Al Fahidi, Burjuman, Al Ghubaiba, Oud Metha, and ADCB connect residents across the emirate. Major roads include Sheikh Zayed Road (E11), Al Khail Road (E44), and Oud Metha Road (D79). BurJuman Mall anchors the community; Carrefour, Choithrams, Lulu Hypermarket, and Spinneys provide daily shopping. This connectivity makes commuting straightforward."
+    ],
+    "schools": [
+      "The area hosts a diverse school ecosystem. Indian High School, GEMS Winchester School, Dubai Gem Private School, St. Mary's Catholic High School, and Bright Riders School Dubai serve primary and secondary needs. GEMS New Millennium School, Nibras International School Dubai, Swiss International Scientific School in Dubai, and Horizon International School provide international options. Chubby Cheeks Nursery, British Orchard Nursery, and Hope Montessori Nursery cover early years."
+    ],
+    "nearbyAreas": [
+      "World Trade Center",
+      "Zabeel",
+      "Al Satwa",
+      "DIFC"
+    ],
+    "whoItSuits": [
+      "Bur Dubai suits multicultural families and young professionals valuing walkability, cultural depth, and heritage. Expat residents—particularly from Asia—have long chosen the district for its community fabric, affordable positioning, and proximity to employment hubs (DIFC, downtown). Investors seeking stable rental yields in an established, connected neighbourhood find appeal here. Those prioritising public transport, school choice, and cultural richness over new-build prestige thrive in this economically mixed district."
+    ],
+    "faq": [
+      {
+        "q": "What's the price range for off-plan units in Bur Dubai?",
+        "a": "Current off-plan offerings range from AED 1.5 million to AED 11.7 million, split between apartments (85%) and duplexes (15%)."
+      },
+      {
+        "q": "When are handovers scheduled?",
+        "a": "The 3 active projects from Wasl Properties offer handover years of 2025 and 2028, depending on the specific development."
+      },
+      {
+        "q": "Is Bur Dubai suitable for expat families?",
+        "a": "Yes. The district has 12 schools and nurseries spanning international curricula, metro connectivity, and a long-established multicultural community—particularly popular among Asian expat residents."
+      }
+    ]
+  },
+  {
+    "slug": "fahid-island",
+    "name": "Fahid Island",
+    "intro": [
+      "Fahid Island is a master-planned residential community in Abu Dhabi focused on wellness and sustainable living. Three live off-plan developments from Aldar Properties PJSC offer 17 residential units with handover scheduled for 2029. Properties range from AED 1.8 million to AED 11 million, with apartments comprising 71% of the mix, alongside duplexes, townhouses, and penthouses.",
+      "The community has been deliberately designed around active living and wellbeing, featuring 15 km of scenic walkways and eco-friendly infrastructure. Its proximity to Abu Dhabi's key employment and leisure zones—including Yas and Saadiyat Islands—positions it as an accessible waterfront choice for investors and residents seeking a balanced lifestyle."
+    ],
+    "lifestyle": [
+      "Fahid Island prioritises wellness through thoughtful master-planning, with footpaths connecting residents to fitness centres and ocean-view gyms, a private beach club, marina with yacht berths, and a watersports centre. The 15 km of scenic walkways and mangrove views support active living and social interaction. Boutique cafes, gourmet restaurants, and luxury fashion boutiques cater to everyday lifestyle needs whilst maintaining an eco-conscious community ethos."
+    ],
+    "transport": [
+      "The community is well-connected via the Sheikh Khalifa bin Zayed Highway (E12) and Coral Drive. Yas Island is 3–5 minutes away, Saadiyat Island 7–15 minutes, and Zayed International Airport approximately 9–15 minutes. Downtown Abu Dhabi is 20–35 minutes by car. The location offers convenient access to major employment hubs and cultural destinations without requiring lengthy commutes across the emirate."
+    ],
+    "schools": [
+      "Island School and King's College School Wimbledon provide international education options for families in the area. Both serve expatriate communities. Prospective residents should contact schools directly to confirm curricula, age ranges, and proximity to specific properties, as detailed catchment information is not available in current community guides."
+    ],
+    "nearbyAreas": [
+      "Ramhan Island",
+      "Al Raha Beach",
+      "Yas Island",
+      "Masdar City"
+    ],
+    "whoItSuits": [
+      "Fahid Island suits investors and residents who prioritise wellness, active lifestyles, and sustainable living. Its walkable, eco-conscious design and proximity to Yas and Saadiyat Islands appeal to families and professionals working across Abu Dhabi's key employment zones. The property mix—dominated by apartments but including townhouses and penthouses—accommodates diverse household sizes and investment profiles. Handover in 2029 suits buyers with medium-term investment horizons."
+    ],
+    "faq": [
+      {
+        "q": "What's the price range for Fahid Island properties?",
+        "a": "Residential units range from AED 1.8 million to AED 11 million, spanning apartments (71% of inventory), duplexes, townhouses, and penthouses. Price variation reflects property type, size, location within the community, and design specifications. Three active off-plan developments from Aldar Properties PJSC currently offer 17 residential units available for purchase with 2029 handover."
+      },
+      {
+        "q": "When will properties be ready?",
+        "a": "Handover is scheduled for 2029. This timeframe allows purchasers to benefit from staged payment schemes typical of UAE off-plan developments, spreading investment outlay over the construction period. The completion date provides a medium-term investment horizon suitable for both owner-occupiers and portfolio investors."
+      },
+      {
+        "q": "What makes Fahid Island different?",
+        "a": "The community is designed explicitly around wellness and sustainability. Features include 15 km of scenic walkways, mangrove views, a private beach club, marina, and watersports centre. Proximity to Yas Island (3 minutes) and Saadiyat Island (7 minutes) differentiates it within Abu Dhabi's waterfront property market, offering access to both leisure amenities and employment zones."
+      }
+    ]
+  },
+  {
+    "slug": "dubai-media-city",
+    "name": "Dubai Media City",
+    "intro": [
+      "Dubai Media City offers 14 units across two live off-plan projects by Damac Properties, ranging from AED 3.0 million to AED 87.1 million. The property mix includes 57% apartments, 21% townhouses, 14% penthouses, and 7% duplexes. Handovers are scheduled for 2025 and 2027, providing options for both near-term and medium-term investment timelines.",
+      "Dubai Media City functions as a business-focused free zone home to over 2,000 media companies, making it a hub for freelancers, startups, SMEs, and enterprises. The community balances its commercial character with residential buildings catering to business professionals and families, creating a live-work environment that appeals to professionals seeking proximity to both work and lifestyle amenities."
+    ],
+    "lifestyle": [
+      "The community offers a vibrant business culture with numerous dining and nightlife options, hosting events and exhibitions alongside its commercial operations. Residential amenities include Dubai Media City Park, with proximity to Jumeirah Beach and Kite Beach. The area's business-friendly environment attracts professionals seeking a dynamic community that combines work opportunities with social and recreational facilities."
+    ],
+    "transport": [
+      "Dubai Media City is well-connected by public transport, with access to Nakheel Metro Station and Dubai Internet City Metro Station. The Media City Tram Station serves the community directly, whilst RTA buses including routes 8, 83, and 84 provide further connectivity. Major roads including Sheikh Zayed Road and Al Sufouh Road facilitate vehicle access throughout Dubai and beyond."
+    ],
+    "schools": [
+      "The area is served by numerous educational institutions, including British Orchard Nursery, Renaissance School, Dwight School, Raffles Nursery, and The International School of Choueifat. Secondary options include Dubai College, GEMS Wellington International School, American School of Dubai, and GEMS Dubai American Academy. Middlesex University's presence adds to the area's educational credentials."
+    ],
+    "nearbyAreas": [
+      "Dubai Harbour",
+      "Dubai Marina",
+      "Jumeirah Beach Residence",
+      "Jumeirah Lake Towers"
+    ],
+    "whoItSuits": [
+      "Dubai Media City suits media industry professionals, business entrepreneurs, and families seeking a live-work lifestyle. The free-zone status and concentration of media companies appeal to freelancers and SMEs. The mix of residential amenities, dining options, and proximity to business hubs makes it ideal for professionals prioritising career proximity and modern residential convenience."
+    ],
+    "faq": [
+      {
+        "q": "What is Dubai Media City best suited for?",
+        "a": "Dubai Media City is primarily a business-focused free zone catering to professionals, entrepreneurs, and media industry workers. The community combines residential buildings with a thriving business environment, making it ideal for those seeking a live-work lifestyle with proximity to industry hubs and professional networks."
+      },
+      {
+        "q": "What are the handover timelines for available properties?",
+        "a": "The 14 units across two live projects are scheduled for handover in 2025 and 2027. This provides flexibility for investors seeking either near-term completion or medium-term investment horizons. Specific handover dates should be confirmed with individual project developers."
+      },
+      {
+        "q": "What transport and amenities are nearby?",
+        "a": "Dubai Media City offers excellent connectivity via Media City Tram Station, Nakheel Metro Station, and RTA bus routes including 8, 83, and 84. Nearby amenities include Mall of the Emirates and Nakheel Mall for shopping, whilst healthcare options include American Hospital and Mediclinic Al Sufouh. The area is also close to Jumeirah Beach and Kite Beach."
+      }
+    ]
+  },
+  {
+    "slug": "jumeirah-park",
+    "name": "Jumeirah Park",
+    "intro": [
+      "Jumeirah Park is an established residential community in Dubai with a mix of apartments and villas across 2 active off-plan projects on our platform. With 4 unit options available, the developments span multiple handover milestones, providing investor and end-user choice across this family-focused enclave.",
+      "Launch prices range from AED 6.5 million to AED 9 million, with a portfolio split of 75% apartments and 25% villas. Nakheel and H&H Development lead the current wave of units, with delivery scheduled across 2023 and 2025—reflecting the community's established market position."
+    ],
+    "lifestyle": [
+      "Jumeirah Park is known as a family-oriented community with generous plot sizes and dedicated community facilities, including Jumeirah Park Pavilion and the Community Centre. Residents describe the area's tranquil streetscape, which favours a quieter residential character away from Dubai's busier commercial districts."
+    ],
+    "transport": [],
+    "schools": [],
+    "nearbyAreas": [
+      "Jumeirah Islands",
+      "Jumeirah Lake Towers",
+      "Al Furjan",
+      "Jumeirah Village Triangle"
+    ],
+    "whoItSuits": [
+      "Jumeirah Park appeals to families seeking villa space and mid-range apartments in a tranquil setting. The mix of 75% apartments and 25% villas, priced from AED 6.5 million, suits both investors seeking rental yields in a family-oriented community and residents prioritising established infrastructure and community amenities."
+    ],
+    "faq": [
+      {
+        "q": "Which developers are building in Jumeirah Park?",
+        "a": "Nakheel and H&H Development are the active developers on our platform, with projects scheduled for handover in 2023 and 2025."
+      },
+      {
+        "q": "What's the apartment-to-villa split?",
+        "a": "The current off-plan offering is 75% apartments and 25% villas, priced from AED 6.5 million to AED 9 million, catering to diverse buyer profiles and investment strategies."
+      },
+      {
+        "q": "Is Jumeirah Park suitable for families?",
+        "a": "Yes. The community is positioned as family-oriented with dedicated amenities including Jumeirah Park Pavilion and Community Centre. Generous plot sizes and villa options also appeal to residents prioritising space."
+      }
+    ]
+  },
+  {
+    "slug": "al-heerah",
+    "name": "Al Heerah",
+    "intro": [
+      "Al Heerah is a coastal suburb in Northern Sharjah offering a family-friendly lifestyle with easy access to beaches and essential amenities. The neighbourhood caters to residents seeking community atmosphere combined with convenient proximity to major attractions. Known for its diverse residential options and welcoming community spirit, Al Heerah provides an appealing blend of coastal living and suburban comfort.",
+      "ARADA is offering a single apartment project in Al Heerah, with units starting from AED 2,510,000. The development is scheduled for handover in 2027, making it an entry opportunity for investors and owner-occupiers seeking a property in this established Northern Sharjah community."
+    ],
+    "lifestyle": [
+      "Al Heerah's coastal position places residents close to Al Fisht Beach, Sharjah Public Beach, and Al Khan Beach. The community features a vibrant, family-friendly atmosphere with neighbourhood-level amenities including Lulu Hypermarket, Carrefour, and local groceries. The accessible beachfront lifestyle combined with a friendly community environment appeals to families and individuals prioritising coastal proximity and essential services."
+    ],
+    "transport": [
+      "Al Heerah is well-connected via Al Sharq Street and Route 14, with bus stations serving Route 14 along Al Sharq Street. The community provides access to Sharjah City Center, Ajman Free Zone, University of Sharjah, and Sharjah International Airport. This connectivity supports commuting to employment centres across Sharjah and adjacent emirates, alongside access to key regional transport hubs."
+    ],
+    "schools": [
+      "Al Heerah has access to a range of schools spanning nursery through university level. Options include English Rose Nursery, Al Khaleej Nursery, and New Hope Nursery for early years, whilst Al Nekhailat School, Al Heera School, and The Emirates National School serve primary and secondary stages. Higher education is accessible through American University of Sharjah, Skyline University College, and City University College of Ajman."
+    ],
+    "nearbyAreas": [
+      "Sharjah",
+      "Al Khan",
+      "Muwaileh",
+      "Aljada"
+    ],
+    "whoItSuits": [
+      "Al Heerah suits families prioritising coastal living and neighbourhood community, particularly those with children attending nearby schools. Investors seeking rental demand in an established Sharjah suburb will find appeal in the family-friendly positioning and beach proximity. Owner-occupiers valuing beach access combined with urban connectivity and proximity to employment centres across Sharjah and neighbouring emirates would also benefit."
+    ],
+    "faq": [
+      {
+        "q": "What is the starting price in the Al Heerah off-plan project?",
+        "a": "The apartment project begins at AED 2,510,000 with handover scheduled for 2027."
+      },
+      {
+        "q": "Is Al Heerah suitable for families?",
+        "a": "Yes. Al Heerah is positioned as a family-friendly neighbourhood with beach access, schools spanning nursery through university level, and community amenities including supermarkets, healthcare facilities, and parks."
+      },
+      {
+        "q": "How is Al Heerah connected to the rest of Sharjah?",
+        "a": "The community benefits from Al Sharq Street and Route 14 connectivity, with bus services available. Residents have access to Sharjah International Airport, Sharjah City Center, and the University of Sharjah."
+      }
+    ]
+  },
+  {
+    "slug": "world-trade-center",
+    "name": "World Trade Center",
+    "intro": [
+      "World Trade Center Dubai is a cosmopolitan commercial hub and landmark destination anchoring the city's business district. On our portal, we feature one live off-plan residential project offering four apartment units from Azizi Developments. Properties are priced at AED 1,827,660, with 2024 handover scheduled. The community combines vibrant retail, hospitality, and residential spaces within a world-class infrastructure setting.",
+      "The locality draws a strong international and expatriate community seeking proximity to Dubai's business epicentre. Its appeal lies in connectivity to key employment hubs, diverse amenities, and a well-established infrastructure. Residents benefit from a compact but vibrant neighbourhood with shopping, hospitality, and cultural venues, making it an attractive choice for professionals and families seeking urban-focused living."
+    ],
+    "lifestyle": [
+      "The World Trade Centre community is defined by its cosmopolitan character and constant activity as a business and cultural hub. Residents enjoy access to multiple leisure activities, shopping destinations including Dubai Mall and Al Ghazal Mall, and world-class hospitality venues. The area attracts a diverse community of locals and expatriates, creating a dynamic, well-established neighbourhood. Proximity to Jumeirah Beach and La Mer Beach provides weekend leisure options beyond the city centre's vibrant commercial scene."
+    ],
+    "transport": [
+      "The community is exceptionally well-connected via multiple transport modes. Sheikh Zayed Road (E11) and 2nd Zabeel Street (D73) provide direct road access, while the World Trade Centre Metro Station offers rapid connectivity to the wider metro network, including Emirates Tower and Al Ghubaiba stations. Additional bus terminals near Novotel Hotel and Jumeirah Living ensure frequent public transport links. This strategic location minimises commute times for residents working across Dubai."
+    ],
+    "schools": [
+      "Early-years provision is well-represented in and around the community, with options including Smart Childrens Nursery, Roots and Wings Nursery, StepUp Nursery, and Safari Kid Sheikh Zayed Road Nursery. For primary and secondary education, GEMS Wellington Primary School, Salma Al Ansaria School, and Al Maktoum Primary School for Boys are established options in the broader area. Dubai College of Tourism also serves the locality, providing vocational pathways for older students."
+    ],
+    "nearbyAreas": [
+      "Zabeel",
+      "Bur Dubai",
+      "Al Satwa",
+      "DIFC"
+    ],
+    "whoItSuits": [
+      "This community is ideally suited to professionals working in business, trade, hospitality, or finance sectors, given its central location within Dubai's commercial hub. Expatriate families seeking urban convenience and proximity to employment centres will find the dynamic, well-established neighbourhood particularly appealing. Those valuing walkable access to shopping, dining, and cultural venues—balanced with metro and road connectivity—will appreciate the World Trade Centre's integrated urban setting."
+    ],
+    "faq": [
+      {
+        "q": "What is the price range for the available apartments?",
+        "a": "The single project on our portal offers four apartments from Azizi Developments, all priced at AED 1,827,660."
+      },
+      {
+        "q": "When will the apartments be ready for occupancy?",
+        "a": "Handover is scheduled for 2024, allowing residents to relocate within the stated timeframe."
+      },
+      {
+        "q": "What makes the World Trade Centre location attractive for residents?",
+        "a": "The community offers proximity to Dubai's business hub, direct metro connectivity via World Trade Centre Metro Station and Sheikh Zayed Road access, diverse shopping and dining venues, and weekend beach access to Jumeirah Beach and La Mer Beach."
+      }
+    ]
+  },
+  {
+    "slug": "bluewaters",
+    "name": "Bluewaters",
+    "intro": [
+      "Bluewaters is Meraas Holding's mixed-use island destination in Dubai featuring premium residences alongside hotels and retail. The community offers direct beach access and vibrant waterfront living, anchored by the iconic Ain Dubai observation wheel. It's positioned as a high-end residential address with a dynamic social environment, blending luxury living with leisure and entertainment on a man-made island.",
+      "Our portal lists one live off-plan project offering five unit options, priced from AED 2.85m to AED 42.44m. The community's property mix is predominantly apartments (80%) with penthouses (20%), all set for 2027 handover. DLD data from 2025 shows a median sold price of AED 10.3m and a per-sqft rate of AED 5,795 across 97 recorded sales."
+    ],
+    "lifestyle": [
+      "Bluewaters delivers luxury waterfront living with direct beach access via Cove Beach. The community hosts Ain Dubai and Caesars Palace, creating a vibrant nightlife and entertainment hub. Residents benefit from The Wharf Bluewaters for retail and dining, proximity to Dubai Marina Mall, and the broader Marina district's cosmopolitan appeal. The adjacent Jumeirah Beach Residence adds to the area's established social ecosystem."
+    ],
+    "transport": [
+      "Public transport options include RTA bus Route F57 and Dubai Tram service. Jebel Ali metro station and Dubai Marina metro stations provide rail connectivity. Ferry and marine transport operates from Bluewaters Wharf. Sheikh Zayed Road ensures vehicular access to key business and commercial areas."
+    ],
+    "schools": [
+      "The area has established educational provision including Arcadia School, Dubai British School, and Emirates International School, alongside multiple nurseries: Willow Children's Nursery, Knowledge Land Nursery, British Orchard Nursery, Toddler Town, and Emirates International School Meadows. This range supports families with children from early childhood through secondary education."
+    ],
+    "nearbyAreas": [
+      "Jumeirah Beach Residence",
+      "Jumeirah Lake Towers",
+      "Dubai Marina",
+      "Jumeirah Islands"
+    ],
+    "whoItSuits": [
+      "Bluewaters appeals to affluent professionals and investors seeking luxury waterfront living with direct beach access and premium retail and dining. The community's vibrant social environment, proximity to Dubai Marina, and high-end residential designation attract residents prioritising lifestyle amenities, entertainment, and established expatriate communities. The 2027 handover timeline suits investors with medium-term capital horizons."
+    ],
+    "faq": [
+      {
+        "q": "When will units be delivered?",
+        "a": "All units are scheduled for 2027 handover under developer Meraas Holding. The phased delivery will bring these premium residences to market as one of Dubai's most anticipated luxury waterfront developments."
+      },
+      {
+        "q": "What's the investment merit at current valuations?",
+        "a": "DLD 2025 data recorded 97 sales with a median price of AED 10.3m and AED 5,795 per square foot, indicating strong demand for premium waterfront properties. The luxury positioning, direct beach access, and iconic amenities (Ain Dubai, Caesars Palace) support capital preservation for discerning investors."
+      },
+      {
+        "q": "What healthcare and schools are nearby?",
+        "a": "Healthcare facilities include Valiant Clinic, Amwaj Polyclinic, Mediclinic Meadows, Emirates Hospital Clinics, and En Vogue Medical Centre. Schools include Arcadia School, Dubai British School, Emirates International School, and nurseries such as Willow Children's Nursery, Knowledge Land Nursery, British Orchard Nursery, and Toddler Town."
+      }
+    ]
+  },
+  {
+    "slug": "abu-dhabi",
+    "name": "Abu Dhabi",
+    "intro": [
+      "Eagle Hills is currently developing a single villa project in Abu Dhabi with two unit options available. This villa-focused community is scheduled for handover in 2030, offering potential residents a chance to secure property in one of the emirate's most established residential areas. The development reflects growing investor interest in Abu Dhabi's villa segments.",
+      "Abu Dhabi stands as the UAE's capital and a leading global financial hub. The emirate combines modern infrastructure with heritage preservation, attracting a diverse international population. Established communities across Abu Dhabi offer varying property typologies and price points, though this particular development remains villa-exclusive."
+    ],
+    "lifestyle": [
+      "Abu Dhabi's villa neighbourhoods offer spacious layouts and green landscapes, fostering strong community bonds among residents. The emirate is renowned for safety and family-friendly environments, with access to entertainment venues including Yas Waterworld and Warner Bros. World. Cultural landmarks such as the Louvre Abu Dhabi complement modern cosmopolitan amenities, whilst the multicultural population enriches the social fabric of established residential areas."
+    ],
+    "transport": [
+      "Abu Dhabi International Airport provides international connectivity for residents. Local mobility is supported by Hafilat Smart Card for public transport, alongside ride-hailing options including Uber, Careem, and the Abu Dhabi taxi app. This multi-modal transport ecosystem connects villa communities to city services and employment centres."
+    ],
+    "schools": [
+      "The community has access to international schools including Raha International School, GEMS American Academy Abu Dhabi, International School of Choueifat, Al Yasmina Academy, Cranleigh Abu Dhabi, and British International School Abu Dhabi. Higher education is available through New York University Abu Dhabi. This educational diversity caters to expatriate families seeking curriculum choice."
+    ],
+    "nearbyAreas": [
+      "Al Maryah Island",
+      "Al Reem Island",
+      "Saadiyat Island",
+      "Ramhan Island"
+    ],
+    "whoItSuits": [
+      "This villa-focused development suits established and growing families seeking spacious homes and strong community environments. The emirate's safety record and family-friendly reputation appeal to international professionals and retirees. Investors valuing villa appreciation and rental potential in a mature, cosmopolitan emirate will find the 2030 handover timeline attractive."
+    ],
+    "faq": [
+      {
+        "q": "How many units are available in this Abu Dhabi development?",
+        "a": "Eagle Hills is currently offering two villa units across the single live project on our portal. With handover scheduled for 2030, these represent limited immediate availability."
+      },
+      {
+        "q": "What transport options are available from this community?",
+        "a": "Residents benefit from Abu Dhabi International Airport for international travel, plus local mobility through Hafilat Smart Card public transport, Uber, Careem, and the Abu Dhabi taxi app for convenient urban connectivity."
+      },
+      {
+        "q": "Is there sufficient schooling in Abu Dhabi for families?",
+        "a": "Yes. International schools including Raha International School, GEMS American Academy, Cranleigh Abu Dhabi, and British International School Abu Dhabi serve the emirate, alongside New York University Abu Dhabi for higher education."
+      }
+    ]
+  },
+  {
+    "slug": "cherrywoods",
+    "name": "Cherrywoods",
+    "intro": [
+      "Cherrywoods is an exclusive gated community in Dubailand developed by Meraas Holding, offering spacious townhouses as the property mix. Launch prices range from AED 3,100,000 to AED 3,475,000. Market data from 2025 shows a median sold price of AED 3,017,500 with median per-square-foot values around AED 1,474, based on 32 recorded transactions, reflecting investor and owner-occupier confidence in the location.",
+      "Originally handed over in 2023, Cherrywoods maintains strong appeal to families and investors seeking villa-style living. The community combines residential tranquility with proximity to Dubai's major thoroughfares, including Al Qudra Road and Emirates Road, positioning residents within reach of wider business and retail districts while preserving a serene atmosphere within its gated perimeter."
+    ],
+    "lifestyle": [
+      "Cherrywoods prioritises family-friendly living with spacious townhouses surrounded by landscaped gardens and open spaces. The community features sports facilities, running and cycling tracks, and a fitness centre encouraging residents to maintain an active lifestyle. Access to retail outlets and dining facilities provides everyday convenience, whilst the serene atmosphere and gated setting appeal to residents valuing both leisure and security."
+    ],
+    "transport": [
+      "Cherrywoods benefits from excellent arterial road access via Al Qudra Road (D63) and Emirates Road (E611), with Sheikh Zayed Bin Hamdan Al Nahyan Street (D54) providing additional connectivity. RTA bus services operate nearby with stops at Town Square and Mira, enabling residents to access broader Dubai by public transport without relying entirely on private vehicles."
+    ],
+    "schools": [
+      "Surrounding areas provide diverse schooling options including Fairgreen International School, Ranches Primary School, GEMS Metropole School, Safa Community School, GEMS United School in Sports City, and Bradenton Preparatory Academy. Families benefit from proximity to established educational institutions across multiple curricula, supporting choice for primary and secondary education within reasonable distance of the community."
+    ],
+    "nearbyAreas": [
+      "Town Square",
+      "Mudon",
+      "DAMAC Islands",
+      "Damac Hills"
+    ],
+    "whoItSuits": [
+      "Cherrywoods suits affluent families prioritising spacious villa-style living with established infrastructure and gated privacy. The community appeals to owner-occupiers seeking active lifestyle amenities and investors benefiting from consistent transaction volume — 32 sales recorded in 2025. The townhouse-only composition and Meraas provenance attract buyers valuing quality finishes, security, and family-oriented development philosophy over density."
+    ],
+    "faq": [
+      {
+        "q": "What is the typical price point for Cherrywoods townhouses?",
+        "a": "Launch prices ranged from AED 3,100,000 to AED 3,475,000. Secondary market data from 2025 shows a median sold price of AED 3,017,500, reflecting both off-plan and resale transactions."
+      },
+      {
+        "q": "When was Cherrywoods handed over?",
+        "a": "Cherrywoods was handed over in 2023, making it an established community with proven track record. The community has generated consistent transaction activity, with 32 sales recorded by Dubai Land Department in 2025 alone."
+      },
+      {
+        "q": "Are there public transport options from Cherrywoods?",
+        "a": "Yes. RTA buses serve the nearby area with stops at Town Square and Mira. Major roads including Al Qudra Road (D63) and Emirates Road (E611) connect residents to wider Dubai, and public transport enables access to business and retail districts across the emirate."
+      }
+    ]
+  },
+  {
+    "slug": "al-barari",
+    "name": "Al Barari",
+    "intro": [
+      "Al Barari presents 3 apartment units through Tiger Properties at AED 870,000, with handover scheduled for 2029. This single live project reflects the community's selective development phase, positioning new investors in an established area with a proven track record.",
+      "The 2,568 recorded sales in 2025 and median price of AED 2,993,000 (approximately AED 1,480 per square foot) demonstrate robust market activity. A gross rental yield of 1.9% aligns with Dubai's premium residential returns, offering stability for both buy-to-let and owner-occupier strategies."
+    ],
+    "lifestyle": [
+      "Al Barari is designed as a family-friendly retreat from Dubai's intensity, offering safe, green spaces and recreational options. The community's lush landscapes and water features create a tranquil setting, supported by wellness centres including The Heart & Soul Spa and Body Language, alongside restaurants and cafes. Its sustainable ethos balances seclusion with urban accessibility."
+    ],
+    "transport": [
+      "Al Barari's proximity to Sheikh Mohammed Bin Zayed Road provides direct arterial access across Dubai. The community sits 15 minutes' drive from Downtown Dubai, whilst the Mall of the Emirates metro station connects residents to wider public transport networks. This positioning balances the community's secluded character with essential urban connectivity."
+    ],
+    "schools": [
+      "The community's proximity to established educational institutions includes GEMS FirstPoint School, Repton School Dubai, Kings' School Nad Al Sheba, and JESS Nursery. Higher education options such as Heriot-Watt University Dubai, University of Birmingham Dubai, and Murdoch University Dubai support families across educational stages. This range accommodates international and UK curriculum preferences."
+    ],
+    "nearbyAreas": [
+      "Majan",
+      "City of Arabia",
+      "Falcon City of Wonders",
+      "Arabian Ranches 3"
+    ],
+    "whoItSuits": [
+      "Al Barari appeals to families prioritising safe, green living and investors targeting reliable returns. The 1.9% gross rental yield and 2025 market activity (2,568 transactions) attract those seeking stable, long-term holdings. Owner-occupiers value proximity to schools, clinics, and amenities; investors recognise the handover timeline and demonstrated market demand."
+    ],
+    "faq": [
+      {
+        "q": "What is the current investment opportunity in Al Barari?",
+        "a": "Tiger Properties is offering 3 apartments at AED 870,000, with handover in 2029. This represents the sole active project currently listed on our platform for the community."
+      },
+      {
+        "q": "What have recent market prices and yields been?",
+        "a": "The 2,568 sales recorded in 2025 established a median price of AED 2,993,000 (approximately AED 1,480 per square foot) and a gross rental yield of 1.9%, reflecting stable market performance."
+      },
+      {
+        "q": "How accessible is Al Barari to employment hubs and amenities?",
+        "a": "Located 15 minutes' drive from Downtown Dubai via Sheikh Mohammed Bin Zayed Road and with access to the Mall of the Emirates metro station, residents enjoy connectivity to employment, shopping, and hospitality options across Dubai."
+      }
+    ]
+  },
+  {
+    "slug": "jumeirah-beach-residence",
+    "name": "Jumeirah Beach Residence",
+    "intro": [
+      "Jumeirah Beach Residence is a major waterfront community in Dubai developed by Dubai Properties. One live off-plan project is currently available on our portal with five residential units across a price range of AED 2.5 million to AED 21 million. Properties are 100% apartments, reflecting the community's residential density. The project is scheduled for 2023 handover.",
+      "DLD data from 2025 shows 650 recorded sales in the community, with a median price of AED 2.64 million and median cost per sqft of AED 1,686. This positions JBR as an established market with consistent transaction volume. The community is one of Dubai's largest single-phase residential developments and anchors the Dubai Marina neighbourhood."
+    ],
+    "lifestyle": [
+      "JBR is synonymous with waterfront living. The community's 40 towers overlook the Arabian Gulf and define a year-round beach lifestyle centred on JBR Beach and The Walk promenade. Dining spans Catch 22, Bosporus Turkish Cuisine, and The Noodle House. The vibrant demographic—families, young professionals, and expatriates—ensures diverse social energy. Marina Mall and The Beach shopping mall provide retail and leisure infrastructure."
+    ],
+    "transport": [
+      "JBR sits at the intersection of key Dubai thoroughfares: Sheikh Zayed Road, Al Sufouh Road, and Jumeirah Beach Road. Dubai Marina Metro Station and Jumeirah Lake Towers Metro Station provide RTA access, whilst the Dubai Tram connects major zones. The Walk promenade functions as a transport spine linking beachfront and interior amenities. Al Khail Road extends commuting reach southward."
+    ],
+    "schools": [],
+    "nearbyAreas": [
+      "Bluewaters",
+      "Dubai Marina",
+      "Jumeirah Lake Towers",
+      "Jumeirah Islands"
+    ],
+    "whoItSuits": [
+      "JBR appeals to young professionals and families drawn to beachfront living and vibrant community energy. Proximity to Dubai Marina and Bluewaters Island extends lifestyle variety. The scale and mix of dining, shopping, and leisure across The Walk and Marina Mall support varied household needs. Established transaction volumes (650 DLD sales in 2025) signal market liquidity for investors."
+    ],
+    "faq": [
+      {
+        "q": "What is the current off-plan inventory in JBR?",
+        "a": "One live project offers five residential units. Prices range from AED 2.5 million to AED 21 million, reflecting a mix of unit sizes and specifications."
+      },
+      {
+        "q": "Is JBR an active market?",
+        "a": "Yes. DLD data shows 650 recorded sales in 2025 with a median price of AED 2.64 million. This volume indicates an established, liquid market."
+      },
+      {
+        "q": "How is transport connectivity?",
+        "a": "Dubai Marina and Jumeirah Lake Towers metro stations serve the community, alongside the Dubai Tram. Major roads including Sheikh Zayed Road and Jumeirah Beach Road provide vehicle access."
+      }
+    ]
+  },
+  {
+    "slug": "ras-al-khaimah-gateway",
+    "name": "Ras al Khaimah Gateway",
+    "intro": [
+      "Ras al Khaimah Gateway is an off-plan residential development from RAK Properties offering 2 apartment units with launch prices ranging from AED 783,457 to AED 1,334,557. The project is scheduled for 2024 handover, appealing to both owner-occupiers and portfolio investors entering Ras Al Khaimah's apartment market. The limited unit count makes early registration important for prospective buyers.",
+      "Positioned as a sustainable, waterfront community within Mina Al Arab, the development emphasises family-friendly amenities and eco-conscious design principles. This reflects the broader Mina Al Arab master development's focus on waterfront living and recreational amenities within Ras Al Khaimah's growing residential market."
+    ],
+    "lifestyle": [
+      "Ras al Khaimah Gateway prioritises a family-friendly, secure environment as part of the wider Mina Al Arab waterfront setting. Residents benefit from proximity to Al Hamra Beach and Al Marjan Island Beach for water-based recreation. Shopping and dining are serviced by Al Hamra Mall and Manar Mall, with daily essentials available at Carrefour, Lulu Hypermarket, Choithrams and Spinneys."
+    ],
+    "transport": [
+      "The community is accessible via Sheikh Mohammed Bin Salem Road and Mina Al Arab Road. Public transport includes the Mina Al Arab Bus Stop and Al Hamra bus station, with 4 bus routes serving the area including the Red bus service. Residents typically rely on personal vehicles for daily commuting within Ras Al Khaimah."
+    ],
+    "schools": [
+      "Families can access RAK Academy and International School of Choueifat for secondary education, with early-years provision from Red Bus Nursery, Little Treasures Nursery, Al Dana Nursery, Rainbow Nursery, and Chubby Cheeks Nursery. Additional options include Al Salam Private School, Delhi Private School Ras Al Khaimah, and Emirates National School Ras Al Khaimah."
+    ],
+    "nearbyAreas": [
+      "Mina Al Arab",
+      "RAK Central",
+      "Al Hamra Village",
+      "Al Marjan Island"
+    ],
+    "whoItSuits": [
+      "Ras al Khaimah Gateway is suited to owner-occupiers and portfolio investors seeking affordably-priced waterfront apartments with near-term delivery. The eco-focused positioning appeals to buyers prioritising sustainable living and beach-adjacent communities. Best suited to those with personal vehicles, given typical Ras Al Khaimah mobility patterns."
+    ],
+    "faq": [
+      {
+        "q": "When does the project complete?",
+        "a": "Handover is scheduled for 2024."
+      },
+      {
+        "q": "What healthcare is nearby?",
+        "a": "RAK Hospital and Al Zahrawi Medical Center provide primary healthcare, with additional clinics including Al Jazirah Al Hamra Health Center, Al Nakheel Medical Center and Al Safa Clinic."
+      },
+      {
+        "q": "Do I need a car?",
+        "a": "Four bus routes serve the area including the Red bus service, but residents typically rely on personal vehicles for daily mobility in Ras Al Khaimah."
+      }
+    ]
+  },
+  {
+    "slug": "sobha-aquamont",
+    "name": "Sobha Aquamont",
+    "intro": [
+      "Sobha Aquamont is a single off-plan residential development by Sobha Realty in Umm Al Quwain's Old Town Area, offering 9 residential units across a mix of apartments and duplexes. Launch prices range from AED 1.11 million to AED 4.3 million, providing options across different scales and budgets. With completion expected in 2028, the project represents a fresh addition to this traditional neighbourhood.",
+      "The property mix comprises 67 per cent apartments and 33 per cent duplexes, enabling investors and owner-occupiers to select the layout that suits their needs. The development sits within the characterful Old Town Area, where traditional Emirati architecture and narrow streets define the neighbourhood's character. This setting offers a distinct alternative to sprawling new development zones elsewhere in the emirate."
+    ],
+    "lifestyle": [
+      "Sobha Aquamont offers seaside living within a family-friendly setting, grounded in the area's traditional character. The community is near Mangrove Beach and key amenities including Umm Al Quwain National Museum and dining options such as Sale Marino and Gulf Restaurant. The neighbourhood's established social fabric and calm environment appeal to families and those seeking an alternative to high-density development."
+    ],
+    "transport": [
+      "The community benefits from connections via King Faisal Street and Sheikh Mohammed Bin Zayed Road, with access to the Lulu Centre bus stop. These routes provide onward links to commercial and residential zones across Umm Al Quwain and neighbouring emirates. Given Umm Al Quwain's compact geography, most local journeys are achievable by car; public transport options exist but are not the primary mobility mode."
+    ],
+    "schools": [
+      "The area serves families through established educational options including GEMS Education Schools, British International School, and Emirates International School. These cater to different curricula and age groups, reducing the need for parents to commute to distant school zones. Primary healthcare is supported locally by Umm Al Quwain Hospital and Al Qasimi Hospital."
+    ],
+    "nearbyAreas": [
+      "Al Raudah",
+      "Umm Al Quwain Marina"
+    ],
+    "whoItSuits": [
+      "Sobha Aquamont suits owner-occupiers and investors seeking a family-oriented, slower-paced environment with established amenities and a clear heritage character. The modest unit count and property mix work well for those wanting smaller-scale community living. It appeals less to buyers prioritizing new-build luxury finishes or dense urban convenience; instead, it targets those valuing tradition, seaside proximity, and a quieter neighbourhood feel."
+    ],
+    "faq": [
+      {
+        "q": "What property types and price range does Sobha Aquamont offer?",
+        "a": "Sobha Aquamont comprises 9 units: 67 per cent apartments and 33 per cent duplexes. Launch prices range from AED 1.11 million to AED 4.3 million. Handover is expected in 2028."
+      },
+      {
+        "q": "Which schools and healthcare facilities serve the area?",
+        "a": "Nearby schools include GEMS Education Schools, British International School, and Emirates International School. Healthcare facilities include Umm Al Quwain Hospital and Al Qasimi Hospital."
+      },
+      {
+        "q": "What amenities and attractions are nearby?",
+        "a": "The neighbourhood offers access to Mangrove Beach, Umm Al Quwain National Museum, and multiple malls including Mall of Umm Al Quwain and Al Hamra Mall. Local supermarkets and restaurants such as Sale Marino and Gulf Restaurant provide daily conveniences."
+      }
+    ]
   }
 ]
