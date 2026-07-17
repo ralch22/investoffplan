@@ -1,0 +1,23 @@
+{
+  "pulledAt": "2026-07-17T07:44:52.354Z",
+  "site": "sc-domain:investoffplan.com",
+  "pathFilter": "/compare-developers/",
+  "window": {
+    "startDate": "2026-06-17",
+    "endDate": "2026-07-15",
+    "days": 28
+  },
+  "pagesWithData": 1,
+  "totals": {
+    "impressions": 1,
+    "clicks": 0
+  },
+  "rows": [
+    {
+      "page": "https://investoffplan.com/compare-developers/reportage-real-estate-vs-zaya",
+      "impressions": 1,
+      "clicks": 0,
+      "position": 19
+    }
+  ]
+}
