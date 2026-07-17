@@ -6,7 +6,14 @@ import {
 import { executeTool, TOOL_DEFINITIONS, type ToolContext } from "./tools";
 import type { AdvisorCard, AdvisorMessage, AdvisorResponse } from "./types";
 
-const MODEL = "@cf/meta/llama-3.1-8b-instruct";
+// @cf/meta/llama-3.1-8b-instruct was deprecated 2026-05-30 (Workers AI error
+// 5028) — it took the advisor silently offline (the route caught the error and
+// served the WhatsApp fallback as a clean 200). Successor: same 8b class, so
+// the daily neuron budget and latency profile are unchanged, and it returns
+// the flat { name, arguments } tool_calls shape the loop below reads directly
+// (verified against the live account 2026-07-17; the 70b/scout alternatives
+// cost ~10x or return the OpenAI-nested shape this loop doesn't parse).
+const MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
 const MAX_STEPS = 4;
 const MAX_HISTORY = 6;
 
