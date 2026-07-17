@@ -1,0 +1,78 @@
+name: Advisor synthetic check
+
+# Daily proof the Off-Plan Advisor actually ANSWERS — not just responds.
+#
+# Why this exists: the advisor was broken for ~7 weeks (its Workers AI model
+# was deprecated 2026-05-30; found 2026-07-17) with zero signal anywhere. The
+# route catches every AI failure into a friendly WhatsApp fallback and returns
+# 200, /api/health never touches the advisor (by design — health must stay
+# cheap and deterministic for dumb uptime probes), and the e2e suite
+# deliberately accepts the fallback because CI has no Workers AI binding. So
+# every layer reported success while every user got "the advisor is offline".
+# This workflow is the one place that asserts a REAL answer against the REAL
+# model in production.
+#
+# Cost: one Workers-AI call per day = 0.33% of the advisor's daily budget
+# (ADVISOR_DAILY_CAP=300). The endpoint needs no auth — just a JSON body.
+#
+# Required GitHub repository secret:
+#   - ADVISOR_HEARTBEAT_URL
+#       Better Stack heartbeat "IOP advisor daily synthetic" (id 472770,
+#       period 24h, grace 6h). Recreate via
+#       POST https://uptime.betterstack.com/api/v2/heartbeats.
+
+on:
+  schedule:
+    # Daily 05:23 UTC — off-peak for the site, an hour after Monday's ingest
+    # window so a Monday failure here isn't tangled with ingest noise.
+    - cron: "23 5 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  synthetic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask the advisor a real question
+        run: |
+          status=$(curl -s -o /tmp/reply.json -w "%{http_code}" -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"messages":[{"role":"user","content":"How does buying off-plan work?"}],"locale":"en"}' \
+            https://investoffplan.com/api/advisor)
+          cat /tmp/reply.json
+          echo ""
+          if [ "$status" != "200" ]; then
+            echo "Advisor returned HTTP $status" >&2
+            exit 1
+          fi
+          reply=$(python3 -c "import json; print(json.load(open('/tmp/reply.json')).get('reply',''))")
+          if [ -z "$reply" ]; then
+            echo "Advisor returned an empty reply" >&2
+            exit 1
+          fi
+          # The two fallback signatures (locale=en). Matching either means the
+          # AI path is broken and the route is papering over it with a 200 —
+          # the exact failure mode that stayed invisible for 7 weeks.
+          case "$reply" in
+            *"advisor is offline right now"*)
+              echo "FALLBACK DETECTED: advisor is serving the offline fallback" >&2
+              exit 1 ;;
+            *"reached today's capacity"*)
+              # Budget exhaustion at 05:23 UTC means something is burning the
+              # daily cap — also worth a page, not a shrug.
+              echo "FALLBACK DETECTED: daily budget exhausted at synthetic time" >&2
+              exit 1 ;;
+          esac
+          echo "Advisor answered for real (${#reply} chars)"
+
+      # Heartbeat pair — same playbook as catalog-ingest.yml: a heartbeat
+      # catches BOTH failure modes (the check failed / the check never ran —
+      # GitHub disables schedules after 60 days of repo inactivity). /fail is
+      # undocumented-but-verified and only buys latency; period+grace is the
+      # real guarantee. `|| true` so flaky alerting never fails a green check.
+      - name: Report success
+        if: success()
+        run: curl -fsS -m 20 "${{ secrets.ADVISOR_HEARTBEAT_URL }}" || true
+
+      - name: Report failure
+        if: failure()
+        run: curl -fsS -m 20 -X POST "${{ secrets.ADVISOR_HEARTBEAT_URL }}/fail" || true
