@@ -88,6 +88,7 @@ async function toSide(dev: DeveloperSummary): Promise<DeveloperSide> {
     slug: dev.slug,
     name: dev.name,
     logoUrl: dev.logoUrl,
+    description: dev.description,
     projectCount: projects.length,
     unitCount: projects.reduce((n, p) => n + p.units.length, 0),
     fromPrice: prices.length ? Math.min(...prices) : null,

@@ -93,6 +93,13 @@ export function DldAreaStatsBand({ stats, areaName, source, spread, locale = "en
               ? interpolate(dld.offplanVsReadyPremium, { pct: Math.abs(spread.spreadPct).toFixed(1) })
               : interpolate(dld.offplanVsReadyDiscount, { pct: Math.abs(spread.spreadPct).toFixed(1) })}
           </p>
+          {/* Methodology caveat (Wave-1 mandate, first rendered Wave-2): this
+              spread is an area-level cohort estimate — saying so wherever the
+              number appears is what keeps it honest. Wording holds for both
+              today's area-proxy data and future per-project cohort data. */}
+          <p className="w-full text-xs leading-relaxed text-muted-light">
+            {dld.offplanVsReadyCaveat}
+          </p>
         </div>
       ) : null}
 
