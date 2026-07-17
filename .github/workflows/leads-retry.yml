@@ -1,8 +1,15 @@
 name: Leads retry
 
 # Re-forwards stored leads whose GoHighLevel delivery is pending/failed/skipped.
-# Required GitHub repository secret:
+# Required GitHub repository secrets:
 #   - LEADS_RETRY_TOKEN  (must match the worker secret of the same name)
+#   - LEADS_HEARTBEAT_URL
+#       Better Stack heartbeat "IOP leads retry forwarding" (id 472771,
+#       period 6h, grace 2h). This job is the safety net for the leads route's
+#       fire-and-forget GHL forwarding (failures there are swallowed into a
+#       200) — so the net itself must not be allowed to fail silently. GH's
+#       on-failure email is silent when the run never happens (schedules are
+#       disabled after 60 days of repo inactivity); the heartbeat catches both.
 # No-ops cleanly while GHL secrets are not configured on the worker.
 
 on:
@@ -25,3 +32,15 @@ jobs:
             echo "Retry endpoint returned $status" >&2
             exit 1
           fi
+
+      # Heartbeat pair — catalog-ingest.yml playbook. Unlike ingest, every run
+      # of this job (scheduled or manual) is a real retry pass, so every run
+      # pings. `|| true` keeps flaky alerting from failing a green run; a ping
+      # that silently never lands lapses the heartbeat, the safe direction.
+      - name: Report success
+        if: success()
+        run: curl -fsS -m 20 "${{ secrets.LEADS_HEARTBEAT_URL }}" || true
+
+      - name: Report failure
+        if: failure()
+        run: curl -fsS -m 20 -X POST "${{ secrets.LEADS_HEARTBEAT_URL }}/fail" || true
