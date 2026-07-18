@@ -73,6 +73,8 @@
     "NEXT_PUBLIC_CATALOG_API": "1",
     "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-7GDZWYG4N2",
     "NEXT_PUBLIC_GTM_ID": "GTM-PJPK4GP6",
+    // Where instant lead alerts are emailed (monitored team mailbox).
+    "LEAD_NOTIFY_EMAIL": "iop@investoffplan.com",
     // Site-wide daily Workers-AI budget for the advisor (hard spend ceiling).
     "ADVISOR_DAILY_CAP": "300"
   }

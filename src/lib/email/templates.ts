@@ -185,6 +185,102 @@ ${sections}`;
   };
 }
 
+export interface LeadNotificationEmailInput {
+  /** Human label for the source, e.g. "Floor-plan unlock". */
+  sourceLabel: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  projectSlug?: string;
+  pagePath?: string;
+  message?: string;
+  /** Absolute site origin for building the project link. */
+  siteUrl: string;
+}
+
+/**
+ * Internal owner alert — one per accepted lead, sent to the monitored team
+ * mailbox. EN only (internal). The reply-to is set to the lead's email by the
+ * caller so a reply reaches the prospect directly.
+ */
+export function leadNotificationEmail(input: LeadNotificationEmailInput): EmailTemplate {
+  const who = input.name?.trim() || input.email || input.phone || "Someone";
+  const subject = input.projectSlug
+    ? `New lead · ${input.sourceLabel} · ${input.projectSlug}`
+    : `New lead · ${input.sourceLabel}`;
+
+  const rows: Array<[string, string | undefined]> = [
+    ["Source", input.sourceLabel],
+    ["Name", input.name],
+    ["Phone", input.phone],
+    ["Email", input.email],
+    ["Project", input.projectSlug],
+    ["Message", input.message],
+    ["Page", input.pagePath],
+  ];
+  const table = rows
+    .filter(([, v]) => v)
+    .map(
+      ([k, v]) => `
+<tr>
+<td style="padding:6px 12px 6px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:${TEXT_MUTED};vertical-align:top;white-space:nowrap;">${escapeHtml(k)}</td>
+<td style="padding:6px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;color:${TEXT_DARK};">${escapeHtml(v as string)}</td>
+</tr>`,
+    )
+    .join("");
+
+  // A phone-bearing lead is actionable immediately — surface a wa.me deep link.
+  const waDigits = input.phone ? input.phone.replace(/[^\d]/g, "") : "";
+  const waBlock = waDigits
+    ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:20px;"><tr><td style="background-color:${BRAND_RED};border-radius:6px;">
+<a href="https://wa.me/${waDigits}" style="display:inline-block;padding:11px 24px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#ffffff;text-decoration:none;">Message on WhatsApp</a>
+</td></tr></table>`
+    : "";
+
+  const bodyHtml = `
+<h1 style="margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:28px;color:${TEXT_DARK};">New lead: ${escapeHtml(who)}</h1>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">${table}</table>
+${waBlock}`;
+  const footer = "Automated alert from investoffplan.com — reply to this email to reach the lead.";
+  return { subject, html: layout({ locale: "en", title: subject, bodyHtml, footer }) };
+}
+
+export interface LeadAckEmailInput {
+  name?: string;
+  /** Human-readable project name if known, else undefined. */
+  projectName?: string;
+  locale?: "en" | "ar";
+}
+
+/**
+ * Auto-acknowledgement to the lead (only when they gave an email). Sets the
+ * expectation that a specialist will follow up. Bilingual; reply-to is the
+ * monitored team mailbox so a reply lands with the team.
+ */
+export function leadAckEmail({ name, projectName, locale = "en" }: LeadAckEmailInput): EmailTemplate {
+  const ar = locale === "ar";
+  const first = (name?.trim().split(/\s+/)[0]) || (ar ? "مرحباً" : "there");
+  const about = projectName ? escapeHtml(projectName) : ar ? "استثمارك في دبي" : "your Dubai investment";
+
+  if (ar) {
+    const subject = "استلمنا طلبك — إنفست أوف بلان";
+    const bodyHtml = `
+<h1 style="margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:22px;line-height:30px;color:${TEXT_DARK};">شكراً لك، ${escapeHtml(first)}</h1>
+<p style="margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:24px;color:${TEXT_DARK};">استلمنا طلبك بخصوص ${about}. سيتواصل معك أحد مستشاري الاستثمار قريباً — عادةً خلال ساعات العمل نفسها.</p>
+<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:24px;color:${TEXT_DARK};">في هذه الأثناء، يمكنك استكشاف أحدث المشاريع على المخطط على موقعنا.</p>`;
+    const footer = "تصلك هذه الرسالة لأنك تواصلت معنا عبر investoffplan.com — إنفست أوف بلان، دبي";
+    return { subject, html: layout({ locale, title: subject, bodyHtml, footer }) };
+  }
+
+  const subject = "We've received your enquiry — invest off-plan";
+  const bodyHtml = `
+<h1 style="margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:22px;line-height:30px;color:${TEXT_DARK};">Thanks, ${escapeHtml(first)}</h1>
+<p style="margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:24px;color:${TEXT_DARK};">We've received your enquiry about ${about}. One of our investment specialists will be in touch shortly — usually within the same business hours.</p>
+<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:24px;color:${TEXT_DARK};">In the meantime, feel free to keep exploring the latest off-plan launches on our site.</p>`;
+  const footer = "You're receiving this because you contacted us via investoffplan.com — invest off-plan, Dubai";
+  return { subject, html: layout({ locale, title: subject, bodyHtml, footer }) };
+}
+
 export function testEmail(): EmailTemplate {
   const subject = "Test email — invest off-plan";
   const bodyHtml = `

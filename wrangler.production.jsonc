@@ -84,6 +84,9 @@
     // Lead owner = Jad Elcheikh (jad@arlo.properties) — every website lead's
     // contact + opportunity is assigned to him. Not a secret (user id).
     "GHL_LEAD_OWNER_ID": "Mu8BNwI3XA8vxM59C3iE",
+    // Where instant lead alerts are emailed (monitored team mailbox). Change to
+    // Jad's direct address to route alerts straight to him. Not a secret.
+    "LEAD_NOTIFY_EMAIL": "iop@investoffplan.com",
     // Site-wide daily Workers-AI budget for the advisor (hard spend ceiling;
     // exhaustion degrades to the WhatsApp CTA). 0 disables the guard.
     "ADVISOR_DAILY_CAP": "300"

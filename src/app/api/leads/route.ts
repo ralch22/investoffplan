@@ -8,6 +8,7 @@ import { isTurnstileEnabled, verifyTurnstileToken } from "@/lib/turnstile";
 import { forwardLeadToGhl } from "@/lib/ghl";
 import { getPlacementLeadBoost } from "@/lib/placements";
 import { sendGa4GenerateLead } from "@/lib/ga4-mp";
+import { notifyLead } from "@/lib/leads-notify";
 import { isWorkersRuntime } from "@/lib/runtime-env";
 
 // Cloudflare Rate Limiting binding — each accepted lead costs a D1 insert +
@@ -215,14 +216,29 @@ export async function POST(request: Request) {
     // Never throws outward; GA4 errors are swallowed inside sendGa4GenerateLead.
   };
 
+  // Instant owner alert + lead auto-acknowledgement — independent of the GHL
+  // forward (CRM/pipeline) and GA4. Best-effort; never blocks the response.
+  const notify = () =>
+    notifyLead({
+      formType,
+      name,
+      email,
+      phone,
+      projectSlug: lead.projectSlug ?? undefined,
+      pagePath: lead.pagePath ?? undefined,
+      message: lead.message ?? undefined,
+    });
+
   try {
     const { ctx } = await getCloudflareContext({ async: true });
     ctx.waitUntil(forwardGhl());
     ctx.waitUntil(sendGa4());
+    ctx.waitUntil(notify());
   } catch {
-    // Not on Workers (e.g. next start in e2e) — forward inline, best effort.
+    // Not on Workers (e.g. next start in e2e) — run inline, best effort.
     await forwardGhl().catch(() => {});
     await sendGa4().catch(() => {});
+    await notify().catch(() => {});
   }
 
   return NextResponse.json({ ok: true, id: lead.id });

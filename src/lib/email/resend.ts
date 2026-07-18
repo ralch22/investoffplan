@@ -17,9 +17,15 @@ export interface SendEmailInput {
   to: string;
   subject: string;
   html: string;
-  kind: "magic-link" | "alert" | "welcome" | "test";
+  kind: "magic-link" | "alert" | "welcome" | "test" | "lead-notify" | "lead-ack";
   userId?: string;
   savedSearchId?: string;
+  /**
+   * Reply-To address. Owner alerts set this to the lead's own email so the
+   * team can reply straight to the prospect; lead acknowledgements set it to
+   * the monitored team mailbox.
+   */
+  replyTo?: string;
   /**
    * When set, adds RFC 8058 one-click List-Unsubscribe headers to the send —
    * required for bulk-ish alert digests to stay out of spam folders.
@@ -92,6 +98,7 @@ export async function sendEmail(input: SendEmailInput): Promise<SendEmailResult>
         to: input.to,
         subject: input.subject,
         html: input.html,
+        ...(input.replyTo ? { reply_to: input.replyTo } : {}),
         ...(input.unsubscribeUrl
           ? {
               headers: {
