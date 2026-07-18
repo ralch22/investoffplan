@@ -74,6 +74,9 @@ function parseArgs() {
 }
 
 /** Map of sourceUrl -> /cdn URL, or null when the source is dead (drop it). */
+// Keyed by task.key (not sourceUrl): sister projects share source URLs but
+// own distinct per-slug keys; URL-keyed resolution let one slug's key win
+// and cross-pointed the other store (al-haseen-residence-6 -> residences-5).
 type Resolution = Map<string, string | null>;
 
 async function mapWithConcurrency<T>(
@@ -159,7 +162,7 @@ async function main() {
     for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
       try {
         if (await r2ObjectExists(bucket, task.key)) {
-          resolution.set(task.sourceUrl, cdnUrlForKey(task.key));
+          resolution.set(task.key, cdnUrlForKey(task.key));
           existing++;
           return;
         }
@@ -167,14 +170,14 @@ async function main() {
         if (body.byteLength < MIN_BYTES) {
           // A real answer, just not an asset: a placeholder/error page. Blessing
           // it as /cdn would make a broken image permanently ours.
-          resolution.set(task.sourceUrl, null);
+          resolution.set(task.key, null);
           dropped++;
           dropReasons[`placeholder(<${MIN_BYTES}B)`] =
             (dropReasons[`placeholder(<${MIN_BYTES}B)`] ?? 0) + 1;
           return;
         }
         await r2PutObject(bucket, task.key, body, contentType);
-        resolution.set(task.sourceUrl, cdnUrlForKey(task.key));
+        resolution.set(task.key, cdnUrlForKey(task.key));
         mirrored++;
         return;
       } catch (error) {
@@ -186,7 +189,7 @@ async function main() {
         }
       }
     }
-    resolution.set(task.sourceUrl, null);
+    resolution.set(task.key, null);
     dropped++;
     const reason = isPermanentAssetFailure(lastMessage)
       ? lastMessage.replace(/ for .*/, "") // "HTTP 404"
@@ -218,10 +221,21 @@ async function main() {
 
   // Rewrite: resolved -> /cdn, dead -> removed. Only touches URLs we resolved,
   // so anything skipped by --limit keeps its current value.
-  const rewriteUrl = (url: unknown): string | null | undefined =>
-    isExternalAsset(url) && resolution.has(url) ? resolution.get(url)! : (url as string);
+  // Contextual rewrite: recompute this project's own keys so every store
+  // entry points at its own slug's namespace even when sister projects share
+  // identical source URLs.
+  const makeRewriter = (urlToKey: Map<string, string>) =>
+    (url: unknown): string | null | undefined => {
+      if (!isExternalAsset(url)) return url as string;
+      const key = urlToKey.get(url as string);
+      if (!key || !resolution.has(key)) return url as string;
+      return resolution.get(key)!;
+    };
 
   for (const project of catalog.projects) {
+    const urlToKey = new Map<string, string>();
+    for (const t of projectMirrorTargets(project)) urlToKey.set(t.sourceUrl, t.key);
+    const rewriteUrl = makeRewriter(urlToKey);
     const hero = rewriteUrl(project.imageUrl);
     if (hero === null) delete project.imageUrl;
     else if (hero !== undefined) project.imageUrl = hero;
@@ -257,10 +271,15 @@ async function main() {
   console.log(`[mirror] rewrote ${CATALOG}`);
 
   if (enrichStore) {
-    for (const entry of Object.values(enrichStore.projects)) {
+    for (const [slug, entry] of Object.entries(enrichStore.projects)) {
       if (!Array.isArray(entry.images)) continue;
+      const urlToKey = new Map<string, string>();
+      for (const url of entry.images) {
+        if (isExternalAsset(url)) urlToKey.set(url, mirrorKey("enrichment", slug, url));
+      }
+      const rewriteEnrichUrl = makeRewriter(urlToKey);
       entry.images = entry.images
-        .map(rewriteUrl)
+        .map(rewriteEnrichUrl)
         .filter((u): u is string => typeof u === "string");
     }
     enrichStore.updatedAt = new Date().toISOString();

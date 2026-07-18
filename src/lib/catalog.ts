@@ -3,6 +3,7 @@ import "server-only";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createCatalogApi, handoverYear, type CatalogApi, type CatalogFile } from "./catalog-core";
+import type { UnitType } from "./types";
 import { getDb } from "./db/client";
 import { fetchCatalogFile, fetchProjectBySlug as dbFetchProject } from "./db/catalog-queries";
 import { getSiteUrl } from "./site-url";
@@ -100,6 +101,30 @@ export async function getCatalogApi(): Promise<CatalogApi> {
       // catalog.json is excluded from CF assets (>25 MB); use the lite mirror instead.
       const res = await fetch(`${base}/data/catalog-lite.json`, { next: { revalidate: 3600 } });
       const raw = (await res.json()) as CatalogFile;
+      // The lite slice ships every project with units: [] (size budget) while
+      // carrying slim top-level units that retain projectId/beds/prices/
+      // propertyType. Rebuild the nested arrays, or every bulk consumer of
+      // p.units (family shares, budget bands, compare stats) silently
+      // computes zeros on a fallback isolate — the chain that 404-poisoned
+      // /locations/best-communities-for-families via a cached notFound()
+      // (fixed alongside the degraded-source guard in location-guides).
+      if (raw.projects?.length && raw.units?.length && raw.projects.every((p) => !p.units?.length)) {
+        const byProject = new Map<string, UnitType[]>();
+        for (const u of raw.units) {
+          const list = byProject.get(u.projectId) ?? [];
+          list.push({
+            id: u.id,
+            beds: u.beds,
+            sqftMin: u.sqftMin,
+            sqftMax: u.sqftMax,
+            launchPriceAed: u.launchPriceAed,
+            launchPriceMaxAed: u.launchPriceMaxAed,
+            propertyType: u.propertyType,
+          });
+          byProject.set(u.projectId, list);
+        }
+        for (const p of raw.projects) p.units = byProject.get(p.id) ?? [];
+      }
       cachedRaw = raw;
       cachedApi = createCatalogApi(raw);
     }

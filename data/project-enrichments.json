@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-17T09:28:50.916Z",
+  "updatedAt": "2026-07-18T12:23:22.496Z",
   "projects": {
     "marina-heights-residences": {
       "slug": "marina-heights-residences",
@@ -873,8 +873,8 @@
       ],
       "brochureUrl": "https://opr.ae/projects/al-hamra-waterfront-by-al-hamra-real-estate-development-llc#",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/al-hamra-waterfront/enrichment/703320389170.png",
+        "/cdn/projects/al-hamra-waterfront/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-08T09:08:12.167Z"
     },
@@ -904,12 +904,12 @@
       ],
       "brochureUrl": "https://1newhomes.ae/al-haseen-residence-dubai/gallery",
       "images": [
-        "/cdn/projects/al-haseen-residences-5/enrichment/c23e66dd79b6.jpg",
-        "/cdn/projects/al-haseen-residences-5/enrichment/aced015fbbe1.jpg",
-        "/cdn/projects/al-haseen-residences-5/enrichment/5fb189453ac7.jpg",
-        "/cdn/projects/al-haseen-residences-5/enrichment/85e1c5528c2c.jpg",
-        "/cdn/projects/al-haseen-residences-5/enrichment/00a4cd586489.jpg",
-        "/cdn/projects/al-haseen-residences-5/enrichment/fe3508f8451e.jpg"
+        "/cdn/projects/al-haseen-residence-6/enrichment/c23e66dd79b6.jpg",
+        "/cdn/projects/al-haseen-residence-6/enrichment/aced015fbbe1.jpg",
+        "/cdn/projects/al-haseen-residence-6/enrichment/5fb189453ac7.jpg",
+        "/cdn/projects/al-haseen-residence-6/enrichment/85e1c5528c2c.jpg",
+        "/cdn/projects/al-haseen-residence-6/enrichment/00a4cd586489.jpg",
+        "/cdn/projects/al-haseen-residence-6/enrichment/fe3508f8451e.jpg"
       ],
       "enrichedAt": "2026-07-08T09:08:52.560Z"
     },
@@ -1166,8 +1166,8 @@
       "videoUrl": "https://www.youtube.com/watch?v=BWMXR2u8dHE",
       "images": [
         "/cdn/projects/damac-altitude-tower/enrichment/d3ef88f00563.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/damac-altitude-tower/enrichment/703320389170.png",
+        "/cdn/projects/damac-altitude-tower/enrichment/c5a8b386b8af.png",
         "/cdn/projects/damac-altitude-tower/enrichment/94adf9a893b7.webp"
       ],
       "enrichedAt": "2026-07-08T09:13:06.156Z"
@@ -1228,8 +1228,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/anantara-mina-ras-al-khaimah-residences-by-rak-properties",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/anantara-mina/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/anantara-mina/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-08T09:14:21.093Z"
     },
@@ -1292,8 +1292,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/aquamarine-beach-residences-at-sobha-siniya-island-umm-al-quwain",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/aquamarine-beach-residences/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/aquamarine-beach-residences/enrichment/8fea6d236171.webp",
         "/cdn/projects/aquamarine-beach-residences/enrichment/7e0ca89d1885.jpg",
         "/cdn/projects/aquamarine-beach-residences/enrichment/fdc0f121fdbd.jpg"
       ],
@@ -1563,10 +1563,10 @@
       ],
       "brochureUrl": "https://skylinebuildersdubai.com/#contact",
       "images": [
-        "/cdn/projects/avant-garde-residences-ii/enrichment/5dd56af46fc0.webp",
-        "/cdn/projects/avant-garde-residences-ii/enrichment/18cdc19e69da.webp",
-        "/cdn/projects/avant-garde-residences-ii/enrichment/2bc379b86803.webp",
-        "/cdn/projects/avant-garde-residences-ii/enrichment/546fb45c1cb3.webp"
+        "/cdn/projects/avant-garde-residences-phase-2-by-skyline-builders/enrichment/5dd56af46fc0.webp",
+        "/cdn/projects/avant-garde-residences-phase-2-by-skyline-builders/enrichment/18cdc19e69da.webp",
+        "/cdn/projects/avant-garde-residences-phase-2-by-skyline-builders/enrichment/2bc379b86803.webp",
+        "/cdn/projects/avant-garde-residences-phase-2-by-skyline-builders/enrichment/546fb45c1cb3.webp"
       ],
       "enrichedAt": "2026-07-08T09:21:10.704Z"
     },
@@ -1685,8 +1685,8 @@
       "videoUrl": "https://www.youtube.com/watch?v=1dAYmMHnnKA",
       "images": [
         "/cdn/projects/avenew-888/enrichment/fa02144204a8.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/avenew-888/enrichment/703320389170.png",
+        "/cdn/projects/avenew-888/enrichment/c5a8b386b8af.png",
         "/cdn/projects/avenew-888/enrichment/15652e09a29b.jpg",
         "/cdn/projects/avenew-888/enrichment/02e64ec547ef.webp"
       ],
@@ -1830,7 +1830,7 @@
         "/cdn/projects/azha-millennium-residences/enrichment/61053193deae.jpg",
         "/cdn/projects/azha-millennium-residences/enrichment/f223015fa525.jpg",
         "/cdn/projects/azha-millennium-residences/enrichment/2bc73fee169c.jpg",
-        "/cdn/projects/norah-residence/enrichment/4156872fa4b4.jpg"
+        "/cdn/projects/azha-millennium-residences/enrichment/4156872fa4b4.jpg"
       ],
       "enrichedAt": "2026-07-08T09:30:19.098Z"
     },
@@ -2385,10 +2385,10 @@
       ],
       "brochureUrl": "https://www.siniyah-island-uae.com/sobha-siniya-island-marina-bayside/",
       "images": [
-        "/cdn/projects/yachtside-marina-residences/enrichment/f4b3074c87d4.jpg",
-        "/cdn/projects/yachtside-marina-residences/enrichment/53429b4bb0f5.jpg",
-        "/cdn/projects/bayside-marina-residences/enrichment/fd0577831cd4.jpg",
-        "/cdn/projects/bayside-marina-residences/enrichment/c698572adb8f.jpg",
+        "/cdn/projects/bayfront-marina-residences/enrichment/f4b3074c87d4.jpg",
+        "/cdn/projects/bayfront-marina-residences/enrichment/53429b4bb0f5.jpg",
+        "/cdn/projects/bayfront-marina-residences/enrichment/fd0577831cd4.jpg",
+        "/cdn/projects/bayfront-marina-residences/enrichment/c698572adb8f.jpg",
         "/cdn/projects/bayfront-marina-residences/enrichment/977114c41a59.jpg",
         "/cdn/projects/bayfront-marina-residences/enrichment/b8d3e28eb27d.jpg"
       ],
@@ -2514,8 +2514,8 @@
       "images": [
         "/cdn/projects/bayside-marina-residences/enrichment/c707e957d072.jpg",
         "/cdn/projects/bayside-marina-residences/enrichment/e925376c5d49.jpg",
-        "/cdn/projects/yachtside-marina-residences/enrichment/f4b3074c87d4.jpg",
-        "/cdn/projects/yachtside-marina-residences/enrichment/53429b4bb0f5.jpg",
+        "/cdn/projects/bayside-marina-residences/enrichment/f4b3074c87d4.jpg",
+        "/cdn/projects/bayside-marina-residences/enrichment/53429b4bb0f5.jpg",
         "/cdn/projects/bayside-marina-residences/enrichment/fd0577831cd4.jpg",
         "/cdn/projects/bayside-marina-residences/enrichment/c698572adb8f.jpg"
       ],
@@ -3212,10 +3212,10 @@
       "images": [
         "/cdn/projects/bora-bora-phase-4-by-damac/enrichment/6770e76cf8ee.webp",
         "/cdn/projects/bora-bora-phase-4-by-damac/enrichment/1a04cc8d5e8d.jpg",
-        "/cdn/projects/damac-islands/enrichment/d6ecb3f6f803.jpg",
-        "/cdn/projects/damac-islands/enrichment/6aa4cc1d1b8c.jpg",
-        "/cdn/projects/damac-islands/enrichment/f5809a73c338.jpg",
-        "/cdn/projects/damac-islands/enrichment/86be67294411.jpg"
+        "/cdn/projects/bora-bora-phase-4-by-damac/enrichment/d6ecb3f6f803.jpg",
+        "/cdn/projects/bora-bora-phase-4-by-damac/enrichment/6aa4cc1d1b8c.jpg",
+        "/cdn/projects/bora-bora-phase-4-by-damac/enrichment/f5809a73c338.jpg",
+        "/cdn/projects/bora-bora-phase-4-by-damac/enrichment/86be67294411.jpg"
       ],
       "enrichedAt": "2026-07-08T09:56:50.813Z"
     },
@@ -3300,7 +3300,7 @@
       "brochureUrl": "https://gfhproperties.com/portfolio/california-village/",
       "images": [
         "/cdn/projects/california-residences/enrichment/87106f19d041.jpg",
-        "/cdn/projects/voxa-pantheon/enrichment/688752e7b632.webp"
+        "/cdn/projects/california-residences/enrichment/688752e7b632.webp"
       ],
       "enrichedAt": "2026-07-08T09:58:55.553Z"
     },
@@ -3399,9 +3399,9 @@
       "brochureUrl": "https://the-valley.community/projects/emaar-virella-at-the-valley",
       "images": [
         "/cdn/projects/virella-at-the-valley/enrichment/7536aa6d967f.webp",
-        "/cdn/projects/virella-2/enrichment/5bd70ae26d13.webp",
-        "/cdn/projects/virella-2/enrichment/00adb3eeb4a6.webp",
-        "/cdn/projects/virella-3/enrichment/af5c9b36c74d.webp"
+        "/cdn/projects/virella-at-the-valley/enrichment/5bd70ae26d13.webp",
+        "/cdn/projects/virella-at-the-valley/enrichment/00adb3eeb4a6.webp",
+        "/cdn/projects/virella-at-the-valley/enrichment/af5c9b36c74d.webp"
       ],
       "enrichedAt": "2026-07-09T07:02:57.519Z"
     },
@@ -3526,8 +3526,8 @@
       ],
       "brochureUrl": "https://www.emaar.com/en/communities/fior-2/",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/fior-2/enrichment/703320389170.png",
+        "/cdn/projects/fior-2/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:09:14.451Z"
     },
@@ -3577,9 +3577,9 @@
       ],
       "brochureUrl": "https://www.binayah.com/dubai-projects/heights-country-club-and-wellness-by-emaar/",
       "images": [
-        "/cdn/projects/faro-2-at-the-heights/enrichment/c6db6869dd30.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/faro-at-the-heights/enrichment/c6db6869dd30.jpg",
+        "/cdn/projects/faro-at-the-heights/enrichment/703320389170.png",
+        "/cdn/projects/faro-at-the-heights/enrichment/c5a8b386b8af.png",
         "/cdn/projects/faro-at-the-heights/enrichment/bd961f91ec88.jpg",
         "/cdn/projects/faro-at-the-heights/enrichment/657ceba03406.jpg",
         "/cdn/projects/faro-at-the-heights/enrichment/ab39d02c0b98.jpg"
@@ -3721,9 +3721,9 @@
       ],
       "brochureUrl": "https://www.binayah.com/dubai-projects/elva-at-the-valley/",
       "images": [
-        "/cdn/projects/alva-3-the-valley/enrichment/7da0bb0939d1.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/alva-the-valley/enrichment/7da0bb0939d1.jpg",
+        "/cdn/projects/alva-the-valley/enrichment/703320389170.png",
+        "/cdn/projects/alva-the-valley/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:11:12.070Z"
     },
@@ -3888,7 +3888,7 @@
       ],
       "brochureUrl": "https://www.tanamiproperties.com/Projects/Emaar-Terra-Heights-Expo-Living-Brochure-Download",
       "images": [
-        "/cdn/projects/terra-gardens/enrichment/591bb7ae6cf2.webp",
+        "/cdn/projects/emaar-expo-living/enrichment/591bb7ae6cf2.webp",
         "/cdn/projects/emaar-expo-living/enrichment/cdf2479afd88.webp"
       ],
       "enrichedAt": "2026-07-09T07:13:38.387Z"
@@ -3940,8 +3940,8 @@
       "brochureUrl": "https://www.emaar.com/en/our-communities",
       "videoUrl": "https://www.youtube.com/watch?v=kjZSyT5gSb0",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/valia-tower/enrichment/703320389170.png",
+        "/cdn/projects/valia-tower/enrichment/c5a8b386b8af.png",
         "/cdn/projects/valia-tower/enrichment/cfe982c08aed.webp",
         "/cdn/projects/valia-tower/enrichment/2b9a805c1296.webp"
       ],
@@ -4057,8 +4057,8 @@
       ],
       "brochureUrl": "https://www.engelvoelkers.com/ae/en/off-plan/alva-2-the-valley#Form",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/alva-2-at-the-valley/enrichment/703320389170.png",
+        "/cdn/projects/alva-2-at-the-valley/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:15:04.308Z"
     },
@@ -4109,8 +4109,8 @@
       "brochureUrl": "https://www.engelvoelkers.com/ae/en/off-plan/alva-3-the-valley#Form",
       "images": [
         "/cdn/projects/alva-3-the-valley/enrichment/7da0bb0939d1.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/alva-3-the-valley/enrichment/703320389170.png",
+        "/cdn/projects/alva-3-the-valley/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:15:41.504Z"
     },
@@ -4233,12 +4233,12 @@
       ],
       "brochureUrl": "https://www.engelvoelkers.com/ae/en/off-plan/equiterra-grand-polo-club#Form",
       "images": [
-        "/cdn/projects/grand-polo-club-and-resort/enrichment/d5a38969ea8c.jpg",
-        "/cdn/projects/grand-polo-club-and-resort/enrichment/66749efdd45b.jpg",
-        "/cdn/projects/grand-polo-club-and-resort/enrichment/20483a1813dd.jpg",
-        "/cdn/projects/grand-polo-club-and-resort/enrichment/a196838a45e0.jpg",
-        "/cdn/projects/grand-polo-club-and-resort/enrichment/09b2b0575448.jpeg",
-        "/cdn/projects/grand-polo-club-and-resort/enrichment/212caf172b59.jpg"
+        "/cdn/projects/equiterra/enrichment/d5a38969ea8c.jpg",
+        "/cdn/projects/equiterra/enrichment/66749efdd45b.jpg",
+        "/cdn/projects/equiterra/enrichment/20483a1813dd.jpg",
+        "/cdn/projects/equiterra/enrichment/a196838a45e0.jpg",
+        "/cdn/projects/equiterra/enrichment/09b2b0575448.jpeg",
+        "/cdn/projects/equiterra/enrichment/212caf172b59.jpg"
       ],
       "enrichedAt": "2026-07-09T07:17:39.313Z"
     },
@@ -4313,9 +4313,9 @@
       "brochureUrl": "https://www.engelvoelkers.com/ae/en/off-plan/virella-3-the-valley#Form",
       "images": [
         "/cdn/projects/virella-3/enrichment/af5c9b36c74d.webp",
-        "/cdn/projects/velora/enrichment/ec767800aff6.webp",
-        "/cdn/projects/velora/enrichment/7dfc0e37dc1e.webp",
-        "/cdn/projects/velora/enrichment/5d43b9eddca8.webp",
+        "/cdn/projects/virella-3/enrichment/ec767800aff6.webp",
+        "/cdn/projects/virella-3/enrichment/7dfc0e37dc1e.webp",
+        "/cdn/projects/virella-3/enrichment/5d43b9eddca8.webp",
         "/cdn/projects/virella-3/enrichment/68c637d1a2d6.webp",
         "/cdn/projects/virella-3/enrichment/5b8cd2f35e21.webp"
       ],
@@ -4441,8 +4441,8 @@
       ],
       "images": [
         "/cdn/projects/avelia/enrichment/5df9a3b9d261.jpg",
-        "/cdn/projects/sera-phase-2-by-emaar/enrichment/52f8e827d267.jpg",
-        "/cdn/projects/sera-phase-2-by-emaar/enrichment/3cfc8a8d6011.jpg",
+        "/cdn/projects/avelia/enrichment/52f8e827d267.jpg",
+        "/cdn/projects/avelia/enrichment/3cfc8a8d6011.jpg",
         "/cdn/projects/avelia/enrichment/1d6e9d5f82aa.jpg"
       ],
       "enrichedAt": "2026-07-09T07:20:51.011Z"
@@ -4677,8 +4677,8 @@
       "brochureUrl": "https://www.binayah.com/dubai-projects/palace-residences-by-emaar/",
       "images": [
         "/cdn/projects/palace-residences-dubai-hills-estate/enrichment/f7c9d63ce5e1.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/palace-residences-dubai-hills-estate/enrichment/703320389170.png",
+        "/cdn/projects/palace-residences-dubai-hills-estate/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:23:41.634Z"
     },
@@ -4762,8 +4762,8 @@
       "brochureUrl": "https://www.emaar.com/en/our-communities",
       "images": [
         "/cdn/projects/aeon/enrichment/3a726cff7612.jpg",
-        "/cdn/projects/creek-waters-2/enrichment/34c99b200ac1.png",
-        "/cdn/projects/creek-waters-2/enrichment/4fb5442ff13b.jpg",
+        "/cdn/projects/aeon/enrichment/34c99b200ac1.png",
+        "/cdn/projects/aeon/enrichment/4fb5442ff13b.jpg",
         "/cdn/projects/aeon/enrichment/961d60847555.jpg",
         "/cdn/projects/aeon/enrichment/910ec8d53c75.png"
       ],
@@ -4801,11 +4801,11 @@
       ],
       "brochureUrl": "https://tohidfetrat.com/wp-content/uploads/2026/02/BAYVIEW_BROCHURE_Tohid_Fetrat.pdf",
       "images": [
-        "/cdn/projects/address-the-bay/enrichment/2466a93069fc.webp",
-        "/cdn/projects/address-the-bay/enrichment/27813d16b578.webp",
-        "/cdn/projects/address-the-bay/enrichment/61a39cceafaf.webp",
+        "/cdn/projects/bayview/enrichment/2466a93069fc.webp",
+        "/cdn/projects/bayview/enrichment/27813d16b578.webp",
+        "/cdn/projects/bayview/enrichment/61a39cceafaf.webp",
         "/cdn/projects/bayview/enrichment/6277bea35412.webp",
-        "/cdn/projects/address-the-bay/enrichment/a4f424759fcf.webp",
+        "/cdn/projects/bayview/enrichment/a4f424759fcf.webp",
         "/cdn/projects/bayview/enrichment/41b6ec92565e.webp"
       ],
       "enrichedAt": "2026-07-09T07:25:23.702Z"
@@ -4969,8 +4969,8 @@
       "brochureUrl": "https://www.binayah.com/dubai-projects/greencrest-by-emaar/",
       "videoUrl": "https://www.youtube.com/watch?v=ZJYjmcBk2Y0",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/greencrest/enrichment/703320389170.png",
+        "/cdn/projects/greencrest/enrichment/c5a8b386b8af.png",
         "/cdn/projects/greencrest/enrichment/1ab7a86ff1f2.jpg"
       ],
       "enrichedAt": "2026-07-09T07:27:33.074Z"
@@ -5061,8 +5061,8 @@
       "brochureUrl": "https://www.emaar.com/en/properties/silva-dubai-creek-harbour",
       "images": [
         "/cdn/projects/silva-tower-by-emaar/enrichment/f7cc0d4bd54a.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/silva-tower-by-emaar/enrichment/703320389170.png",
+        "/cdn/projects/silva-tower-by-emaar/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:28:31.431Z"
     },
@@ -5210,12 +5210,12 @@
       ],
       "brochureUrl": "https://www.engelvoelkers.com/ae/en/off-plan/baystar-by-vida#Form",
       "images": [
-        "/cdn/projects/sera-phase-2-by-emaar/enrichment/3cfc8a8d6011.jpg",
-        "/cdn/projects/sera-phase-2-by-emaar/enrichment/0eadd1723882.jpg",
-        "/cdn/projects/sera-phase-2-by-emaar/enrichment/52f8e827d267.jpg",
-        "/cdn/projects/sera-phase-2-by-emaar/enrichment/16cb50b9545b.jpg",
-        "/cdn/projects/sera-phase-2-by-emaar/enrichment/de18c487b126.jpg",
-        "/cdn/projects/sera-phase-2-by-emaar/enrichment/4b53ec8296dd.jpg"
+        "/cdn/projects/baystar-by-vida/enrichment/3cfc8a8d6011.jpg",
+        "/cdn/projects/baystar-by-vida/enrichment/0eadd1723882.jpg",
+        "/cdn/projects/baystar-by-vida/enrichment/52f8e827d267.jpg",
+        "/cdn/projects/baystar-by-vida/enrichment/16cb50b9545b.jpg",
+        "/cdn/projects/baystar-by-vida/enrichment/de18c487b126.jpg",
+        "/cdn/projects/baystar-by-vida/enrichment/4b53ec8296dd.jpg"
       ],
       "enrichedAt": "2026-07-09T07:29:58.478Z"
     },
@@ -5337,8 +5337,8 @@
       "videoUrl": "https://www.youtube.com/watch?v=txatl-TXFns",
       "images": [
         "/cdn/projects/vida-residences-hillside/enrichment/ba14ba27c4ee.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/vida-residences-hillside/enrichment/703320389170.png",
+        "/cdn/projects/vida-residences-hillside/enrichment/c5a8b386b8af.png",
         "/cdn/projects/vida-residences-hillside/enrichment/073bbf349eef.jpg",
         "/cdn/projects/vida-residences-hillside/enrichment/9a7a2e736ce8.jpg"
       ],
@@ -5382,8 +5382,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-selvara-grand-polo-club-and-resort-in-dubai",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/selvara/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/selvara/enrichment/8fea6d236171.webp",
         "/cdn/projects/selvara/enrichment/0b8a820ff271.avif",
         "/cdn/projects/selvara/enrichment/7010d95ba557.avif"
       ],
@@ -5479,8 +5479,8 @@
       "videoUrl": "https://www.youtube.com/watch?v=EUPMf3iM6VU",
       "images": [
         "/cdn/projects/altan/enrichment/5acf3cf92385.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/altan/enrichment/703320389170.png",
+        "/cdn/projects/altan/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:33:21.413Z"
     },
@@ -5601,7 +5601,7 @@
       ],
       "brochureUrl": "https://www.tanamiproperties.com/Projects/Emaar-Marina-Place-2-Mina-Rashid-Brochure-Download",
       "images": [
-        "/cdn/projects/emaar-marina-place-mina-rashid/enrichment/7d23343416b3.webp",
+        "/cdn/projects/marina-place-2/enrichment/7d23343416b3.webp",
         "/cdn/projects/marina-place-2/enrichment/839e057ddb92.jpg",
         "/cdn/projects/marina-place-2/enrichment/9809b646bdbb.jpg",
         "/cdn/projects/marina-place-2/enrichment/5a37b08d28bb.jpg",
@@ -5646,7 +5646,7 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-marina-place-mina-rashid-yachts-marina-dubai",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/emaar-marina-place-mina-rashid/enrichment/8fea6d236171.webp",
         "/cdn/projects/emaar-marina-place-mina-rashid/enrichment/2b7d16021e69.png",
         "/cdn/projects/emaar-marina-place-mina-rashid/enrichment/7d23343416b3.webp"
       ],
@@ -6013,11 +6013,11 @@
       "brochureUrl": "https://www.binayah.com/dubai-projects/farm-grove-by-emaar/",
       "videoUrl": "https://www.youtube.com/watch?v=k111ckTeGx4",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/farm-grove/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/farm-grove/enrichment/8fea6d236171.webp",
         "/cdn/projects/farm-grove/enrichment/35ba4e204f1d.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/farm-grove/enrichment/703320389170.png",
+        "/cdn/projects/farm-grove/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:39:52.035Z"
     },
@@ -6170,8 +6170,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-porto-view-mina-rashid-yachts-marina-dubai",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/porto-view-mina-rashid/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/porto-view-mina-rashid/enrichment/8fea6d236171.webp",
         "/cdn/projects/porto-view-mina-rashid/enrichment/988e58697d8a.jpeg",
         "/cdn/projects/porto-view-mina-rashid/enrichment/52d711115e2d.jpeg",
         "/cdn/projects/porto-view-mina-rashid/enrichment/e24674e15eda.jpeg",
@@ -6203,12 +6203,12 @@
       ],
       "brochureUrl": "https://ggwcapitalre.com/storage/offplan/brochures/01KE76X6AJ850Z8B0K2MA7SKJM.pdf",
       "images": [
-        "/cdn/projects/pier-point-2/enrichment/6c4f15fe9867.webp",
-        "/cdn/projects/pier-point-2/enrichment/30a61b5b4485.webp",
-        "/cdn/projects/pier-point-2/enrichment/a9e9755e339d.webp",
-        "/cdn/projects/pier-point-2/enrichment/daeb943e3341.webp",
-        "/cdn/projects/pier-point-2/enrichment/d408efaf3b12.webp",
-        "/cdn/projects/pier-point-2/enrichment/3bf4555d5aa4.webp"
+        "/cdn/projects/pier-point/enrichment/6c4f15fe9867.webp",
+        "/cdn/projects/pier-point/enrichment/30a61b5b4485.webp",
+        "/cdn/projects/pier-point/enrichment/a9e9755e339d.webp",
+        "/cdn/projects/pier-point/enrichment/daeb943e3341.webp",
+        "/cdn/projects/pier-point/enrichment/d408efaf3b12.webp",
+        "/cdn/projects/pier-point/enrichment/3bf4555d5aa4.webp"
       ],
       "enrichedAt": "2026-07-09T07:42:51.221Z"
     },
@@ -6259,8 +6259,8 @@
       "videoUrl": "https://www.youtube.com/watch?v=FdzWKxA02pE",
       "images": [
         "/cdn/projects/golf-verge/enrichment/5bb9f8b6385e.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/golf-verge/enrichment/703320389170.png",
+        "/cdn/projects/golf-verge/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:43:15.993Z"
     },
@@ -6364,8 +6364,8 @@
       ],
       "images": [
         "/cdn/projects/greenspoint/enrichment/5868f8cf1be1.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/greenspoint/enrichment/703320389170.png",
+        "/cdn/projects/greenspoint/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:44:09.279Z"
     },
@@ -6405,9 +6405,9 @@
       ],
       "brochureUrl": "https://www.binayah.com/wp-content/uploads/2022/11/bluewaters-bay-brochure-Horizontal3-Eng-New-D-compressed.pdf",
       "images": [
-        "/cdn/projects/emaar-greenville-2/enrichment/5e76e73e7a30.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/greenville/enrichment/5e76e73e7a30.jpg",
+        "/cdn/projects/greenville/enrichment/703320389170.png",
+        "/cdn/projects/greenville/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:44:29.482Z"
     },
@@ -6449,8 +6449,8 @@
       "brochureUrl": "https://www.binayah.com/wp-content/uploads/2022/11/bluewaters-bay-brochure-Horizontal3-Eng-New-D-compressed.pdf",
       "images": [
         "/cdn/projects/emaar-greenville-2/enrichment/5e76e73e7a30.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/emaar-greenville-2/enrichment/703320389170.png",
+        "/cdn/projects/emaar-greenville-2/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:44:54.835Z"
     },
@@ -6504,8 +6504,8 @@
         "https://uae-offplan.com/property/emaar-marina-views-mina-rashid"
       ],
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/marina-views/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/marina-views/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T07:46:14.879Z"
     },
@@ -6640,9 +6640,9 @@
         "/cdn/projects/emaar-altus/enrichment/9ea9db43db09.png",
         "/cdn/projects/emaar-altus/enrichment/6fb8fd608266.png",
         "/cdn/projects/emaar-altus/enrichment/9f6378aafaf9.jpg",
-        "/cdn/projects/creek-waters-2/enrichment/34c99b200ac1.png",
-        "/cdn/projects/creek-waters-2/enrichment/44df5a54be2e.jpg",
-        "/cdn/projects/creek-waters-2/enrichment/4fb5442ff13b.jpg"
+        "/cdn/projects/emaar-altus/enrichment/34c99b200ac1.png",
+        "/cdn/projects/emaar-altus/enrichment/44df5a54be2e.jpg",
+        "/cdn/projects/emaar-altus/enrichment/4fb5442ff13b.jpg"
       ],
       "enrichedAt": "2026-07-09T07:48:07.359Z"
     },
@@ -6792,8 +6792,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-vida-residences-club-point-at-dubai-hills-estate",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/vida-residences-club-point/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/vida-residences-club-point/enrichment/8fea6d236171.webp",
         "/cdn/projects/vida-residences-club-point/enrichment/48910fb172fd.webp"
       ],
       "enrichedAt": "2026-07-09T07:50:42.462Z"
@@ -6834,8 +6834,8 @@
       "brochureUrl": "https://www.binayah.com/wp-content/uploads/2022/11/bluewaters-bay-brochure-Horizontal3-Eng-New-D-compressed.pdf",
       "videoUrl": "https://www.youtube.com/watch?v=T8pBdQxX5_Q",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/vindera/enrichment/703320389170.png",
+        "/cdn/projects/vindera/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T07:51:20.585Z"
     },
@@ -6906,8 +6906,8 @@
       ],
       "brochureUrl": "https://opr.ae/projects/parkland-by-emaar-properties-in-dubai-hills-estate#modal-brochure",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/parkland/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/parkland/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T07:52:27.319Z"
     },
@@ -7027,8 +7027,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-marina-cove-at-dubai-marina",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/marina-cove/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/marina-cove/enrichment/8fea6d236171.webp",
         "/cdn/projects/marina-cove/enrichment/c0e4f8c1098c.jpg",
         "/cdn/projects/marina-cove/enrichment/665fec4551a4.jpg",
         "/cdn/projects/marina-cove/enrichment/ecf660c0d233.jpg",
@@ -7211,8 +7211,8 @@
       ],
       "brochureUrl": "https://www.tanamiproperties.com/Projects/Emaar-Ocean-Cove-Mina-Rashid-Brochure-Download",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/ocean-cove/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/ocean-cove/enrichment/8fea6d236171.webp",
         "/cdn/projects/ocean-cove/enrichment/17e11c10783a.webp",
         "/cdn/projects/ocean-cove/enrichment/16d10ca0641f.jpg",
         "/cdn/projects/ocean-cove/enrichment/b452326efc46.jpg",
@@ -7347,8 +7347,8 @@
         "/cdn/projects/venera/enrichment/1fc95bbd6a8c.jpg",
         "/cdn/projects/venera/enrichment/786cc0c51088.jpg",
         "/cdn/projects/venera/enrichment/be8b59f1de5d.jpg",
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/venera/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/venera/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T07:57:44.893Z"
     },
@@ -7425,8 +7425,8 @@
         "https://www.bayut.com/area-guides/velora-the-vallay/"
       ],
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/velora/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/velora/enrichment/8fea6d236171.webp",
         "/cdn/projects/velora/enrichment/f32272e3ef67.webp",
         "/cdn/projects/velora/enrichment/ec767800aff6.webp",
         "/cdn/projects/velora/enrichment/7dfc0e37dc1e.webp",
@@ -7471,11 +7471,11 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-palmiera-3-the-oasis-villas-dubai",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/palmiera-3-the-oasis/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/palmiera-3-the-oasis/enrichment/8fea6d236171.webp",
         "/cdn/projects/palmiera-3-the-oasis/enrichment/40552576bf33.webp",
         "/cdn/projects/palmiera-3-the-oasis/enrichment/f1c5e95bc4e8.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png"
+        "/cdn/projects/palmiera-3-the-oasis/enrichment/703320389170.png"
       ],
       "enrichedAt": "2026-07-09T07:59:13.529Z"
     },
@@ -7510,7 +7510,7 @@
       ],
       "brochureUrl": "https://www.emaar.com/en/properties/palace-residences-creek-blue",
       "images": [
-        "/cdn/projects/palace-residences-dubai-hills/enrichment/865146998c9f.png"
+        "/cdn/projects/palace-residences-creek-blue/enrichment/865146998c9f.png"
       ],
       "enrichedAt": "2026-07-09T07:59:43.539Z"
     },
@@ -7606,10 +7606,10 @@
       ],
       "brochureUrl": "https://opr.ae/projects/emaar-south-fairway-villas-2-for-sale-in-dubai#modal-brochure",
       "images": [
-        "/cdn/projects/fairway-villas/enrichment/5b8d43dee461.jpg",
-        "/cdn/projects/fairway-villas/enrichment/fbda955a68fe.jpg",
-        "/cdn/projects/fairway-villas/enrichment/c18745afe3c1.jpg",
-        "/cdn/projects/fairway-villas/enrichment/337c069be7bb.jpg"
+        "/cdn/projects/fairway-villas-3/enrichment/5b8d43dee461.jpg",
+        "/cdn/projects/fairway-villas-3/enrichment/fbda955a68fe.jpg",
+        "/cdn/projects/fairway-villas-3/enrichment/c18745afe3c1.jpg",
+        "/cdn/projects/fairway-villas-3/enrichment/337c069be7bb.jpg"
       ],
       "enrichedAt": "2026-07-09T08:01:00.104Z"
     },
@@ -7709,8 +7709,8 @@
       ],
       "brochureUrl": "https://www.tanamiproperties.com/Projects/Emaar-Ocean-Point-Mina-Rashid-Brochure-Download",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/ocean-point-1/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/ocean-point-1/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T08:03:07.323Z"
     },
@@ -7740,8 +7740,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-avena-villas-at-the-valley-dubai",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/avena/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/avena/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T08:03:47.677Z"
     },
@@ -7815,8 +7815,8 @@
       ],
       "brochureUrl": "https://www.tanamiproperties.com/Projects/Emaar-Ocean-Star-Mina-Rashid-Brochure-Download",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/ocean-star/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/ocean-star/enrichment/8fea6d236171.webp",
         "/cdn/projects/ocean-star/enrichment/0bf3341992cc.png"
       ],
       "enrichedAt": "2026-07-09T08:05:01.985Z"
@@ -8076,8 +8076,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-mirage-the-oasis-villas-for-sale-in-dubai#modal-form",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/mirage-the-oasis/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/mirage-the-oasis/enrichment/8fea6d236171.webp",
         "/cdn/projects/mirage-the-oasis/enrichment/fb518ceb286f.webp",
         "/cdn/projects/mirage-the-oasis/enrichment/862a4c0348bd.webp",
         "/cdn/projects/mirage-the-oasis/enrichment/86ee25720c8b.webp"
@@ -8131,7 +8131,7 @@
         "/cdn/projects/caya-2/enrichment/bde2be54d089.jpg",
         "/cdn/projects/caya-2/enrichment/df7df052dba6.jpg",
         "/cdn/projects/caya-2/enrichment/0ffa39622635.jpg",
-        "/cdn/projects/caya/enrichment/78a116b9f6eb.jpg"
+        "/cdn/projects/caya-2/enrichment/78a116b9f6eb.jpg"
       ],
       "enrichedAt": "2026-07-09T08:08:14.157Z"
     },
@@ -8317,7 +8317,7 @@
         "/cdn/projects/lamborghini-mansions/enrichment/27d2234831bc.jpg",
         "/cdn/projects/lamborghini-mansions/enrichment/1606a9da6ecd.jpg",
         "/cdn/projects/lamborghini-mansions/enrichment/d40d7fa2a617.jpg",
-        "/cdn/projects/majestic-vistas/enrichment/0eb54a491273.webp",
+        "/cdn/projects/lamborghini-mansions/enrichment/0eb54a491273.webp",
         "/cdn/projects/lamborghini-mansions/enrichment/2fe24e9296e6.webp"
       ],
       "enrichedAt": "2026-07-09T08:10:23.003Z"
@@ -8359,8 +8359,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-bayline-avonlea-mina-rashid-yachts-marina-dubai-apartments",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/bayline/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/bayline/enrichment/8fea6d236171.webp",
         "/cdn/projects/bayline/enrichment/7d639a14dd7a.png",
         "/cdn/projects/bayline/enrichment/c3aa728a2081.webp"
       ],
@@ -8497,8 +8497,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-the-valley-lillia-townhouses-for-sale-in-dubai",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/lillia-townhouses/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/lillia-townhouses/enrichment/8fea6d236171.webp",
         "/cdn/projects/lillia-townhouses/enrichment/d23d766cca3e.png"
       ],
       "enrichedAt": "2026-07-09T08:12:31.358Z"
@@ -8537,8 +8537,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-parkside-hills-dubai-hills-estate-apartments-for-sale",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/parkside-hills/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/parkside-hills/enrichment/8fea6d236171.webp",
         "/cdn/projects/parkside-hills/enrichment/e7ebc551c892.avif"
       ],
       "enrichedAt": "2026-07-09T08:13:03.002Z"
@@ -8630,8 +8630,8 @@
       "brochureUrl": "https://opr.ae/projects/nima-by-emaar-properties-at-the-valley-dubai#modal-brochure",
       "images": [
         "/cdn/projects/nima-the-valley/enrichment/aa193fa77cdb.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/nima-the-valley/enrichment/703320389170.png",
+        "/cdn/projects/nima-the-valley/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T08:14:13.464Z"
     },
@@ -8702,8 +8702,8 @@
       "brochureUrl": "https://www.tanamiproperties.com/Projects/Emaar-Clearpoint-Mina-Rashid-Brochure-Download",
       "images": [
         "/cdn/projects/clearpoint/enrichment/c4e365928412.jpeg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/clearpoint/enrichment/703320389170.png",
+        "/cdn/projects/clearpoint/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T08:15:18.467Z"
     },
@@ -8742,8 +8742,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/emaar-bayline-avonlea-mina-rashid-yachts-marina-dubai-apartments",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/avonlea/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/avonlea/enrichment/8fea6d236171.webp",
         "/cdn/projects/avonlea/enrichment/4d10e6fd8227.webp"
       ],
       "enrichedAt": "2026-07-09T08:15:46.774Z"
@@ -8824,8 +8824,8 @@
       ],
       "brochureUrl": "https://investindxb.com/wp-content/uploads/2023/10/EMAAR-CLUB-DRIVE-BROCHURE-investindxb.pdf",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/club-drive/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/club-drive/enrichment/8fea6d236171.webp",
         "/cdn/projects/club-drive/enrichment/b8d97cf544f6.jpg",
         "/cdn/projects/club-drive/enrichment/a9645c5c8210.jpg",
         "/cdn/projects/club-drive/enrichment/67bb56f73b80.jpg",
@@ -8955,8 +8955,8 @@
       "brochureUrl": "https://www.bayut.com/new-projects/developers/emaar/",
       "images": [
         "/cdn/projects/may/enrichment/d880462d4b22.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/may/enrichment/703320389170.png",
+        "/cdn/projects/may/enrichment/c5a8b386b8af.png",
         "/cdn/projects/may/enrichment/b69d2248a833.jpg",
         "/cdn/projects/may/enrichment/29ee5be24d00.jpg"
       ],
@@ -9039,8 +9039,8 @@
       "images": [
         "/cdn/projects/golf-grand/enrichment/17ced802e35d.jpg",
         "/cdn/projects/golf-grand/enrichment/6cf5e864afb5.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/golf-grand/enrichment/703320389170.png",
+        "/cdn/projects/golf-grand/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T08:19:42.765Z"
     },
@@ -9114,9 +9114,9 @@
       ],
       "brochureUrl": "https://1newhomes.ae/anya-2-dubai",
       "images": [
-        "/cdn/projects/anya-arabian-ranches-3/enrichment/d0286c74d3cd.jpg",
-        "/cdn/projects/anya-arabian-ranches-3/enrichment/377f780094d1.jpg",
-        "/cdn/projects/anya-arabian-ranches-3/enrichment/0daf9966c6fe.jpg",
+        "/cdn/projects/anya-2/enrichment/d0286c74d3cd.jpg",
+        "/cdn/projects/anya-2/enrichment/377f780094d1.jpg",
+        "/cdn/projects/anya-2/enrichment/0daf9966c6fe.jpg",
         "/cdn/projects/anya-2/enrichment/fc510d5d92a8.jpg",
         "/cdn/projects/anya-2/enrichment/50f7eb21d443.jpg",
         "/cdn/projects/anya-2/enrichment/b0aecfec40fb.jpg"
@@ -9151,8 +9151,8 @@
       ],
       "brochureUrl": "https://opr.ae/projects/parkside-views-by-emaar-properties#modal-brochure",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/parkside-views/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/parkside-views/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T08:21:33.952Z"
     },
@@ -9192,11 +9192,11 @@
       "brochureUrl": "https://opr.ae/projects/emaar-palace-residences-north-in-dubai-creek-harbour-for-sale#",
       "images": [
         "/cdn/projects/palace-residences-north/enrichment/6648c094c5fe.jpg",
-        "/cdn/projects/creek-palace/enrichment/6e009126871a.jpg",
-        "/cdn/projects/creek-palace/enrichment/e5ddc5786651.jpg",
-        "/cdn/projects/creek-palace/enrichment/27a11fd6d4d5.jpg",
-        "/cdn/projects/creek-palace/enrichment/4be4374fd7ca.jpg",
-        "/cdn/projects/creek-palace/enrichment/55c1a47c21c7.jpg"
+        "/cdn/projects/palace-residences-north/enrichment/6e009126871a.jpg",
+        "/cdn/projects/palace-residences-north/enrichment/e5ddc5786651.jpg",
+        "/cdn/projects/palace-residences-north/enrichment/27a11fd6d4d5.jpg",
+        "/cdn/projects/palace-residences-north/enrichment/4be4374fd7ca.jpg",
+        "/cdn/projects/palace-residences-north/enrichment/55c1a47c21c7.jpg"
       ],
       "enrichedAt": "2026-07-09T08:22:12.709Z"
     },
@@ -9249,8 +9249,8 @@
       "brochureUrl": "https://www.emaar.com/en/our-communities",
       "images": [
         "/cdn/projects/moor-at-creek-beach/enrichment/e4de84a1facc.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/moor-at-creek-beach/enrichment/703320389170.png",
+        "/cdn/projects/moor-at-creek-beach/enrichment/c5a8b386b8af.png",
         "/cdn/projects/moor-at-creek-beach/enrichment/f81b8daecc30.jpg",
         "/cdn/projects/moor-at-creek-beach/enrichment/635dece114cc.jpg"
       ],
@@ -9292,10 +9292,10 @@
       ],
       "brochureUrl": "https://www.emaar.com/en/property-investment-dubai/",
       "images": [
-        "/cdn/projects/summer/enrichment/bec65050157e.jpg",
+        "/cdn/projects/savanna/enrichment/bec65050157e.jpg",
         "/cdn/projects/savanna/enrichment/57737559c976.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/savanna/enrichment/703320389170.png",
+        "/cdn/projects/savanna/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T08:23:17.486Z"
     },
@@ -9800,8 +9800,8 @@
       "brochureUrl": "https://www.emaar.com/en/properties/creek-waters",
       "images": [
         "/cdn/projects/creek-waters/enrichment/0f45f14e37d8.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/creek-waters/enrichment/703320389170.png",
+        "/cdn/projects/creek-waters/enrichment/c5a8b386b8af.png",
         "/cdn/projects/creek-waters/enrichment/5ff2448f1a5a.jpg",
         "/cdn/projects/creek-waters/enrichment/8e70ba9b8cd1.jpg"
       ],
@@ -10231,11 +10231,11 @@
       ],
       "brochureUrl": "https://www.tanamiproperties.com/Projects/Elie-Saab-at-Arabian-Ranches-3-Brochure-Download",
       "images": [
-        "/cdn/projects/sun-arabian-ranches-3/enrichment/1ca15829dfb2.jpg",
-        "/cdn/projects/sun-arabian-ranches-3/enrichment/9dd8378fd013.jpg",
-        "/cdn/projects/sun-arabian-ranches-3/enrichment/42e6424b9e0f.jpg",
-        "/cdn/projects/sun-arabian-ranches-3/enrichment/198352687356.jpg",
-        "/cdn/projects/sun-arabian-ranches-3/enrichment/6a1d0784a777.jpg",
+        "/cdn/projects/elie-saab-dubai/enrichment/1ca15829dfb2.jpg",
+        "/cdn/projects/elie-saab-dubai/enrichment/9dd8378fd013.jpg",
+        "/cdn/projects/elie-saab-dubai/enrichment/42e6424b9e0f.jpg",
+        "/cdn/projects/elie-saab-dubai/enrichment/198352687356.jpg",
+        "/cdn/projects/elie-saab-dubai/enrichment/6a1d0784a777.jpg",
         "/cdn/projects/elie-saab-dubai/enrichment/9cb3f7d76c12.jpg"
       ],
       "enrichedAt": "2026-07-09T08:35:57.987Z"
@@ -10384,7 +10384,7 @@
       ],
       "brochureUrl": "https://opr.ae/projects/emaar-june-villas-in-arabian-ranches-3-for-sale#",
       "images": [
-        "/cdn/projects/june-2/enrichment/4bdc70ddd803.webp"
+        "/cdn/projects/june/enrichment/4bdc70ddd803.webp"
       ],
       "enrichedAt": "2026-07-09T08:38:14.230Z"
     },
@@ -10518,8 +10518,8 @@
       ],
       "brochureUrl": "https://www.offplan-dubai.com/bliss-at-arabian-ranches-iii-by-emaar/#section-floor-plan",
       "images": [
-        "/cdn/projects/bliss/enrichment/3ad45f6a4e8b.jpg",
-        "/cdn/projects/bliss/enrichment/cbec26b127c2.jpg",
+        "/cdn/projects/bliss-2-arabian-ranches-3/enrichment/3ad45f6a4e8b.jpg",
+        "/cdn/projects/bliss-2-arabian-ranches-3/enrichment/cbec26b127c2.jpg",
         "/cdn/projects/bliss-2-arabian-ranches-3/enrichment/d1ac330bfbfe.jpg",
         "/cdn/projects/bliss-2-arabian-ranches-3/enrichment/bddf2bf2ec81.jpg",
         "/cdn/projects/bliss-2-arabian-ranches-3/enrichment/cdb39db4589b.jpg",
@@ -10851,11 +10851,11 @@
       ],
       "brochureUrl": "https://www.emaar.com/en/properties/palace-residences",
       "images": [
-        "/cdn/projects/creek-palace/enrichment/6e009126871a.jpg",
-        "/cdn/projects/creek-palace/enrichment/e5ddc5786651.jpg",
-        "/cdn/projects/creek-palace/enrichment/27a11fd6d4d5.jpg",
-        "/cdn/projects/creek-palace/enrichment/4be4374fd7ca.jpg",
-        "/cdn/projects/creek-palace/enrichment/55c1a47c21c7.jpg"
+        "/cdn/projects/palace-residences-dubai-creek-harbour/enrichment/6e009126871a.jpg",
+        "/cdn/projects/palace-residences-dubai-creek-harbour/enrichment/e5ddc5786651.jpg",
+        "/cdn/projects/palace-residences-dubai-creek-harbour/enrichment/27a11fd6d4d5.jpg",
+        "/cdn/projects/palace-residences-dubai-creek-harbour/enrichment/4be4374fd7ca.jpg",
+        "/cdn/projects/palace-residences-dubai-creek-harbour/enrichment/55c1a47c21c7.jpg"
       ],
       "enrichedAt": "2026-07-09T08:43:34.938Z"
     },
@@ -11659,8 +11659,8 @@
       "images": [
         "/cdn/projects/golf-place-2/enrichment/cfb382d699dc.webp",
         "/cdn/projects/golf-place-2/enrichment/e263c174339c.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/golf-place-2/enrichment/703320389170.png",
+        "/cdn/projects/golf-place-2/enrichment/c5a8b386b8af.png",
         "/cdn/projects/golf-place-2/enrichment/0519cf2650f9.jpg"
       ],
       "enrichedAt": "2026-07-09T08:53:21.286Z"
@@ -12120,12 +12120,12 @@
       ],
       "brochureUrl": "https://www.rakproperties.ae/wp-content/uploads/2025/05/Cape-Hayat-Brochure-compressed.pdf",
       "images": [
-        "/cdn/projects/cape-hayat-2/enrichment/e5676eac8544.jpg",
-        "/cdn/projects/cape-hayat-2/enrichment/b758df235111.jpg",
-        "/cdn/projects/cape-hayat-2/enrichment/5f40dcff4cfb.jpg",
-        "/cdn/projects/cape-hayat-2/enrichment/c924bf688327.jpg",
-        "/cdn/projects/cape-hayat-2/enrichment/7bc888771f83.jpg",
-        "/cdn/projects/cape-hayat-2/enrichment/ba54f30866db.jpg"
+        "/cdn/projects/cape-hayat/enrichment/e5676eac8544.jpg",
+        "/cdn/projects/cape-hayat/enrichment/b758df235111.jpg",
+        "/cdn/projects/cape-hayat/enrichment/5f40dcff4cfb.jpg",
+        "/cdn/projects/cape-hayat/enrichment/c924bf688327.jpg",
+        "/cdn/projects/cape-hayat/enrichment/7bc888771f83.jpg",
+        "/cdn/projects/cape-hayat/enrichment/ba54f30866db.jpg"
       ],
       "enrichedAt": "2026-07-09T08:58:53.725Z"
     },
@@ -12418,8 +12418,8 @@
       "brochureUrl": "https://www.binayah.com/dubai-projects/casagrand-seafront-residences/",
       "images": [
         "/cdn/projects/casagrand-seafront-residences/enrichment/da96e39f21ba.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/casagrand-seafront-residences/enrichment/703320389170.png",
+        "/cdn/projects/casagrand-seafront-residences/enrichment/c5a8b386b8af.png",
         "/cdn/projects/casagrand-seafront-residences/enrichment/eaa590042bb5.webp"
       ],
       "enrichedAt": "2026-07-09T09:03:17.830Z"
@@ -12606,7 +12606,7 @@
         "/cdn/projects/cheval-residences/enrichment/d168cb1a793d.jpg",
         "/cdn/projects/cheval-residences/enrichment/bd05dc32cc12.jpg",
         "/cdn/projects/cheval-residences/enrichment/b9f13454e94c.jpg",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/cheval-residences/enrichment/8fea6d236171.webp",
         "/cdn/projects/cheval-residences/enrichment/4ee94fd8ef87.webp"
       ],
       "enrichedAt": "2026-07-09T09:06:41.954Z"
@@ -12745,12 +12745,12 @@
       ],
       "brochureUrl": "https://buyoffplanproperty.com/athlon-aldar-dubai/#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjMyMjQ2IiwidG9nZ2xlIjpmYWxzZX0%3D",
       "images": [
-        "/cdn/projects/delphi/enrichment/6e0d62d39ee1.jpg",
-        "/cdn/projects/delphi/enrichment/a31a8dd9af40.jpg",
-        "/cdn/projects/delphi/enrichment/e2d42889b9e8.jpg",
-        "/cdn/projects/delphi/enrichment/d3a1d24da416.jpg",
-        "/cdn/projects/rise-by-athlon-2/enrichment/bc9d3b12d2b1.jpg",
-        "/cdn/projects/rise-by-athlon-2/enrichment/f9132598475d.jpg"
+        "/cdn/projects/chion/enrichment/6e0d62d39ee1.jpg",
+        "/cdn/projects/chion/enrichment/a31a8dd9af40.jpg",
+        "/cdn/projects/chion/enrichment/e2d42889b9e8.jpg",
+        "/cdn/projects/chion/enrichment/d3a1d24da416.jpg",
+        "/cdn/projects/chion/enrichment/bc9d3b12d2b1.jpg",
+        "/cdn/projects/chion/enrichment/f9132598475d.jpg"
       ],
       "enrichedAt": "2026-07-09T09:08:24.489Z"
     },
@@ -13116,7 +13116,7 @@
       ],
       "brochureUrl": "https://www.3guae.com/off-plan-properties/property-details/cove-at-lunaya-terraces/",
       "images": [
-        "/cdn/projects/the-bloom-at-lunaya/enrichment/b7d2c510a421.jpg"
+        "/cdn/projects/cove-at-lunaya-terraces/enrichment/b7d2c510a421.jpg"
       ],
       "enrichedAt": "2026-07-09T09:13:58.479Z"
     },
@@ -13137,8 +13137,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/creekside-residence-al-zorah-city-ajman-uae",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/creekside-residence/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/creekside-residence/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T09:17:39.392Z"
     },
@@ -13249,7 +13249,7 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/nakheel-palm-jebel-ali-villa-crystal-springs#modal-form",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/crystal-springs-villa/enrichment/8fea6d236171.webp",
         "/cdn/projects/crystal-springs-villa/enrichment/5f82218a2633.webp",
         "/cdn/projects/crystal-springs-villa/enrichment/6a462c5a6d23.webp",
         "/cdn/projects/crystal-springs-villa/enrichment/b9a82a469cdd.webp",
@@ -13347,8 +13347,8 @@
       ],
       "brochureUrl": "https://www.binayah.com/dubai-projects/dalmore-tower-at-dlrc/",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/dalmore-tower/enrichment/703320389170.png",
+        "/cdn/projects/dalmore-tower/enrichment/c5a8b386b8af.png",
         "/cdn/projects/dalmore-tower/enrichment/cdf1a12cd314.jpg",
         "/cdn/projects/dalmore-tower/enrichment/73bf318ff103.jpg",
         "/cdn/projects/dalmore-tower/enrichment/ede226bdf426.jpg"
@@ -13615,7 +13615,7 @@
         "/cdn/projects/darb/enrichment/1734022fefdf.jpg",
         "/cdn/projects/darb/enrichment/0db8aadbcda2.jpg",
         "/cdn/projects/darb/enrichment/3a0627dd9a05.jpg",
-        "/cdn/projects/suroor-4/enrichment/bab85da848df.jpeg"
+        "/cdn/projects/darb/enrichment/bab85da848df.jpeg"
       ],
       "enrichedAt": "2026-07-09T09:28:35.113Z"
     },
@@ -13702,12 +13702,12 @@
       ],
       "brochureUrl": "https://uae-offplan.com/property/hayyan-by-alef#",
       "images": [
-        "/cdn/projects/hayyan/enrichment/cd055f0266ac.webp",
-        "/cdn/projects/hayyan/enrichment/ee5b8f02d497.webp",
-        "/cdn/projects/hayyan/enrichment/fa95d4be72ef.webp",
-        "/cdn/projects/hayyan/enrichment/6eb8d4a87033.webp",
-        "/cdn/projects/hayyan/enrichment/510e2ac28fdd.webp",
-        "/cdn/projects/hayyan/enrichment/b852724df196.webp"
+        "/cdn/projects/deem/enrichment/cd055f0266ac.webp",
+        "/cdn/projects/deem/enrichment/ee5b8f02d497.webp",
+        "/cdn/projects/deem/enrichment/fa95d4be72ef.webp",
+        "/cdn/projects/deem/enrichment/6eb8d4a87033.webp",
+        "/cdn/projects/deem/enrichment/510e2ac28fdd.webp",
+        "/cdn/projects/deem/enrichment/b852724df196.webp"
       ],
       "enrichedAt": "2026-07-09T09:33:19.930Z"
     },
@@ -13795,8 +13795,8 @@
       "images": [
         "/cdn/projects/sobha-delphine-beach-residences/enrichment/5bfe51a520bb.jpg",
         "/cdn/projects/sobha-delphine-beach-residences/enrichment/018c2797a1a2.jpg",
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/sobha-delphine-beach-residences/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/sobha-delphine-beach-residences/enrichment/8fea6d236171.webp",
         "/cdn/projects/sobha-delphine-beach-residences/enrichment/ff4f1d8b6bba.jpg",
         "/cdn/projects/sobha-delphine-beach-residences/enrichment/f529ded664a3.jpg"
       ],
@@ -13882,8 +13882,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/do-hotels-and-residences-on-dubai-islands",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/do-hotels-and-residences/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/do-hotels-and-residences/enrichment/8fea6d236171.webp",
         "/cdn/projects/do-hotels-and-residences/enrichment/4bdd8475ffd4.png",
         "/cdn/projects/do-hotels-and-residences/enrichment/5111d3b99ed9.png",
         "/cdn/projects/do-hotels-and-residences/enrichment/99a8784bc69b.png",
@@ -13926,8 +13926,8 @@
       "brochureUrl": "https://www.bayut.com/new-projects/developers/palma-development/",
       "images": [
         "/cdn/projects/east-residence-2-at-serenia-district/enrichment/e9ce5d90088d.webp",
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/east-residence-2-at-serenia-district/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/east-residence-2-at-serenia-district/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T09:41:18.824Z"
     },
@@ -13965,7 +13965,7 @@
       ],
       "brochureUrl": "https://www.bayut.com/new-projects/developers/palma-development/",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/east-residence-3-at-serenia-district/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T09:41:43.633Z"
     },
@@ -14011,10 +14011,10 @@
       ],
       "brochureUrl": "https://www.bayut.com/new-projects/developers/palma-development/",
       "images": [
-        "/cdn/projects/east-residence-5-at-serenia-district/enrichment/6f3c583bb5d7.jpg",
-        "/cdn/projects/east-residence-5-at-serenia-district/enrichment/91a43c13bf63.jpg",
-        "/cdn/projects/east-residence-5-at-serenia-district/enrichment/6640a00748b7.jpg",
-        "/cdn/projects/east-residence-5-at-serenia-district/enrichment/87919b80e374.jpg"
+        "/cdn/projects/east-residence-4-at-serenia-district/enrichment/6f3c583bb5d7.jpg",
+        "/cdn/projects/east-residence-4-at-serenia-district/enrichment/91a43c13bf63.jpg",
+        "/cdn/projects/east-residence-4-at-serenia-district/enrichment/6640a00748b7.jpg",
+        "/cdn/projects/east-residence-4-at-serenia-district/enrichment/87919b80e374.jpg"
       ],
       "enrichedAt": "2026-07-09T09:42:15.089Z"
     },
@@ -14111,7 +14111,7 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/serenia-district-west-jumeirah-islands-dubai",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/east-residence-6-at-serenia-district/enrichment/8fea6d236171.webp",
         "/cdn/projects/east-residence-6-at-serenia-district/enrichment/e098937833c9.jpg",
         "/cdn/projects/east-residence-6-at-serenia-district/enrichment/4bbf1de4e016.jpg",
         "/cdn/projects/east-residence-6-at-serenia-district/enrichment/b674b76859b7.jpg",
@@ -14559,8 +14559,8 @@
       ],
       "brochureUrl": "https://www.binayah.com/dubai-projects/eltiera-views-by-ellington/",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/eltiera-views-2/enrichment/703320389170.png",
+        "/cdn/projects/eltiera-views-2/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T09:56:54.380Z"
     },
@@ -14597,8 +14597,8 @@
       "brochureUrl": "https://www.engelvoelkers.com/ae/en/off-plan/emerge-residences-by-elysian#Form",
       "images": [
         "/cdn/projects/emerge-residences/enrichment/f1ba8735a4fc.webp",
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/emerge-residences/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/emerge-residences/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T09:57:53.199Z"
     },
@@ -15850,11 +15850,11 @@
         "https://www.binayah.com/dubai-projects/guzel-tower-at-jvt/"
       ],
       "images": [
-        "/cdn/projects/guzel-towers-phase-4-by-tiger/enrichment/7ecf6a92f619.jpg",
+        "/cdn/projects/guzel-towers/enrichment/7ecf6a92f619.jpg",
         "/cdn/projects/guzel-towers/enrichment/0cfea600938b.jpg",
         "/cdn/projects/guzel-towers/enrichment/94ab2ebdabed.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/guzel-towers/enrichment/703320389170.png",
+        "/cdn/projects/guzel-towers/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T10:20:22.191Z"
     },
@@ -15928,7 +15928,7 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/harbour-by-prestige-one-dubai-islands",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/harbour-by-prestige-one/enrichment/8fea6d236171.webp",
         "/cdn/projects/harbour-by-prestige-one/enrichment/342210ae0b3b.webp",
         "/cdn/projects/harbour-by-prestige-one/enrichment/274332b90551.jpg",
         "/cdn/projects/harbour-by-prestige-one/enrichment/3c532009e19e.jpg",
@@ -16330,9 +16330,9 @@
       ],
       "brochureUrl": "https://emiratesdevelopments.com/community/hilton-residences-al-raha/",
       "images": [
-        "/cdn/projects/jumeirah-residences/enrichment/81b33cad97d2.jpg",
-        "/cdn/projects/jumeirah-residences/enrichment/fe809d2bc798.jpg",
-        "/cdn/projects/jumeirah-residences/enrichment/768b79053748.jpg",
+        "/cdn/projects/hilton-residences-abu-dhabi-al-raha/enrichment/81b33cad97d2.jpg",
+        "/cdn/projects/hilton-residences-abu-dhabi-al-raha/enrichment/fe809d2bc798.jpg",
+        "/cdn/projects/hilton-residences-abu-dhabi-al-raha/enrichment/768b79053748.jpg",
         "/cdn/projects/hilton-residences-abu-dhabi-al-raha/enrichment/09d1faa0febe.webp",
         "/cdn/projects/hilton-residences-abu-dhabi-al-raha/enrichment/3fbbcab8f98f.webp",
         "/cdn/projects/hilton-residences-abu-dhabi-al-raha/enrichment/a3c37ca2d17f.avif"
@@ -16768,8 +16768,8 @@
       "brochureUrl": "https://www.rangedvelopments.com/island-heights-brochure",
       "virtualTourUrl": "https://www.rangedvelopments.com/island-heights-virtual-tour",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/island-heights/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/island-heights/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T10:31:49.175Z"
     },
@@ -16940,9 +16940,9 @@
       ],
       "brochureUrl": "https://ictred.ae/landing/projects/lulu/luluat_marina_brochure.pdf",
       "images": [
-        "/cdn/projects/juman-3/enrichment/d7ad76ac7a86.jpg",
-        "/cdn/projects/juman-3/enrichment/d84b507a1bbb.jpg",
-        "/cdn/projects/juman-3/enrichment/f6c4ad31e2e4.jpg"
+        "/cdn/projects/juman-2/enrichment/d7ad76ac7a86.jpg",
+        "/cdn/projects/juman-2/enrichment/d84b507a1bbb.jpg",
+        "/cdn/projects/juman-2/enrichment/f6c4ad31e2e4.jpg"
       ],
       "enrichedAt": "2026-07-09T10:34:53.050Z"
     },
@@ -17057,10 +17057,10 @@
       "brochureUrl": "https://www.rak.realestate/jw-marriott-residences/#contact",
       "videoUrl": "https://www.youtube.com/watch?v=MOtmWb7dDsg",
       "images": [
-        "/cdn/projects/nasim-al-bahr-residences/enrichment/8852b2d43270.jpg",
-        "/cdn/projects/nasim-al-bahr-residences/enrichment/d7a692e9491f.jpg",
-        "/cdn/projects/nasim-al-bahr-residences/enrichment/e54060aa9520.jpg",
-        "/cdn/projects/nasim-al-bahr-residences/enrichment/98fcde9d9899.jpg",
+        "/cdn/projects/jw-marriott-residences/enrichment/8852b2d43270.jpg",
+        "/cdn/projects/jw-marriott-residences/enrichment/d7a692e9491f.jpg",
+        "/cdn/projects/jw-marriott-residences/enrichment/e54060aa9520.jpg",
+        "/cdn/projects/jw-marriott-residences/enrichment/98fcde9d9899.jpg",
         "/cdn/projects/jw-marriott-residences/enrichment/ed4973688051.jpg",
         "/cdn/projects/jw-marriott-residences/enrichment/3815ee5e85e7.jpg"
       ],
@@ -17723,12 +17723,12 @@
       ],
       "brochureUrl": "https://reelly-backend.s3.amazonaws.com/project_files/f19a1aa742c44fbd908371c3e369bc94.pdf",
       "images": [
-        "/cdn/projects/meriden-beach/enrichment/34153603611d.webp",
-        "/cdn/projects/meriden-beach/enrichment/607687b8f185.webp",
-        "/cdn/projects/meriden-beach/enrichment/bd4a2967b14d.webp",
-        "/cdn/projects/meriden-beach/enrichment/ef6dc5b4e45e.webp",
-        "/cdn/projects/meriden-beach/enrichment/6c9fd809ff27.webp",
-        "/cdn/projects/meriden-beach/enrichment/6df9ac0b58db.webp"
+        "/cdn/projects/luminous-coastal-living/enrichment/34153603611d.webp",
+        "/cdn/projects/luminous-coastal-living/enrichment/607687b8f185.webp",
+        "/cdn/projects/luminous-coastal-living/enrichment/bd4a2967b14d.webp",
+        "/cdn/projects/luminous-coastal-living/enrichment/ef6dc5b4e45e.webp",
+        "/cdn/projects/luminous-coastal-living/enrichment/6c9fd809ff27.webp",
+        "/cdn/projects/luminous-coastal-living/enrichment/6df9ac0b58db.webp"
       ],
       "enrichedAt": "2026-07-09T10:43:58.669Z"
     },
@@ -18011,8 +18011,8 @@
       "images": [
         "/cdn/projects/mangrove/enrichment/4691f55f2c4b.png",
         "/cdn/projects/mangrove/enrichment/be0270146920.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/mangrove/enrichment/703320389170.png",
+        "/cdn/projects/mangrove/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T10:47:07.515Z"
     },
@@ -18420,10 +18420,10 @@
       ],
       "brochureUrl": "https://www.binghatti.com/en/branded-projects/mercedes-benz-places-binghatti-city#",
       "images": [
-        "/cdn/projects/mercedes-benz-places-by-binghatti/enrichment/f6c71b763305.webp",
-        "/cdn/projects/mercedes-benz-places-by-binghatti/enrichment/0a6db1faf092.webp",
-        "/cdn/projects/mercedes-benz-places-by-binghatti/enrichment/64763af4a86c.webp",
-        "/cdn/projects/mercedes-benz-places-by-binghatti/enrichment/eb7262f77337.webp"
+        "/cdn/projects/mercedes-benz-amg-vision/enrichment/f6c71b763305.webp",
+        "/cdn/projects/mercedes-benz-amg-vision/enrichment/0a6db1faf092.webp",
+        "/cdn/projects/mercedes-benz-amg-vision/enrichment/64763af4a86c.webp",
+        "/cdn/projects/mercedes-benz-amg-vision/enrichment/eb7262f77337.webp"
       ],
       "enrichedAt": "2026-07-09T10:51:58.989Z"
     },
@@ -18551,11 +18551,11 @@
       ],
       "brochureUrl": "https://genz-properties.com/property/meriva-collection/#",
       "images": [
-        "/cdn/projects/the-meriva-collection/enrichment/49177dadb439.png",
-        "/cdn/projects/the-meriva-collection/enrichment/e65031211226.png",
-        "/cdn/projects/the-meriva-collection/enrichment/d2fc2489d763.png",
-        "/cdn/projects/the-meriva-collection/enrichment/4583150dd557.png",
-        "/cdn/projects/the-meriva-collection/enrichment/6ab68bc32339.png",
+        "/cdn/projects/meriva-gardens/enrichment/49177dadb439.png",
+        "/cdn/projects/meriva-gardens/enrichment/e65031211226.png",
+        "/cdn/projects/meriva-gardens/enrichment/d2fc2489d763.png",
+        "/cdn/projects/meriva-gardens/enrichment/4583150dd557.png",
+        "/cdn/projects/meriva-gardens/enrichment/6ab68bc32339.png",
         "/cdn/projects/meriva-gardens/enrichment/b3e16855243e.jpg"
       ],
       "enrichedAt": "2026-07-09T10:54:01.708Z"
@@ -18605,11 +18605,11 @@
       ],
       "brochureUrl": "https://genz-properties.com/property/meriva-collection/#",
       "images": [
-        "/cdn/projects/the-meriva-collection/enrichment/49177dadb439.png",
-        "/cdn/projects/the-meriva-collection/enrichment/e65031211226.png",
-        "/cdn/projects/the-meriva-collection/enrichment/d2fc2489d763.png",
-        "/cdn/projects/the-meriva-collection/enrichment/4583150dd557.png",
-        "/cdn/projects/the-meriva-collection/enrichment/6ab68bc32339.png",
+        "/cdn/projects/meriva-sunset/enrichment/49177dadb439.png",
+        "/cdn/projects/meriva-sunset/enrichment/e65031211226.png",
+        "/cdn/projects/meriva-sunset/enrichment/d2fc2489d763.png",
+        "/cdn/projects/meriva-sunset/enrichment/4583150dd557.png",
+        "/cdn/projects/meriva-sunset/enrichment/6ab68bc32339.png",
         "/cdn/projects/meriva-sunset/enrichment/73550bc70975.webp"
       ],
       "enrichedAt": "2026-07-09T10:54:34.576Z"
@@ -18647,7 +18647,7 @@
       ],
       "brochureUrl": "https://www.binayah.com/wp-content/uploads/2022/11/bluewaters-bay-brochure-Horizontal3-Eng-New-D-compressed.pdf",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/bfd0e9a30b11.png",
+        "/cdn/projects/miami-beach-residence/enrichment/bfd0e9a30b11.png",
         "/cdn/projects/miami-beach-residence/enrichment/49bab2264070.png",
         "/cdn/projects/miami-beach-residence/enrichment/7733251b15a7.png",
         "/cdn/projects/miami-beach-residence/enrichment/da16da7470ac.png",
@@ -18788,8 +18788,8 @@
       "brochureUrl": "https://www.binayah.com/ras-al-khaimah-projects/miraggio-at-al-marjan-island/",
       "images": [
         "/cdn/projects/miraggio/enrichment/d74dcf3a85ba.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/miraggio/enrichment/703320389170.png",
+        "/cdn/projects/miraggio/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T10:57:07.913Z"
     },
@@ -18960,9 +18960,9 @@
       ],
       "brochureUrl": "https://www.binayah.com/dubai-projects/montage-by-key-mavens/",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
-        "/cdn/projects/voxa-pantheon/enrichment/688752e7b632.webp"
+        "/cdn/projects/montage/enrichment/703320389170.png",
+        "/cdn/projects/montage/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/montage/enrichment/688752e7b632.webp"
       ],
       "enrichedAt": "2026-07-09T10:59:21.188Z"
     },
@@ -19014,8 +19014,8 @@
       "videoUrl": "https://www.youtube.com/watch?v=dTjxt2hyDt8",
       "images": [
         "/cdn/projects/montiva/enrichment/dcbf2f0c2b64.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/montiva/enrichment/703320389170.png",
+        "/cdn/projects/montiva/enrichment/c5a8b386b8af.png",
         "/cdn/projects/montiva/enrichment/51487ee588b9.jpg",
         "/cdn/projects/montiva/enrichment/76f19e184235.jpg",
         "/cdn/projects/montiva/enrichment/0a2db01ec2e3.jpg"
@@ -19071,7 +19071,7 @@
         "/cdn/projects/montura-2-at-grand-polo/enrichment/6840b48e4c6d.jpg",
         "/cdn/projects/montura-2-at-grand-polo/enrichment/9217c75d7631.webp",
         "/cdn/projects/montura-2-at-grand-polo/enrichment/030b61f77faf.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png"
+        "/cdn/projects/montura-2-at-grand-polo/enrichment/703320389170.png"
       ],
       "enrichedAt": "2026-07-09T11:00:22.600Z"
     },
@@ -19138,8 +19138,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/durar-moonstone-interiors-by-missoni-al-marjan-ras-al-khaimah-uae",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/moonstone-residences-interiors-by-missoni/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/moonstone-residences-interiors-by-missoni/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T11:01:26.813Z"
     },
@@ -19533,12 +19533,12 @@
       "brochureUrl": "https://royallp.com/nawayef-east-hill-hudayriyat-island-by-modon/#elementor-action%3Aaction%3Dpopup%3Aopen%26settings%3DeyJpZCI6IjMxMDU1IiwidG9nZ2xlIjpmYWxzZX0%3D",
       "virtualTourUrl": "https://world.modon.com/abu-dhabi/hudayriyat/?state=hudayriyat&zone=east_hill&utm_source=Website&utm_medium=Nawayef_East&utm_campaign=VR_Button",
       "images": [
-        "/cdn/projects/nawayef-east-b/enrichment/36aa52fcfd68.jpg",
-        "/cdn/projects/nawayef-east-b/enrichment/f2c570c2ffcd.jpg",
-        "/cdn/projects/nawayef-east-b/enrichment/bd6bada4abfa.jpg",
-        "/cdn/projects/nawayef-east-b/enrichment/3aa840f800f5.jpg",
-        "/cdn/projects/nawayef-east-b/enrichment/210410c47e75.jpg",
-        "/cdn/projects/nawayef-east-b/enrichment/88219654ce70.jpg"
+        "/cdn/projects/nawayef-east-a/enrichment/36aa52fcfd68.jpg",
+        "/cdn/projects/nawayef-east-a/enrichment/f2c570c2ffcd.jpg",
+        "/cdn/projects/nawayef-east-a/enrichment/bd6bada4abfa.jpg",
+        "/cdn/projects/nawayef-east-a/enrichment/3aa840f800f5.jpg",
+        "/cdn/projects/nawayef-east-a/enrichment/210410c47e75.jpg",
+        "/cdn/projects/nawayef-east-a/enrichment/88219654ce70.jpg"
       ],
       "enrichedAt": "2026-07-09T11:06:45.400Z"
     },
@@ -19840,7 +19840,7 @@
       "brochureUrl": "https://www.rrsinternationaldevelopment.com/projects",
       "virtualTourUrl": "https://www.rrsinternationaldevelopment.com/#",
       "images": [
-        "/cdn/projects/rr-residence/enrichment/2c281c946147.jpg",
+        "/cdn/projects/nh-collection/enrichment/2c281c946147.jpg",
         "/cdn/projects/nh-collection/enrichment/ad0bed3041cd.png",
         "/cdn/projects/nh-collection/enrichment/62edc16701c5.jpg",
         "/cdn/projects/nh-collection/enrichment/f3ccf782c5fc.jpg",
@@ -20255,8 +20255,8 @@
         "/cdn/projects/oasis-residences/enrichment/26c771858e5c.jpg",
         "/cdn/projects/oasis-residences/enrichment/6e99ce68bd74.jpg",
         "/cdn/projects/oasis-residences/enrichment/ab54fb9e6458.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/oasis-residences/enrichment/703320389170.png",
+        "/cdn/projects/oasis-residences/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T11:16:56.604Z"
     },
@@ -20567,8 +20567,8 @@
       "images": [
         "/cdn/projects/one-central/enrichment/f6783bf2ef90.webp",
         "/cdn/projects/one-central/enrichment/7f6d466c4715.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/one-central/enrichment/703320389170.png",
+        "/cdn/projects/one-central/enrichment/c5a8b386b8af.png",
         "/cdn/projects/one-central/enrichment/ae55468da45e.webp"
       ],
       "enrichedAt": "2026-07-09T11:21:09.055Z"
@@ -20620,8 +20620,8 @@
       ],
       "brochureUrl": "https://www.tanamiproperties.com/Projects/One-Residence-at-Downtown-Dubai-Brochure-Download",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/one-residence/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/one-residence/enrichment/8fea6d236171.webp",
         "/cdn/projects/one-residence/enrichment/9dd5a802df55.jpg",
         "/cdn/projects/one-residence/enrichment/a780d5909d1c.jpg",
         "/cdn/projects/one-residence/enrichment/a9eb9a3d4f55.jpg",
@@ -20667,8 +20667,8 @@
       "brochureUrl": "https://opr.ae/projects/one-river-point-by-ellington-properties-dutco-in-business-bay#modal-brochure",
       "images": [
         "/cdn/projects/one-river-point/enrichment/c94609153626.webp",
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/one-river-point/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/one-river-point/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T11:22:09.151Z"
     },
@@ -21123,11 +21123,11 @@
       ],
       "brochureUrl": "https://www.nakheel.com/en/developments/nakheel-collections/palmjebelali",
       "images": [
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/07a67b2e786f.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/42911063b84a.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/d13bd48b30fe.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/2f689f119baf.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/ff22e388720f.jpg"
+        "/cdn/projects/palm-jebel-ali-frond-b/enrichment/07a67b2e786f.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-b/enrichment/42911063b84a.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-b/enrichment/d13bd48b30fe.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-b/enrichment/2f689f119baf.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-b/enrichment/ff22e388720f.jpg"
       ],
       "enrichedAt": "2026-07-09T11:28:55.904Z"
     },
@@ -21173,12 +21173,12 @@
       ],
       "brochureUrl": "https://www.nakheel.com/en/developments/nakheel-collections/palmjebelali",
       "images": [
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/85108f4986d5.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/42911063b84a.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/d13bd48b30fe.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/2f689f119baf.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/ff22e388720f.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-k/enrichment/5542045a538c.jpg"
+        "/cdn/projects/palm-jebel-ali-frond-d/enrichment/85108f4986d5.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-d/enrichment/42911063b84a.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-d/enrichment/d13bd48b30fe.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-d/enrichment/2f689f119baf.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-d/enrichment/ff22e388720f.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-d/enrichment/5542045a538c.jpg"
       ],
       "enrichedAt": "2026-07-09T11:29:36.438Z"
     },
@@ -21272,11 +21272,11 @@
       ],
       "brochureUrl": "https://www.nakheel.com/en/developments/nakheel-collections/palmjebelali",
       "images": [
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/07a67b2e786f.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/42911063b84a.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/d13bd48b30fe.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/2f689f119baf.jpg",
-        "/cdn/projects/palm-jebel-ali-frond-l/enrichment/ff22e388720f.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-k/enrichment/07a67b2e786f.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-k/enrichment/42911063b84a.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-k/enrichment/d13bd48b30fe.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-k/enrichment/2f689f119baf.jpg",
+        "/cdn/projects/palm-jebel-ali-frond-k/enrichment/ff22e388720f.jpg",
         "/cdn/projects/palm-jebel-ali-frond-k/enrichment/5542045a538c.jpg"
       ],
       "enrichedAt": "2026-07-09T11:31:07.299Z"
@@ -21951,8 +21951,8 @@
       ],
       "brochureUrl": "https://www.siniyah-island-uae.com/sobha-siniya-starline-beach-residences/",
       "images": [
-        "/cdn/projects/starline-beach-residences/enrichment/cb0740aea9ca.jpg",
-        "/cdn/projects/starline-beach-residences/enrichment/eea8c8d9cd4b.jpg",
+        "/cdn/projects/pristine-beach-residences/enrichment/cb0740aea9ca.jpg",
+        "/cdn/projects/pristine-beach-residences/enrichment/eea8c8d9cd4b.jpg",
         "/cdn/projects/pristine-beach-residences/enrichment/5b309b3168b0.webp",
         "/cdn/projects/pristine-beach-residences/enrichment/a64a0d82ce77.webp",
         "/cdn/projects/pristine-beach-residences/enrichment/756d7bb0f8ad.webp",
@@ -22820,11 +22820,11 @@
         "https://www.binayah.com/dubai-projects/rixos-downtown/"
       ],
       "images": [
-        "/cdn/projects/rixos-beach-residences-ll/enrichment/8cc9a380fa07.webp",
-        "/cdn/projects/rixos-beach-residences-ll/enrichment/4ea5a52c76ff.webp",
-        "/cdn/projects/rixos-beach-residences-ll/enrichment/3edfbde8cdea.webp",
-        "/cdn/projects/rixos-beach-residences-ll/enrichment/ecd1aa6a4122.webp",
-        "/cdn/projects/rixos-beach-residences-ll/enrichment/183b060a563e.webp",
+        "/cdn/projects/rixos-al-reem-residences/enrichment/8cc9a380fa07.webp",
+        "/cdn/projects/rixos-al-reem-residences/enrichment/4ea5a52c76ff.webp",
+        "/cdn/projects/rixos-al-reem-residences/enrichment/3edfbde8cdea.webp",
+        "/cdn/projects/rixos-al-reem-residences/enrichment/ecd1aa6a4122.webp",
+        "/cdn/projects/rixos-al-reem-residences/enrichment/183b060a563e.webp",
         "/cdn/projects/rixos-al-reem-residences/enrichment/b551322cd5c4.jpg"
       ],
       "enrichedAt": "2026-07-09T11:50:20.602Z"
@@ -23019,11 +23019,11 @@
       ],
       "brochureUrl": "https://topultraluxury.com/wp-content/uploads/tara-park-2-by-modon-main-450x310.webp",
       "images": [
-        "/cdn/projects/rotana-residences-south-tower/enrichment/8fe43a913be3.png",
-        "/cdn/projects/rotana-residences-south-tower/enrichment/30cce33c644e.png",
-        "/cdn/projects/rotana-residences-south-tower/enrichment/199503947aa9.png",
-        "/cdn/projects/rotana-residences-south-tower/enrichment/5be327bd55f1.png",
-        "/cdn/projects/rotana-residences-south-tower/enrichment/207cc6f0ab7f.png"
+        "/cdn/projects/rotana-residences-north-tower/enrichment/8fe43a913be3.png",
+        "/cdn/projects/rotana-residences-north-tower/enrichment/30cce33c644e.png",
+        "/cdn/projects/rotana-residences-north-tower/enrichment/199503947aa9.png",
+        "/cdn/projects/rotana-residences-north-tower/enrichment/5be327bd55f1.png",
+        "/cdn/projects/rotana-residences-north-tower/enrichment/207cc6f0ab7f.png"
       ],
       "enrichedAt": "2026-07-09T11:52:37.565Z"
     },
@@ -23552,12 +23552,12 @@
       ],
       "brochureUrl": "https://ggwcapitalre.com/storage/offplan/brochures/01KHXHFDN1NZW23B1GZE2R4KHJ.pdf",
       "images": [
-        "/cdn/projects/samana-ocean-pearl-2/enrichment/1df2615f8e51.jpg",
-        "/cdn/projects/samana-ocean-pearl-2/enrichment/51ef76dcc9f1.png",
-        "/cdn/projects/samana-ocean-pearl-2/enrichment/5fa84d83d711.png",
-        "/cdn/projects/samana-ocean-pearl-2/enrichment/50adff3bfc0a.png",
-        "/cdn/projects/samana-ocean-pearl-2/enrichment/81040c348db0.png",
-        "/cdn/projects/samana-ocean-pearl-2/enrichment/311447259a10.jpg"
+        "/cdn/projects/samana-ocean-pearl/enrichment/1df2615f8e51.jpg",
+        "/cdn/projects/samana-ocean-pearl/enrichment/51ef76dcc9f1.png",
+        "/cdn/projects/samana-ocean-pearl/enrichment/5fa84d83d711.png",
+        "/cdn/projects/samana-ocean-pearl/enrichment/50adff3bfc0a.png",
+        "/cdn/projects/samana-ocean-pearl/enrichment/81040c348db0.png",
+        "/cdn/projects/samana-ocean-pearl/enrichment/311447259a10.jpg"
       ],
       "enrichedAt": "2026-07-09T11:59:59.099Z"
     },
@@ -23705,7 +23705,7 @@
       ],
       "brochureUrl": "https://opr.ae/projects/sawa-apartments-in-al-mamsha-sharjah-by-alef#",
       "images": [
-        "/cdn/projects/suroor-4/enrichment/4b73a72284c6.jpg"
+        "/cdn/projects/sawa-2/enrichment/4b73a72284c6.jpg"
       ],
       "enrichedAt": "2026-07-09T12:03:31.776Z"
     },
@@ -23743,8 +23743,8 @@
       ],
       "brochureUrl": "https://opr.ae/projects/sea-glints-mansions-by-al-zorah-development-company#modal-brochure",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/sea-glints/enrichment/703320389170.png",
+        "/cdn/projects/sea-glints/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T12:04:10.543Z"
     },
@@ -24047,10 +24047,10 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/silena-dubai-islands-by-avenew-development",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/selina-at-dubai-islands/enrichment/8fea6d236171.webp",
         "/cdn/projects/selina-at-dubai-islands/enrichment/6a0d5d5f312d.webp",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/selina-at-dubai-islands/enrichment/703320389170.png",
+        "/cdn/projects/selina-at-dubai-islands/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T12:08:08.084Z"
     },
@@ -24405,12 +24405,12 @@
       ],
       "brochureUrl": "https://downloads.ctfassets.net/r2cfrvo3y08m/72iLqjVs9ZsugbYdYgAcNj/6fc8f58c13e2a075d186b4d87c011158/Sidr_Residences-Brochure-Eng.pdf",
       "images": [
-        "/cdn/projects/sidr-residences-tower-2/enrichment/d10cc6cf8924.png",
-        "/cdn/projects/sidr-residences-tower-2/enrichment/5f31b25ab0f1.png",
-        "/cdn/projects/sidr-residences-tower-2/enrichment/67134d214152.png",
-        "/cdn/projects/sidr-residences-tower-2/enrichment/c05f73d0221f.png",
-        "/cdn/projects/sidr-residences-tower-2/enrichment/70fe29676fb7.png",
-        "/cdn/projects/sidr-residences-tower-2/enrichment/31647a4f726f.png"
+        "/cdn/projects/sidr-residences/enrichment/d10cc6cf8924.png",
+        "/cdn/projects/sidr-residences/enrichment/5f31b25ab0f1.png",
+        "/cdn/projects/sidr-residences/enrichment/67134d214152.png",
+        "/cdn/projects/sidr-residences/enrichment/c05f73d0221f.png",
+        "/cdn/projects/sidr-residences/enrichment/70fe29676fb7.png",
+        "/cdn/projects/sidr-residences/enrichment/31647a4f726f.png"
       ],
       "enrichedAt": "2026-07-09T12:12:51.629Z"
     },
@@ -24575,8 +24575,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/sierra-by-iman-developers-at-dubai-motor-city",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/sierra-by-iman/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/sierra-by-iman/enrichment/8fea6d236171.webp",
         "/cdn/projects/sierra-by-iman/enrichment/5c308001df0d.jpg",
         "/cdn/projects/sierra-by-iman/enrichment/6fbfe1dcad46.jpg",
         "/cdn/projects/sierra-by-iman/enrichment/39937979ef34.jpg",
@@ -24759,12 +24759,12 @@
       "brochureUrl": "https://sobharealty.com/sites/default/files/2026-01/SOBHA%20SANCTUARY_MASTER_PLAN%20BROCHURE.pdf",
       "virtualTourUrl": "https://sobharealty.com/digital-walkthrough",
       "images": [
-        "/cdn/projects/the-willows-at-sobha-sanctuary/enrichment/86c1b4dafcc9.webp",
-        "/cdn/projects/the-willows-at-sobha-sanctuary/enrichment/8fdb244a5ee5.webp",
+        "/cdn/projects/sobha-sanctuary/enrichment/86c1b4dafcc9.webp",
+        "/cdn/projects/sobha-sanctuary/enrichment/8fdb244a5ee5.webp",
         "/cdn/projects/sobha-sanctuary/enrichment/1470e2d55aa6.webp",
         "/cdn/projects/sobha-sanctuary/enrichment/7e0b5dc8a6f8.webp",
-        "/cdn/projects/the-willows-at-sobha-sanctuary/enrichment/374b0c683fab.webp",
-        "/cdn/projects/the-willows-at-sobha-sanctuary/enrichment/5cbf0cfe61a7.webp"
+        "/cdn/projects/sobha-sanctuary/enrichment/374b0c683fab.webp",
+        "/cdn/projects/sobha-sanctuary/enrichment/5cbf0cfe61a7.webp"
       ],
       "enrichedAt": "2026-07-09T12:17:16.722Z"
     },
@@ -24868,7 +24868,7 @@
       "images": [
         "/cdn/projects/sobha-skyscape-aura/enrichment/2b53da02daf9.webp",
         "/cdn/projects/sobha-skyscape-aura/enrichment/863dfd41c4dc.webp",
-        "/cdn/projects/the-mansions/enrichment/a8772e37d35a.webp",
+        "/cdn/projects/sobha-skyscape-aura/enrichment/a8772e37d35a.webp",
         "/cdn/projects/sobha-skyscape-aura/enrichment/c5dbd49380e6.webp",
         "/cdn/projects/sobha-skyscape-aura/enrichment/9dc90c2e217f.webp",
         "/cdn/projects/sobha-skyscape-aura/enrichment/a62a313d0117.webp"
@@ -24912,8 +24912,8 @@
       ],
       "brochureUrl": "https://opr.ae/projects/sofitel-residences-dubai-by-azha-development#modal-brochure",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/sofitel-residences/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/sofitel-residences/enrichment/8fea6d236171.webp",
         "/cdn/projects/sofitel-residences/enrichment/e04be3857375.jpg",
         "/cdn/projects/sofitel-residences/enrichment/0abd752f2e53.jpg",
         "/cdn/projects/sofitel-residences/enrichment/1a8ac61e9854.jpg"
@@ -24958,8 +24958,8 @@
         "/cdn/projects/solaya-in-la-mer/enrichment/791e128af74a.png",
         "/cdn/projects/solaya-in-la-mer/enrichment/0da3cd25771e.png",
         "/cdn/projects/solaya-in-la-mer/enrichment/9e526a47292a.png",
-        "/cdn/projects/solaya-4-and-6/enrichment/fb9eb2b3bdde.png",
-        "/cdn/projects/solaya-4-and-6/enrichment/ba8c3397e611.png",
+        "/cdn/projects/solaya-in-la-mer/enrichment/fb9eb2b3bdde.png",
+        "/cdn/projects/solaya-in-la-mer/enrichment/ba8c3397e611.png",
         "/cdn/projects/solaya-in-la-mer/enrichment/305fa3dddfd9.png"
       ],
       "enrichedAt": "2026-07-09T12:20:06.143Z"
@@ -25056,7 +25056,7 @@
       "videoUrl": "https://meraas.com/assets/videos/solaya-presentation.mp4",
       "virtualTourUrl": "https://www.meraas.com/virtual-tours/solaya-5-tour",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/solaya-5-and-7/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T12:21:26.353Z"
     },
@@ -25422,12 +25422,12 @@
       ],
       "brochureUrl": "https://www.wasl.ae/en/project/wasl-gate/south-garden",
       "images": [
-        "/cdn/projects/south-garden-e/enrichment/3212c49890fa.webp",
-        "/cdn/projects/south-garden-e/enrichment/f97bb5bf4298.webp",
-        "/cdn/projects/south-garden-e/enrichment/d4f8db157799.webp",
-        "/cdn/projects/south-garden-e/enrichment/6339843d9a7f.webp",
-        "/cdn/projects/south-garden-e/enrichment/6f3d69d6784a.webp",
-        "/cdn/projects/south-garden-e/enrichment/aaca07362750.webp"
+        "/cdn/projects/south-garden-d/enrichment/3212c49890fa.webp",
+        "/cdn/projects/south-garden-d/enrichment/f97bb5bf4298.webp",
+        "/cdn/projects/south-garden-d/enrichment/d4f8db157799.webp",
+        "/cdn/projects/south-garden-d/enrichment/6339843d9a7f.webp",
+        "/cdn/projects/south-garden-d/enrichment/6f3d69d6784a.webp",
+        "/cdn/projects/south-garden-d/enrichment/aaca07362750.webp"
       ],
       "enrichedAt": "2026-07-09T12:27:04.517Z"
     },
@@ -25657,8 +25657,8 @@
       "videoUrl": "https://www.youtube.com/watch?v=r2hZuLvjfcE",
       "images": [
         "/cdn/projects/stamn-two/enrichment/06cd987d5178.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/stamn-two/enrichment/703320389170.png",
+        "/cdn/projects/stamn-two/enrichment/c5a8b386b8af.png",
         "/cdn/projects/stamn-two/enrichment/dbd4839fdce9.jpg",
         "/cdn/projects/stamn-two/enrichment/889f4be558bb.jpg",
         "/cdn/projects/stamn-two/enrichment/22175ce1f93c.jpg"
@@ -26062,7 +26062,7 @@
       ],
       "brochureUrl": "https://opr.ae/projects/studios-and-apartments-taj-wellington-mews-al-marjan-island#modal-brochure",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/taj-wellington-mews/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T12:34:56.131Z"
     },
@@ -26295,8 +26295,8 @@
       "brochureUrl": "https://www.binayah.com/dubai-projects/tetris-tower-at-jvc/",
       "images": [
         "/cdn/projects/tetris-tower/enrichment/c5f2a8683a6f.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/tetris-tower/enrichment/703320389170.png",
+        "/cdn/projects/tetris-tower/enrichment/c5a8b386b8af.png",
         "/cdn/projects/tetris-tower/enrichment/af4c79dbf86e.jpg",
         "/cdn/projects/tetris-tower/enrichment/85dbd9560dc4.jpg"
       ],
@@ -26602,11 +26602,11 @@
       ],
       "brochureUrl": "https://www.engelvoelkers.com/ae/en/off-plan/the-eden-sobha-central#Form",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/the-eden-at-sobha-central/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/the-eden-at-sobha-central/enrichment/8fea6d236171.webp",
         "/cdn/projects/the-eden-at-sobha-central/enrichment/66784ea9898e.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/the-eden-at-sobha-central/enrichment/703320389170.png",
+        "/cdn/projects/the-eden-at-sobha-central/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T12:43:23.642Z"
     },
@@ -26738,12 +26738,12 @@
       "brochureUrl": "https://sobharealty.com/sites/default/files/2026-01/SOBHA%20SANCTUARY_MASTER_PLAN%20BROCHURE.pdf",
       "virtualTourUrl": "https://sobharealty.com/digital-walkthrough",
       "images": [
-        "/cdn/projects/the-willows-at-sobha-sanctuary/enrichment/86c1b4dafcc9.webp",
-        "/cdn/projects/the-willows-at-sobha-sanctuary/enrichment/8fdb244a5ee5.webp",
-        "/cdn/projects/the-willows-at-sobha-sanctuary/enrichment/374b0c683fab.webp",
-        "/cdn/projects/the-willows-at-sobha-sanctuary/enrichment/5cbf0cfe61a7.webp",
-        "/cdn/projects/the-willows-at-sobha-sanctuary/enrichment/8ea058a1cea4.webp",
-        "/cdn/projects/the-willows-at-sobha-sanctuary/enrichment/55dac1b516c4.webp"
+        "/cdn/projects/the-greens-at-sobha-sanctuary/enrichment/86c1b4dafcc9.webp",
+        "/cdn/projects/the-greens-at-sobha-sanctuary/enrichment/8fdb244a5ee5.webp",
+        "/cdn/projects/the-greens-at-sobha-sanctuary/enrichment/374b0c683fab.webp",
+        "/cdn/projects/the-greens-at-sobha-sanctuary/enrichment/5cbf0cfe61a7.webp",
+        "/cdn/projects/the-greens-at-sobha-sanctuary/enrichment/8ea058a1cea4.webp",
+        "/cdn/projects/the-greens-at-sobha-sanctuary/enrichment/55dac1b516c4.webp"
       ],
       "enrichedAt": "2026-07-09T12:45:02.623Z"
     },
@@ -26813,11 +26813,11 @@
       "brochureUrl": "https://www.binayah.com/dubai-projects/the-hillgate-by-ellington/",
       "videoUrl": "https://www.youtube.com/watch?v=RHdYiA3pNGI",
       "images": [
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/the-hillgate-by-ellington/enrichment/703320389170.png",
+        "/cdn/projects/the-hillgate-by-ellington/enrichment/c5a8b386b8af.png",
         "/cdn/projects/the-hillgate-by-ellington/enrichment/5522d53ec55d.webp",
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/the-hillgate-by-ellington/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/the-hillgate-by-ellington/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T12:46:08.281Z"
     },
@@ -27475,8 +27475,8 @@
       "images": [
         "/cdn/projects/the-valley-west/enrichment/1ef45e9b2ca5.webp",
         "/cdn/projects/the-valley-west/enrichment/988656287c82.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/the-valley-west/enrichment/703320389170.png",
+        "/cdn/projects/the-valley-west/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T12:57:56.686Z"
     },
@@ -27516,8 +27516,8 @@
       ],
       "brochureUrl": "https://www.tanamiproperties.com/Projects/Sun-Island-Villas-Brochure-Download",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/the-view-island/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/the-view-island/enrichment/8fea6d236171.webp",
         "/cdn/projects/the-view-island/enrichment/ed69538a0756.jpg",
         "/cdn/projects/the-view-island/enrichment/3221e667ee1b.jpg",
         "/cdn/projects/the-view-island/enrichment/741643bc0d00.webp",
@@ -27552,8 +27552,8 @@
       ],
       "brochureUrl": "https://www.tanamiproperties.com/Projects/Serenia-District-West-at-Jumeirah-Brochure-Download",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/west-residence/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/west-residence/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T12:58:49.223Z"
     },
@@ -27675,8 +27675,8 @@
       ],
       "brochureUrl": "https://dxboffplan.com/properties/treppan-serenique-residences-dubai-islands/#floor-plans",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/treppan-living-prive/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/treppan-living-prive/enrichment/8fea6d236171.webp",
         "/cdn/projects/treppan-living-prive/enrichment/f5575d8668f7.png",
         "/cdn/projects/treppan-living-prive/enrichment/0ade51a4559e.png",
         "/cdn/projects/treppan-living-prive/enrichment/a81512e3a6de.png",
@@ -27720,8 +27720,8 @@
       "brochureUrl": "https://www.bayut.com/buildings/treppan-tower-jvt/",
       "images": [
         "/cdn/projects/treppan-tower/enrichment/4f6982d37015.jpg",
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/treppan-tower/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/treppan-tower/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T13:06:39.970Z"
     },
@@ -28310,8 +28310,8 @@
       "brochureUrl": "https://www.bayut.com/download-brochure/velos-residence/",
       "images": [
         "/cdn/projects/velos-residence/enrichment/34b6a6900a05.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png"
+        "/cdn/projects/velos-residence/enrichment/703320389170.png",
+        "/cdn/projects/velos-residence/enrichment/c5a8b386b8af.png"
       ],
       "enrichedAt": "2026-07-09T13:14:57.239Z"
     },
@@ -28387,8 +28387,8 @@
       ],
       "brochureUrl": "https://www.tanamiproperties.com/Projects/VERDANIA-2-at-DLRC-Brochure-Download",
       "images": [
-        "/cdn/projects/verdan1a-phase-4/enrichment/9b3f1b68bd41.webp",
-        "/cdn/projects/voxa-pantheon/enrichment/688752e7b632.webp",
+        "/cdn/projects/verdania-phase-2-by-object-1-development/enrichment/9b3f1b68bd41.webp",
+        "/cdn/projects/verdania-phase-2-by-object-1-development/enrichment/688752e7b632.webp",
         "/cdn/projects/verdania-phase-2-by-object-1-development/enrichment/f8defa70c72a.webp"
       ],
       "enrichedAt": "2026-07-09T13:15:57.421Z"
@@ -28420,8 +28420,8 @@
       ],
       "brochureUrl": "https://www.tanamiproperties.com/Projects/VERDANIA-2-at-DLRC-Brochure-Download",
       "images": [
-        "/cdn/projects/verdan1a-phase-4/enrichment/9b3f1b68bd41.webp",
-        "/cdn/projects/voxa-pantheon/enrichment/688752e7b632.webp"
+        "/cdn/projects/verdan1a-phase-3-by-object-1/enrichment/9b3f1b68bd41.webp",
+        "/cdn/projects/verdan1a-phase-3-by-object-1/enrichment/688752e7b632.webp"
       ],
       "enrichedAt": "2026-07-09T13:16:30.927Z"
     },
@@ -28468,9 +28468,9 @@
       "videoUrl": "https://www.youtube.com/watch?v=-_VqOBERvls",
       "images": [
         "/cdn/projects/verdan1a-phase-4/enrichment/6c0b18090781.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
-        "/cdn/projects/voxa-pantheon/enrichment/688752e7b632.webp",
+        "/cdn/projects/verdan1a-phase-4/enrichment/703320389170.png",
+        "/cdn/projects/verdan1a-phase-4/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/verdan1a-phase-4/enrichment/688752e7b632.webp",
         "/cdn/projects/verdan1a-phase-4/enrichment/9b3f1b68bd41.webp"
       ],
       "enrichedAt": "2026-07-09T13:16:56.667Z"
@@ -28503,11 +28503,11 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/verdana-empire-by-reportage-properties-at-dubai-investment-park",
       "images": [
-        "/cdn/projects/voxa-pantheon/enrichment/688752e7b632.webp",
-        "/cdn/projects/verdana-x/enrichment/76cd259ad6ea.webp",
-        "/cdn/projects/verdana-x/enrichment/83919b20278a.webp",
-        "/cdn/projects/verdana-x/enrichment/45f3dd964056.webp",
-        "/cdn/projects/verdana-x/enrichment/6508b5294a0f.webp"
+        "/cdn/projects/verdana/enrichment/688752e7b632.webp",
+        "/cdn/projects/verdana/enrichment/76cd259ad6ea.webp",
+        "/cdn/projects/verdana/enrichment/83919b20278a.webp",
+        "/cdn/projects/verdana/enrichment/45f3dd964056.webp",
+        "/cdn/projects/verdana/enrichment/6508b5294a0f.webp"
       ],
       "enrichedAt": "2026-07-09T13:17:38.371Z"
     },
@@ -28543,9 +28543,9 @@
       "brochureUrl": "https://www.binayah.com/dubai-projects/verdana-townhouse-phase-2/",
       "images": [
         "/cdn/projects/verdana-2/enrichment/3c63e5aec6ea.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
-        "/cdn/projects/verdana-x/enrichment/b017fa3dc455.webp"
+        "/cdn/projects/verdana-2/enrichment/703320389170.png",
+        "/cdn/projects/verdana-2/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/verdana-2/enrichment/b017fa3dc455.webp"
       ],
       "enrichedAt": "2026-07-09T13:17:59.718Z"
     },
@@ -28767,9 +28767,9 @@
       "images": [
         "/cdn/projects/villa-blue-horizon/enrichment/899c39a88557.webp",
         "/cdn/projects/villa-blue-horizon/enrichment/cc8561b213b2.jpg",
-        "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
-        "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp"
+        "/cdn/projects/villa-blue-horizon/enrichment/703320389170.png",
+        "/cdn/projects/villa-blue-horizon/enrichment/c5a8b386b8af.png",
+        "/cdn/projects/villa-blue-horizon/enrichment/f5bb29a04896.webp"
       ],
       "enrichedAt": "2026-07-09T13:20:33.311Z"
     },
@@ -28825,8 +28825,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/nakheel-palm-jebel-ali-villa-cobalt",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/villa-cobalt/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/villa-cobalt/enrichment/8fea6d236171.webp",
         "/cdn/projects/villa-cobalt/enrichment/703320389170.png",
         "/cdn/projects/villa-cobalt/enrichment/c5a8b386b8af.png",
         "/cdn/projects/villa-cobalt/enrichment/bfd0e9a30b11.png"
@@ -28860,8 +28860,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/nakheel-palm-jebel-ali-villa-cyan-sky/brochure",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/villa-cyan-sky/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/villa-cyan-sky/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T13:21:40.651Z"
     },
@@ -28894,8 +28894,8 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/nakheel-palm-jebel-ali-villa-ocean-whisper",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/f5bb29a04896.webp",
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/ocean-whisper/enrichment/f5bb29a04896.webp",
+        "/cdn/projects/ocean-whisper/enrichment/8fea6d236171.webp",
         "/cdn/projects/ocean-whisper/enrichment/7953fb663f17.jpg",
         "/cdn/projects/ocean-whisper/enrichment/118f7d1b36b6.jpg",
         "/cdn/projects/ocean-whisper/enrichment/0327b280148f.jpg"
@@ -28936,7 +28936,7 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/nakheel-palm-jebel-ali-villa-wave-crest",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp",
+        "/cdn/projects/villa-wave-crest/enrichment/8fea6d236171.webp",
         "/cdn/projects/villa-wave-crest/enrichment/3a3c8b745c9f.jpg",
         "/cdn/projects/villa-wave-crest/enrichment/e2be2945750c.jpg",
         "/cdn/projects/villa-wave-crest/enrichment/5fc9252ed92c.jpg",
@@ -30097,7 +30097,7 @@
       ],
       "brochureUrl": "https://insiderealty.ae/en/projects/zephyra-residences-on-dubai-islands",
       "images": [
-        "/cdn/projects/zephyra-residences/enrichment/8fea6d236171.webp"
+        "/cdn/projects/zephyra-residences-2-by-arsenal-east/enrichment/8fea6d236171.webp"
       ],
       "enrichedAt": "2026-07-09T13:41:25.454Z"
     }
