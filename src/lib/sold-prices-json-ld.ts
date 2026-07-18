@@ -41,6 +41,7 @@ export function buildSoldPricesDatasetJsonLd(opts: {
       "size band (sqm)",
       "registration type (off-plan/ready)",
     ],
-    license: "Derived from Dubai Land Department open data; anonymized aggregates.",
+    license: "https://dubailand.gov.ae/en/open-data/",
+    usageInfo: "Derived from Dubai Land Department open data; anonymized aggregates.",
   };
 }

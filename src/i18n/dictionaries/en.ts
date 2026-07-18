@@ -1199,7 +1199,7 @@ const dict = {
       "searchPlaceholder": "Tower or developer name",
       "areaLabel": "Area",
       "allAreas": "All areas",
-      "showingCount": "Showing {count} projects with launch pricing. Resale rent trends require a licensed market feed — we surface off-plan benchmarks instead."
+      "showingCount": "Showing {count} projects at launch prices — launch benchmarks mapped by community"
     },
     "communityInsightsPage": {
       "heroTitle": "Community insights",

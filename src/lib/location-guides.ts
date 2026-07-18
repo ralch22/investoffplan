@@ -39,12 +39,29 @@ export async function getCommunityMetrics(): Promise<CommunityMetrics[]> {
 
   const family = new Map<string, number>();
   const total = new Map<string, number>();
+  let totalUnits = 0;
   for (const p of api.projects) {
     const slug = communitySlugFor(p.area);
     for (const u of p.units) {
+      totalUnits++;
       total.set(slug, (total.get(slug) ?? 0) + 1);
       if (FAMILY_TYPES.has(u.propertyType)) family.set(slug, (family.get(slug) ?? 0) + 1);
     }
+  }
+
+  // Degraded-source guard. getCatalogApi() can fall back to catalog-lite.json
+  // (every project there carries units: []) when D1 blips on a cold isolate.
+  // Computing familyShare=0 from that slice and caching it forever is how
+  // /locations/best-communities-for-families notFound()'d during an ISR
+  // revalidation and poisoned the shared incremental cache with a 404 for a
+  // page the build had rendered perfectly. A catalog with zero units across
+  // 1,700+ projects is not a market fact — it is a degraded read, and the
+  // only honest response is to throw: a failed revalidation keeps serving
+  // the last good page, while notFound() replaces it.
+  if (api.projects.length > 0 && totalUnits === 0) {
+    throw new Error(
+      "[location-guides] catalog has projects but zero units — degraded source (lite fallback?); refusing to compute metrics",
+    );
   }
 
   cache = communities.map((c: CommunitySummary) => {
