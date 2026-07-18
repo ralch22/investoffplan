@@ -4,6 +4,8 @@ import { sendGAEvent } from "@next/third-parties/google";
 
 export const ANALYTICS_EVENTS = {
   BROCHURE_OPEN: "brochure_open",
+  FLOORPLANS_GATE_OPEN: "floorplans_gate_open",
+  FLOORPLANS_UNLOCK: "floorplans_unlock",
   CONTACT_SUBMIT: "contact_submit",
   COMPARE_ADD: "compare_add",
   WHATSAPP_CLICK: "whatsapp_click",

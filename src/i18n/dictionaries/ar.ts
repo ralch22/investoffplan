@@ -642,7 +642,10 @@ export const ar: Dict = {
       "countSingular": "مخطط طابق واحد منشور لـ {name}.",
       "countPlural": "{count} مخطط طابق منشورة لـ {name}.",
       "all": "الكل",
-      "sqft": "{value} قدم مربع"
+      "sqft": "{value} قدم مربع",
+      "lockedCount": "{count} مخططات إضافية",
+      "lockedHint": "أدخل بياناتك مرة واحدة لعرض جميع التصاميم — وصول فوري دون أي التزام.",
+      "unlockCta": "افتح جميع المخططات"
     },
     "timeline": {
       "heading": "الجدول الزمني للمشروع",
@@ -773,6 +776,14 @@ export const ar: Dict = {
       "downloadPdf": "تحميل البروشور PDF",
       "requestViaWhatsapp": "اطلب البروشور عبر واتساب",
       "whatsappPrefill": "مرحباً، طلبت للتو بروشور {project} على invest off-plan. اسمي {name}. الهاتف: {phone}. يُرجى إرساله إلي!",
+      "closeAria": "إغلاق"
+    },
+    "floorPlans": {
+      "title": "افتح جميع مخططات الطوابق",
+      "subtitle": "اطّلع على جميع تصاميم {name} — أدخل بياناتك للوصول الفوري.",
+      "fullNameLabel": "الاسم الكامل",
+      "phoneNumberLabel": "رقم الهاتف",
+      "submit": "افتح المخططات",
       "closeAria": "إغلاق"
     },
     "preapproval": {
