@@ -11,6 +11,11 @@ const CACHE_CONTROL = "public, max-age=300, s-maxage=3600, stale-while-revalidat
 // param at its default) is dropped from the cache key so the dominant traffic
 // (default listing + one-filter views) collapses onto a handful of keys.
 const KEY_PARAMS: Array<[name: string, defaultValue: string]> = [
+  // Client cache-version key (catalog-browser.ts appends ?v=<scrapedAt> with
+  // force-cache). MUST stay in the edge key: if versions collapsed onto one
+  // entry, a post-ingest request could be served the previous week's body and
+  // the browser would then pin that stale body under the NEW version URL.
+  ["v", ""],
   ["q", ""],
   ["city", "all"],
   ["propertyType", "all"],
