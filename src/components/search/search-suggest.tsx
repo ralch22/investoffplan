@@ -6,13 +6,9 @@ import type { Dict } from "@/i18n";
 import { useI18n } from "@/i18n/locale-provider";
 import { interpolate, localePath, type Locale } from "@/i18n/config";
 import { ANALYTICS_EVENTS, trackEvent } from "@/lib/analytics";
-import { fetchCatalogApi } from "@/lib/catalog-browser";
+import { fetchCatalogApi, fetchSuggestIndex } from "@/lib/catalog-browser";
 import type { CatalogApi, FlatUnit } from "@/lib/catalog-core";
-import {
-  buildSuggestIndex,
-  normText,
-  type SuggestIndex,
-} from "@/lib/suggest-index";
+import { normText, type SuggestIndex } from "@/lib/suggest-index";
 import { parseSmartQuery, type SmartQueryResult } from "@/lib/smart-query";
 import { SEARCH_ALIASES, type AliasKind } from "@/lib/search-aliases";
 import { formatPrice, propertyTypeLabel } from "@/lib/format";
@@ -25,22 +21,39 @@ import { cn } from "@/lib/cn";
 // ---------------------------------------------------------------------------
 
 interface SuggestData {
-  api: CatalogApi;
   index: SuggestIndex;
-  units: FlatUnit[];
+  /** Present only once the full catalog has been lazily loaded (smart counts). */
+  api?: CatalogApi;
+  units?: FlatUnit[];
 }
 
 let suggestDataPromise: Promise<SuggestData> | null = null;
+let fullDataPromise: Promise<SuggestData> | null = null;
 
+// Suggestions match against the dedicated ~10×-smaller suggest index — the
+// full catalog (units and all) is NOT on the first-keystroke path anymore.
 function loadSuggestData(): Promise<SuggestData> {
   if (!suggestDataPromise) {
-    suggestDataPromise = fetchCatalogApi().then((api) => ({
-      api,
-      index: buildSuggestIndex(api),
-      units: api.flattenCatalogUnits(),
-    }));
+    suggestDataPromise = fetchSuggestIndex().then((index) => ({ index }));
   }
   return suggestDataPromise;
+}
+
+// Upgrade path: unit-level "→ N results" counts on smart queries need the
+// full catalog. Loaded lazily on the first structured parse; until it lands
+// the smart row simply renders without a count (the pre-existing degraded
+// label), so suggestions never wait on the big payload.
+function loadFullSuggestData(): Promise<SuggestData> {
+  if (!fullDataPromise) {
+    fullDataPromise = Promise.all([loadSuggestData(), fetchCatalogApi()]).then(
+      ([base, api]) => ({
+        index: base.index,
+        api,
+        units: api.flattenCatalogUnits(),
+      }),
+    );
+  }
+  return fullDataPromise;
 }
 
 interface YieldCommunity {
@@ -304,8 +317,10 @@ export function SearchSuggest({
   }, [value]);
 
   const ensureData = useCallback(() => {
+    // prev ?? d: never downgrade already-upgraded data (with units) back to
+    // the index-only object on a later focus.
     void loadSuggestData()
-      .then((d) => setData(d))
+      .then((d) => setData((prev) => prev ?? d))
       .catch(() => undefined);
   }, []);
 
@@ -315,6 +330,22 @@ export function SearchSuggest({
     if (!query) return null;
     return parseSmartQuery(query, data?.index ?? EMPTY_INDEX);
   }, [query, data]);
+
+  // First structured parse → lazily pull the full catalog so the smart row
+  // can show its live result count. Suggestions render without waiting.
+  useEffect(() => {
+    if (!parse || data?.units) return;
+    if (parse.intent === "yield" || structuredCount(parse) < 1) return;
+    let active = true;
+    void loadFullSuggestData()
+      .then((d) => {
+        if (active) setData(d);
+      })
+      .catch(() => undefined);
+    return () => {
+      active = false;
+    };
+  }, [parse, data]);
 
   // Lazy-load yield data only for yield-intent queries.
   useEffect(() => {
@@ -374,7 +405,10 @@ export function SearchSuggest({
       // (1) Smart interpretation row — needs no catalog data except the count.
       const serp = smartSerp(parse);
       smartHref = serp.href;
-      const count = data ? data.api.filterUnits(data.units, serp.filters).length : null;
+      const count =
+        data?.api && data.units
+          ? data.api.filterUnits(data.units, serp.filters).length
+          : null;
       const label =
         count === null
           ? smartLabel(parse, dict, locale)
