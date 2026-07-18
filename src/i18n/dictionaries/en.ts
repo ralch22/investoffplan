@@ -640,7 +640,10 @@ const dict = {
       "countSingular": "1 layout published for {name}.",
       "countPlural": "{count} layouts published for {name}.",
       "all": "All",
-      "sqft": "{value} sqft"
+      "sqft": "{value} sqft",
+      "lockedCount": "{count} more floor plans",
+      "lockedHint": "Enter your details once to view every layout — instant access, no obligation.",
+      "unlockCta": "Unlock all floor plans"
     },
     "timeline": {
       "heading": "Project timeline",
@@ -771,6 +774,14 @@ const dict = {
       "downloadPdf": "Download PDF brochure",
       "requestViaWhatsapp": "Request brochure via WhatsApp",
       "whatsappPrefill": "Hi, I just requested the brochure for {project} on invest off-plan. My name is {name}. Phone: {phone}. Please send it to me!",
+      "closeAria": "Close"
+    },
+    "floorPlans": {
+      "title": "Unlock all floor plans",
+      "subtitle": "See every layout for {name} — enter your details for instant access.",
+      "fullNameLabel": "Full name",
+      "phoneNumberLabel": "Phone number",
+      "submit": "Unlock floor plans",
       "closeAria": "Close"
     },
     "preapproval": {
