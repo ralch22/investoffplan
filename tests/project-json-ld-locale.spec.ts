@@ -34,7 +34,7 @@ function project(partial: Partial<Project> = {}): Project {
     unitCount: units.length,
     whatsapp: "971500000000",
     units,
-    brochureUrl: "https://example.com/brochure.pdf",
+    brochureUrl: "/cdn/projects/sample-residences/brochure.pdf",
     ...partial,
   };
 }

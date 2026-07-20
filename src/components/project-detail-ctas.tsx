@@ -69,7 +69,6 @@ export function ProjectDetailCtas({
     <>
       <div className="mt-6 hidden flex-wrap gap-3 md:flex">
         <BrochureButton
-          url={brochureUrl || "#brochure-request"}
           projectName={projectName}
           variant="hero"
           onOpenModal={() => setBrochureOpen(true)}

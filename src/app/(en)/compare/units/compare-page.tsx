@@ -29,7 +29,7 @@ import {
   type CompareAreaStats,
   type CompareStatsMap,
 } from "@/lib/compare-stats";
-import { resolveBrochureUrl } from "@/lib/brochure";
+import { hasDownloadableBrochure } from "@/lib/brochure";
 import { CompactMediaGallery } from "@/components/compact-media-gallery";
 import { DeveloperAttribution } from "@/components/developer-attribution";
 import { PaymentPlanBar } from "@/components/compare/payment-plan-bar";
@@ -142,7 +142,7 @@ export function ComparePage({
     {
       label: dict.common.brochure,
       render: (item) =>
-        resolveBrochureUrl(item.project)
+        hasDownloadableBrochure(item.project)
           ? dict.compare.pdfReady
           : dict.pdp.keyFacts.onRequest,
     },

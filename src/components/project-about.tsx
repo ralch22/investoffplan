@@ -10,7 +10,6 @@ const DESCRIPTION_TRUNCATE_CHARS = 4000;
 
 interface ProjectAboutProps {
   enrichment: ProjectEnrichment | null;
-  brochureUrl?: string;
   videoUrl?: string;
   description?: string;
   amenities?: string[];
@@ -29,7 +28,6 @@ function stripHtml(html: string): string {
 
 export function ProjectAbout({
   enrichment,
-  brochureUrl,
   videoUrl,
   description,
   amenities: amenitiesProp,
@@ -38,7 +36,6 @@ export function ProjectAbout({
 }: ProjectAboutProps) {
   const about = getDictionary(locale).pdp.about;
   const clean = (u?: string) => (u && u !== "#" ? u : undefined);
-  const brochure = clean(brochureUrl) || clean(enrichment?.brochureUrl);
   const video = clean(videoUrl) || clean(enrichment?.videoUrl);
   const catalogAmenities = amenitiesProp ?? [];
   const enrichmentAmenities = Array.isArray(enrichment?.facts.amenities)
@@ -55,7 +52,7 @@ export function ProjectAbout({
   const proseText =
     aboutText && aboutText.trim().length > 0 ? aboutText : factualFallback;
 
-  if (!proseText && !hasRichHtml && !brochure && !video && amenities.length === 0) {
+  if (!proseText && !hasRichHtml && !video && amenities.length === 0) {
     return null;
   }
 
@@ -107,28 +104,16 @@ export function ProjectAbout({
         </div>
       ) : null}
 
-      {(brochure || video) && (
+      {video ? (
         <div className="flex flex-wrap gap-3">
-          {brochure ? (
-            <a
-              href={brochure}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full bg-brand px-6 py-3 text-sm font-bold text-white shadow-elevation-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-elevation-lg"
-            >
-              {about.downloadBrochure}
-            </a>
-          ) : null}
-          {video ? (
-            <a
-              href="#media"
-              className="inline-flex items-center rounded-full border-2 border-brand px-6 py-3 text-sm font-bold text-brand shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand hover:text-white"
-            >
-              {about.watchVideo}
-            </a>
-          ) : null}
+          <a
+            href="#media"
+            className="inline-flex items-center rounded-full border-2 border-brand px-6 py-3 text-sm font-bold text-brand shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand hover:text-white"
+          >
+            {about.watchVideo}
+          </a>
         </div>
-      )}
+      ) : null}
     </ScrollReveal>
   );
 }

@@ -1,5 +1,5 @@
 import { cityLabel } from "@/lib/format";
-import { resolveBrochureUrl } from "@/lib/brochure";
+import { hostedBrochureUrl, resolveBrochureUrl } from "@/lib/brochure";
 import { hasPaymentPlan } from "@/lib/investment-metrics";
 import { parseMedia } from "@/lib/media";
 import type { Project } from "@/lib/types";
@@ -66,7 +66,9 @@ export function buildProjectJsonLd(opts: {
     .filter((src): src is string => Boolean(src))
     .slice(0, 8);
 
-  const brochure = resolveBrochureUrl(project);
+  // Self-hosted brochures only — never emit a raw PropertyFinder/third-party
+  // URL into structured data.
+  const brochure = hostedBrochureUrl(resolveBrochureUrl(project));
 
   // No stated price → no offers block: `lowPrice: 0` is schema spam and
   // renders "From AED 0" in rich results (8 live Emaar projects hit this).
