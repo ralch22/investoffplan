@@ -6,6 +6,7 @@ export interface LeadSubmission {
     | "contact-cta"
     | "brochure"
     | "floorplans"
+    | "placements"
     | "newsletter"
     | "mortgage-preapproval"
     | "advisor";

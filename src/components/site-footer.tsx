@@ -143,6 +143,7 @@ export function SiteFooter() {
               <LicenseBadge />
             </div>
             <div className="flex gap-5">
+              <Link href={localePath(locale, "/feature-your-project")} className="hover:text-white">{dict.footer.featureProject}</Link>
               <Link href={localePath(locale, "/privacy-policy")} className="hover:text-white">{dict.footer.privacy}</Link>
               <Link href={localePath(locale, "/cookie-policy")} className="hover:text-white">{dict.footer.cookies}</Link>
             </div>
