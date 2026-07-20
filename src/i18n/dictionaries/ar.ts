@@ -684,6 +684,37 @@ export const ar: Dict = {
       "downloadBrochure": "تحميل البروشور ←",
       "watchVideo": "شاهد الفيديو"
     },
+    "suitability": {
+      "headingLead": "لمن",
+      "headingEm": "هذا المشروع؟",
+      "caption": "قراءة سريعة لمن يناسبه هذا المشروع، بناءً على تصاميمه ومرافقه وبيانات سوق المجتمع.",
+      "disclaimer": "إرشاد استرشادي مبني على بيانات المشروع والمجتمع — وليس نصيحة شخصية. يُرجى تأكيد التفاصيل مع فريقنا.",
+      "audiences": {
+        "family": "العائلات",
+        "investor": "المستثمرون",
+        "lifestyle": "باحثو نمط الحياة"
+      },
+      "tiers": {
+        "strong": "ملاءمة قوية",
+        "good": "ملاءمة جيدة"
+      },
+      "reasons": {
+        "familyBedsMix": "{value} من الوحدات بغرفتَي نوم أو أكثر",
+        "familyAmenities": "مرافق عائلية في الموقع (مناطق لعب، حدائق)",
+        "familyHomeTypes": "فلل وتاون هاوس متاحة",
+        "familyPaymentPlan": "خطة سداد ({value}) تسهّل ميزانية العائلة",
+        "investorYield": "عائد إيجاري إجمالي ~{value} في هذا المجتمع",
+        "investorEntryPrice": "سعر الإطلاق أقل بـ ~{value} من أسعار البيع الأخيرة في المنطقة",
+        "investorLiquidity": "{value} عملية بيع حديثة هنا — سوق إعادة بيع نشط",
+        "investorPostHandover": "خطة سداد بعد التسليم ({value})",
+        "investorLowDownPayment": "دفعة أولى منخفضة ({value})",
+        "investorNearHandover": "قريب من التسليم ({value}) — فترة احتفاظ أقصر حتى الدخل الإيجاري",
+        "lifestyleAmenities": "مرافق فندقية (سبا، مسابح، صالات)",
+        "lifestyleWaterfront": "إطلالة على الواجهة البحرية / المارينا",
+        "lifestyleCompactMix": "{value} استوديوهات وغرفة نوم واحدة — سهلة الإقفال والمغادرة",
+        "lifestylePenthouse": "بنتهاوس متاح"
+      }
+    },
     "factualSummary": {
       "intro": "{name} هو مشروع على الخارطة من تطوير {developer} في {location}.",
       "introTyped": "{name} هو مشروع {type} على الخارطة من تطوير {developer} في {location}.",
