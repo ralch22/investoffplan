@@ -179,7 +179,7 @@ export async function buildGroups(): Promise<Entry[][]> {
   }));
 
   const arStaticPaths = [
-    "/ar", "/ar/about", "/ar/contact", "/ar/projects", "/ar/communities",
+    "/ar", "/ar/about", "/ar/contact", "/ar/feature-your-project", "/ar/projects", "/ar/communities",
     "/ar/market-report", "/ar/market-report/archive",
     "/ar/developers", "/ar/guides", "/ar/news", "/ar/faq", "/ar/compare",
     "/ar/compare-projects", "/ar/compare-developers",
