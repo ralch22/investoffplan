@@ -56,13 +56,22 @@ test("catalog hotlinks no third-party assets", () => {
   assert.equal(offenders.length, 0, summarise(offenders));
 });
 
-test("enrichment store hotlinks no third-party images", () => {
-  const store = loadJson<{ projects: Record<string, { images?: string[] }> }>(
-    "data/project-enrichments.json",
-  );
+test("enrichment store hotlinks no third-party images or brochures", () => {
+  const store = loadJson<{
+    projects: Record<string, { images?: string[]; brochureUrl?: string | null }>;
+  }>("data/project-enrichments.json");
   if (!store) return;
-  const offenders = Object.values(store.projects).flatMap((e) =>
-    (e.images ?? []).filter(isExternalAsset),
-  );
+  // brochureUrl is surfaced only when it is a self-hosted /cdn PDF
+  // (src/lib/brochure.ts hostedBrochureUrl); an external value is a dead hotlink
+  // to a competitor landing page that never reaches users AND is never mirrored.
+  // Fix: npx tsx scripts/clean-enrichment-brochures.ts (nulls non-/cdn values).
+  //
+  // videoUrl (YouTube/Vimeo) and virtualTourUrl (Matterport/360°) are NOT flagged
+  // on purpose: they are intentional external embeds the PDP renders as links,
+  // not page assets we mirror onto R2/CDN.
+  const offenders = Object.values(store.projects).flatMap((e) => [
+    ...(e.images ?? []).filter(isExternalAsset),
+    ...(isExternalAsset(e.brochureUrl) ? [e.brochureUrl] : []),
+  ]);
   assert.equal(offenders.length, 0, summarise(offenders));
 });
