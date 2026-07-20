@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { PageShell } from "@/components/page-shell";
 import { communitySlugFor } from "@/lib/community-slug";
 import { ProjectAbout } from "@/components/project-about";
+import { ProjectSuitability } from "@/components/project-suitability";
+import { suitabilityScores } from "@/lib/suitability";
 import { ProjectKeyFacts } from "@/components/project-key-facts";
 import { ProjectLocationSection } from "@/components/project-location-section";
 import { ProjectTimeline } from "@/components/project-timeline";
@@ -201,6 +203,7 @@ export default async function ProjectDetailPage({
 
   const enrichment = getEnrichment(slug);
   const dldStats = getAreaStats(project.area);
+  const suitability = suitabilityScores(project, dldStats);
   const dldSource = getDldSource();
   const dldSpread = getOffplanVsReady(project.area);
   const pfFaqs = project.pfFaqs ?? [];
@@ -558,6 +561,8 @@ export default async function ProjectDetailPage({
           locale={locale}
           factualFallback={factualAbout}
         />
+
+        <ProjectSuitability scores={suitability} locale={locale} />
 
         <ProjectUnitRanges units={project.units} locale={locale} />
 

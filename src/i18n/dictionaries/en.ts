@@ -682,6 +682,37 @@ const dict = {
       "downloadBrochure": "Download brochure →",
       "watchVideo": "Watch video"
     },
+    "suitability": {
+      "headingLead": "Who is this",
+      "headingEm": "for?",
+      "caption": "A quick read on who this project tends to suit, based on its layouts, amenities, and the community's market data.",
+      "disclaimer": "Indicative guidance from project and community data — not personal advice. Confirm details with our team.",
+      "audiences": {
+        "family": "Families",
+        "investor": "Investors",
+        "lifestyle": "Lifestyle buyers"
+      },
+      "tiers": {
+        "strong": "Strong fit",
+        "good": "Good fit"
+      },
+      "reasons": {
+        "familyBedsMix": "{value} of homes are 2 bedrooms or larger",
+        "familyAmenities": "Family amenities on-site (play areas, parks)",
+        "familyHomeTypes": "Villas & townhouses available",
+        "familyPaymentPlan": "Payment plan ({value}) eases family budgeting",
+        "investorYield": "~{value} gross rental yield in this community",
+        "investorEntryPrice": "Launch price ~{value} below recent sold prices in the area",
+        "investorLiquidity": "{value} recent sales here — an active resale market",
+        "investorPostHandover": "Post-handover payment plan ({value})",
+        "investorLowDownPayment": "Low down-payment entry ({value})",
+        "investorNearHandover": "Near handover ({value}) — shorter hold to rental income",
+        "lifestyleAmenities": "Resort-style amenities (spa, pools, lounges)",
+        "lifestyleWaterfront": "Waterfront / marina setting",
+        "lifestyleCompactMix": "{value} studios & 1-beds — lock-up-and-leave",
+        "lifestylePenthouse": "Penthouses available"
+      }
+    },
     "factualSummary": {
       "intro": "{name} is an off-plan development by {developer} in {location}.",
       "introTyped": "{name} is an off-plan {type} development by {developer} in {location}.",
