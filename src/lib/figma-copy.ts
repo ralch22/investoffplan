@@ -54,6 +54,34 @@ export const GUIDE_CARDS = [
     href: "/guides/foreign-investor-guide",
   },
   {
+    slug: "escrow-and-rera-protections",
+    title: "Escrow & RERA Protections",
+    description:
+      "How Dubai's escrow law and RERA protect your off-plan money — project escrow, milestone releases, and the 5% completion retention.",
+    href: "/guides/escrow-and-rera-protections",
+  },
+  {
+    slug: "developer-due-diligence",
+    title: "How to Vet a Developer",
+    description:
+      "Verify a developer and project before you pay — Dubai REST, RERA and DLD numbers, Oqood, and the red flags that should stop a deal.",
+    href: "/guides/developer-due-diligence",
+  },
+  {
+    slug: "off-plan-risks",
+    title: "Off-Plan Risks & Mitigations",
+    description:
+      "The real risks — delay, cancellation, market movement, handover quality — named honestly, each with a concrete mitigation.",
+    href: "/guides/off-plan-risks",
+  },
+  {
+    slug: "handover-and-snagging",
+    title: "Handover, Snagging & Defect Liability",
+    description:
+      "Inspect before you accept: the snagging process, title-deed transfer, and Dubai's 10-year structural / 1-year defect-liability periods.",
+    href: "/guides/handover-and-snagging",
+  },
+  {
     slug: "upcoming-projects",
     title: "Upcoming Projects to Watch",
     description:
