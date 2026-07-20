@@ -4,11 +4,11 @@ import { getHeroImage } from "@/lib/area-images";
 import { FeatureYourProjectView } from "@/components/feature-your-project-view";
 
 export const metadata: Metadata = {
-  title: "Feature Your Project — Advertise on invest off-plan",
+  title: "أبرِز مشروعك — أعلن على invest off-plan",
   description:
-    "Developers and brokers: feature your Dubai off-plan project on invest off-plan — homepage placement, search visibility, and priority lead routing. Request a tailored proposal.",
+    "للمطوّرين والوسطاء: أبرِز مشروعك على الخارطة في دبي على invest off-plan — إبراز في الصفحة الرئيسية، وظهور في البحث، وتوجيه أولوي للعملاء المحتملين. اطلب عرضاً مخصّصاً.",
   alternates: {
-    canonical: `${getSiteUrl()}/feature-your-project`,
+    canonical: `${getSiteUrl()}/ar/feature-your-project`,
     languages: {
       "x-default": `${getSiteUrl()}/feature-your-project`,
       en: `${getSiteUrl()}/feature-your-project`,
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export default async function FeatureYourProjectPage() {
+export default async function ArFeatureYourProjectPage() {
   const heroImage = await getHeroImage();
-  return <FeatureYourProjectView locale="en" heroImage={heroImage} />;
+  return <FeatureYourProjectView locale="ar" heroImage={heroImage} />;
 }
