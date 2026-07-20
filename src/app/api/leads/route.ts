@@ -34,6 +34,7 @@ const FORM_TYPES = new Set([
   "contact-cta",
   "brochure",
   "floorplans",
+  "placements",
   "newsletter",
   "mortgage-preapproval",
   "advisor",

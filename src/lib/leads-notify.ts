@@ -22,6 +22,7 @@ const SOURCE_LABELS: Record<string, string> = {
   brochure: "Brochure request",
   floorplans: "Floor-plan unlock",
   "mortgage-preapproval": "Mortgage pre-approval",
+  placements: "Placement enquiry",
   newsletter: "Newsletter signup",
   advisor: "AI advisor lead",
 };

@@ -120,6 +120,7 @@ const dict = {
       "successPrefix": "You're subscribed — we'll send launch alerts to",
       "successSuffix": "."
     },
+    "featureProject": "Feature Your Project",
     "privacy": "Privacy",
     "cookies": "Cookies",
     "legal": "© {year} invest off-plan"
@@ -845,6 +846,51 @@ const dict = {
       "messageWhatLooking": "Tell us what you're looking for",
       "submitFailed": "Unable to submit. Please try again.",
       "subscribeFailed": "Unable to subscribe. Please try again."
+    }
+  },
+  "featureProject": {
+    "hero": {
+      "title": "Feature your project",
+      "subtitle": "Put your Dubai off-plan development in front of active, high-intent buyers on invest off-plan."
+    },
+    "included": {
+      "home": {
+        "title": "Homepage feature",
+        "body": "A featured slot on the homepage grid, clearly labelled “Featured”, above the organic listings."
+      },
+      "search": {
+        "title": "Search visibility",
+        "body": "Priority placement in relevant search and community results, so your project is seen first by matched buyers."
+      },
+      "leads": {
+        "title": "Priority lead routing",
+        "body": "Enquiries on a featured project are tagged and routed to your team first, with priority follow-up."
+      }
+    },
+    "reach": {
+      "heading": "A focused Dubai off-plan audience",
+      "body": "invest off-plan is a dedicated off-plan portal — buyers here are researching new launches, not browsing rentals. Coverage across the market:",
+      "stats": [
+        { "value": "120", "label": "Dubai communities covered" },
+        { "value": "200+", "label": "developers tracked" },
+        { "value": "Weekly", "label": "catalog refresh" },
+        { "value": "EN + AR", "label": "bilingual audience" }
+      ]
+    },
+    "formHeading": "Request a proposal",
+    "formSubtitle": "Tell us about your project and we’ll send a tailored placement proposal — no obligation.",
+    "form": {
+      "company": "Company / brokerage",
+      "name": "Your name",
+      "email": "Work email",
+      "phone": "Phone (optional)",
+      "project": "Project or developer (optional)",
+      "message": "Anything else? (optional)",
+      "submit": "Request a proposal",
+      "companyRequired": "Company name is required",
+      "disclaimer": "We’ll reply with a tailored proposal. Pricing is quoted per campaign.",
+      "successTitle": "Thanks — we’ve received your enquiry.",
+      "successBody": "Our partnerships team will be in touch shortly with a tailored placement proposal."
     }
   },
   "format": {
