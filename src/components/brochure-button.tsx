@@ -5,7 +5,6 @@ import { useI18n } from "@/i18n/locale-provider";
 import { interpolate } from "@/i18n/config";
 
 interface BrochureButtonProps {
-  url: string;
   projectName: string;
   variant?: "card" | "hero" | "inline" | "ghost-light";
   className?: string;
@@ -13,7 +12,6 @@ interface BrochureButtonProps {
 }
 
 export function BrochureButton({
-  url,
   projectName,
   variant = "card",
   className,
@@ -30,9 +28,7 @@ export function BrochureButton({
   if (variant === "hero") {
     return (
       <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
+        href="#brochure-request"
         onClick={handleClick}
         className={cn(
           "inline-flex items-center justify-center rounded bg-brand px-9 py-5 text-xl font-bold text-white shadow-[0_2px_25px_rgba(0,137,182,0.3)] transition hover:bg-brand-dark",
@@ -47,9 +43,7 @@ export function BrochureButton({
   if (variant === "inline") {
     return (
       <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
+        href="#brochure-request"
         onClick={handleClick}
         className={cn(
           "inline-flex items-center gap-1 text-sm font-bold text-brand transition hover:text-brand-dark",
@@ -64,9 +58,7 @@ export function BrochureButton({
   if (variant === "ghost-light") {
     return (
       <a
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
+        href="#brochure-request"
         onClick={handleClick}
         aria-label={interpolate(dict.common.downloadBrochureFor, { name: projectName })}
         className={cn(
@@ -81,9 +73,7 @@ export function BrochureButton({
 
   return (
     <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
+      href="#brochure-request"
       onClick={handleClick}
       aria-label={interpolate(dict.common.downloadBrochureFor, { name: projectName })}
       className={cn(

@@ -21,7 +21,7 @@ import {
   propertyTypeLabel,
   sqftLabel,
 } from "@/lib/format";
-import { resolveBrochureUrl } from "@/lib/brochure";
+import { hostedBrochureUrl, resolveBrochureUrl } from "@/lib/brochure";
 import { hasPaymentPlan, unitPricePerSqft } from "@/lib/investment-metrics";
 import { getProjectGalleryImages } from "@/lib/project-gallery-images";
 import { cardEntrance, cardHoverLift } from "@/lib/motion";
@@ -88,7 +88,7 @@ export function ProjectCard({
   const handover = catalog?.handover ?? project.handover;
   const galleryImages = getProjectGalleryImages(project, catalog);
   const isSoldOut = (catalog?.status ?? project.status) === "sold-out";
-  const brochureUrl = resolveBrochureUrl(project);
+  const brochureUrl = hostedBrochureUrl(resolveBrochureUrl(project));
   const ppsf = unitPricePerSqft({ project, unit, catalog });
   const rawPlan = catalog?.paymentPlan || project.paymentPlan;
   const paymentLabel = hasPaymentPlan(rawPlan) ? rawPlan.trim() : null;
@@ -203,7 +203,6 @@ export function ProjectCard({
                 className="iop-btn-press focus-ring rounded-full border border-white/80 bg-transparent px-4 py-2 text-sm font-semibold text-white hover:bg-white hover:text-text-dark"
               />
               <BrochureButton
-                url={brochureUrl ?? "#brochure-request"}
                 projectName={project.name}
                 onOpenModal={() => setBrochureOpen(true)}
                 variant="ghost-light"

@@ -25,6 +25,7 @@ import { ProjectMedia } from "@/components/project-media";
 import { isEmbeddableVideo } from "@/lib/media";
 import { ShareButton } from "@/components/share-button";
 import { getProjectBySlug, slugify } from "@/lib/catalog";
+import { hostedBrochureUrl } from "@/lib/brochure";
 import { shouldNoindexProject } from "@/lib/catalog-core";
 import { getAreaInsightsForProject } from "@/lib/area-insights";
 import { ProjectLivingInArea } from "@/components/project-living-in-area";
@@ -537,7 +538,7 @@ export default async function ProjectDetailPage({
           projectName={project.name}
           projectSlug={project.slug}
           whatsapp={project.whatsapp}
-          brochureUrl={project.brochureUrl ?? enrichment?.brochureUrl}
+          brochureUrl={hostedBrochureUrl(project.brochureUrl ?? enrichment?.brochureUrl)}
           videoUrl={project.videoUrl ?? enrichment?.videoUrl}
           virtualTourUrl={enrichment?.virtualTourUrl}
         />
@@ -551,7 +552,6 @@ export default async function ProjectDetailPage({
 
         <ProjectAbout
           enrichment={enrichment}
-          brochureUrl={project.brochureUrl ?? enrichment?.brochureUrl}
           videoUrl={project.videoUrl ?? enrichment?.videoUrl}
           description={project.descriptionUnique ?? project.description}
           amenities={amenities}
@@ -662,7 +662,7 @@ export default async function ProjectDetailPage({
               unitCount={project.unitCount}
               handover={project.handover ?? dict.pdp.keyFacts.toBeAnnounced}
               whatsapp={project.whatsapp}
-              brochureUrl={project.brochureUrl ?? enrichment?.brochureUrl}
+              brochureUrl={hostedBrochureUrl(project.brochureUrl ?? enrichment?.brochureUrl)}
             />
           </aside>
         </div>
