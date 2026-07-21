@@ -202,24 +202,56 @@ export function ProjectsPage({
   }, []);
 
   // Save scroll position when navigating away (e.g. clicking into a PDP), so
-  // back-navigation can restore it once the correct page data has loaded.
+  // back-navigation can restore it. The router scrolls the window to the top
+  // as part of the outgoing navigation, so `window.scrollY` is already 0 by the
+  // time this cleanup runs — track the last real offset from a scroll listener
+  // and persist that instead.
+  const lastScrollYRef = useRef(0);
   useEffect(() => {
+    const onScroll = () => {
+      if (window.scrollY > 0) lastScrollYRef.current = window.scrollY;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      sessionStorage.setItem(SCROLL_KEY, String(window.scrollY));
+      window.removeEventListener("scroll", onScroll);
+      if (lastScrollYRef.current > 100) {
+        sessionStorage.setItem(SCROLL_KEY, String(lastScrollYRef.current));
+      }
     };
   }, []);
 
-  // Restore scroll after the first data load resolves. Only fires once.
+  // Restore the saved offset on back-navigation. Re-apply it across frames so
+  // it survives the client-catalog layout settling AND wins over Next's own
+  // scroll restoration, which intermittently drops the SERP back to the top on
+  // back-nav (a fresh scrollTo each frame until the offset holds, capped so it
+  // never fights a user who scrolls). Fires once, only when a saved offset
+  // exists (i.e. arriving back from a PDP), then clears it.
   const scrollRestoredRef = useRef(false);
   useEffect(() => {
-    if (scrollRestoredRef.current || apiLoading) return;
-    scrollRestoredRef.current = true;
+    if (scrollRestoredRef.current) return;
     const saved = sessionStorage.getItem(SCROLL_KEY);
     if (!saved) return;
+    scrollRestoredRef.current = true;
     sessionStorage.removeItem(SCROLL_KEY);
     const y = parseInt(saved, 10);
-    if (y > 100) window.scrollTo({ top: y, behavior: "instant" });
-  }, [apiLoading]);
+    if (!(y > 100)) return;
+    let raf = 0;
+    const start = performance.now();
+    let stableFrames = 0;
+    const apply = () => {
+      if (Math.abs(window.scrollY - y) > 2) {
+        window.scrollTo({ top: y, behavior: "instant" });
+        stableFrames = 0;
+      } else {
+        stableFrames += 1;
+      }
+      if (stableFrames < 3 && performance.now() - start < 1500) {
+        raf = requestAnimationFrame(apply);
+      }
+    };
+    raf = requestAnimationFrame(apply);
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   // Scroll to top when the user changes pages (but not on initial mount).
   const skipFirstPageScroll = useRef(true);

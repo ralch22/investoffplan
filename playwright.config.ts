@@ -40,9 +40,13 @@ export default defineConfig({
     // start the server there. Locally we still do the full prebuild→seed→build chain
     // so a cold `npx playwright test` works without extra setup.
     // D1 seed is required so /api/leads inserts and /api/catalog queries succeed.
+    // `next start` is wrapped by scripts/e2e-next-start.mjs, which filters Next 16's
+    // benign "Internal: NoFallbackError" stderr burst (logged for correct 404s on
+    // dynamicParams=false routes — content.spec.ts asserts unknown-slug 404s) so it
+    // doesn't drown real server errors in CI output.
     command: process.env.CI
-      ? `npx next start --port ${E2E_PORT}`
-      : `npm run prebuild && npm run db:migrate:local && npm run db:seed:local && NEXT_IS_BUILD=1 npm run build && npx next start --port ${E2E_PORT}`,
+      ? `node scripts/e2e-next-start.mjs --port ${E2E_PORT}`
+      : `npm run prebuild && npm run db:migrate:local && npm run db:seed:local && NEXT_IS_BUILD=1 npm run build && node scripts/e2e-next-start.mjs --port ${E2E_PORT}`,
     url: `${E2E_BASE}/projects`,
     reuseExistingServer: !process.env.CI && process.env.PW_REUSE_SERVER === "1",
     timeout: process.env.CI ? 120_000 : 480_000,
