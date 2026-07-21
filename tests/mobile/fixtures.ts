@@ -76,6 +76,33 @@ export async function settleChromeAtTop(page: Page) {
   await page.waitForTimeout(450); // translate transition is 300ms
 }
 
+/**
+ * Wait until the SERP's total document height stops changing — a concrete
+ * "list settled" signal. The SERP hydrates its card list from the async client
+ * catalog, so `data-hydrated` (the compare-bar's own mount flag) fires well
+ * before the full-length list exists. Scroll restoration on back-nav only
+ * reaches the saved offset once that full list is laid out, so timing specs
+ * must wait for the height to stabilize, not merely for hydration.
+ */
+export async function waitForStableScrollHeight(
+  page: Page,
+  { settleMs = 400, timeout = 15_000 }: { settleMs?: number; timeout?: number } = {},
+) {
+  const start = Date.now();
+  let last = -1;
+  let stableSince = Date.now();
+  while (Date.now() - start < timeout) {
+    const h = await page.evaluate(() => document.body.scrollHeight);
+    if (h > 0 && h === last) {
+      if (Date.now() - stableSince >= settleMs) return;
+    } else {
+      last = h;
+      stableSince = Date.now();
+    }
+    await page.waitForTimeout(100);
+  }
+}
+
 /** Navigate to the first PDP from the SERP; returns its pathname. */
 export async function gotoFirstPdp(page: Page): Promise<string> {
   await page.goto("/projects");

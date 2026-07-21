@@ -1,4 +1,11 @@
-import { test, expect, box, settleChromeAtTop, gotoFirstPdp } from "./fixtures";
+import {
+  test,
+  expect,
+  box,
+  settleChromeAtTop,
+  gotoFirstPdp,
+  waitForStableScrollHeight,
+} from "./fixtures";
 
 /**
  * Core mobile funnels at 390×844 (consent pre-denied — banner suppressed).
@@ -110,16 +117,27 @@ test("SERP: view toggles work and announce state", async ({ page }) => {
 test("SERP → PDP → back restores scroll position", async ({ page }) => {
   await page.goto("/projects");
   await page.waitForSelector('div[data-hydrated="true"]', { timeout: 30_000 });
+  const links = page.getByRole("link", { name: /view details/i });
+  await links.first().waitFor({ timeout: 30_000 });
+  // Let the client-catalog list finish rendering (height settles) so the saved
+  // offset is against the full-length page, then scroll deep and confirm the
+  // offset committed before navigating away.
+  await waitForStableScrollHeight(page);
   await page.evaluate(() => window.scrollTo(0, 1200));
-  await page.waitForTimeout(600); // let the scroll-save debounce run
-  const link = page.getByRole("link", { name: /view details/i }).first();
-  await link.click();
+  await expect
+    .poll(() => page.evaluate(() => window.scrollY), { timeout: 5_000 })
+    .toBeGreaterThan(600);
+
+  await links.first().click();
   await page.waitForURL(/\/projects\/[^/?#]+/);
+
   await page.goBack();
   await page.waitForSelector('div[data-hydrated="true"]', { timeout: 30_000 });
-  // Restore fires only after the card list renders — wait for it, then give
-  // the poll CI-runner headroom (10s flaked on the slower GitHub runner).
-  await page.getByRole("link", { name: /view details/i }).first().waitFor({ timeout: 30_000 });
+  await links.first().waitFor({ timeout: 30_000 });
+  // Wait for the list to re-render (height settles) so restoration has the
+  // full-length page to scroll within, then assert the offset was restored.
+  // `data-hydrated` alone (compare-bar mount) fires too early to gate this.
+  await waitForStableScrollHeight(page);
   await expect
     .poll(() => page.evaluate(() => window.scrollY), { timeout: 25_000 })
     .toBeGreaterThan(400);
