@@ -11,6 +11,7 @@
  * answers stay pure markdown text in the existing chat bubble).
  */
 import type { AdvisorCard, AdvisorCta } from "../types";
+import type { AdvisorArtifacts } from "../tools";
 import {
   IOP_A2UI,
   createSurface,
@@ -26,46 +27,78 @@ export interface ComposeAdvisorInput {
   cards: AdvisorCard[];
   /** Whether the advisor offered a callback (renders the inline lead form). */
   cta: AdvisorCta;
-  /** Last user question — seeds the lead-form message field. */
+  /** Last user question — seeds the lead-form + drives compare-intent layout. */
   lastQuestion?: string;
+  /** Structured tool side-outputs (mortgage inputs, …). */
+  artifacts?: AdvisorArtifacts;
 }
 
-/** Build a ProjectCard node with only the fields that are actually present. */
-function projectCardComponent(id: string, card: AdvisorCard): A2uiComponent {
-  const node: A2uiComponent = {
-    id,
-    component: IOP_A2UI.ProjectCard,
+/**
+ * Deterministic layout signal — we never ask the 8b model for a layout hint
+ * (its tool-call contract is fragile enough). EN + AR compare verbs.
+ */
+function hasCompareIntent(question?: string): boolean {
+  if (!question) return false;
+  return /\bcompare[ds]?\b|\bvs\.?\b|\bversus\b|قارن|مقارنة/i.test(question);
+}
+
+/** Drop undefined fields so the payload stays lean and schema-clean. */
+function cardProps(card: AdvisorCard): Record<string, unknown> {
+  const out: Record<string, unknown> = {
     slug: card.slug,
     name: card.name,
     developer: card.developer,
     area: card.area,
   };
-  if (card.imageUrl) node.imageUrl = card.imageUrl;
-  if (typeof card.fromPriceAed === "number") node.fromPriceAed = card.fromPriceAed;
-  if (card.handover) node.handover = card.handover;
-  if (card.beds?.length) node.beds = card.beds;
-  if (card.paymentPlan) node.paymentPlan = card.paymentPlan;
-  return node;
+  if (card.imageUrl) out.imageUrl = card.imageUrl;
+  if (typeof card.fromPriceAed === "number") out.fromPriceAed = card.fromPriceAed;
+  if (card.handover) out.handover = card.handover;
+  if (card.beds?.length) out.beds = card.beds;
+  if (card.paymentPlan) out.paymentPlan = card.paymentPlan;
+  return out;
+}
+
+/** Build a ProjectCard node with only the fields that are actually present. */
+function projectCardComponent(id: string, card: AdvisorCard): A2uiComponent {
+  return { id, component: IOP_A2UI.ProjectCard, ...cardProps(card) };
 }
 
 export function composeAdvisorA2ui(
   input: ComposeAdvisorInput,
 ): A2uiMessage[] | undefined {
-  const { surfaceId, cards, cta, lastQuestion } = input;
+  const { surfaceId, cards, cta, lastQuestion, artifacts } = input;
   const showLeadForm = cta === "lead-form";
+  const mortgage = artifacts?.mortgage;
   const hasCards = cards.length > 0;
+  // Two grounded projects + an explicit compare ask → side-by-side table
+  // instead of a stack of cards (the cards would just repeat the table).
+  const showCompare = cards.length >= 2 && hasCompareIntent(lastQuestion);
 
   // Nothing structured to render — let the text bubble carry the whole reply.
-  if (!hasCards && !showLeadForm) return undefined;
+  if (!hasCards && !showLeadForm && !mortgage) return undefined;
 
   const components: A2uiComponent[] = [];
   const childIds: string[] = [];
 
-  cards.forEach((card, i) => {
-    const id = `p-${i}`;
-    components.push(projectCardComponent(id, card));
-    childIds.push(id);
-  });
+  if (showCompare) {
+    components.push({
+      id: "cmp",
+      component: IOP_A2UI.CompareTable,
+      projects: cards.slice(0, 2).map(cardProps),
+    });
+    childIds.push("cmp");
+  } else {
+    cards.forEach((card, i) => {
+      const id = `p-${i}`;
+      components.push(projectCardComponent(id, card));
+      childIds.push(id);
+    });
+  }
+
+  if (mortgage) {
+    components.push({ id: "mortgage", component: IOP_A2UI.MortgagePanel, ...mortgage });
+    childIds.push("mortgage");
+  }
 
   if (showLeadForm) {
     const lead: A2uiComponent = { id: "lead", component: IOP_A2UI.LeadForm };

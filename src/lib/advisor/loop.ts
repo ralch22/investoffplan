@@ -86,7 +86,7 @@ export async function runAdvisor(
     };
   }
 
-  const ctx: ToolContext = { searchBinding, cardIndex: new Map() };
+  const ctx: ToolContext = { searchBinding, cardIndex: new Map(), artifacts: {} };
   const history = messages.slice(-MAX_HISTORY).map((m) => ({
     role: m.role,
     content: String(m.content).slice(0, 1500),
@@ -157,6 +157,7 @@ export async function runAdvisor(
         cards,
         cta,
         lastQuestion,
+        artifacts: ctx.artifacts,
       });
     } catch (error) {
       console.error(

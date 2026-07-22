@@ -66,9 +66,25 @@ interface AiSearchBinding {
   }): Promise<{ data?: Array<{ text?: string; item?: { key?: string } ; score?: number }> } & Record<string, unknown>>;
 }
 
+/**
+ * Structured side-outputs captured from tool runs, for the A2UI composer.
+ * The model only ever sees the prose return value; these are the grounded
+ * inputs the composer renders as rich UI.
+ */
+export interface AdvisorArtifacts {
+  /** Inputs of the last mortgage_estimate — the panel recomputes client-side. */
+  mortgage?: {
+    propertyPriceAed: number;
+    downPaymentPct: number;
+    annualRatePct: number;
+    termYears: number;
+  };
+}
+
 export interface ToolContext {
   searchBinding: AiSearchBinding | undefined;
   cardIndex: Map<string, AdvisorCard>;
+  artifacts: AdvisorArtifacts;
 }
 
 /** Execute one tool call; returns a string result for the model. */
@@ -142,13 +158,16 @@ export async function executeTool(
       case "mortgage_estimate": {
         const price = Number(args.propertyPriceAed);
         if (!Number.isFinite(price) || price <= 0) return "Invalid price.";
-        const result = calculateMortgage({
+        const input = {
           propertyPriceAed: price,
           downPaymentPct: Number(args.downPaymentPct) || 20,
           annualRatePct: 4.25,
           termYears: Number(args.termYears) || 25,
-          includeFees: true,
-        });
+        };
+        // Keep the structured inputs for the A2UI MortgagePanel (the string
+        // below is all the model ever sees).
+        ctx.artifacts.mortgage = input;
+        const result = calculateMortgage({ ...input, includeFees: true });
         return `Indicative mortgage at 4.25% p.a. (illustrative, not advice): monthly AED ${result.monthlyPaymentAed.toLocaleString("en-US")}, down payment AED ${result.downPaymentAed.toLocaleString("en-US")}, DLD fee AED ${result.dldFeeAed.toLocaleString("en-US")}, cash to close AED ${result.cashToCloseAed.toLocaleString("en-US")}. Free pre-approval at /tools/mortgage.`;
       }
       case "request_callback": {
