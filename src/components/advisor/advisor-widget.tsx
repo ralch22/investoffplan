@@ -1,26 +1,36 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/i18n/locale-provider";
-import { localePath } from "@/i18n/config";
 import { submitLead } from "@/lib/leads-client";
 import { TurnstileField } from "@/components/turnstile-field";
 import { WHATSAPP_PRIMARY } from "@/lib/contact-info";
-import { bedsLabel, formatPrice } from "@/lib/format";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/cn";
+import { AdvisorProjectCard } from "./a2ui/project-card";
+import type { A2uiMessage } from "@/lib/advisor/a2ui/messages";
 import type {
   AdvisorCard,
   AdvisorMessage,
   AdvisorResponse,
 } from "@/lib/advisor/types";
 
+// A2UI renderer is client-only and heavy (renderer + web_core + markdown-it) —
+// load it on demand so the site-wide FAB doesn't pay for it until an opted-in
+// advisor response actually carries an A2UI surface.
+const AdvisorA2uiSurface = dynamic(
+  () => import("./a2ui/surface").then((m) => m.AdvisorA2uiSurface),
+  { ssr: false },
+);
+
+const A2UI_CLIENT_ENABLED = process.env.NEXT_PUBLIC_ADVISOR_A2UI === "1";
+
 interface ChatEntry extends AdvisorMessage {
   cards?: AdvisorCard[];
   showLeadForm?: boolean;
+  a2ui?: A2uiMessage[];
 }
 
 export function AdvisorWidget() {
@@ -85,6 +95,7 @@ export function AdvisorWidget() {
         body: JSON.stringify({
           locale,
           messages: nextEntries.map(({ role, content: c }) => ({ role, content: c })),
+          a2uiSupported: A2UI_CLIENT_ENABLED,
         }),
       });
       const data = (await res.json()) as AdvisorResponse & { error?: string };
@@ -103,6 +114,7 @@ export function AdvisorWidget() {
           content: data.reply,
           cards: data.cards,
           showLeadForm: data.cta === "lead-form" && !leadDone,
+          a2ui: data.a2ui,
         },
       ]);
       setSuggestions(data.suggestions ?? []);
@@ -149,6 +161,72 @@ export function AdvisorWidget() {
       setLeadBusy(false);
     }
   }
+
+  // Called by the A2UI LeadForm after a successful client-side submit — mirrors
+  // sendLead's success path so both rendering modes behave identically.
+  function handleA2uiLeadSubmitted() {
+    setLeadDone(true);
+    setEntries((prev) => [...prev, { role: "assistant", content: t.leadThanks }]);
+  }
+
+  // Legacy structured render (project cards + inline lead form). Used directly
+  // when a turn has no A2UI surface, and as the A2UI error-boundary fallback.
+  const renderLegacyCards = (entry: ChatEntry) =>
+    entry.cards?.length ? (
+      <div className="mt-3 w-full space-y-2">
+        {entry.cards.map((card) => (
+          <AdvisorProjectCard key={card.slug} card={card} />
+        ))}
+      </div>
+    ) : null;
+
+  const renderLegacyLeadForm = () => (
+    <div className="mt-3 w-full space-y-3 rounded-2xl border border-border bg-white p-4 shadow-sm">
+      <p className="text-sm font-semibold text-text-dark">{t.leadTitle}</p>
+      <input
+        value={leadName}
+        onChange={(e) => setLeadName(e.target.value)}
+        placeholder={t.leadName}
+        aria-label={t.leadName}
+        autoComplete="name"
+        className="iop-input h-11 text-sm"
+      />
+      <input
+        value={leadPhone}
+        onChange={(e) => setLeadPhone(e.target.value)}
+        placeholder={t.leadPhone}
+        aria-label={t.leadPhone}
+        autoComplete="tel"
+        type="tel"
+        className="iop-input h-11 text-sm"
+      />
+      <TurnstileField
+        onToken={setLeadToken}
+        action="advisor-callback"
+        resetSignal={leadTokenReset}
+      />
+      {leadError ? (
+        <p className="text-xs font-medium text-brand" role="alert">
+          {leadError}
+        </p>
+      ) : null}
+      <button
+        type="button"
+        onClick={sendLead}
+        disabled={leadBusy}
+        className="iop-btn-press focus-ring w-full rounded-full bg-brand py-3 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
+      >
+        {leadBusy ? t.leadSending : t.leadSubmit}
+      </button>
+    </div>
+  );
+
+  const renderLegacyStructured = (entry: ChatEntry) => (
+    <>
+      {renderLegacyCards(entry)}
+      {entry.showLeadForm && !leadDone ? renderLegacyLeadForm() : null}
+    </>
+  );
 
   return (
     <>
@@ -256,52 +334,21 @@ export function AdvisorWidget() {
                         </div>
                       )}
                     </div>
-                    {entry.cards?.length ? (
-                      <div className="mt-3 w-full space-y-2">
-                        {entry.cards.map((card) => (
-                          <AdvisorCardView key={card.slug} card={card} />
-                        ))}
-                      </div>
-                    ) : null}
-                    {entry.showLeadForm && !leadDone ? (
-                      <div className="mt-3 w-full space-y-3 rounded-2xl border border-border bg-white p-4 shadow-sm">
-                        <p className="text-sm font-semibold text-text-dark">{t.leadTitle}</p>
-                        <input
-                          value={leadName}
-                          onChange={(e) => setLeadName(e.target.value)}
-                          placeholder={t.leadName}
-                          aria-label={t.leadName}
-                          autoComplete="name"
-                          className="iop-input h-11 text-sm"
-                        />
-                        <input
-                          value={leadPhone}
-                          onChange={(e) => setLeadPhone(e.target.value)}
-                          placeholder={t.leadPhone}
-                          aria-label={t.leadPhone}
-                          autoComplete="tel"
-                          type="tel"
-                          className="iop-input h-11 text-sm"
-                        />
-                        <TurnstileField
-                          onToken={setLeadToken}
-                          action="advisor-callback"
-                          resetSignal={leadTokenReset}
-                        />
-                        {leadError ? (
-                          <p className="text-xs font-medium text-brand" role="alert">
-                            {leadError}
-                          </p>
-                        ) : null}
-                        <button
-                          type="button"
-                          onClick={sendLead}
-                          disabled={leadBusy}
-                          className="iop-btn-press focus-ring w-full rounded-full bg-brand py-3 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
-                        >
-                          {leadBusy ? t.leadSending : t.leadSubmit}
-                        </button>
-                      </div>
+                    {entry.role === "assistant" ? (
+                      entry.a2ui?.length ? (
+                        <div className="mt-3 w-full">
+                          <AdvisorA2uiSurface
+                            messages={entry.a2ui}
+                            handlers={{
+                              leadDone,
+                              onLeadSubmitted: handleA2uiLeadSubmitted,
+                            }}
+                            fallback={renderLegacyStructured(entry)}
+                          />
+                        </div>
+                      ) : (
+                        renderLegacyStructured(entry)
+                      )
                     ) : null}
                   </div>
                 ))}
@@ -355,43 +402,6 @@ export function AdvisorWidget() {
         ) : null}
       </AnimatePresence>
     </>
-  );
-}
-
-function AdvisorCardView({ card }: { card: AdvisorCard }) {
-  const { locale, dict } = useI18n();
-  const t = dict.advisor;
-  return (
-    <div className="flex gap-4 rounded-2xl border border-border bg-white p-3 shadow-sm transition-colors hover:border-brand-muted">
-      {card.imageUrl ? (
-        <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-xl bg-surface-alt">
-          <Image src={card.imageUrl} alt="" fill className="object-cover" sizes="96px" />
-        </div>
-      ) : null}
-      <div className="min-w-0 flex-1 py-0.5">
-        <p className="truncate text-sm font-semibold text-text-dark">{card.name}</p>
-        <p className="truncate text-xs text-muted">
-          {card.developer} · {card.area}
-        </p>
-        <p className="mt-1 text-xs font-medium text-text-dark">
-          {card.fromPriceAed
-            ? `${t.from} ${formatPrice(card.fromPriceAed, "AED")}`
-            : ""}
-          {card.handover ? ` · ${card.handover}` : ""}
-        </p>
-        <p className="text-xs text-muted">
-          {card.beds?.length
-            ? `${card.beds.map((n) => bedsLabel(n, dict)).join("–")}`
-            : ""}
-        </p>
-        <Link
-          href={localePath(locale, `/projects/${card.slug}`)}
-          className="focus-ring mt-2 inline-block rounded-sm text-xs font-semibold text-brand hover:text-brand-dark"
-        >
-          {t.viewProject} →
-        </Link>
-      </div>
-    </div>
   );
 }
 

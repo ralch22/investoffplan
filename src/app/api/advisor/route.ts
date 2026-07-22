@@ -81,8 +81,13 @@ export async function POST(request: Request) {
     return NextResponse.json(capped);
   }
 
+  // A2UI is composed only when the client opted in AND the server flag is on —
+  // two independent kill switches, neither needing the other to deploy.
+  const a2uiEnabled =
+    body.a2uiSupported === true && process.env.ADVISOR_A2UI === "1";
+
   try {
-    const response = await runAdvisor(messages, locale);
+    const response = await runAdvisor(messages, locale, a2uiEnabled);
     return NextResponse.json(response);
   } catch (error) {
     // Any AI failure degrades to the human channel — never a 500 to the widget.

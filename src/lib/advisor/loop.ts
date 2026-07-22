@@ -5,6 +5,7 @@ import {
 } from "@/lib/contact-info";
 import { executeTool, TOOL_DEFINITIONS, type ToolContext } from "./tools";
 import type { AdvisorCard, AdvisorMessage, AdvisorResponse } from "./types";
+import { composeAdvisorA2ui } from "./a2ui/composer";
 
 // @cf/meta/llama-3.1-8b-instruct was deprecated 2026-05-30 (Workers AI error
 // 5028) — it took the advisor silently offline (the route caught the error and
@@ -60,6 +61,7 @@ function buildSuggestions(cards: AdvisorCard[], hadCallback: boolean): string[] 
 export async function runAdvisor(
   messages: AdvisorMessage[],
   locale: "en" | "ar",
+  a2uiEnabled = false,
 ): Promise<AdvisorResponse> {
   let ai: AiBinding | undefined;
   let searchBinding: ToolContext["searchBinding"] | undefined;
@@ -141,6 +143,32 @@ export async function runAdvisor(
 
   const cards = [...ctx.cardIndex.values()].slice(0, 4);
 
+  // Grounded A2UI surface for opted-in clients. Deterministic and additive —
+  // wrapped in try/catch so a composer bug can never take down the text reply
+  // (the widget always has `cards`/`cta` to fall back on).
+  let a2ui: AdvisorResponse["a2ui"];
+  if (a2uiEnabled) {
+    try {
+      const lastQuestion = [...messages]
+        .reverse()
+        .find((m) => m.role === "user")?.content;
+      a2ui = composeAdvisorA2ui({
+        surfaceId: `adv-${history.length}`,
+        cards,
+        cta,
+        lastQuestion,
+      });
+    } catch (error) {
+      console.error(
+        JSON.stringify({
+          advisor_a2ui_compose_error: {
+            message: error instanceof Error ? error.message : String(error),
+          },
+        }),
+      );
+    }
+  }
+
   // Structured session insight (Workers observability), Ask-Aqua pattern.
   console.log(
     JSON.stringify({
@@ -150,6 +178,7 @@ export async function runAdvisor(
         toolsUsed,
         nCards: cards.length,
         cta,
+        a2ui: !!a2ui,
       },
     }),
   );
@@ -163,5 +192,6 @@ export async function runAdvisor(
     cards,
     suggestions: buildSuggestions(cards, cta === "lead-form"),
     cta,
+    ...(a2ui ? { a2ui } : {}),
   };
 }
