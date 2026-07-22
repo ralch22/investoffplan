@@ -51,7 +51,10 @@ function A2uiRenderer({ messages }: { messages: A2uiMessage[] }) {
 
   useEffect(() => () => processor.model.dispose(), [processor]);
 
-  if (!surface) return null;
+  // We were handed A2UI messages but couldn't build a surface (e.g. unknown
+  // catalog / no createSurface) — treat as a failure so the boundary shows the
+  // legacy fallback instead of blanking the structured content.
+  if (!surface) throw new Error("advisor a2ui: no surface produced");
   return <A2uiSurface surface={surface} />;
 }
 
