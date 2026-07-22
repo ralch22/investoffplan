@@ -30,6 +30,8 @@ export const IOP_A2UI = {
   Stack: "Stack",
   ProjectCard: "ProjectCard",
   LeadForm: "LeadForm",
+  MortgagePanel: "MortgagePanel",
+  CompareTable: "CompareTable",
 } as const;
 
 /** A flat component node: `{ id, component, ...props }`, children by id ref. */

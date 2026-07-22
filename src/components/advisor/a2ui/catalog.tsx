@@ -8,6 +8,8 @@ import { IOP_ADVISOR_CATALOG_ID, IOP_A2UI } from "@/lib/advisor/a2ui/messages";
 import type { AdvisorCard } from "@/lib/advisor/types";
 import { AdvisorProjectCard } from "./project-card";
 import { AdvisorLeadForm } from "./lead-form";
+import { AdvisorMortgagePanel } from "./mortgage-panel";
+import { AdvisorCompareTable } from "./compare-table";
 
 /**
  * IOP Advisor A2UI catalog.
@@ -43,22 +45,52 @@ const StackImpl = createBinderlessComponentImplementation(
   },
 );
 
+/** Narrow raw A2UI props onto the AdvisorCard shape (shared by card + table). */
+function toCard(p: Record<string, unknown>): AdvisorCard {
+  return {
+    slug: String(p.slug ?? ""),
+    name: String(p.name ?? ""),
+    developer: String(p.developer ?? ""),
+    area: String(p.area ?? ""),
+    imageUrl: typeof p.imageUrl === "string" ? p.imageUrl : undefined,
+    fromPriceAed: typeof p.fromPriceAed === "number" ? p.fromPriceAed : undefined,
+    handover: typeof p.handover === "string" ? p.handover : undefined,
+    beds: Array.isArray(p.beds) ? (p.beds as number[]) : undefined,
+    paymentPlan: typeof p.paymentPlan === "string" ? p.paymentPlan : undefined,
+  };
+}
+
 const ProjectCardImpl = createBinderlessComponentImplementation(
   { name: IOP_A2UI.ProjectCard, schema: INERT_SCHEMA },
+  ({ context }: RenderProps) => (
+    <AdvisorProjectCard card={toCard(context.componentModel.properties)} />
+  ),
+);
+
+const MortgagePanelImpl = createBinderlessComponentImplementation(
+  { name: IOP_A2UI.MortgagePanel, schema: INERT_SCHEMA },
   ({ context }: RenderProps) => {
     const p = context.componentModel.properties;
-    const card: AdvisorCard = {
-      slug: String(p.slug ?? ""),
-      name: String(p.name ?? ""),
-      developer: String(p.developer ?? ""),
-      area: String(p.area ?? ""),
-      imageUrl: typeof p.imageUrl === "string" ? p.imageUrl : undefined,
-      fromPriceAed: typeof p.fromPriceAed === "number" ? p.fromPriceAed : undefined,
-      handover: typeof p.handover === "string" ? p.handover : undefined,
-      beds: Array.isArray(p.beds) ? (p.beds as number[]) : undefined,
-      paymentPlan: typeof p.paymentPlan === "string" ? p.paymentPlan : undefined,
-    };
-    return <AdvisorProjectCard card={card} />;
+    const price = Number(p.propertyPriceAed);
+    if (!Number.isFinite(price) || price <= 0) return null;
+    return (
+      <AdvisorMortgagePanel
+        propertyPriceAed={price}
+        downPaymentPct={Number(p.downPaymentPct) || 20}
+        annualRatePct={Number(p.annualRatePct) || 4.25}
+        termYears={Number(p.termYears) || 25}
+      />
+    );
+  },
+);
+
+const CompareTableImpl = createBinderlessComponentImplementation(
+  { name: IOP_A2UI.CompareTable, schema: INERT_SCHEMA },
+  ({ context }: RenderProps) => {
+    const raw = context.componentModel.properties.projects;
+    if (!Array.isArray(raw)) return null;
+    const projects = (raw as Record<string, unknown>[]).map(toCard);
+    return <AdvisorCompareTable projects={projects} />;
   },
 );
 
@@ -73,5 +105,7 @@ const LeadFormImpl = createBinderlessComponentImplementation(
 export const advisorCatalog = new Catalog(IOP_ADVISOR_CATALOG_ID, [
   StackImpl,
   ProjectCardImpl,
+  MortgagePanelImpl,
+  CompareTableImpl,
   LeadFormImpl,
 ]);

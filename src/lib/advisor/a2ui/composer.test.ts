@@ -95,6 +95,96 @@ test("lead-form with no cards still renders (CTA alone is enough)", () => {
   assert.deepEqual(comps.find((c) => c.id === "root").children, ["lead"]);
 });
 
+test("mortgage artifact appends an interactive MortgagePanel", () => {
+  const msgs = composeAdvisorA2ui({
+    surfaceId: "adv-11",
+    cards: [card()],
+    cta: "none",
+    artifacts: {
+      mortgage: {
+        propertyPriceAed: 1_200_000,
+        downPaymentPct: 20,
+        annualRatePct: 4.25,
+        termYears: 25,
+      },
+    },
+  });
+  assert.ok(msgs);
+  assertValid(msgs);
+  const comps = (msgs[1] as { updateComponents: { components: any[] } })
+    .updateComponents.components;
+  assert.deepEqual(comps.find((c) => c.id === "root").children, ["p-0", "mortgage"]);
+  const m = comps.find((c) => c.id === "mortgage");
+  assert.equal(m.component, IOP_A2UI.MortgagePanel);
+  assert.equal(m.propertyPriceAed, 1_200_000);
+  assert.equal(m.termYears, 25);
+});
+
+test("mortgage alone (no cards, no CTA) still renders a surface", () => {
+  const msgs = composeAdvisorA2ui({
+    surfaceId: "adv-12",
+    cards: [],
+    cta: "none",
+    artifacts: {
+      mortgage: {
+        propertyPriceAed: 900_000,
+        downPaymentPct: 25,
+        annualRatePct: 4.25,
+        termYears: 20,
+      },
+    },
+  });
+  assert.ok(msgs, "mortgage-only turns must still compose");
+  assertValid(msgs);
+});
+
+test("explicit compare ask with 2+ cards swaps cards for a CompareTable", () => {
+  const msgs = composeAdvisorA2ui({
+    surfaceId: "adv-13",
+    cards: [card(), card({ slug: "creek-rise", name: "Creek Rise" })],
+    cta: "none",
+    lastQuestion: "Compare Marina Vista with Creek Rise",
+  });
+  assert.ok(msgs);
+  assertValid(msgs);
+  const comps = (msgs[1] as { updateComponents: { components: any[] } })
+    .updateComponents.components;
+  assert.deepEqual(comps.find((c) => c.id === "root").children, ["cmp"]);
+  const cmp = comps.find((c) => c.id === "cmp");
+  assert.equal(cmp.component, IOP_A2UI.CompareTable);
+  assert.equal(cmp.projects.length, 2);
+  assert.equal(cmp.projects[1].slug, "creek-rise");
+  // No individual cards — the table replaces them.
+  assert.ok(!comps.some((c) => c.component === IOP_A2UI.ProjectCard));
+});
+
+test("compare intent without a second project keeps plain cards", () => {
+  const msgs = composeAdvisorA2ui({
+    surfaceId: "adv-14",
+    cards: [card()],
+    cta: "none",
+    lastQuestion: "compare this one",
+  });
+  assert.ok(msgs);
+  const comps = (msgs[1] as { updateComponents: { components: any[] } })
+    .updateComponents.components;
+  assert.equal(comps.find((c) => c.id === "p-0").component, IOP_A2UI.ProjectCard);
+  assert.ok(!comps.some((c) => c.component === IOP_A2UI.CompareTable));
+});
+
+test("two cards WITHOUT a compare ask stay as cards", () => {
+  const msgs = composeAdvisorA2ui({
+    surfaceId: "adv-15",
+    cards: [card(), card({ slug: "creek-rise", name: "Creek Rise" })],
+    cta: "none",
+    lastQuestion: "show me 2-beds in Dubai Marina",
+  });
+  assert.ok(msgs);
+  const comps = (msgs[1] as { updateComponents: { components: any[] } })
+    .updateComponents.components;
+  assert.deepEqual(comps.find((c) => c.id === "root").children, ["p-0", "p-1"]);
+});
+
 test("optional card fields are omitted, not emitted as undefined", () => {
   const msgs = composeAdvisorA2ui({
     surfaceId: "adv-9",
