@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.investoffplan.com/sitemap.xml
+
+# AI crawlers — allowed for citation and indexing
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Googlebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Bytespider (ByteDance) — high-volume, no citation value
+User-agent: Bytespider
+Disallow: /

@@ -51,6 +51,7 @@ import {
   buildFactualSummary,
   hasSubstantialProjectCopy,
 } from "@/lib/project-factual-summary";
+import { QuickAnswer } from "@/components/quick-answer";
 import { hasPaymentPlan, unitPricePerSqft } from "@/lib/investment-metrics";
 import { getSiteUrl } from "@/lib/site-url";
 import {
@@ -546,7 +547,13 @@ export default async function ProjectDetailPage({
           virtualTourUrl={enrichment?.virtualTourUrl}
         />
 
-
+        <QuickAnswer
+          answer={[
+            `${project.name} is an off-plan development by ${project.developer} in ${project.area.split(",")[0].trim()}, ${cityLabel(project.city, dict)}.`,
+            minPrice > 0 ? ` Units start from AED ${minPrice.toLocaleString("en-US")}` : "",
+            project.handover ? `${minPrice > 0 ? " with" : " Handover"} expected ${project.handover}.` : minPrice > 0 ? "." : "",
+          ].join("")}
+        />
 
         <div id="key-facts" className="scroll-mt-24">
           <ProjectKeyFacts project={project} locale={locale} />

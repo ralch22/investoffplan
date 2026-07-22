@@ -24,6 +24,7 @@ import { MarketAdviceCta } from "@/components/market-advice-cta";
 import { getAreaEditorial } from "@/content/areas";
 import { areaTagline } from "@/lib/figma-copy";
 import { formatPrice } from "@/lib/format";
+import { QuickAnswer } from "@/components/quick-answer";
 import { getSiteUrl } from "@/lib/site-url";
 import { getDictionary, interpolate } from "@/i18n";
 import { localePath, type Locale } from "@/i18n/config";
@@ -168,6 +169,14 @@ export default async function CommunityDetailPage({ params, locale = "en" }: Pag
 
       <main className="mx-auto max-w-[1200px] px-5 py-12 md:px-8">
         <Breadcrumbs items={[{ label: dict.common.home, href: "/" }, { label: t.breadcrumbCommunities, href: "/communities" }, { label: community.name }]} />
+        <QuickAnswer
+          answer={[
+            `${community.name} is a residential community in ${community.cityLabel} with ${community.projectCount} off-plan ${community.projectCount === 1 ? "project" : "projects"} listed${community.unitCount > 0 ? ` across ${community.unitCount.toLocaleString()} unit options` : ""}.`,
+            dldStats?.medianPpsqft
+              ? ` Median sold price is AED ${dldStats.medianPpsqft.toLocaleString()}/sqft based on ${dldStats.saleSample.toLocaleString()} DLD transactions.`
+              : "",
+          ].join("")}
+        />
         {/* Stats band */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard label={t.statOffPlanProjects} value={String(community.projectCount)} />

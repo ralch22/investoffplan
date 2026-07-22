@@ -28,3 +28,45 @@
 - Market statistics: Dubai Land Department open data, anonymized aggregates only, attributed on every surface, refreshed per data release (never claimed live).
 - Catalog claims (prices, payment plans, handover dates) come from developer/portal sources and carry the project's source attribution.
 - No invented numbers, testimonials, or return guarantees anywhere on the site.
+
+## Market data (DLD 2025 — updated July 2026)
+Sourced from Dubai Land Department open data. Minimum 8 transactions per published statistic.
+All AED/sqft figures are medians across residential sales. Gross yield = median annual rent ÷ median sale price (Ejari data); capped at 12% to exclude outliers. Off-plan premium = median AED/sqft off-plan vs ready units in the same area and year.
+
+| Community | Median AED/sqft | Transactions (2025) | Gross yield | Off-plan premium |
+|---|---|---|---|---|
+| Jumeirah Village Circle | 1,474 | 18,144 | 6.9% | +17.5% |
+| Business Bay | 2,452 | 13,552 | 6.1% | +39.4% |
+| Dubai Land Residence Complex | 1,338 | 7,744 | — | +91.0% |
+| Madinat Al Mataar | 1,628 | 6,752 | 3.8% | +35.9% |
+| Motor City | 1,910 | 6,047 | — | +116.1% |
+| Dubai Marina | 2,708 | 5,432 | 5.3% | +86.7% |
+| Dubai Investment Park Second | 1,486 | 5,277 | — | +114.6% |
+| Dubai Science Park | 1,666 | 5,276 | — | +24.9% |
+| Dubai Production City | 1,330 | 5,273 | — | +38.8% |
+| Jumeirah Village Triangle | 1,558 | 4,980 | — | +31.5% |
+
+## Developer roster (top 10 by active project count)
+| Developer | Active projects |
+|---|---|
+| Emaar Properties | 222 |
+| Damac Properties | 169 |
+| Azizi Developments | 112 |
+| Aldar Properties PJSC | 106 |
+| Ellington | 73 |
+| Binghatti Developers | 70 |
+| Nakheel | 67 |
+| Meraas Holding | 63 |
+| Samana Developers | 53 |
+| Sobha Realty | 48 |
+
+## Data provenance
+- Source: Dubai Land Department (DLD) open transaction data
+- Residential sales only (apartments, villas, townhouses)
+- Minimum sample gate: 8 transactions per published statistic
+- Off-plan premium: median AED/sqft off-plan vs ready units, same area and year (data/dld-appreciation.json → offplanVsReady)
+- Gross rental yield: median annual rent ÷ median sale price (Ejari data); capped at 12% (data/dld-area-stats.json → grossYieldPct)
+- Transaction counts and median AED/sqft: data/dld-area-stats.json → saleSample, medianPpsqft
+- Developer project counts: data/catalog.json → projects[].developer aggregated
+- Data refreshed with each DLD open-data release
+- No buyer or owner personal data is ever stored or published

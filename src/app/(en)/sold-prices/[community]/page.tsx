@@ -17,6 +17,7 @@ import {
 import { buildSoldPricesDatasetJsonLd } from "@/lib/sold-prices-json-ld";
 import { getCommunities, getCommunity, getProjectsByCommunity } from "@/lib/communities";
 import { formatPrice } from "@/lib/format";
+import { QuickAnswer } from "@/components/quick-answer";
 import { getSiteUrl } from "@/lib/site-url";
 import { getDictionary, interpolate } from "@/i18n";
 import { localePath, type Locale } from "@/i18n/config";
@@ -159,6 +160,16 @@ export async function SoldPricesCommunityPage({ params, locale = "en" }: PagePro
 
       <div className="mx-auto max-w-[1200px] px-5 py-8 md:px-8">
         <Breadcrumbs items={crumbs} />
+        <QuickAnswer
+          answer={[
+            rows.length > 0 && stats?.medianPpsqft
+              ? `DLD transaction data for ${community.name} shows a median sold price of AED ${stats.medianPpsqft.toLocaleString()}/sqft across ${rows.length.toLocaleString()} residential sales.`
+              : `DLD transaction data for ${community.name} includes ${rows.length.toLocaleString()} anonymized residential sales.`,
+            spread
+              ? ` Off-plan units traded at AED ${spread.offplanPpsqft.toLocaleString()}/sqft vs AED ${spread.readyPpsqft.toLocaleString()}/sqft for ready properties.`
+              : "",
+          ].join("")}
+        />
 
         {stats ? (
           <section className="mt-6">
