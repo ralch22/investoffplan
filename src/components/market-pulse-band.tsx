@@ -1,27 +1,26 @@
-import { getCatalogApi } from "@/lib/catalog";
 import { getAreaStats } from "@/lib/dld-area-stats";
 import { getMarketPulse } from "@/lib/dld-recent-sales";
 import { getDictionary, interpolate } from "@/i18n";
 import type { Locale } from "@/i18n/config";
 
 /**
- * Build-time market stats strip (PF "Market Pulse" pattern, our data):
- * new catalog launches this month, hottest DLD community by volume, and the
- * off-plan share of transactions. Server component, zero client JS — all
- * three stats resolve at build/ISR time, never per-request.
+ * Build-time market stats strip (PF "Market Pulse" pattern, our data): total
+ * DLD transactions, the hottest DLD community by volume, and the off-plan
+ * share — all three drawn from the SAME latest fully-covered DLD month, so the
+ * strip reads as one coherent market snapshot. Server component, zero client
+ * JS; stats resolve at build/ISR time, never per-request.
+ *
+ * Deliberately NOT a "new launches this month" tile: the only catalog field
+ * for that (`salesStartDate`) is present on ~22% of projects, so a monthly
+ * count off it understates reality by an unknowable margin (it read "1" while
+ * the catalog held 1,746 projects). `firstSeenAt` is no substitute either —
+ * every row carries the same seed month. No honest source, so no tile.
  */
 export async function MarketPulseBand({ locale = "en" }: { locale?: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.marketPulse;
   const pulse = getMarketPulse();
   if (!pulse.latestMonth) return null;
-
-  const api = await getCatalogApi();
-  const monthPrefix = new Date().toISOString().slice(0, 7);
-  const newLaunches = api.projects.filter((p) => {
-    const s = (p as { salesStartDate?: string | null }).salesStartDate;
-    return typeof s === "string" && s.startsWith(monthPrefix);
-  }).length;
 
   // Resolve the hottest area's display label through the stats store (it
   // carries the most-common human label for the cadastral key).
@@ -30,11 +29,11 @@ export async function MarketPulseBand({ locale = "en" }: { locale?: Locale }) {
     : null;
 
   const tiles = [
-    newLaunches > 0
+    pulse.totalTx > 0
       ? {
-          value: String(newLaunches),
-          label: t.newLaunches,
-          hint: t.newLaunchesHint,
+          value: pulse.totalTx.toLocaleString(),
+          label: t.totalTx,
+          hint: interpolate(t.totalTxHint, { month: pulse.latestMonth }),
         }
       : null,
     hottestLabel && pulse.hottest

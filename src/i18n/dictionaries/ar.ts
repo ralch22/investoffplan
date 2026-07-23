@@ -2031,8 +2031,8 @@ export const ar: Dict = {
   },
   "marketPulse": {
     "aria": "نبض السوق",
-    "newLaunches": "إطلاقات جديدة هذا الشهر",
-    "newLaunchesHint": "مشاريع بدأ البيع فيها ضمن دليلنا",
+    "totalTx": "المعاملات المسجّلة",
+    "totalTxHint": "مبيعات دائرة الأراضي في المجتمعات المتابَعة، {month}",
     "hottestCommunity": "المجتمع الأنشط مبيعاً",
     "hottestHint": "{n} معاملة في أحدث شهر لدى دائرة الأراضي",
     "hottestHintMom": "{n} معاملة، {mom}% مقارنة بالشهر السابق",
