@@ -686,7 +686,7 @@ export function ProjectsPage({
           content scrolling beneath it. */}
       <div
         className={cn(
-          "md:sticky md:top-[var(--header-h)] z-[15] transition-all duration-300",
+          "md:sticky md:top-[var(--header-h)] z-[var(--z-subheader)] transition-all duration-300",
           headerScrolled 
             ? "bg-white/95 backdrop-blur-xl shadow-md border-b border-border/50 py-4" 
             : "bg-white/95 border-b border-border py-4 md:bg-transparent md:border-0 md:pt-8 md:pb-4"
