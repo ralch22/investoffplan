@@ -2029,8 +2029,8 @@ const dict = {
   },
   "marketPulse": {
     "aria": "Market pulse",
-    "newLaunches": "New launches this month",
-    "newLaunchesHint": "Projects opening sales in our catalog",
+    "totalTx": "Transactions recorded",
+    "totalTxHint": "DLD sales across tracked communities, {month}",
     "hottestCommunity": "Hottest community by sales",
     "hottestHint": "{n} DLD transactions in the latest month",
     "hottestHintMom": "{n} DLD transactions, {mom}% month-on-month",
