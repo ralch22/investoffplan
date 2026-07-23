@@ -25,7 +25,7 @@
     "scrape:brochures": "tsx scripts/scrape-pf-brochures.ts",
     "scrape:masterplans": "tsx scripts/scrape-pf-masterplans.ts",
     "db:migrate:local": "wrangler d1 migrations apply investoffplan-catalog --local",
-    "db:migrate:remote": "wrangler d1 migrations apply investoffplan-catalog --remote",
+    "db:migrate:remote": "CLOUDFLARE_ACCOUNT_ID=4a75e91d6fca8bc58467fb80ce1b9c2e wrangler d1 migrations apply investoffplan-catalog --remote",
     "db:seed:local": "tsx scripts/migrate-catalog-to-d1.ts",
     "db:seed:remote": "node scripts/seed-remote-d1.mjs",
     "db:upsert:local": "tsx scripts/upsert-catalog-to-d1.ts",
