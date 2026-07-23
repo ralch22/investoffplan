@@ -2,20 +2,23 @@ import type { MetadataRoute } from "next";
 import { getSiteUrl } from "@/lib/site-url";
 
 /**
- * The single source of truth for robots.txt.
+ * The single source of truth for robots.txt — for site structure only.
  *
- * There used to be two: this route and a static `public/robots.txt`. A static
- * file in public/ is served verbatim and this route never ran — so the two
- * disagreed and only the static one took effect. They are now reconciled here,
- * because a static file cannot do the one thing that actually matters below:
- * keep the public preview worker out of the index.
- *
- * ⚠️ Cloudflare's *Managed robots.txt* (dashboard) prepends its own block at the
- * edge, including `Disallow: /` for several AI crawlers (GPTBot, ClaudeBot,
- * CCBot, Google-Extended, …). That OVERRIDES the AI-crawler `Allow` rules below,
- * which express our AEO/GEO intent to admit citation-class bots. To actually let
- * them in, that setting has to be changed in the Cloudflare dashboard — it is not
- * something this file can win against.
+ * Deliberate scope split:
+ * - AI-crawler policy is owned by **Cloudflare AI Crawl Control** (dashboard →
+ *   AI Crawl Control), NOT here. It enforces at the WAF and keeps its managed
+ *   robots.txt block current as new AI bots appear. Its posture: block the bulk
+ *   "AI Crawler" scrapers/trainers (GPTBot, ClaudeBot, CCBot, Google-Extended,
+ *   Bytespider, …) while allowing the AI *search / citation* bots (OAI-SearchBot,
+ *   Claude-SearchBot, PerplexityBot, Applebot, Googlebot, Bing, …) — i.e. stay
+ *   citable in AI answers without being free training data.
+ *   This file must NOT re-declare those bots: a robots `Allow` here cannot beat
+ *   the WAF block, and only makes the served robots.txt contradict itself and the
+ *   `ai-train=no` content-signal Cloudflare sets. (Verified in the dashboard,
+ *   2026-07-23.)
+ * - This file owns the site-structure rules below, plus the one thing a static
+ *   `public/robots.txt` could not do: lock the public preview worker out of the
+ *   index.
  */
 export default function robots(): MetadataRoute.Robots {
   const site = getSiteUrl() || "https://investoffplan.com";
@@ -23,9 +26,8 @@ export default function robots(): MetadataRoute.Robots {
     site.includes("preview") || site.includes("emerge-digital.workers.dev");
 
   // The preview worker is a public *.workers.dev copy of the whole site that
-  // shares production data. It must never be indexed — hence a static
-  // public/robots.txt (which would serve `Allow: /` here) could not be the
-  // source of truth.
+  // shares production data. It must never be indexed — which a static
+  // public/robots.txt (served `Allow: /` everywhere) could not guarantee.
   if (isPreview) {
     return {
       rules: { userAgent: "*", disallow: "/" },
@@ -34,29 +36,19 @@ export default function robots(): MetadataRoute.Robots {
   }
 
   return {
-    rules: [
-      {
-        userAgent: "*",
-        allow: "/",
-        // /api/ has no canonical content; /compare/units is the share-link-driven
-        // client compare tool; /*?ask= is the home ask-bar's linkable-answer
-        // param — home canonicalises to the bare URL and never reads searchParams,
-        // so none of these are real indexable pages, and crawling an ask link
-        // would spend a slice of the advisor's daily budget.
-        // ⚠️ "/compare/units" must stay exactly this specific — a bare "/compare"
-        // would prefix-block the /compare hub, /compare/[pair], /compare-projects/*
-        // and /compare-developers/* (~825 sitemap URLs).
-        disallow: ["/api/", "/compare/units", "/*?ask="],
-      },
-      // Citation-class AI crawlers are welcome (AEO/GEO). See the ⚠️ above: the
-      // Cloudflare Managed block currently overrides this at the edge.
-      {
-        userAgent: ["GPTBot", "ClaudeBot", "PerplexityBot", "Google-Extended", "CCBot"],
-        allow: "/",
-      },
-      // High crawl volume, no citation value.
-      { userAgent: "Bytespider", disallow: "/" },
-    ],
+    rules: {
+      userAgent: "*",
+      allow: "/",
+      // /api/ has no canonical content; /compare/units is the share-link-driven
+      // client compare tool; /*?ask= is the home ask-bar's linkable-answer param
+      // (home canonicalises to the bare URL and never reads searchParams, so none
+      // are real indexable pages, and crawling an ask link would spend a slice of
+      // the advisor's daily budget).
+      // ⚠️ "/compare/units" must stay exactly this specific — a bare "/compare"
+      // would prefix-block the /compare hub, /compare/[pair], /compare-projects/*
+      // and /compare-developers/* (~825 sitemap URLs).
+      disallow: ["/api/", "/compare/units", "/*?ask="],
+    },
     sitemap: `${site}/sitemap.xml`,
   };
 }
