@@ -20,6 +20,9 @@ import {
   type QuizStepKey,
   type YieldCommunity,
 } from "@/lib/investor-match";
+import { composeMatchNextStep } from "@/lib/advisor/a2ui/page-composers";
+import { surfaceEnabled } from "@/lib/advisor/a2ui/surfaces";
+import { PageA2uiSurface } from "@/components/advisor/a2ui/page-surface";
 
 type PartialAnswers = Partial<QuizAnswers>;
 
@@ -340,6 +343,9 @@ function ResultsView({
   onStartOver,
 }: ResultsViewProps) {
   const list = matches ?? [];
+  const nextStep = surfaceEnabled("match")
+    ? composeMatchNextStep(list[0] ? { fromPriceAed: list[0].fromPriceAed } : undefined)
+    : undefined;
   const loaded = !computing && matches != null;
   const hasMatches = loaded && list.length > 0;
 
@@ -459,6 +465,15 @@ function ResultsView({
               </li>
             ))}
           </ol>
+
+          {nextStep ? (
+            // Deterministic A2UI: the numbers on the top match + a way to reach
+            // the team. Deliberately no project cards — the ranked list above
+            // already has them.
+            <div className="mt-8">
+              <PageA2uiSurface messages={nextStep} />
+            </div>
+          ) : null}
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <LocaleLink

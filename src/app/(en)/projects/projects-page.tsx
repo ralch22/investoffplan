@@ -13,6 +13,11 @@ import { LocaleLink } from "@/components/locale-link";
 import { Pagination } from "@/components/pagination";
 import { MobileFilterSheet } from "@/components/mobile-filter-sheet";
 import { DeveloperSpotlight } from "@/components/developer-spotlight";
+import { composeSerpRescue, type RelaxedFilter } from "@/lib/advisor/a2ui/page-composers";
+import { surfaceEnabled } from "@/lib/advisor/a2ui/surfaces";
+import { PageA2uiSurface } from "@/components/advisor/a2ui/page-surface";
+import type { A2uiMessage } from "@/lib/advisor/a2ui/messages";
+import type { AdvisorCard } from "@/lib/advisor/types";
 import { ProjectMap } from "@/components/project-map";
 import { CollectionChips } from "@/components/collection-chips";
 import { ProjectsSearchSync } from "@/components/projects-search-sync";
@@ -297,6 +302,7 @@ export function ProjectsPage({
     return () => { active = false; };
   }, [filters, sort, collection, page, viewMode]);
 
+
   const cities = useMemo(
     () => api?.getCityCounts() ?? initialCityCounts,
     [api, initialCityCounts],
@@ -391,6 +397,120 @@ export function ProjectsPage({
         : 1;
   const currentPage = Math.min(page, totalPages);
 
+
+  // A dead-end search is the worst moment in a catalogue. Rather than leaving an
+  // empty state that pushes the work back on the user, re-run the SAME query
+  // with one filter relaxed and offer the closest real matches — saying plainly
+  // which filter was widened. Deterministic: no advisor call, no model budget.
+  const [serpRescue, setSerpRescue] = useState<A2uiMessage[] | undefined>(undefined);
+  useEffect(() => {
+    if (!surfaceEnabled("serp")) return;
+    if (isApiMode && apiLoading) return;
+    if (resultCount > 0) { setSerpRescue(undefined); return; }
+
+    // Relax order = most-likely-too-strict first. Only filters actually set are
+    // candidates, and we stop at the first that finds something.
+    const candidates: RelaxedFilter[] = [];
+    if (filters.maxPrice) candidates.push("maxPrice");
+    if (filters.beds !== "all") candidates.push("beds");
+    if (filters.handoverBy !== "all") candidates.push("handoverBy");
+    if (filters.developer !== "all") candidates.push("developer");
+    if (filters.city !== "all") candidates.push("city");
+    if (candidates.length === 0) { setSerpRescue(undefined); return; }
+
+    const toCard = (pr: any): AdvisorCard => {
+      const prices = Array.isArray(pr?.units)
+        ? pr.units.map((u: any) => u.launchPriceAed).filter((v: number) => v > 0)
+        : [];
+      const from = prices.length
+        ? Math.min(...prices)
+        : Number.isFinite(pr?.minPriceAed) ? pr.minPriceAed : undefined;
+      return {
+        slug: String(pr?.slug ?? ""),
+        name: String(pr?.name ?? ""),
+        developer: String(pr?.developer ?? ""),
+        area: String(pr?.area ?? ""),
+        imageUrl: typeof pr?.imageUrl === "string" ? pr.imageUrl : undefined,
+        fromPriceAed: typeof from === "number" ? from : undefined,
+        handover: typeof pr?.handover === "string" ? pr.handover : undefined,
+        paymentPlan: typeof pr?.paymentPlan === "string" ? pr.paymentPlan : undefined,
+      };
+    };
+    const relaxedFilters = (relax: RelaxedFilter): Filters => ({
+      ...filters,
+      ...(relax === "maxPrice" ? { maxPrice: null } : {}),
+      ...(relax === "beds" ? { beds: "all" as Filters["beds"] } : {}),
+      ...(relax === "city" ? { city: "all" as Filters["city"] } : {}),
+      ...(relax === "developer" ? { developer: "all" } : {}),
+      ...(relax === "handoverBy" ? { handoverBy: "all" as Filters["handoverBy"] } : {}),
+    });
+
+    // Static/file mode filters the catalog in memory, so relax there directly —
+    // no request needed, and it keeps the rescue working in every build mode.
+    if (!isApiMode) {
+      if (!api) return;
+      for (const relax of candidates.slice(0, 3)) {
+        const hits = api.filterUnits(allUnits, relaxedFilters(relax));
+        if (hits.length === 0) continue;
+        const seen = new Set<string>();
+        const cards: AdvisorCard[] = [];
+        for (const h of hits) {
+          const pr: any = (h as any).project;
+          if (!pr?.slug || seen.has(pr.slug)) continue;
+          seen.add(pr.slug);
+          cards.push(toCard(pr));
+          if (cards.length === 4) break;
+        }
+        setSerpRescue(composeSerpRescue(cards, [relax]));
+        return;
+      }
+      setSerpRescue(undefined);
+      return;
+    }
+
+    let active = true;
+    (async () => {
+      for (const relax of candidates.slice(0, 3)) {
+        const url = new URL("/api/catalog/projects", window.location.origin);
+        url.searchParams.set("page", "1");
+        url.searchParams.set("pageSize", "4");
+        url.searchParams.set("view", "project");
+        url.searchParams.set("sort", sort);
+        url.searchParams.set("collection", collection);
+        if (filters.query) url.searchParams.set("q", filters.query);
+        if (relax !== "city") url.searchParams.set("city", filters.city);
+        url.searchParams.set("propertyType", filters.propertyType);
+        if (relax !== "beds") url.searchParams.set("beds", filters.beds.toString());
+        if (filters.minPrice) url.searchParams.set("minPrice", filters.minPrice.toString());
+        if (relax !== "maxPrice" && filters.maxPrice)
+          url.searchParams.set("maxPrice", filters.maxPrice.toString());
+        if (relax !== "developer" && filters.developer !== "all")
+          url.searchParams.set("developer", filters.developer);
+        if (filters.paymentPlan !== "all")
+          url.searchParams.set("payment", filters.paymentPlan);
+        if (relax !== "handoverBy" && filters.handoverBy !== "all")
+          url.searchParams.set("handoverBy", String(filters.handoverBy));
+
+        try {
+          const data: { items?: unknown } = await fetch(url).then((r) => r.json());
+          if (!active) return;
+          const items: any[] = Array.isArray(data?.items) ? data.items : [];
+          if (items.length === 0) continue;
+          const cards: AdvisorCard[] = items
+            .slice(0, 4)
+            .map((it: any) => toCard(it?.project ?? it))
+            .filter((c) => c.slug && c.name);
+          setSerpRescue(composeSerpRescue(cards, [relax]));
+          return;
+        } catch {
+          // A failed rescue is not an error the user should ever see — the
+          // existing empty state is already a correct, complete answer.
+        }
+      }
+      if (active) setSerpRescue(undefined);
+    })();
+    return () => { active = false; };
+  }, [apiLoading, filters, sort, collection, resultCount, api, allUnits]);
   const pageItems = isApiActive
     ? (apiData?.items ?? (isDefaultView ? initialPageItems : []))
     : catalogReady
@@ -750,6 +870,12 @@ export function ProjectsPage({
                     {dict.tools.investorMatch.serpCta}
                   </LocaleLink>
                 </p>
+
+                {serpRescue ? (
+                  <div className="mx-auto mt-8 w-full max-w-2xl text-start">
+                    <PageA2uiSurface messages={serpRescue} />
+                  </div>
+                ) : null}
               </div>
             ) : (
               pageItems.map((item, index) => (

@@ -4,15 +4,12 @@ import { getProjectBySlug } from "@/lib/catalog";
 import { calculateMortgage } from "@/lib/mortgage";
 import type { CitySlug, PaymentPlanFilter, Project } from "@/lib/types";
 import type { AdvisorCard } from "./types";
+import { projectToCard, projectBeds } from "./project-card";
 
 export { TOOL_DEFINITIONS } from "./tool-schemas";
-
-function projectBeds(project: Project): number[] | undefined {
-  const beds = [...new Set((project.units ?? []).map((u) => u.beds))].sort(
-    (a, b) => a - b,
-  );
-  return beds.length ? beds : undefined;
-}
+// projectToCard lives in ./project-card (pure, no DB) so the page-surface
+// composers can reuse it; re-exported here to keep existing importers working.
+export { projectToCard, projectBeds } from "./project-card";
 
 /** EN-only compact bed chip for LLM tool facts (not UI chrome). */
 function bedsFactLabel(beds: number[]): string {
@@ -20,23 +17,6 @@ function bedsFactLabel(beds: number[]): string {
   return beds.length === 1
     ? label(beds[0])
     : `${label(beds[0])}–${label(beds[beds.length - 1])}`;
-}
-
-export function projectToCard(project: Project): AdvisorCard {
-  const prices = (project.units ?? [])
-    .map((u) => u.launchPriceAed)
-    .filter((v) => v > 0);
-  return {
-    slug: project.slug,
-    name: project.name,
-    developer: project.developer,
-    area: project.area,
-    imageUrl: project.imageUrl,
-    fromPriceAed: prices.length ? Math.min(...prices) : undefined,
-    handover: project.handover,
-    beds: projectBeds(project),
-    paymentPlan: project.paymentPlan,
-  };
 }
 
 function projectFacts(project: Project): string {

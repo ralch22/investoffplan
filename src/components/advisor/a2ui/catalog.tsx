@@ -10,6 +10,7 @@ import { AdvisorProjectCard } from "./project-card";
 import { AdvisorLeadForm } from "./lead-form";
 import { AdvisorMortgagePanel } from "./mortgage-panel";
 import { AdvisorCompareTable } from "./compare-table";
+import { AdvisorRelaxedFilterNote, type RelaxedFilter } from "./relaxed-filter-note";
 
 /**
  * IOP Advisor A2UI catalog.
@@ -102,10 +103,20 @@ const LeadFormImpl = createBinderlessComponentImplementation(
   },
 );
 
+const RelaxedFilterNoteImpl = createBinderlessComponentImplementation(
+  { name: IOP_A2UI.RelaxedFilterNote, schema: INERT_SCHEMA },
+  ({ context }: RenderProps) => {
+    const raw = context.componentModel.properties.relaxed;
+    if (!Array.isArray(raw)) return null;
+    return <AdvisorRelaxedFilterNote relaxed={raw as RelaxedFilter[]} />;
+  },
+);
+
 export const advisorCatalog = new Catalog(IOP_ADVISOR_CATALOG_ID, [
   StackImpl,
   ProjectCardImpl,
   MortgagePanelImpl,
   CompareTableImpl,
+  RelaxedFilterNoteImpl,
   LeadFormImpl,
 ]);

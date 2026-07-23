@@ -951,7 +951,18 @@ const dict = {
     "compareHandover": "Handover",
     "compareBeds": "Bedrooms",
     "comparePlan": "Payment plan",
-    "compareOpen": "Full comparison"
+    "compareOpen": "Full comparison",
+    "relaxedNote": "No exact matches — showing the closest options with {filters} relaxed.",
+    "relaxedAnd": "and",
+    "relaxedFilters": {
+      "maxPrice": "maximum price",
+      "beds": "bedrooms",
+      "city": "city",
+      "developer": "developer",
+      "handoverBy": "handover date"
+    },
+    "pdpStripTitle": "Work the numbers",
+    "matchVerdictTitle": "Your closest matches"
   },
   "auth": {
     "signIn": "Sign in",
