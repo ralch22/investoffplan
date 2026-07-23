@@ -32,6 +32,9 @@ export const IOP_A2UI = {
   LeadForm: "LeadForm",
   MortgagePanel: "MortgagePanel",
   CompareTable: "CompareTable",
+  // Page-surface leaves (Phase 2) — the catalog is shared across every surface,
+  // so a component composed for one page renders anywhere the host is mounted.
+  RelaxedFilterNote: "RelaxedFilterNote",
 } as const;
 
 /** A flat component node: `{ id, component, ...props }`, children by id ref. */

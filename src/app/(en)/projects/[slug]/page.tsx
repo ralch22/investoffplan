@@ -43,6 +43,10 @@ import { DldAreaStatsBand } from "@/components/dld-area-stats";
 import { getAreaStats, getDldSource } from "@/lib/dld-area-stats";
 import { getOffplanVsReady } from "@/lib/dld-recent-sales";
 import { getProjectComparisonLinks } from "@/lib/project-compare";
+import type { Project } from "@/lib/types";
+import { composePdpStrip } from "@/lib/advisor/a2ui/page-composers";
+import { surfaceEnabled } from "@/lib/advisor/a2ui/surfaces";
+import { PageA2uiSurface } from "@/components/advisor/a2ui/page-surface";
 import {
   cityLabel,
 } from "@/lib/format";
@@ -253,6 +257,13 @@ export default async function ProjectDetailPage({
     .filter((p) => communitySlugFor(p.area) !== community)
     .sort((a, b) => priceDistance(a) - priceDistance(b));
   const related = [...sameCommunity, ...sameCity].slice(0, 3);
+
+  // A2UI decision strip: mortgage on this project's from-price + a comparison
+  // against the closest related project. Deterministic — no advisor call, so it
+  // costs nothing per page render and is safe on every PDP.
+  const pdpStrip = surfaceEnabled("pdp")
+    ? composePdpStrip(project, related as unknown as Project[])
+    : undefined;
   const areaInsights = await getAreaInsightsForProject(
     slugify(project.area),
     locale,
@@ -594,6 +605,19 @@ export default async function ProjectDetailPage({
             </LocaleLink>
           </p>
         </div>
+
+        {pdpStrip ? (
+          <section id="decision" className="mt-10 scroll-mt-24">
+            <h2 className="text-xl font-semibold text-text-dark">
+              {dict.advisor.pdpStripTitle}
+            </h2>
+            {/* Agent-composed surface, but composed deterministically at render
+                time from this project's own grounded data — no model call. */}
+            <div className="mt-4">
+              <PageA2uiSurface messages={pdpStrip} />
+            </div>
+          </section>
+        ) : null}
 
         <section id="units" className="mt-10 scroll-mt-24">
           <h2 className="text-xl font-semibold text-text-dark">{dict.pdp.unitTypes}</h2>

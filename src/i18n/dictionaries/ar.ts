@@ -953,7 +953,18 @@ export const ar: Dict = {
     "compareHandover": "التسليم",
     "compareBeds": "غرف النوم",
     "comparePlan": "خطة السداد",
-    "compareOpen": "المقارنة الكاملة"
+    "compareOpen": "المقارنة الكاملة",
+    "relaxedNote": "لا توجد نتائج مطابقة تماماً — نعرض أقرب الخيارات بعد توسيع {filters}.",
+    "relaxedAnd": "و",
+    "relaxedFilters": {
+      "maxPrice": "الحد الأقصى للسعر",
+      "beds": "عدد غرف النوم",
+      "city": "المدينة",
+      "developer": "المطور",
+      "handoverBy": "تاريخ التسليم"
+    },
+    "pdpStripTitle": "احسب أرقامك",
+    "matchVerdictTitle": "أقرب الخيارات لك"
   },
   "auth": {
     "signIn": "تسجيل الدخول",
