@@ -27,6 +27,28 @@ CLOUDFLARE_ACCOUNT_ID=4a75e91d6fca8bc58467fb80ce1b9c2e npm run deploy:production
 curl -s "https://investoffplan.com/<page>?cb=$(date +%s)" | grep <expected>
 ```
 
+## The production build is `npm run build:production` — never a bare `next build`
+
+Every build-time flag that shapes the deployed site lives in that ONE script:
+
+```
+NEXT_PUBLIC_CATALOG_API=1 NEXT_PUBLIC_ADVISOR_A2UI=1 NEXT_IS_BUILD=1 opennextjs-cloudflare build -c wrangler.production.jsonc
+```
+
+`NEXT_PUBLIC_*` is **inlined into client bundles at build time**, so a wrangler var alone does nothing in the browser. Build with a different command and the site silently changes with nothing erroring:
+- no `NEXT_PUBLIC_ADVISOR_A2UI` → the A2UI advisor surface turns off (widget falls back to the legacy cards)
+- no `NEXT_PUBLIC_CATALOG_API` → the catalog reads the JSON snapshot instead of D1
+- no `NEXT_IS_BUILD` → SSG tries to hit D1 at build time
+
+`NEXT_IS_BUILD` is **build-only** — it makes `catalog.ts`/`placements.ts` skip D1. It must NOT go in `.env.production`, which also applies at runtime and would stop the live Worker reading D1. Same reason `NEXT_PUBLIC_CATALOG_API` isn't there: the e2e suite builds without it and would flip into API mode.
+
+**Cloudflare Workers Builds** (the perpetually-red `Workers Builds: investoffplan` check) is NOT wired up — its build token was deleted/rolled, and deploys are manual. Leave it disconnected unless you want push-to-deploy; auto-deploy on every merge would fire ~90-minute deploys that can collide with a manual one. If you ever do connect it:
+- Production branch: `main`
+- Build command: `npm run build:production`
+- Deploy command: `npx opennextjs-cloudflare deploy -c wrangler.production.jsonc`
+- No `CLOUDFLARE_ACCOUNT_ID` needed — `account_id` is in `wrangler.production.jsonc`
+- The repo is private, so the Cloudflare Workers & Pages GitHub App must be explicitly granted access to it, or the branch picker stays empty.
+
 ## Port / process hygiene (phantom-failure prevention)
 
 Before EVERY e2e run:
