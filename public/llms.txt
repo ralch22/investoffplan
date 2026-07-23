@@ -6,6 +6,10 @@
 > plans, payment plans, developer brochures — and market data derived from Dubai
 > Land Department (DLD) open data. English + Arabic (/ar).
 
+Full data companion: https://investoffplan.com/llms-full.txt — per-area DLD market
+statistics (132 areas) and the complete project index with canonical URLs,
+regenerated on every build.
+
 ## Canonical facts
 - Catalog: 1,746 off-plan projects · 5,533 unit types · 216 developers · 94 communities (updated continuously; verified against PropertyFinder new-projects + developer sources).
 - Market data: anonymized aggregates from Dubai Land Department open data (267k+ residential sale transactions, 1M+ Ejari rent contracts, 2025). Minimum sample of 8 transactions per published statistic. No buyer/owner data is ever ingested.
