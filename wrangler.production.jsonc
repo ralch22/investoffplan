@@ -76,6 +76,15 @@
     // "NEXT_PUBLIC_GSC_VERIFICATION": "",
     "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADxyqgdGGZ6sArrC",
     "NEXT_PUBLIC_CATALOG_API": "1",
+    // A2UI advisor surface. ADVISOR_A2UI gates the SERVER composer (read at
+    // runtime by /api/advisor); NEXT_PUBLIC_ADVISOR_A2UI gates the CLIENT
+    // opt-in and must ALSO be set in the deploy build command, since Next
+    // inlines NEXT_PUBLIC_* into client bundles at build time — a wrangler var
+    // alone would leave it undefined in the browser (same as CATALOG_API).
+    // Set either to "0"/remove to kill the surface; the widget then renders the
+    // existing cards exactly as before.
+    "ADVISOR_A2UI": "1",
+    "NEXT_PUBLIC_ADVISOR_A2UI": "1",
     "NEXT_PUBLIC_GA_MEASUREMENT_ID": "G-7GDZWYG4N2",
     "NEXT_PUBLIC_GTM_ID": "GTM-PJPK4GP6",
     // Website-leads pipeline (created by Rami 2026-07-10); entry stage is

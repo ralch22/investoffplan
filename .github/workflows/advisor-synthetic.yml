@@ -64,6 +64,52 @@ jobs:
           esac
           echo "Advisor answered for real (${#reply} chars)"
 
+      # Second call: prove the A2UI surface is still being composed in prod.
+      # Same invisible-failure risk as above, but worse — if the composer breaks
+      # or ADVISOR_A2UI gets flipped off, the widget silently falls back to the
+      # legacy cards and NOTHING errors. Only this check would notice.
+      #
+      # Assertion is conditional on purpose: the model doesn't always call
+      # search_projects, and a turn with no grounded cards legitimately composes
+      # no surface. So we assert the implication "cards => a2ui", which catches a
+      # broken composer / disabled flag without flaking on ungrounded turns.
+      #
+      # Cost: a second Workers-AI call = 2/300 of the daily cap total.
+      - name: Verify the A2UI surface is composed
+        run: |
+          status=$(curl -s -o /tmp/a2ui.json -w "%{http_code}" -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"messages":[{"role":"user","content":"Show me 2-bed apartments in Dubai Marina"}],"locale":"en","a2uiSupported":true}' \
+            https://investoffplan.com/api/advisor)
+          cat /tmp/a2ui.json
+          echo ""
+          if [ "$status" != "200" ]; then
+            echo "Advisor returned HTTP $status" >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import json, sys
+          d = json.load(open("/tmp/a2ui.json"))
+          cards, a2ui = d.get("cards") or [], d.get("a2ui") or []
+          if not cards:
+              print("No grounded cards this turn — nothing to compose; skipping.")
+              sys.exit(0)
+          if not a2ui:
+              print(f"A2UI MISSING: {len(cards)} grounded card(s) but no a2ui payload — "
+                    "composer broken or ADVISOR_A2UI disabled.", file=sys.stderr)
+              sys.exit(1)
+          kinds = [k for m in a2ui for k in m if k != "version"]
+          if "createSurface" not in kinds or "updateComponents" not in kinds:
+              print(f"A2UI MALFORMED: expected createSurface+updateComponents, got {kinds}", file=sys.stderr)
+              sys.exit(1)
+          comps = [c for m in a2ui if "updateComponents" in m
+                     for c in m["updateComponents"]["components"]]
+          if not any(c.get("id") == "root" for c in comps):
+              print("A2UI MALFORMED: no root component — the renderer would show nothing.", file=sys.stderr)
+              sys.exit(1)
+          print(f"A2UI composed: {len(cards)} card(s) -> {len(comps)} component(s)")
+          PY
+
       # Heartbeat pair — same playbook as catalog-ingest.yml: a heartbeat
       # catches BOTH failure modes (the check failed / the check never ran —
       # GitHub disables schedules after 60 days of repo inactivity). /fail is
