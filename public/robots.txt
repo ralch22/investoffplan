@@ -1,5 +1,10 @@
 User-agent: *
 Allow: /
+# The home page's ask bar puts the question in the URL so an answer can be
+# linked. Those URLs are not separate pages — home's canonical is the bare site
+# URL and its metadata never reads searchParams — and every crawl of one would
+# spend a slice of the advisor's daily budget.
+Disallow: /*?ask=
 
 Sitemap: https://www.investoffplan.com/sitemap.xml
 
