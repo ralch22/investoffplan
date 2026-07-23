@@ -133,6 +133,48 @@ export function composeMatchNextStep(
   );
 }
 
+// ── B2 · Shared shortlist ───────────────────────────────────────────────────
+
+/**
+ * A shortlist someone was sent, rendered as the surface it came from.
+ *
+ * The share record stores slugs, not components, so this composes from cards
+ * that were re-resolved out of the catalogue moments ago. Two consequences
+ * worth stating: a share can't carry anything the catalogue doesn't have, and
+ * a link opened next month shows current prices rather than a stale snapshot.
+ *
+ * The mortgage panel is included only when a price was captured with the share
+ * — a panel defaulted to some arbitrary number would be worse than none.
+ */
+export function composeShare(
+  cards: AdvisorCard[],
+  opts: { surfaceId?: string; mortgagePriceAed?: number | null; limit?: number } = {},
+): A2uiMessage[] | undefined {
+  const list = cards.slice(0, opts.limit ?? 6);
+  if (list.length === 0) return undefined;
+
+  const surfaceId = opts.surfaceId ?? "share";
+  const components: A2uiComponent[] = [];
+  const children: string[] = [];
+
+  list.forEach((card, i) => {
+    const id = `p-${i}`;
+    components.push({ id, component: IOP_A2UI.ProjectCard, ...cardProps(card) });
+    children.push(id);
+  });
+
+  const price = opts.mortgagePriceAed;
+  if (typeof price === "number" && price > 0) {
+    components.push(mortgageNode("mortgage", price));
+    children.push("mortgage");
+  }
+
+  components.push({ id: "lead", component: IOP_A2UI.LeadForm });
+  children.push("lead");
+
+  return wrap(surfaceId, children, components);
+}
+
 // ── A3 · SERP zero-results rescue ───────────────────────────────────────────
 
 export type RelaxedFilter =

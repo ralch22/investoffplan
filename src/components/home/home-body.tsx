@@ -2,6 +2,8 @@ import Image from "next/image";
 import { LocaleLink } from "@/components/locale-link";
 import { PageShell } from "@/components/page-shell";
 import { HeroSearch } from "@/components/hero-search";
+import { HomeAskBar } from "@/components/home/ask-bar";
+import { surfaceEnabled } from "@/lib/advisor/a2ui/surfaces";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { HomeFeaturedGrid } from "@/components/home-featured-grid";
 import { CountUp } from "@/components/count-up";
@@ -239,6 +241,13 @@ export async function HomeBody({ locale }: { locale: Locale }) {
           </div>
         </div>
       </section>
+
+      {/* Inline advisor. Deliberately its own band under the hero rather than
+          inside it: the hero is a dark full-bleed image, and an answer with
+          cards and a mortgage panel has to be readable. Costs a model call only
+          when someone actually asks, and is off unless "ask" is in
+          NEXT_PUBLIC_A2UI_SURFACES. */}
+      {surfaceEnabled("ask") ? <HomeAskBar /> : null}
 
       <section className="overflow-hidden border-b border-border bg-white py-5 marquee-mask">
         <div className="relative flex items-center gap-14">

@@ -46,7 +46,7 @@ export default defineConfig({
     // doesn't drown real server errors in CI output.
     command: process.env.CI
       ? `node scripts/e2e-next-start.mjs --port ${E2E_PORT}`
-      : `npm run prebuild && npm run db:migrate:local && npm run db:seed:local && NEXT_IS_BUILD=1 npm run build && node scripts/e2e-next-start.mjs --port ${E2E_PORT}`,
+      : `npm run prebuild && npm run db:migrate:local && npm run db:seed:local && NEXT_IS_BUILD=1 NEXT_PUBLIC_A2UI_SURFACES=pdp,match,serp,share,ask npm run build && node scripts/e2e-next-start.mjs --port ${E2E_PORT}`,
     url: `${E2E_BASE}/projects`,
     reuseExistingServer: !process.env.CI && process.env.PW_REUSE_SERVER === "1",
     timeout: process.env.CI ? 120_000 : 480_000,

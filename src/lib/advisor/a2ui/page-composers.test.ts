@@ -7,6 +7,7 @@ import {
   composePdpStrip,
   composeMatchNextStep,
   composeSerpRescue,
+  composeShare,
 } from "./page-composers";
 import { IOP_A2UI, IOP_ADVISOR_CATALOG_ID } from "./messages";
 import type { Project } from "@/lib/types";
@@ -148,4 +149,45 @@ test("SERP rescue: caps the card list", () => {
   const many = Array.from({ length: 9 }, (_, i) => card({ slug: `p${i}`, name: `P${i}` }));
   const msgs = composeSerpRescue(many, ["beds"])!;
   assert.equal(rootChildren(msgs).filter((c: string) => c.startsWith("p-")).length, 4);
+});
+
+// ── composeShare ────────────────────────────────────────────────────────────
+
+test("share: cards, then the mortgage panel, then the lead form", () => {
+  const msgs = composeShare([card(), card({ slug: "creek-rise", name: "Creek Rise" })], {
+    surfaceId: "share-abc",
+    mortgagePriceAed: 1_200_000,
+  })!;
+  assertValid(msgs);
+  assert.deepEqual(rootChildren(msgs), ["p-0", "p-1", "mortgage", "lead"]);
+  const comps = componentsOf(msgs);
+  assert.equal(comps.find((c: any) => c.id === "p-0").component, IOP_A2UI.ProjectCard);
+  assert.equal(comps.find((c: any) => c.id === "mortgage").propertyPriceAed, 1_200_000);
+  assert.deepEqual(msgs[0], {
+    version: "v0.9",
+    createSurface: { surfaceId: "share-abc", catalogId: IOP_ADVISOR_CATALOG_ID },
+  });
+});
+
+test("share: no captured price means NO mortgage panel, not a made-up one", () => {
+  for (const price of [undefined, null, 0]) {
+    const msgs = composeShare([card()], { mortgagePriceAed: price as number | null })!;
+    assert.equal(
+      rootChildren(msgs).includes("mortgage"),
+      false,
+      `price ${String(price)} should not produce a panel`,
+    );
+    // The lead form still stands — a shared list is a hand-off to a human.
+    assert.equal(rootChildren(msgs).includes("lead"), true);
+  }
+});
+
+test("share: composes nothing when the catalogue resolved no cards", () => {
+  assert.equal(composeShare([]), undefined);
+});
+
+test("share: caps the list", () => {
+  const many = Array.from({ length: 12 }, (_, i) => card({ slug: `p${i}`, name: `P${i}` }));
+  const msgs = composeShare(many)!;
+  assert.equal(rootChildren(msgs).filter((c: string) => c.startsWith("p-")).length, 6);
 });

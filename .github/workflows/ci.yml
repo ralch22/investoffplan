@@ -58,6 +58,12 @@ jobs:
             ${{ runner.os }}-nextjs-
 
       - name: Build
+        # The ask bar is dark in production (it spends model budget, so it must
+        # be opted into by name — see lib/advisor/a2ui/surfaces.ts). Enable it
+        # for e2e so its specs actually exercise it instead of skipping; the
+        # advisor call is mocked in those specs, so nothing is spent.
+        env:
+          NEXT_PUBLIC_A2UI_SURFACES: pdp,match,serp,share,ask
         run: npm run build
 
       - name: Seed local D1 for e2e

@@ -356,6 +356,26 @@ export const dailyCounters = sqliteTable("daily_counters", {
   updatedAt: text("updated_at").notNull(),
 });
 
+/**
+ * Shareable advisor shortlists behind /s/[id].
+ *
+ * Stores the INGREDIENTS of a surface, never composed A2UI JSON: slugs the
+ * catalogue can re-resolve plus the reply text. The surface is recomposed
+ * server-side at read time, so a share can never smuggle in an attacker-chosen
+ * image URL or a card the catalogue doesn't have — and a link opened next month
+ * shows current prices instead of a stale snapshot.
+ */
+export const sharedSurfaces = sqliteTable("shared_surfaces", {
+  id: text("id").primaryKey(),
+  locale: text("locale").notNull().default("en"),
+  reply: text("reply").notNull(),
+  /** JSON array of project slugs, in display order. */
+  slugsJson: text("slugs_json").notNull(),
+  mortgagePriceAed: integer("mortgage_price_aed"),
+  createdAt: text("created_at").notNull(),
+  expiresAt: text("expires_at").notNull(),
+});
+
 // better-auth durable rate-limit storage (storage: "database"); field names
 // must match better-auth's rateLimit model exactly (key/count/lastRequest).
 export const rateLimits = sqliteTable("rate_limits", {
