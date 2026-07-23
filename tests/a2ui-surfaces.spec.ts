@@ -45,6 +45,12 @@ test.describe("A2UI page surfaces", () => {
     const monthly = strip.locator("[data-testid='advisor-mortgage-monthly']");
     await expect(monthly).toBeVisible();
 
+    // Let the page finish loading BEFORE counting. The claim under test is
+    // "moving the slider causes no request" — attaching the counter while
+    // page-load requests are still in flight measures the wrong thing, and any
+    // straggler (favourites sync, analytics) failed this for the wrong reason.
+    await page.waitForLoadState("networkidle", { timeout: 15_000 }).catch(() => {});
+
     let calls = 0;
     page.on("request", (r) => {
       if (r.url().includes("/api/")) calls += 1;
