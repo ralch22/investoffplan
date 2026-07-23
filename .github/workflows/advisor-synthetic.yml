@@ -122,3 +122,80 @@ jobs:
       - name: Report failure
         if: failure()
         run: curl -fsS -m 20 -X POST "${{ secrets.ADVISOR_HEARTBEAT_URL }}/fail" || true
+
+  # ── Deterministic A2UI page surfaces ────────────────────────────────────────
+  #
+  # The job above proves the CHAT surface. These are the Phase-2 surfaces that
+  # live in pages (PDP decision strip, SERP zero-result rescue, investor-match
+  # next step). Their risk profile is the opposite of the advisor's: they spend
+  # no model budget, so nothing rate-limits or bills them — but they fail just
+  # as silently. A broken composer, a bad NEXT_PUBLIC_A2UI_SURFACES value, or a
+  # build that dropped the flag all degrade to "the page as it looked before",
+  # which is indistinguishable from healthy. Nothing 500s. Nothing alerts.
+  #
+  # Cost: zero Workers-AI calls — every assertion here is deterministic.
+  #
+  # No heartbeat of its own on purpose: it shares this workflow's schedule, so
+  # the advisor heartbeat above already covers "the check stopped running", and
+  # a second Better Stack monitor would only duplicate that signal.
+  page-surfaces:
+    runs-on: ubuntu-latest
+    steps:
+      # Cheapest first, and no checkout needed. The PDP strip is composed in the
+      # SERVER render, so its protocol JSON is in the HTML flight payload — a
+      # plain curl can see it. This one check would catch a composer break or a
+      # missing flag site-wide, before we pay for a browser.
+      - name: PDP decision strip is composed server-side
+        run: |
+          set -o pipefail
+          url="https://investoffplan.com/projects/105-residences"
+          status=$(curl -s -o /tmp/pdp.html -w "%{http_code}" --max-time 45 "$url")
+          echo "HTTP $status  ($(wc -c < /tmp/pdp.html) bytes)"
+          if [ "$status" != "200" ]; then
+            echo "::error::PDP returned HTTP $status" >&2
+            exit 1
+          fi
+          # The section wrapper is server-rendered even when the surface is off,
+          # so it is NOT evidence on its own — assert the protocol payload.
+          if ! grep -q 'createSurface' /tmp/pdp.html; then
+            echo "::error::A2UI MISSING — no createSurface in the PDP payload. The composer is broken, or NEXT_PUBLIC_A2UI_SURFACES excludes 'pdp'." >&2
+            exit 1
+          fi
+          if ! grep -q '\\"id\\":\\"root\\"\|"id":"root"' /tmp/pdp.html; then
+            echo "::error::A2UI MALFORMED — createSurface present but no root component; the renderer would show nothing." >&2
+            exit 1
+          fi
+          echo "PDP decision strip composed (createSurface + root present)"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system dependencies
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
+
+      # The other two surfaces are composed CLIENT-side (the A2UI renderer has
+      # no getServerSnapshot, so page surfaces mount with ssr:false) and are
+      # therefore invisible to curl. Real browser, real production.
+      - name: Client-composed surfaces render in production
+        run: npx tsx scripts/prod-surfaces-synthetic.ts https://investoffplan.com

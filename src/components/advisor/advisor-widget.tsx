@@ -10,6 +10,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/cn";
 import { AdvisorProjectCard } from "./a2ui/project-card";
+import { AdvisorShareButton } from "./share-button";
+import { surfaceEnabled } from "@/lib/advisor/a2ui/surfaces";
 import type { A2uiMessage } from "@/lib/advisor/a2ui/messages";
 import type {
   AdvisorCard,
@@ -26,6 +28,7 @@ const AdvisorA2uiSurface = dynamic(
 );
 
 const A2UI_CLIENT_ENABLED = process.env.NEXT_PUBLIC_ADVISOR_A2UI === "1";
+const SHARE_ENABLED = surfaceEnabled("share");
 
 interface ChatEntry extends AdvisorMessage {
   cards?: AdvisorCard[];
@@ -335,20 +338,33 @@ export function AdvisorWidget() {
                       )}
                     </div>
                     {entry.role === "assistant" ? (
-                      entry.a2ui?.length ? (
-                        <div className="mt-3 w-full">
-                          <AdvisorA2uiSurface
-                            messages={entry.a2ui}
-                            handlers={{
-                              leadDone,
-                              onLeadSubmitted: handleA2uiLeadSubmitted,
-                            }}
-                            fallback={renderLegacyStructured(entry)}
+                      <>
+                        {entry.a2ui?.length ? (
+                          <div className="mt-3 w-full">
+                            <AdvisorA2uiSurface
+                              messages={entry.a2ui}
+                              handlers={{
+                                leadDone,
+                                onLeadSubmitted: handleA2uiLeadSubmitted,
+                              }}
+                              fallback={renderLegacyStructured(entry)}
+                            />
+                          </div>
+                        ) : (
+                          renderLegacyStructured(entry)
+                        )}
+                        {/* A grounded shortlist is worth more outside this
+                            drawer than inside it — for a shopper sending it to
+                            a partner, and for the team, who otherwise share
+                            these as screenshots. */}
+                        {SHARE_ENABLED && entry.cards?.length ? (
+                          <AdvisorShareButton
+                            cards={entry.cards}
+                            reply={entry.content}
+                            mortgagePriceAed={entry.cards[0]?.fromPriceAed}
                           />
-                        </div>
-                      ) : (
-                        renderLegacyStructured(entry)
-                      )
+                        ) : null}
+                      </>
                     ) : null}
                   </div>
                 ))}
