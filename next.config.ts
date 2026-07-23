@@ -107,6 +107,14 @@ const nextConfig: NextConfig = {
           },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          // Agent discovery (RFC 8288). `describedby` is the registered relation
+          // for "a resource describing this one" — which is exactly what
+          // /llms.txt is: the canonical, agent-oriented description of the site
+          // (catalog stats, DLD data provenance, EN/AR structure). We do NOT
+          // advertise an api-catalog/service-desc: the only APIs here are the
+          // rate-limited, budget-capped advisor endpoints, which robots.txt
+          // deliberately disallows — advertising them would invite abuse.
+          { key: "Link", value: '</llms.txt>; rel="describedby"; type="text/plain"' },
           {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
