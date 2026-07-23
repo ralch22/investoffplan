@@ -92,9 +92,15 @@ test("PDP: lead-capture UI present (Turnstile blocks localhost submits — prese
   const pdpPath = await gotoFirstPdp(page);
   const html = await (await page.request.get(pdpPath)).text();
   expect(html).toMatch(/quick actions|download brochure/i);
+  // NOTE: since the A2UI decision strip shipped, a PDP has TWO name inputs —
+  // the page's own lead form and the strip's. The strip mounts client-side, so
+  // whichever node `.first()` resolves to can be replaced mid-action; the
+  // imperative scrollIntoViewIfNeeded that used to be here threw "Element is
+  // not attached to the DOM" whenever it lost that race. `toBeEditable`
+  // re-resolves the locator on every poll, which is exactly what a hydrating
+  // page needs — and scrolling was never required to assert editability.
   const nameField = page.locator('input[autocomplete="name"]').first();
   if (await nameField.count()) {
-    await nameField.scrollIntoViewIfNeeded();
     await expect(nameField).toBeEditable();
   }
 });
