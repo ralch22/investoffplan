@@ -134,8 +134,12 @@ const nextConfig: NextConfig = {
             // instrumentation of every dangerouslySetInnerHTML call.
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://challenges.cloudflare.com",
-              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.clarity.ms https://challenges.cloudflare.com",
+              // static.cloudflareinsights.com: Cloudflare Web Analytics beacon,
+              // auto-injected by the zone; without this it is CSP-blocked on
+              // every page (console error + no RUM). Beacon POSTs to
+              // cloudflareinsights.com — allowed in connect-src below.
+              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://challenges.cloudflare.com https://static.cloudflareinsights.com",
+              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com https://www.clarity.ms https://challenges.cloudflare.com https://cloudflareinsights.com",
               "img-src 'self' data: blob: https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://new-projects-media.propertyfinder.com https://i.ytimg.com",
               "frame-src 'self' https://www.openstreetmap.org https://www.youtube-nocookie.com https://challenges.cloudflare.com",
               "frame-ancestors 'self'",
