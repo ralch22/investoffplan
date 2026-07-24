@@ -42,12 +42,15 @@
     "assets:apply-d1:remote": "tsx scripts/apply-asset-urls-to-d1.ts --remote",
     "assets:apply-d1:production": "tsx scripts/apply-asset-urls-to-d1.ts --remote --config=wrangler.production.jsonc",
     "cf:typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
-    "build:dld-area-stats": "tsx scripts/build-dld-area-stats.ts"
+    "build:dld-area-stats": "tsx scripts/build-dld-area-stats.ts",
+    "dev:mcp": "wrangler dev -c wrangler.mcp.jsonc --local --port 8788",
+    "deploy:mcp": "CLOUDFLARE_ACCOUNT_ID=4a75e91d6fca8bc58467fb80ce1b9c2e wrangler deploy -c wrangler.mcp.jsonc"
   },
   "dependencies": {
     "@a2ui/react": "0.10.2",
     "@next/third-parties": "^16.2.10",
     "@opennextjs/cloudflare": "^1.20.1",
+    "agents": "^0.19.0",
     "better-auth": "^1.6.23",
     "drizzle-orm": "^0.45.2",
     "framer-motion": "^12.42.2",

@@ -9,29 +9,8 @@ import { projectToCard, projectBeds } from "./project-card";
 export { TOOL_DEFINITIONS } from "./tool-schemas";
 // projectToCard lives in ./project-card (pure, no DB) so the page-surface
 // composers can reuse it; re-exported here to keep existing importers working.
-export { projectToCard, projectBeds } from "./project-card";
-
-/** EN-only compact bed chip for LLM tool facts (not UI chrome). */
-function bedsFactLabel(beds: number[]): string {
-  const label = (b: number) => (b === 0 ? "Studio" : `${b}BR`);
-  return beds.length === 1
-    ? label(beds[0])
-    : `${label(beds[0])}–${label(beds[beds.length - 1])}`;
-}
-
-function projectFacts(project: Project): string {
-  const card = projectToCard(project);
-  return [
-    `${project.name} (slug: ${project.slug}) by ${project.developer} in ${project.area}, ${project.city}.`,
-    card.fromPriceAed ? `From AED ${card.fromPriceAed.toLocaleString("en-US")}.` : "",
-    card.beds?.length ? `Bedrooms: ${bedsFactLabel(card.beds)}.` : "",
-    project.handover ? `Handover: ${project.handover}.` : "",
-    project.paymentPlan ? `Payment plan: ${project.paymentPlan}.` : "",
-    project.ownershipType ? `Ownership: ${project.ownershipType}.` : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-}
+export { projectToCard, projectBeds, projectFacts } from "./project-card";
+import { projectFacts } from "./project-card";
 
 interface AiSearchBinding {
   search(params: {

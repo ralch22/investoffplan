@@ -1,0 +1,47 @@
+/**
+ * investoffplan-mcp — the read-only MCP server over the catalog.
+ *
+ * A SECOND deployable from this repo (precedent: wrangler.remote-ingest.jsonc),
+ * carved out of the main worker's routes by longest-match: only /mcp* lands
+ * here, on both hosts — www must be listed explicitly or www.…/mcp falls
+ * through to the main worker's Next 404.
+ *
+ * Deploy: npm run deploy:mcp   (plain wrangler deploy — seconds, no OpenNext)
+ * Dev:    npm run dev:mcp      (local D1; seed with npm run db:seed:local)
+ *
+ * ⚠️ Deliberately NO migrations_dir: this worker shares the production D1 with
+ * the main site but must never be a path through which migrations run.
+ */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "investoffplan-mcp",
+  "main": "src/mcp/worker.ts",
+  "account_id": "4a75e91d6fca8bc58467fb80ce1b9c2e",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "routes": [
+    { "pattern": "investoffplan.com/mcp*", "zone_name": "investoffplan.com" },
+    { "pattern": "www.investoffplan.com/mcp*", "zone_name": "investoffplan.com" }
+  ],
+  "observability": { "enabled": true },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "investoffplan-catalog",
+      "database_id": "e5aa2877-4359-4c28-8499-0c149200c6a4"
+    }
+  ],
+  // Per-IP shaping. Namespace ids are account-scoped and arbitrary; the main
+  // worker uses 1001 (advisor) and 1002 (leads) — 2001 is this worker's own.
+  "ratelimits": [
+    {
+      "name": "MCP_RATE_LIMIT",
+      "namespace_id": "2001",
+      "simple": { "limit": 20, "period": 60 }
+    }
+  ],
+  "vars": {
+    // Runaway-bot belt, not a spend cap — every tool is deterministic (no LLM).
+    "MCP_DAILY_CAP": "5000"
+  }
+}
